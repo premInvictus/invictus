@@ -231,6 +231,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			for(let i=0; i<data.length;i++) {
 				if(data[i]['acc_state']==='acc_group') {
 					this.accountGroupArr.push(data[i]);
+					this.tempAccountGroup.push(data[i]);
 				}
 				if(data[i]['acc_state']==='acc_type') {
 					this.accountTypeArr.push(data[i]);
@@ -238,7 +239,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			}
 			
 			if(this.accountGroupArr.length > 0) {
-				this.tempAccountGroup = [];
+				 
 				console.log(this.accountGroupArr);
 				this.accountGroupArr.forEach(element => {
 					

@@ -33,9 +33,11 @@
                 <!-- <mat-option *ngFor="let item of accountGroupArr" [value]="item.acc_id">{{item.acc_name}}</mat-option> -->
                 <mat-optgroup *ngFor="let item of tempAccountGroup" >
                   <mat-option class="parent-optiongroup" [value]="item.acc_id">{{item.acc_name}}</mat-option>
-                  <mat-option *ngFor="let chld of item.childSub" [value]="chld.acc_id">
+                  
+                  <mat-option *ngFor="let chld of item?.childSub" [value]="chld.acc_id">
                     {{chld.acc_name}}
                   </mat-option>
+                
                 </mat-optgroup>
               </mat-select>
             </mat-form-field>
