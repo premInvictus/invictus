@@ -61,7 +61,8 @@ export class AccountGroupComponent implements OnInit {
 			acc_parent_name: '',
 			order: '',
 			status:'',
-			acc_state: ''
+			acc_state: '',
+			display_section: {}
 		});
 	}
 	getAccountMaster() {
@@ -74,18 +75,22 @@ export class AccountGroupComponent implements OnInit {
 				this.configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 				let pos = 1;
 				for (const item of this.accountGroupArr) {
-					element = {
-						srno: pos,
-						acc_id: item.acc_id,
-						acc_name: item.acc_name,
-						acc_parent: item.acc_parent ? this.accountGroupArr.find(e => e.acc_id == item.acc_parent).acc_name : '',
-						order: item.order,
-						status: item.status,
-						action: item
-					};
-					this.CONFIG_ELEMENT_DATA.push(element);
-					pos++;
-
+					if (item.acc_state && item.acc_state == 'acc_group') {
+						element = {
+							srno: pos,
+							acc_id: item.acc_id,
+							acc_name: item.acc_name,
+							acc_parent: item.acc_parent ? ((this.accountGroupArr.find(e => e.acc_id == item.acc_parent)) ? this.accountGroupArr.find(e => e.acc_id == item.acc_parent).acc_name:'') : '',
+							order: item.order,
+							status: item.status,
+							action: item
+						};
+						// console.log('element-->', element);
+						this.CONFIG_ELEMENT_DATA.push(element);
+						pos++;
+	
+					}
+					
 				}
 				this.configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 				this.configDataSource.paginator = this.paginator;
@@ -98,6 +103,7 @@ export class AccountGroupComponent implements OnInit {
 	  }
 
 	save() {
+		console.log('this.locationForm--', this.locationForm);
 		if (this.locationForm.valid) {
 			this.disabledApiButton = true;
 			
@@ -149,13 +155,15 @@ export class AccountGroupComponent implements OnInit {
 	}
 
 	edit(element) {
-		console.log(element);
+		
 		this.editFlag = true;
 		this.locationForm.patchValue({
 			acc_id: element.acc_id ? element.acc_id : 0,
 			acc_name: element.acc_name ? element.acc_name : '',
 			acc_parent: element.acc_parent ? element.acc_parent : 0,
-			order: element.order ? element.order : 1
+			order: element.order ? element.order : 1,
+			status: element.status === '1' ? '1' : '0',
+			display_section: {}
 		});
 	}
 
@@ -166,7 +174,8 @@ export class AccountGroupComponent implements OnInit {
 			acc_name: element.acc_name ? element.acc_name : '',
 			acc_parent: element.acc_parent ? element.acc_parent : 0,
 			status: element.status === '1' ? '0' : '1',
-			order: element.order ? element.order : 1
+			order: element.order ? element.order : 1,
+			display_section: {}
 		});
 
 		this.save();
