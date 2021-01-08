@@ -242,6 +242,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address_for: 'S',
 			ea_address1: '',
 			ea_city: '',
+			ea_city1: '',
 			ea_state: '',
 			ea_district: '',
 			ea_country: '',
@@ -255,6 +256,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address_for: 'S',
 			ea_address1: '',
 			ea_city: '',
+			ea_city1: '',
 			ea_state: '',
 			ea_district: '',
 			ea_country: '',
@@ -284,6 +286,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address_for: 'S',
 			ea_address1: '',
 			ea_city: '',
+			ea_city1: '',
 			ea_state: '',
 			ea_district: '',
 			ea_country: '',
@@ -298,6 +301,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address_for: 'S',
 			ea_address1: '',
 			ea_city: '',
+			ea_city1: '',
 			ea_state: '',
 			ea_district: '',
 			ea_country: '',
@@ -573,7 +577,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								}
 							});
 						}
-						// console.log("i am eeeee", element);
+						console.log("i am eeeee", element);
 						
 						this.paddressform.patchValue({
 							ea_id: element.ea_id,
@@ -582,7 +586,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
 							ea_address_for: 'S',
 							ea_address1: element.ea_address1,
-							ea_city: element.cit_name,
+							ea_city: element.ea_city,
+							ea_city1: element.cit_name,
 							ea_state: element.ea_state,
 							ea_district: element.ea_district,
 							ea_country: element.ea_country,
@@ -605,7 +610,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
 							ea_address_for: 'S',
 							ea_address1: element.ea_address1,
-							ea_city: element.cit_name,
+							ea_city: element.ea_city,
+							ea_city1: element.cit_name,
 							ea_state: element.ea_state,
 							ea_district: element.ea_district,
 							ea_country: element.ea_country,
@@ -638,22 +644,50 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	getCityResId(item: any) {
 		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
 		this.cityId2 = item.cit_id;
+		
+		
 		this.raddressform.patchValue({
-			ea_city: this.getCityName(item.cit_id),
+			ea_city1: this.getCityName(item.cit_id),
+			ea_city: item.cit_id,
 			ea_state: item.sta_id,
 			ea_country: item.cou_id,
 			ea_district: item.dist_id
 		});
+		this.paddressform.controls.ea_city.markAsTouched();
+		// this.paddressform.controls.ea_city.markAsPending();
+		this.paddressform.controls.ea_city.markAsDirty();
+		this.paddressform.controls.ea_city1.markAsPristine();
+		this.paddressform.controls.ea_state.markAsTouched();
+		// this.paddressform.controls.ea_state.markAsPending();
+		this.paddressform.controls.ea_state.markAsDirty();
+		this.paddressform.controls.ea_district.markAsTouched();
+		// this.paddressform.controls.ea_district.markAsPending();
+		this.paddressform.controls.ea_district.markAsDirty();
+		// console.log("i am check", this.raddressform);
 	}
 	getCityPerId(item: any) {
 		this.cityId = item.cit_id;
 		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
+		
+		
 		this.paddressform.patchValue({
-			ea_city: this.getCityName(item.cit_id),
+			ea_city1: this.getCityName(item.cit_id),
+			ea_city: item.cit_id,
 			ea_state: item.sta_id,
 			ea_country: item.cou_id,
 			ea_district: item.dist_id
 		});
+		
+		this.paddressform.controls.ea_city.markAsTouched();
+		// this.paddressform.controls.ea_city.markAsPending();
+		this.paddressform.controls.ea_city.markAsDirty();
+		this.paddressform.controls.ea_city1.markAsPristine();
+		this.paddressform.controls.ea_state.markAsTouched();
+		// this.paddressform.controls.ea_state.markAsPending();
+		this.paddressform.controls.ea_state.markAsDirty();
+		this.paddressform.controls.ea_district.markAsTouched();
+		// this.paddressform.controls.ea_district.markAsPending();
+		this.paddressform.controls.ea_district.markAsDirty();
 	}
 
 	getCityName(id) {

@@ -205,7 +205,7 @@
                 <div class="col-12 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
-                    <input type="text" matInput placeholder="City" formControlName="ea_city" required
+                    <input type="text" matInput placeholder="City" formControlName="ea_city1" required
                       [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
                       [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete" autocomplete="off">
@@ -222,7 +222,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>State</mat-label>
                     <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
                         {{item.sta_name}}
@@ -237,7 +237,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>District</mat-label>
                     <mat-select formControlName="ea_district" placeholder="District" required disabled="true"
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayDist" [value]="item.dist_id">
                         {{item.dist_name}}
@@ -253,7 +253,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Country</mat-label>
                     <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayCountry" [value]="item.cou_id">
                         {{item.cou_name}}
@@ -316,7 +316,7 @@
                 <div class="col-12 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
-                    <input type="text" matInput placeholder="City" formControlName="ea_city" [readonly]="viewOnly || (editOnly && !showAddressFlag)
+                    <input type="text" matInput placeholder="City" formControlName="ea_city1" [readonly]="viewOnly || (editOnly && !showAddressFlag)
                     || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher"
                       [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete">
@@ -333,7 +333,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>State</mat-label>
                     <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
                         {{item.sta_name}}
@@ -348,7 +348,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>District</mat-label>
                     <mat-select formControlName="ea_district" placeholder="District" required 
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayDist2" [value]="item.dist_id">
                         {{item.dist_name}}
@@ -363,7 +363,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Country</mat-label>
                     <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
-                      [errorStateMatcher]="confirmValidParentMatcher">
+                      [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayCountry" [value]="item.cou_id">
                         {{item.cou_name}}
