@@ -129,7 +129,7 @@
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Aadhaar No.</mat-label>
                               <input matInput placeholder="Aadhaar no." formControlName="epd_aadhar_no"
-                                 mask="0000 0000 0000 0000" minlength="12" maxlength="14" [readonly]="viewOnly"
+                                 mask="0000 0000 0000" minlength="12" maxlength="14" [readonly]="viewOnly"
                                  [errorStateMatcher]="confirmValidParentMatcher">
                               <mat-error>
                                  Please enter aadhar number
@@ -150,9 +150,9 @@
                         <legend class="invoice_legend"> <b>Occupation Details</b></legend>
                         <form [formGroup]="formGroupArray[i].formGroup">
                            <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_parent_occupation_type')">
-                              <mat-form-field class="form-field" appearance="outline">
+                              <mat-form-field *ngIf="!flagOccupation" class="form-field" appearance="outline">
                                  <mat-label>Occupation Type</mat-label>
-                                 <mat-select placeholder="Occupation Type" [disabled]="viewOnly"
+                                 <mat-select placeholder="Occupation Type" [disabled]="viewOnly" (selectionChange)="changeFlafOcc($event.value)"
                                     formControlName="epd_parent_occupation_type"
                                     [errorStateMatcher]="confirmValidParentMatcher">
                                     <br>
@@ -164,6 +164,10 @@
                                     <mat-option *ngFor="let item of occupationTypeArray" [value]="item.ocpt_id">
                                        {{item.ocpt_name}}</mat-option>
                                  </mat-select>
+                              </mat-form-field>
+                              <mat-form-field *ngIf="flagOccupation" class="form-field" appearance="outline">
+                                 <mat-label>Add New Occupation</mat-label>
+                                 <input matInput [readonly]="viewOnly" formControlName="epd_parent_occupation_type" value='' (keyup.enter)='blurValue(epd_parent_occupation_type)' placeholder="Your Occupation ">
                               </mat-form-field>
                            </div>
                            <div class="col-12 " *ngIf="checkIfFieldExist('epd_organisation')">

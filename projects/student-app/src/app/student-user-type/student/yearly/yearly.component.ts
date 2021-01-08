@@ -20,10 +20,10 @@ export class YearlyComponent implements OnInit, OnChanges {
 		// 	primary: '#eb4d4b',
 		// 	secondary: '#eb4d4b'
 		// },
-		// absent: {
-		// 	primary: '#febe36',
-		// 	secondary: '#febe36'
-		// }
+		nodata: {
+			primary: '#ffffff',
+			secondary: '#ffffff',
+		},
 		holiday: {
 			primary: '#F6B83B',
 			secondary: '#F6B83B'
@@ -85,8 +85,8 @@ export class YearlyComponent implements OnInit, OnChanges {
 				if (result.data.attendence && result.data.attendence[0].attendence) {
 					const attendence = result.data.attendence[0].attendence;
 					const fromDate = moment(this.reloadScheduler.year_id+'-'+this.reloadScheduler.fm_id+'-01');
-					const toDate = moment(this.reloadScheduler.year_id+'-'+this.reloadScheduler.fm_id+'-'+("0" + new Date().getDate()).slice(-2));
-					console.log('toDate',toDate)
+					const toDate = moment(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+					console.log('toDate --------------------',toDate, )
 					console.log('new Date().getDay()',new Date().getDate())
 					for (const i = fromDate; i.diff(toDate, 'days') <= 0; i.add(1, 'days')) {
 						const eachEvent: any = {};
@@ -99,10 +99,12 @@ export class YearlyComponent implements OnInit, OnChanges {
 
 						if (attendence[dayOfMonth] == 'h') {
 							eachEvent.color = this.colors.holiday;
-						} else if (attendence[dayOfMonth] == '0' || attendence[dayOfMonth] == '-') {
+						} else if (attendence[dayOfMonth] == '0') {
 							eachEvent.color = this.colors.absent;
 						} else if (attendence[dayOfMonth] == '1') {
 							eachEvent.color = this.colors.present;
+						} else if(attendence[dayOfMonth] == '-') {
+							eachEvent.color =this.colors.nodata; 
 						}
 						this.events.push(eachEvent);
 					}

@@ -320,11 +320,15 @@ export class StudentDashboardComponent implements OnInit {
 		param.fm_id = ("0" + (new Date().getMonth() + 1)).slice(-2)
 		param.year_id = new Date().getFullYear();
 		param.au_login_id = this.userDetail.au_login_id;
+		console.log("i am params ----------", param);
+		
 		this.reloadScheduler = param;
 		this.attendanceFlag = true;
 		await this.erpCommonService.getStudentAttendence(param).toPromise().then((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sessionAttendance = result.data;
+				console.log('i am session attendence', this.sessionAttendance);
+				
 			}
 		});
 	}
