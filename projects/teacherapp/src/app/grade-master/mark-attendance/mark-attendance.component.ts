@@ -40,6 +40,7 @@ export class MarkAttendanceComponent implements OnInit {
     { aid: 1, a_name: 'Present' },
   ];
   requiredAll = false;
+  backdate_attendance_to_teacher=0;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -54,6 +55,7 @@ export class MarkAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getGlobalSetting();
     this.buildForm();
     this.getClass();
     this.ctForClass();
@@ -64,11 +66,24 @@ export class MarkAttendanceComponent implements OnInit {
     this.firstForm = this.fbuild.group({
       syl_class_id: '',
       syl_section_id: '',
-      syl_event: ''
+      syl_event: '',
+      cw_entry_date: this.entry_date
     });
     this.attendanceForm = this.fbuild.group({
       attendance: ''
     });
+  }
+  getGlobalSetting() {
+    let param: any = {};
+    param.gs_alias = ['backdate_attendance_to_teacher'];
+    this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const settings = result.data;
+        settings.forEach(element => {
+          this.backdate_attendance_to_teacher = element.gs_value
+        });
+      }
+    })
   }
   resetdata() {
     this.formgroupArray = [];
@@ -154,7 +169,7 @@ export class MarkAttendanceComponent implements OnInit {
     const studentParam: any = {};
     studentParam.au_class_id = this.class_id;
     studentParam.au_sec_id = this.section_id;
-    studentParam.ma_created_date = this.commonService.dateConvertion(this.entry_date);
+    studentParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
     studentParam.au_event_id = this.firstForm.value.syl_event;
     studentParam.au_role_id = '4';
     studentParam.au_status = '1';
@@ -184,7 +199,7 @@ export class MarkAttendanceComponent implements OnInit {
                 class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',
                 sec_id: this.firstForm.value.syl_section_id ? this.firstForm.value.syl_section_id : '',
                 ma_event: this.firstForm.value.syl_event ? this.firstForm.value.syl_event : '',
-                ma_created_date: this.commonService.dateConvertion(this.entry_date) ? this.commonService.dateConvertion(this.entry_date) : '',
+                ma_created_date: this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) ? this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) : '',
                 login_id: item.au_login_id ? item.au_login_id : '',
                 roll_no: item.r_rollno ? item.r_rollno : '',
                 attendance: item.ma_attendance ? Number(item.ma_attendance) : '',
