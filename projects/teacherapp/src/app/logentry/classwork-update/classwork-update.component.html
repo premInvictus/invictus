@@ -19,7 +19,9 @@
                 <mat-label>Teacher Name</mat-label>
                 <input matInput formControlName="teacher_name">
               </mat-form-field> -->
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+              <span *ngIf="backdate_attendance_to_teacher == 0" class="font-color-grey margin-bottom-5 margin-left-10 font-size-18 font-bold">On :
+                {{entry_date | date : 'd-MMM-y'}}</span>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline" *ngIf="backdate_attendance_to_teacher == 1">
                 <mat-label>Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date" (dateChange)="datechange()">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
