@@ -2697,16 +2697,16 @@ export class OutstandingReportComponent implements OnInit {
 											},
 											groupTotalsFormatter: this.srnTotalsFormatter,
 										},
-										// {
-										// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-										// 	filterable: true,
-										// 	cssClass: 'amount-report-fee',
-										// 	filterSearchType: FieldType.number,
-										// 	filter: { model: Filters.compoundInputNumber },
-										// 	sortable: true,
-										// 	formatter: this.checkFeeFormatter,
-										// 	groupTotalsFormatter: this.sumTotalsFormatter
-										// }
+										{
+											id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+											filterable: true,
+											cssClass: 'amount-report-fee',
+											filterSearchType: FieldType.number,
+											filter: { model: Filters.compoundInputNumber },
+											sortable: true,
+											formatter: this.checkFeeFormatter,
+											groupTotalsFormatter: this.sumTotalsFormatter
+										}
 									];
 									if(this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
