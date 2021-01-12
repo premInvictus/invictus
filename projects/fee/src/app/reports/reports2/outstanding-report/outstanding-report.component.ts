@@ -1964,7 +1964,7 @@ export class OutstandingReportComponent implements OnInit {
 					'studentName': '',
 					'report_type': this.reportType,
 					'classId': value.fee_value,
-					'to_date': value.from_date,
+					'to_date': new DatePipe('en-in').transform((this.reportFilterForm.value.from_date), 'yyyy-MM-dd'),
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -2697,16 +2697,16 @@ export class OutstandingReportComponent implements OnInit {
 											},
 											groupTotalsFormatter: this.srnTotalsFormatter,
 										},
-										// {
-										// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-										// 	filterable: true,
-										// 	cssClass: 'amount-report-fee',
-										// 	filterSearchType: FieldType.number,
-										// 	filter: { model: Filters.compoundInputNumber },
-										// 	sortable: true,
-										// 	formatter: this.checkFeeFormatter,
-										// 	groupTotalsFormatter: this.sumTotalsFormatter
-										// }
+										{
+											id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+											filterable: true,
+											cssClass: 'amount-report-fee',
+											filterSearchType: FieldType.number,
+											filter: { model: Filters.compoundInputNumber },
+											sortable: true,
+											formatter: this.checkFeeFormatter,
+											groupTotalsFormatter: this.sumTotalsFormatter
+										}
 									];
 									if(this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
@@ -4590,6 +4590,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
+		console.log('this.reportFilterForm-->',this.reportFilterForm);
 	}
 	getToDate(value) {
 		this.reportFilterForm.patchValue({
