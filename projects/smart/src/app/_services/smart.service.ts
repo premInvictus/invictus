@@ -91,6 +91,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
 	}
+	insertClasswise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/insertClasswise', value);
+	}
 
 	//////////////////////// Syllabus Service Function //////////////////////
 	topicwiseInsert(value) {
@@ -459,6 +463,10 @@ export class SmartService {
 	getSessionEndDate() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/smtreport/getSessionEndDate');
+	}
+	getClassSectionWiseTimeTable(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getClassSectionWiseTimeTable', value);
 	}
 
 }

@@ -263,6 +263,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
 			{ id: 'cit_name', name: 'City', field: 'cit_name', sortable: true, filterable: true },
 			{ id: 'sta_name', name: 'State', field: 'sta_name', sortable: true, filterable: true },
+			{ id: 'dist_name', name: 'District', field: 'dist_name', sortable: true, filterable: true },
 			{ id: 'ea_pincode', name: 'Pin', field: 'ea_pincode', sortable: true, filterable: true }
 		];
 	}
@@ -1197,6 +1198,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']);
 			tempObj['cit_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']));
 			tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
+			tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
 			tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
 			if (this.reportProcessWiseData[key]['au_admission_no'] === 'A - 4324') {

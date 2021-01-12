@@ -2,17 +2,17 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-	selector: 'app-review-classwork', 
-	templateUrl: './review-classwork.component.html',
-	styleUrls: ['./review-classwork.component.css']
+  selector: 'app-review-classwise',
+  templateUrl: './review-classwise.component.html',
+  styleUrls: ['./review-classwise.component.css']
 })
-export class ReviewClassworkComponent implements OnInit {
+export class ReviewClasswiseComponent implements OnInit {
 
-	reviewArray: any[] = [];
+  reviewArray: any[] = [];
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 
 	constructor(
-		public dialogRef: MatDialogRef<ReviewClassworkComponent>,
+		public dialogRef: MatDialogRef<ReviewClasswiseComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 

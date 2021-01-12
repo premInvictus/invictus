@@ -3,7 +3,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
-import { ReviewClassworkComponent } from './review-classwork/review-classwork.component';
+import { ReviewClasswiseComponent } from './review-classwise/review-classwise.component';
 // tslint:disable-next-line: max-line-length
 import { AssignmentAttachmentDialogComponent } from '../../smart-shared/assignment-attachment-dialog/assignment-attachment-dialog.component';
 import * as moment from 'moment';
@@ -81,26 +81,54 @@ export class ClasswiseUpdateComponent implements OnInit {
 		this.classworkforForm = this.fbuild.group({
 			// cw_teacher_id: '',
 			// teacher_name: '',
-      cw_entry_date: this.entry_date,
-      cw_sec_id:'',
-      cw_class_id:''
+			cw_entry_date: this.entry_date,
+			cw_sec_id:'',
+			cw_class_id:''
 		});
-		this.smartService.getMaxPeriod().subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.noOfPeriods = result.data.no_of_period;
-				for (let i = 0; i < this.noOfPeriods; i++) {
-          // this.addPeriods(i + 1, this.teacherId);
-          this.addPeriods(i + 1, '');
-					this.disableSubtopicArray[i] = false;
-					this.disabletopicArray[i] = false;
-					this.disableClassArray[i] = false;
-					this.disableSubjectArray[i] = false;
-				}
-				this.generateReviewArray();
-			}
-		});
+		// this.smartService.getMaxPeriod().subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		this.noOfPeriods = result.data.no_of_period;
+		// 		for (let i = 0; i < this.noOfPeriods; i++) {
+        //   		// this.addPeriods(i + 1, this.teacherId);
+        //   		this.addPeriods(i + 1, '');
+		// 			this.disableSubtopicArray[i] = false;
+		// 			this.disabletopicArray[i] = false;
+		// 			this.disableClassArray[i] = false;
+		// 			this.disableSubjectArray[i] = false;
+		// 		}
+		// 		this.generateReviewArray();
+		// 	}
+		// });
 
   }
+	getClassSectionWiseTimeTable() {
+		this.classwisetableArray = [];
+		const param: any = {};
+		param.class_id = this.classworkforForm.value.cw_class_id;
+		param.sec_id = this.classworkforForm.value.cw_sec_id;
+		this.smartService.getClassSectionWiseTimeTable(param).subscribe(
+		(result: any) => {
+			if (result && result.status === 'ok') {
+				if(result.data.data) {
+					this.noOfPeriods = result.data.data.length;
+					for (let i = 0; i < this.noOfPeriods; i++) {
+						// this.addPeriods(i + 1, this.teacherId);
+						this.addPeriods(i + 1, '');
+						this.disableSubtopicArray[i] = false;
+						this.disabletopicArray[i] = false;
+						this.disableClassArray[i] = false;
+						this.disableSubjectArray[i] = false;
+					}
+					this.generateReviewArray();
+					this.patchClass();
+					this.patchSection();
+				} else {
+					this.noDataFlag = true;
+					this.deleteAllPeriods();
+				}
+			}
+		});
+	}
   getClass() {
 		this.classArray = [];
 		this.smartService.getClassData({ class_status: '1' }).subscribe((result: any) => {
@@ -113,6 +141,10 @@ export class ClasswiseUpdateComponent implements OnInit {
 	}
 
 	getSectionsByClass() {
+		this.classworkforForm.patchValue({
+			cw_sec_id : ''
+		});
+		this.deleteAllPeriods();
 		this.sectionArray = [];
 		this.smartService.getSectionsByClass({ class_id: this.classworkforForm.value.cw_class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -122,6 +154,29 @@ export class ClasswiseUpdateComponent implements OnInit {
 			}
 		});
   }
+	patchClass(){
+		if(this.classworkforForm.value.cw_class_id) {
+			for (let index = 0; index < this.Periods.length; index++) {
+				const eachPeriodFG: any = this.Periods.controls[index];
+				eachPeriodFG.patchValue({
+					cw_class_id : this.classworkforForm.value.cw_class_id
+				})
+				
+			}
+		}
+	}
+  	patchSection(){
+		if(this.classworkforForm.value.cw_sec_id) {
+			for (let index = 0; index < this.Periods.length; index++) {
+			const eachPeriodFG: any = this.Periods.controls[index];
+			eachPeriodFG.patchValue({
+				cw_sec_id : this.classworkforForm.value.cw_sec_id
+			})
+				
+			}
+		}
+	}
+  
   getSubjectsByClass() {
 		const subjectParam: any = {};
 		subjectParam.class_id = this.classworkforForm.value.cw_class_id ;
@@ -139,40 +194,6 @@ export class ClasswiseUpdateComponent implements OnInit {
 				}
 			);
   }
-  getclasswisedetails() {
-		this.classwisetableArray = [];
-		const timetableparam: any = {};
-		timetableparam.tt_class_id = this.classworkforForm.value.cw_class_id;
-		timetableparam.tt_section_id = this.classworkforForm.value.cw_sec_id;
-		this.smartService.getTimeTableId(timetableparam)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.noOfDay = result.data[0].no_of_day;
-						const param: any = {};
-						param.td_tt_id = result.data[0].tt_id;
-						if (param.td_tt_id !== '') {
-							this.smartService.getClasswiseDetails(param)
-								.subscribe(
-									(final_result: any) => {
-										if (final_result && final_result.status === 'ok') {
-											this.classwisetableArray = [];
-										let classwiseArray = [];
-											classwiseArray = final_result.data;
-											for (let i = 0; i < classwiseArray.length; i++) {
-												this.classwisetableArray.push({
-													'classwise': JSON.parse(classwiseArray[i].td_no_of_day)
-												});
-											}
-											console.log(this.classwisetableArray);
-										}
-									});
-						}
-					} else {
-						this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
-					}
-				});
-	}
 	generateReviewArray() {
 		this.reviewClasswork = [];
 		for (let i = 0; i < this.noOfPeriods; i++) {
@@ -217,7 +238,7 @@ export class ClasswiseUpdateComponent implements OnInit {
 			eachPeriodFG.patchValue({
 				cw_st_id: '0'
 			});
-			this.getClassSectionByTeacherIdSubjectId(index, false);
+			//this.getClassSectionByTeacherIdSubjectId(index, false);
 		} else if (event.value === '8') {
 			eachPeriodFG.controls['cw_sub_id'].clearValidators(Validators.required);
 			eachPeriodFG.controls['cw_class_id'].clearValidators(Validators.required);
@@ -247,7 +268,7 @@ export class ClasswiseUpdateComponent implements OnInit {
 				cw_topic_id: '0',
 				cw_st_id: '0'
 			});
-			this.getAllClassSection(index);
+			//this.getAllClassSection(index);
 		} else {
 			eachPeriodFG.controls['cw_sub_id'].setValidators(Validators.required);
 			eachPeriodFG.controls['cw_st_id'].setValidators(Validators.required);
@@ -257,7 +278,7 @@ export class ClasswiseUpdateComponent implements OnInit {
 			this.disableSubtopicArray[index] = false;
 			this.disabletopicArray[index] = false;
 			this.disableClassArray[index] = false;
-			this.getClassSectionByTeacherIdSubjectId(index, false);
+			//this.getClassSectionByTeacherIdSubjectId(index, false);
 		}
 	}
 
@@ -402,12 +423,12 @@ export class ClasswiseUpdateComponent implements OnInit {
 		eachPeriodFG.patchValue({
 			cw_st_id: ''
 		});
-		const csArray = eachPeriodFG.value.cw_class_id.split('-');
+		//const csArray = eachPeriodFG.value.cw_class_id.split('-');
 		const param: any = { class_id: this.classworkforForm.value.cw_class_id, sub_id: eachPeriodFG.value.cw_sub_id };
 		this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray[i] = result.data;
-				param.sec_id = csArray[1];
+				param.sec_id = this.classworkforForm.value.cw_sec_id
 				param.tw_ctr_id = '1';
 				this.smartService.getTopicwiseCTR(param).subscribe((result1: any) => {
 					if(result1 && result1.status === 'ok') {
@@ -441,12 +462,10 @@ export class ClasswiseUpdateComponent implements OnInit {
 		// console.log(this.classworkForm);
 		// console.log(this.classworkForm.value);
 	}
-	classworkInsert() {
-
-	}
 	openReviewClasswork() {
+		console.log('reviewClasswork',this.reviewClasswork)
 		if (this.classworkForm.valid) {
-			const dialogRef = this.dialog.open(ReviewClassworkComponent, {
+			const dialogRef = this.dialog.open(ReviewClasswiseComponent, {
 				width: '1000px',
 				height: '50%',
 				data: this.reviewClasswork
@@ -457,46 +476,14 @@ export class ClasswiseUpdateComponent implements OnInit {
 					if (this.classworkForm.valid) {
 						this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
 							Object.keys(eachFormGroup.controls).forEach(key => {
-								if (key === 'cw_class_id') {
-									if (eachFormGroup.value.cw_class_id !== '') {
-										const csArray = eachFormGroup.value.cw_class_id.split('-');
-										eachFormGroup.patchValue({
-											cw_class_id: csArray[0],
-											cw_sec_id: csArray[1]
-										});
-									} else {
-										eachFormGroup.patchValue({
-											cw_class_id: '',
-											cw_sec_id: ''
-										});
-									}
-								}
-								if (!this.isTeacher) {
-									if (key === 'cw_teacher_id') {
-										eachFormGroup.patchValue({
-											cw_teacher_id: this.classworkforForm.value.cw_teacher_id
-										});
-									}
-									if (key === 'cw_entry_date') {
-										eachFormGroup.patchValue({
-											cw_entry_date: this.commonAPIService.dateConvertion(this.classworkforForm.value.cw_entry_date)
-										});
-									}
-								} else {
-									if (key === 'cw_teacher_id') {
-										eachFormGroup.patchValue({
-											cw_teacher_id: this.teacherId
-										});
-									}
-									if (key === 'cw_entry_date') {
-										eachFormGroup.patchValue({
-											cw_entry_date: ''
-										});
-									}
+								if (key === 'cw_entry_date') {
+									eachFormGroup.patchValue({
+										cw_entry_date: this.commonAPIService.dateConvertion(this.classworkforForm.value.cw_entry_date)
+									});
 								}
 							});
 						});
-						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
+						this.smartService.insertClasswise(this.classworkForm.value).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								this.disabledApiButton = false;
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -524,7 +511,7 @@ export class ClasswiseUpdateComponent implements OnInit {
 	attachmentDialog(currentAttachmentIndex) {
 		const eachPeriodFG = this.Periods.controls[currentAttachmentIndex];
 		if (eachPeriodFG.valid) {
-			const csArray = eachPeriodFG.value.cw_class_id.split('-');
+			//const csArray = eachPeriodFG.value.cw_class_id.split('-');
 			const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
 				width: '1000px',
 				height: '50%',
@@ -534,8 +521,8 @@ export class ClasswiseUpdateComponent implements OnInit {
 					edit: false,
 					currentAttachmentIndex: currentAttachmentIndex,
 					attachments: eachPeriodFG.value.cw_attachment ? eachPeriodFG.value.cw_attachment : [],
-					class_id: csArray[0],
-					sec_id: csArray[1],
+					class_id: this.classworkforForm.value.cw_class_id,
+					sec_id: this.classworkforForm.value.cw_sec_id,
 					sub_id: eachPeriodFG.value.cw_sub_id,
 					topic_id: eachPeriodFG.value.cw_topic_id,
 					st_id: eachPeriodFG.value.cw_st_id,
@@ -712,6 +699,12 @@ export class ClasswiseUpdateComponent implements OnInit {
 		this.topicArray[i] = [];
 		this.subtopicArray[i] = [];
 		// console.log(this.classworkForm.value);
+	}
+	deleteAllPeriods(){
+		while (this.Periods.length !== 0) {
+			this.Periods.removeAt(0)
+		  }
+		this.reviewClasswork=[];
 	}
 
 }

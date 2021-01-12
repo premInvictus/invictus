@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReviewClassworkComponent } from './review-classwork.component';
+import { ReviewClasswiseComponent } from './review-classwise.component';
 
-describe('ReviewClassworkComponent', () => {
-  let component: ReviewClassworkComponent;
-  let fixture: ComponentFixture<ReviewClassworkComponent>;
+describe('ReviewClasswiseComponent', () => {
+  let component: ReviewClasswiseComponent;
+  let fixture: ComponentFixture<ReviewClasswiseComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReviewClassworkComponent ]
+      declarations: [ ReviewClasswiseComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReviewClassworkComponent);
+    fixture = TestBed.createComponent(ReviewClasswiseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

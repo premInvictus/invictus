@@ -345,6 +345,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/setup/getState/');
 	}
+	getDistrict() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/setup/getDist/');
+	}
 	getStateCountryByCity(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setup/getStateCountryByCity', value);
@@ -540,6 +544,10 @@ export class SisService {
 	uploadDocuments(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
+	}
+	addNewOccupation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/updateOccTable', value)
 	}
 	getDocumentRequired() {
 		this.service.startLoading();

@@ -16,7 +16,6 @@
             <th class="custom-th" width="8%">Period</th>
             <th class="custom-th" width="8%">Subject</th>
             <th class="custom-th" width="8%">Category</th>
-            <th class="custom-th" width="8%">Class</th>
             <th class="custom-th" width="15%">Topic</th>
             <th class="custom-th" width="15%">Subtopic</th>
             <th class="custom-th" width="30%">Assignment</th>
@@ -29,8 +28,6 @@
             <td class="custom-td" *ngIf="item.subjectName">{{item.subjectName | capitalize}}</td>
             <td class="custom-td" *ngIf="!item.subjectName">-</td>
             <td class="custom-td">{{item.categoryName | capitalize}}</td>
-            <td class="custom-td" *ngIf="item.className">{{item.className | capitalize}}</td>
-            <td class="custom-td" *ngIf="!item.className">-</td>
             <td class="custom-td" *ngIf="item.topicName">{{item.topicName | capitalize}}</td>
             <td class="custom-td" *ngIf="!item.topicName">-</td>
             <td class="custom-td" *ngIf="item.subtopicName">{{item.subtopicName | capitalize}}</td>

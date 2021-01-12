@@ -38,6 +38,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	siblingForm: FormGroup;
 	currentUser: any;
 	userDetail: any;
+	flagOccupation = false;
 	checkReadOnlyStatus = false;
 	sameSchoolArray: any[] = [];
 	diffSchoolArray: any[] = [];
@@ -454,6 +455,13 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 		}
 	}
+
+	changeFlafOcc(val) {
+
+		if(val == 81 ) {
+			this.flagOccupation = true;
+		}
+	}
 	setActiveParent(index, $event) {
 		if (Number($event.value) === 1) {
 			this.formGroupArray[index].formGroup.value.epd_status = $event.value;
@@ -538,6 +546,19 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 					});
 				}
 			});
+	}
+	blurValue(e) {
+		let val = {
+			octp_name: this.formGroupArray[0].formGroup.value.epd_parent_occupation_type
+		}
+
+		this.sisService.addNewOccupation(val).subscribe((result:any) => {
+			if(result.status === 'ok') {
+				this.getOccupationType();
+			}
+		});
+		this.flagOccupation = false;
+		
 	}
 	getParentDetails(value: any[]) {
 		let parent: any[] = [];
