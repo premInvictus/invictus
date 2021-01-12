@@ -67,6 +67,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.assignment_desc = this.data.assignment_desc;
 		this.assignmentForm.patchValue({
 			class_id: this.class_id,
+			sec_id:this.sec_id,
 			sub_id: this.sub_id,
 			topic_id: this.topic_id,
 			assignment_desc: this.assignment_desc
@@ -120,46 +121,13 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getSectionsByClass() {
 		this.sectionArray = [];
-		if (this.isTeacher) {
-			this.smartService.getSectionByTeacherIdClassId({ teacher_id: this.currentUser.login_id, class_id: this.class_id })
-				.subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.sectionArray = result.data;
-						if (this.sec_id instanceof Array) {
-						this.assignmentForm.patchValue({
-							sec_id: this.sec_id
-						});
-					} else {
-						const arr: any = [];
-						arr.push(this.sec_id);
-						this.assignmentForm.patchValue({
-							sec_id: arr
-						});
-					}
-					} else {
-						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-					}
-				});
-		} else {
-			this.smartService.getSectionsByClass({ class_id: this.assignmentForm.value.class_id }).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.sectionArray = result.data;
-					if (this.sec_id instanceof Array) {
-						this.assignmentForm.patchValue({
-							sec_id: this.sec_id
-						});
-					} else {
-						const arr: any = [];
-						arr.push(this.sec_id);
-						this.assignmentForm.patchValue({
-							sec_id: arr
-						});
-					}
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-				}
-			});
-		}
+		this.smartService.getSectionsByClass({ class_id: this.assignmentForm.value.class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.sectionArray = result.data;
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
