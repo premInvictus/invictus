@@ -97,17 +97,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 " *ngIf="checkIfFieldExist('au_process_class')">
-                      <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Admitted In.</mat-label>
-                        <input formControlName="au_process_class" type="number" minlength="1" maxlength="2"
-                          matInput placeholder="Admitted In." [readonly]="viewOnly"
-                        >
-                        <mat-error>
-                          This field is required
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
                   </div>
                 </div>
                 <div class="col-6">
