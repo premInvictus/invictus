@@ -54,6 +54,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
+	settingsArray2: any[] = [];
 	enrolmentPlaceholder = 'Enrollment Id';
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
@@ -123,6 +124,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		// this.getConfigureSetting();
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.settingsArray = this.configSetting;
+		this.settingsArray2 = this.configSetting;
 		this.buildForm();
 		this.getSchool();
 		this.getClass2();
@@ -459,10 +461,11 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		localStorage.removeItem('remark_entry_last_state');
 	}
 	checkIfFieldExist(value) {
-		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
-		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
+		
+		const findex = this.settingsArray2.findIndex(f => f.ff_field_name === value);
+		if (findex !== -1 && this.settingsArray2[findex]['cos_status'] === 'Y') {
 			return true;
-		} else if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'N') {
+		} else if (findex !== -1 && this.settingsArray2[findex]['cos_status'] === 'N') {
 			return false;
 		} else {
 			return false;
@@ -520,6 +523,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_enrollment_id: '',
 			au_login_id: '',
 			au_full_name: '',
+			au_process_class: '',
 			au_class_id: '',
 			au_mobile: '',
 			au_email: '',
@@ -570,6 +574,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.studentdetails = [];
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
+						
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
@@ -652,6 +657,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
 			au_login_id: this.studentdetails.au_login_id,
 			au_full_name: this.studentdetails.au_full_name,
+			au_process_class: this.studentdetails.au_process_class != "0" ? this.studentdetails.au_process_class : this.studentdetails.au_class_id,
 			au_class_id: this.studentdetails.au_class_id,
 			au_mobile: this.studentdetails.au_mobile,
 			au_email: this.studentdetails.au_email,
@@ -966,7 +972,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.studentDet.push({
 				au_ses_id: this.session.ses_id,
 				au_class_id: this.studentdetailsform.value.au_class_id,
-				au_full_name: this.studentdetailsform.value.au_full_name
+				au_full_name: this.studentdetailsform.value.au_full_name,
+				au_process_class: this.studentdetailsform.value.au_process_class
 			});
 			this.studentDet.push(firstTabDetails.personalDetails[0]);
 			this.parentDet = firstTabDetails.parentDetails;

@@ -134,6 +134,18 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist('au_process_class')">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Admitted In</mat-label>
+                    <mat-select formControlName="au_process_class" placeholder="Admitted In" required
+                    [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                      {{item.class_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Section</mat-label>

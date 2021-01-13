@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angula
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SmartService, SisService, CommonAPIService } from '../../_services';
+
 import { AccessionMasterModel } from './accession-master.model';
 import { MatTableDataSource, MatPaginator, MatSort, PageEvent, MatPaginatorIntl, MatDialog } from '@angular/material';
 import { TitleCasePipe } from '@angular/common';
@@ -66,12 +67,12 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		type_id: '4',
 		type_name: 'Sample',
 	}];
-	booktype1Array: any[] = [{
-		type_id: 'n',
-		type_name: 'Normal',
+	accessionSequenceArray: any[] = [{
+		type_id: 'G',
+		type_name: 'General',
 	},
 	{
-		type_id: 's',
+		type_id: 'S',
 		type_name: 'Specimen',
 	}];
 	statusArray: any[] = [
@@ -262,33 +263,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.searchViaSearch = false;
 					this.totalRecords = Number(res.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					for (const item of res.data.resultData) {
-						let authName = '';
-						if(item && item.authors) {
-						for (const aut of item.authors) {
-							authName = authName + aut + ',';
-						} }
-						if(authName && authName.length > 0) {
-							authName = authName.substring(0, authName.length - 1);
-						}
-						
-						this.BOOK_ELEMENT_DATA.push({
-							sr_no: i + 1,
-							book_name: item.title ? item.title : '',
-							book_no: item.reserv_id,
-							authors: authName,
-							publisher: item.publisher ?  item.publisher : '',
-							location: item.location ? item.location : '' ,
-							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
-							action: item
-						});
-						i++;
-					}
-					this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-					this.bookDataSource.sort = this.sort;
-					this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.bookDataSource.paginator = this.paginator;
+					this.prepareDatasource(res.data.resultData);
 				}
 			});
 		}
@@ -324,31 +299,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				this.searchViaSearch = true;
 				this.totalRecords = Number(res.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				for (const item of res.data.resultData) {
-					let authName = '';
-					if (item && item.authors) {
-					for (const aut of item.authors) {
-						authName = authName + aut + ',';
-					}}
-					if(authName && authName.length > 0) {
-					authName = authName.substring(0, authName.length - 1);}
-					this.BOOK_ELEMENT_DATA.push({
-						sr_no: i + 1,
-						book_name: item.title ? item.title : '',
-						book_no: item.reserv_id,
-						authors: authName,
-						publisher: item.publisher ? item.publisher :'',
-						location: item.location ? item.location:'',
-						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
-						action: item
-					});
-					i++;
-				}
-				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-				this.bookDataSource.sort = this.sort;
-				this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
-				this.bookDataSource.paginator = this.paginator;
+				this.prepareDatasource(res.data.resultData);
 			}
 		});
 	}
@@ -382,7 +333,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			buy_link: '',
 			type_id: '',
 			category_id: '',
-			booktype_id:'',
+			accessionsequence:'',
 			project_type_id: '6',
 			reserv_class_id: [],
 			reserv_status: '',
@@ -426,33 +377,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.searchViaSearch = false;
 					this.totalRecords = Number(res.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					for (const item of res.data.resultData) {
-						let authName = '';
-						if ( item && item.authors) {
-						for (const aut of item.authors) {
-							authName = authName + aut + ',';
-						}}
-						if (authName && authName.length > 0) {
-							authName = authName.substring(0, authName.length - 1);
-						}
-						
-						this.BOOK_ELEMENT_DATA.push({
-							sr_no: i + 1,
-							book_name: item.title ? item.title : '',
-							book_no: item.reserv_id,
-							authors: authName,
-							publisher: item.publisher ? item.publisher : '',
-							location: item.location ? item.location :'',
-							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
-							action: item
-						});
-						i++;
-					}
-					this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-					this.bookDataSource.sort = this.sort;
-					this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.bookDataSource.paginator = this.paginator;
+					this.prepareDatasource(res.data.resultData);
 				}
 			});
 		} else {
@@ -465,6 +390,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
 		}
 	}
+
 	openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 	uploadImage(fileName, au_profileimage) {
 		this.imageFlag = false;
@@ -638,43 +564,64 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				this.searchViaSearch = true;
 				this.totalRecords = Number(res.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				for (const item of res.data.resultData) {
-					let authName = '';
-					if (item && item.authors) {
-					for (const aut of item.authors) {
-						authName = authName + aut + ',';
-					}
-					if(authName && authName.length > 0) {
-						authName = authName.substring(0, authName.length - 1);
-					} }
-					
-
-					this.BOOK_ELEMENT_DATA.push({
-						sr_no: i + 1,
-						book_name: item.title ? item.title : '',
-						book_no: item.reserv_id,
-						authors: authName,
-						publisher: item.publisher ? item.publisher :'',
-						location: item.location ? item.location : '',
-						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
-						action: item
-					});
-					i++;
-				}
-				this.paginator.pageIndex = this.bookpageindex;
-				this.paginator.pageSize = this.bookpagesize;
-				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-				this.bookDataSource.sort = this.sort;
-				
-				this.bookDataSource.paginator['length'] = this.paginator['length'] = this.totalRecords;
-				this.bookDataSource.paginator = this.paginator;
+				this.prepareDatasource(res.data.resultData);
 				
 			} else {
 				this.BOOK_ELEMENT_DATA = [];
 				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 			}
 		});
+	}
+	async prepareDatasource(data){
+		let accession_type;
+		await this.common.getGlobalSetting({gs_alias:['accession_type']}).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				const settings = result.data;
+				for (let i=0; i< settings.length;i++) {
+					accession_type = settings[i].gs_value;
+				}
+			}
+		});
+		console.log(data);
+		this.BOOK_ELEMENT_DATA = [];
+		this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+		let i=0;
+		for (const item of data) {
+			let authName = '';
+			let book_no;
+			if (item && item.authors) {
+			for (const aut of item.authors) {
+				authName = authName + aut + ',';
+			}
+			if(authName && authName.length > 0) {
+				authName = authName.substring(0, authName.length - 1);
+			} }
+			
+			if(accession_type == 'single') {
+				book_no = item.reserv_no;
+			} else {
+				book_no = item.accessionsequence + item.reserv_no;
+			}
+			this.BOOK_ELEMENT_DATA.push({
+				sr_no: i + 1,
+				book_name: item.title ? item.title : '',
+				book_no: book_no,
+				authors: authName,
+				publisher: item.publisher ? item.publisher :'',
+				location: item.location ? item.location : '',
+				status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+				action: item
+			});
+			i++;
+		}
+		this.paginator.pageIndex = this.bookpageindex;
+		this.paginator.pageSize = this.bookpagesize;
+		this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+		this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+		this.bookDataSource.sort = this.sort;
+		
+		this.bookDataSource.paginator['length'] = this.paginator['length'] = this.totalRecords;
+		this.bookDataSource.paginator = this.paginator;
 	}
 	submitBook() {
 		if (Object.keys(this.bookDetails).length > 0) {

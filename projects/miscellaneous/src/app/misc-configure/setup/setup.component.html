@@ -162,6 +162,15 @@
                                         </mat-select>
                                       </mat-form-field>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'accession_type'">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-select [formControlName]="control.gs_alias">
+                                          <mat-option *ngFor="let item of accession_typeArray" [value]="item">
+                                            {{item | titlecase}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </ng-container>
                                   </ng-container>
                                   <ng-container *ngIf="control.gs_type == 'json'">
                                     <ng-container *ngIf="control.gs_alias == 'library_user_setting'">
