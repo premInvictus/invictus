@@ -66,6 +66,14 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		type_id: '4',
 		type_name: 'Sample',
 	}];
+	booktype1Array: any[] = [{
+		type_id: 'n',
+		type_name: 'Normal',
+	},
+	{
+		type_id: 's',
+		type_name: 'Specimen',
+	}];
 	statusArray: any[] = [
 		{
 			type_id: 'available',
@@ -374,6 +382,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			buy_link: '',
 			type_id: '',
 			category_id: '',
+			booktype_id:'',
 			project_type_id: '6',
 			reserv_class_id: [],
 			reserv_status: '',
