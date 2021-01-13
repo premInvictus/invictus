@@ -206,7 +206,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			}},
 			{ id: 'dob', name: 'DOB', field: 'dob', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
+				 formatter: this.checkDateFormatter },
+			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
 			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
 			grouping: {
 				getter: 'gender',
@@ -1146,6 +1147,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 
 			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
 			tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[key]['dob']);
+			tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
 
 			const father_honorific = this.getParentHonorific((this.reportProcessWiseData[key]['student_parent_data'] &&
 			this.reportProcessWiseData[key]['student_parent_data'][0]) ?
