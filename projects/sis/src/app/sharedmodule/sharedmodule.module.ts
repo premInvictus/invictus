@@ -75,10 +75,11 @@ import { SearchViaStudentComponent } from './search-via-student/search-via-stude
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
+const dateInput = 'DD.MM.YYYY' || 'DD-MM-YYYY' || 'DD/MM/YYYY' ;
 
 export const MY_FORMATS = {
 	parse: {
-		dateInput: 'L',
+		dateInput: dateInput,
 	},
 	display: {
 		dateInput: 'DD-MMM-YYYY',
