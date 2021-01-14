@@ -12,3 +12,6 @@ th.mat-header-cell {
     opacity: 0.3 !important;
     pointer-events: none !important;
 }
+form.ng-untouched.ng-pristine.ng-valid .mat-form-field {
+    padding: 10px;
+}
