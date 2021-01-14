@@ -4,9 +4,10 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
-import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ckconfig } from '../ckeditorconfig';
+import { saveAs } from 'file-saver';
+
 @Component({
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',
@@ -1164,8 +1165,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						(excel_r: any) => {
 							if (excel_r && excel_r.status === 'ok') {
 								const length = excel_r.data.split('/').length;
-								window.open(excel_r.data);
-								// saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
 								this.resetForm(this.configValue);
 							}
 						});
