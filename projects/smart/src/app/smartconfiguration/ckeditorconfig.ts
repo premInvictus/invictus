@@ -3,7 +3,7 @@ export const ckconfig = {
 		pasteFromWordRemoveFontStyles : false,
 		disallowedContent : 'm:omathpara',
 		// tslint:disable-next-line:max-line-length
-		extraPlugins : 'mathjax,language,html5audio,html5video,videoembed,pramukhime,pastefromword,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload,simpleVideoUpload,simpleAudioUpload,keystrokes,eqneditor',
+		//extraPlugins : 'mathjax,language,html5audio,html5video,videoembed,pramukhime,pastefromword,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload,simpleVideoUpload,simpleAudioUpload,keystrokes,eqneditor',
 		scayt_multiLanguageMod : true,
 		mathJaxLib : '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
 		language_list : [ 'fr:French', 'es:Spanish', 'it:Italian',  'he:Hebrew:rtl', 'pt:Portuguese', 'de:German', 'hi:Hindi' ],
