@@ -1164,7 +1164,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						(excel_r: any) => {
 							if (excel_r && excel_r.status === 'ok') {
 								const length = excel_r.data.split('/').length;
+								console.log("above---------------------------2", excel_r.data);
+								window.open(excel_r.data);
 								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+								console.log("below---------------------------2");
 								this.resetForm(this.configValue);
 							}
 						});
@@ -1183,7 +1186,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					(excel_r: any) => {
 						if (excel_r && excel_r.status === 'ok') {
 							const length = excel_r.data.split('/').length;
+							console.log("above---------------------------1");
 							saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+							console.log("below---------------------------1");
 							this.resetForm(this.configValue);
 						}
 					});

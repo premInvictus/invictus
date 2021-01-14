@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { IndianCurrency } from '../../../_pipes';
 import * as moment from 'moment';
+import { ModeltableComponent } from '../../modeltable/modeltable.component';
 
 @Component({
   selector: 'app-receipt-mode-wise',
@@ -73,6 +74,19 @@ export class ReceiptModeWiseComponent implements OnInit {
     }
 
 
+  }
+  openModel(e) {
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: e.date,
+        reportType: 'headwise'
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
   }
   // getGlobalSetting() {
 	// 	let param: any = {};

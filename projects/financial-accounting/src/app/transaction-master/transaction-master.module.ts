@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AngularSlickgridModule } from 'angular-slickgrid';
 
 import { TransactionMasterRoutingModule } from './transaction-master-routing.module';
 import { FaSharedModule } from '../fa-shared/sharedmodule.module';
@@ -14,11 +15,13 @@ import { ReceiptModeWiseComponent } from './daybook/receipt-mode-wise/receipt-mo
 import { TotalFeeReceivableComponent } from './daybook/total-fee-receivable/total-fee-receivable.component';
 import { VouchersListComponent } from './daybook/vouchers-list/vouchers-list.component';
 import { VoucherPrintSetupComponent } from './voucher-print-setup/voucher-print-setup.component';
+import { ModeltableComponent } from './modeltable/modeltable.component';
 @NgModule({
   imports: [
     CommonModule,
     TransactionMasterRoutingModule,
-    FaSharedModule
+    FaSharedModule,
+    AngularSlickgridModule.forRoot(),
   ],
   declarations: [
     DaybookComponent,
@@ -31,8 +34,9 @@ import { VoucherPrintSetupComponent } from './voucher-print-setup/voucher-print-
     TotalFeeReceivableComponent,
     VouchersListComponent,
     VoucherPrintSetupComponent,
-    AdjustmentComponent
+    AdjustmentComponent,
+    ModeltableComponent
   ],
-  entryComponents: [VoucherPrintSetupComponent]
+  entryComponents: [VoucherPrintSetupComponent, ModeltableComponent]
 })
 export class TransactionMasterModule { }
