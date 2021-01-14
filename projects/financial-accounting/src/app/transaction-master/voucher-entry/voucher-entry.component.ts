@@ -317,6 +317,16 @@ export class VoucherEntryComponent implements OnInit {
 	validateVoucher() {
 		let valid = true;
 		for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+			if(isNaN(this.voucherFormGroupArray[i].value.vc_credit)){
+				this.voucherFormGroupArray[i].patchValue({
+					vc_credit:''
+				})
+			}
+			if(isNaN(this.voucherFormGroupArray[i].value.vc_debit)){
+				this.voucherFormGroupArray[i].patchValue({
+					vc_debit:''
+				})
+			}
 			if (this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit) {
 				valid = false;
 				break;
@@ -724,6 +734,11 @@ export class VoucherEntryComponent implements OnInit {
 	calculateDebitTotal() {
 		this.totalDebit = 0;
 		for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+			if(isNaN(this.voucherFormGroupArray[i].value.vc_debit)){
+				this.voucherFormGroupArray[i].patchValue({
+					vc_debit:''
+				})
+			}
 			this.totalDebit = this.totalDebit + Number(this.voucherFormGroupArray[i].value.vc_debit);
 		}
 
@@ -738,7 +753,20 @@ export class VoucherEntryComponent implements OnInit {
 		}
 	}
 	oneValueDebitOrCredit(i) {
+		if(isNaN(this.voucherFormGroupArray[i].value.vc_credit)){
+			this.voucherFormGroupArray[i].patchValue({
+				vc_credit:''
+			})
+		}
+		if(isNaN(this.voucherFormGroupArray[i].value.vc_debit)){
+			this.voucherFormGroupArray[i].patchValue({
+				vc_debit:''
+			})
+		}
+		console.log('this.voucherFormGroupArray[i].value.vc_credit',this.voucherFormGroupArray[i].value.vc_credit);
+		console.log('this.voucherFormGroupArray[i].value.vc_debit',this.voucherFormGroupArray[i].value.vc_debit);
 		if (this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit) {
+			
 			this.commonAPIService.showSuccessErrorMessage('Error Plese fill eiher credit or debit', 'error');
 		}
 	}
@@ -765,6 +793,11 @@ export class VoucherEntryComponent implements OnInit {
 	calculateCreditTotal() {
 		this.totalCredit = 0;
 		for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+			if(isNaN(this.voucherFormGroupArray[i].value.vc_credit)){
+				this.voucherFormGroupArray[i].patchValue({
+					vc_credit:''
+				})
+			}
 			this.totalCredit = this.totalCredit + Number(this.voucherFormGroupArray[i].value.vc_credit);
 		}
 	}
