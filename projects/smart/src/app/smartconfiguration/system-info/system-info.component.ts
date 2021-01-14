@@ -1164,7 +1164,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						(excel_r: any) => {
 							if (excel_r && excel_r.status === 'ok') {
 								const length = excel_r.data.split('/').length;
-								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+								window.open(excel_r.data);
+								// saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
 								this.resetForm(this.configValue);
 							}
 						});
