@@ -1,3 +1,5 @@
+
+
 <div class="row">
     <div class="col-12">
       <mat-card>
@@ -73,6 +75,19 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                      <mat-icon>file_download</mat-icon>
+                    </button>
+                    <mat-menu style="background-color: #1e88e5;color: #fff;"  #menu="matMenu">
+                      <button mat-menu-item (click)="downloadPdf()">
+                        <mat-icon style="color: #fff;">picture_as_pdf</mat-icon>
+                        <span>Download Pdf</span>
+                      </button>
+                      <button mat-menu-item (click)="downloadExcel()">
+                        <mat-icon>voicemail</mat-icon>
+                        <span>Download Excel</span>
+                      </button>
+                    </mat-menu>
                 </div>
             </form>
             </div>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AngularSlickgridModule } from 'angular-slickgrid';
+import { LoadingModule } from 'ngx-loading';
 
 import { TransactionMasterRoutingModule } from './transaction-master-routing.module';
 import { FaSharedModule } from '../fa-shared/sharedmodule.module';
@@ -21,6 +22,7 @@ import { ModeltableComponent } from './modeltable/modeltable.component';
     CommonModule,
     TransactionMasterRoutingModule,
     FaSharedModule,
+    LoadingModule,
     AngularSlickgridModule.forRoot(),
   ],
   declarations: [

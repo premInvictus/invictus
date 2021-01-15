@@ -40,6 +40,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   tempChartsOfAccountInvoice: any[] = [];
   vcYearlyStatus = 0;
   feeReceivableAccountId = 0;
+  showLoadingFlag = false;
   feeReceivableAccountName = 'Fee Receivable';
   globalsetup:any;
 
@@ -128,6 +129,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   getInvoiceDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
@@ -206,12 +208,13 @@ export class ReceiptModeWiseComponent implements OnInit {
         //   this.tableDivFlag = true;
         // }
         console.log(this.ELEMENT_DATA);
-
       }
+      this.showLoadingFlag = false;
     });
   }
 
   getNonPartialDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
@@ -292,8 +295,9 @@ export class ReceiptModeWiseComponent implements OnInit {
         //   this.tableDivFlag = true;
         // }
         console.log(this.ELEMENT_DATA);
-
       }
+
+      this.showLoadingFlag = false;
     });
   }
   getColumnTotal(item) {
