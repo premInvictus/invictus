@@ -331,14 +331,6 @@ export class IssueReturnComponent implements OnInit {
 								result.data.resultData[0]['due_date'] = date;
 								// result.data.resultData[0]['issued_on'] = '';
 								// result.data.resultData[0]['returned_on'] = '';
-
-								let book_no;
-								if(this.accession_type == 'single') {
-									book_no = result.data.resultData[0].reserv_no;
-								} else {
-									book_no = result.data.resultData[0].accessionsequence + result.data.resultData[0].reserv_no;
-								}
-								result.data.resultData[0]['book_no'] = book_no;
 								this.bookData.push(result.data.resultData[0]);
 								this.setDueDate(this.bookData.length - 1, date);
 								this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
@@ -389,15 +381,6 @@ export class IssueReturnComponent implements OnInit {
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookLogData = result.data;
-				this.bookLogData.forEach(item => {
-					let book_no;
-					if(this.accession_type == 'single') {
-						book_no = item.reserv_user_logs.reserv_no;
-					} else {
-						book_no = item.reserv_user_logs.accessionsequence + item.reserv_user_logs.reserv_no;
-					}
-					item['book_no'] = book_no;
-				});
 				this.finIssueBook = [];
 				this.userHaveBooksData = true;
 				this.bookReadTillDate = 0;
@@ -416,16 +399,10 @@ export class IssueReturnComponent implements OnInit {
 					for (const avalue of item.reserv_user_logs.authors) {
 						aval += avalue + ',';
 					}
-					let book_no;
-					if(this.accession_type == 'single') {
-						book_no = item.reserv_user_logs.reserv_no;
-					} else {
-						book_no = item.reserv_user_logs.accessionsequence + item.reserv_user_logs.reserv_no;
-					}
 					element = {
 						srno: pos,
 						reserv_id: item.reserv_user_logs.reserv_id,
-						book_no:book_no,
+						book_no:item.reserv_user_logs.book_no,
 						title: item.reserv_user_logs.title,
 						author:  item.reserv_user_logs.authors[0],
 						publisher: item.reserv_user_logs.publisher,

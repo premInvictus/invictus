@@ -29,7 +29,6 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 	datasource = new MatTableDataSource<any>(this.RESERVATION_DATA);
 	delMessage = '';
 	delText = '';
-	accession_type;
 	ngOnInit() {
 		localStorage.removeItem('invoiceBulkRecords');
 		this.getBookReservations();
@@ -54,14 +53,6 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 		this.RESERVATION_DATA = [];
 		this.datasource = new MatTableDataSource<any>(this.RESERVATION_DATA);
 		let index = 0;
-		await this.erp.getGlobalSetting({gs_alias:['accession_type']}).toPromise().then((result: any) => {
-			if (result && result.status === 'ok') {
-				const settings = result.data;
-				for (let i=0; i< settings.length;i++) {
-					this.accession_type = settings[i].gs_value;
-				}
-			}
-		});
 		await this.erp.getBookReservations({
 			page_size: this.bookpagesize,
 			page_index: this.bookpageindex
@@ -71,12 +62,6 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of res.data.resultData) {
 					let userRole = '';
-					let book_no;
-					if(this.accession_type == 'single') {
-						book_no = item.reserv_data.reserv_no;
-					} else {
-						book_no = item.reserv_data.accessionsequence + item.reserv_data.reserv_no;
-					}
 					if (Number(item.request_user_role_id) === 2) {
 						userRole = 'Staff';
 					} else if (Number(item.request_user_role_id) === 3) {
@@ -88,7 +73,7 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 						'sr_no': index + 1,
 						'request_id': item.requested_id,
 						'reserv_id': item.req_reserv_id,
-						'book_no':book_no,
+						'book_no':item.reserv_data.book_no,
 						'book_name': item.request_book_title,
 						'requested_by': item.request_user_name,
 						'request_user': userRole,

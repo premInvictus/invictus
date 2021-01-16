@@ -28,6 +28,7 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
   pageEvent: any;
   @ViewChild('searchModal') searchModal;
   @ViewChild('bookDet')bookDet;
+  accession_type;
   constructor(public dialog: MatDialog,
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -55,24 +56,41 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
   }
 
 
-  getDueReservoir(bookArr) {
+  async getDueReservoir(bookArr) {
     const datePipe = new DatePipe('en-in');
     let inputJson =  {'viewAll': true};
     if (bookArr && bookArr.length > 0) {
       inputJson['bookData'] = bookArr;
     }
-
-    this.erpCommonService.getDashboardDueReservoirData(inputJson).subscribe((result: any) => {
+    await this.erpCommonService.getGlobalSetting({gs_alias:['accession_type']}).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				const settings = result.data;
+				for (let i=0; i< settings.length;i++) {
+					if (settings[i]['gs_alias'] === 'accession_type') {
+						this.accession_type = settings[i]['gs_value'];
+					}
+				}
+			}
+		});
+    this.erpCommonService.getDashboardDueReservoirData(inputJson).toPromise().then((result: any) => {
       let element: any = {};
       let recordArray = [];
       this.DUE_LIST_ELEMENT = [];
       this.duelistdataSource = new MatTableDataSource<DueListElement>(this.DUE_LIST_ELEMENT);
       if (result && result.status === 'ok') {
-        let pos = 1;
+        let pos = 1; 
         this.dueListData = recordArray = result.data.all;
         for (const item of recordArray) {
+          let book_no;
+          if(this.accession_type == 'single') {
+            book_no = item.reserv_user_logs.reserv_no;
+          } else {
+            book_no = item.reserv_user_logs.accessionsequence + item.reserv_user_logs.reserv_no;
+          }
+          item['book_no'] = book_no;
           element = {
             srno: pos,
+            book_no:book_no,
             reserv_id: item.reserv_user_logs && item.reserv_user_logs.reserv_id ? item.reserv_user_logs.reserv_id : '',
             title: item.reserv_user_logs && item.reserv_user_logs.title ? item.reserv_user_logs.title : '',
             issued_to: (item.user_role_id === 3) ? item.user_full_name + ' (T) ' : (item.user_role_id === 4) ? item.user_full_name + ' (S) ' :item.user_full_name + ' (A) ',
@@ -158,6 +176,7 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
 
 export interface DueListElement {
   srno: number;
+  book_no:string;
   reserv_id: string;
   title: string;
   issued_to: string;

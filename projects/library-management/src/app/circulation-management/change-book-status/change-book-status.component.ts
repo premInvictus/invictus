@@ -77,6 +77,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			type_name: 'Specimen',
 		}
 	];
+
 	constructor(private sis: SisService, private common: ErpCommonService,
 		private smart: SmartService,
 		private notif: CommonAPIService,
@@ -203,7 +204,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			this.bookData = [];
 			this.enteredVal = true;
 			let inputJson = {
-				'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
+				'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
 				'generalFilters': {
 					"reserv_status": this.issuedFlag ? [
 						"issued"

@@ -149,7 +149,7 @@
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
                     <span class="font-skyblue"
-                      (click)="openBookModal(item.book_no)">{{item?.book_no}}</span>
+                      (click)="openBookModal(item.reserv_user_logs.book_no)">{{item?.reserv_user_logs.book_no}}</span>
                   </td>
                   <td class="custom-td text-left">
                     <span>{{item?.reserv_user_logs?.title | titlecase | truncatetext: 55}}</span></td>

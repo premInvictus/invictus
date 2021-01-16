@@ -573,22 +573,12 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		});
 	}
 	async prepareDatasource(data){
-		let accession_type;
-		await this.common.getGlobalSetting({gs_alias:['accession_type']}).toPromise().then((result: any) => {
-			if (result && result.status === 'ok') {
-				const settings = result.data;
-				for (let i=0; i< settings.length;i++) {
-					accession_type = settings[i].gs_value;
-				}
-			}
-		});
 		console.log(data);
 		this.BOOK_ELEMENT_DATA = [];
 		this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 		let i=0;
 		for (const item of data) {
 			let authName = '';
-			let book_no;
 			if (item && item.authors) {
 			for (const aut of item.authors) {
 				authName = authName + aut + ',';
@@ -597,15 +587,10 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				authName = authName.substring(0, authName.length - 1);
 			} }
 			
-			if(accession_type == 'single') {
-				book_no = item.reserv_no;
-			} else {
-				book_no = item.accessionsequence + item.reserv_no;
-			}
 			this.BOOK_ELEMENT_DATA.push({
 				sr_no: i + 1,
 				book_name: item.title ? item.title : '',
-				book_no: book_no,
+				book_no: item.book_no,
 				authors: authName,
 				publisher: item.publisher ? item.publisher :'',
 				location: item.location ? item.location : '',
