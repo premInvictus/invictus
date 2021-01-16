@@ -5,6 +5,10 @@
     justify-content: center;
     background: white;
   }
+  .text-link {
+    text-decoration: none !important;
+    cursor: pointer;
+}
   .my-filter-btn.mat-raised-button {
     color: white !important;
     background-color: #757b85 !important;
@@ -41,6 +45,14 @@ button.reset-bt:hover{
   .my-inv {
     margin-left: -74% !important;
   }
+}
+.margin-right {
+  margin-right: 0px;
+}
+table.mat-table {
+margin-left: 0px;
+border-spacing: 0;
+width: 100% !important;
 }
 .cdk-column-select{
   width: 3%!important;
