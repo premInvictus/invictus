@@ -365,9 +365,24 @@ mat-dialog-content {
     .axiom-navbar-show-small {
         display: none;
     }
+    // .for-mobile-screen {
+    //     overflow-x: scroll;
+    // }
 }
 
 @media (max-width: 720px) {
+    .for-mobile-screen {
+        overflow-x: scroll;
+    }
+    ul.process-adm-ul li {
+        word-break: normal;
+        padding: 5px;
+    }
+    .process-adm-ul {
+        text-align: left;
+        margin-left: -22%;
+        /* padding: 5px; */
+    }
     a:hover {
         color: none;
     }
@@ -5485,6 +5500,15 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
       width: calc(100% - 55px);
   }
 } */
+
+/** Anamika Css **/
+@media screen and (min-width:1800px){
+.axiom-sidebar{
+    height: calc(100vh - 85px) !important;
+}
+
+}
+
 
 
 /** Shikhar Css **/

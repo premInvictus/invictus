@@ -62,7 +62,7 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
 
   };
   length: any;
-  displayedBookLogListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
+  displayedBookLogListColumns: string[] = ['srno', 'book_no', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
   BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
   userData: any = '';
 	bookData: any = [];
@@ -125,7 +125,7 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
 		};
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.bookLogData = result.data.reserv_user_logs;
+				this.bookLogData = result.data;
 				this.userHaveBooksData = true;
 				let element: any = {};
 				let recordArray = [];
@@ -138,26 +138,27 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
 				for (const item of recordArray) {
 
 					let aval = '';
-					for (const avalue of item.authors) {
+					for (const avalue of item.reserv_user_logs.authors) {
 						aval += avalue + ',';
 					}
-
+ 
 					element = {
 						srno: pos,
-						reserv_id: item.reserv_id,
-						title: item.title,
+						reserv_id: item.reserv_user_logs.reserv_id,
+						book_no:item.reserv_user_logs.book_no,
+						title: item.reserv_user_logs.title,
 						author: aval.slice(0, -1),
-						publisher: item.publisher,
-						issued_on: item.issued_on,
-						due_date: item.due_date,
-						returned_on: item.returned_on,
-						fine: item.fine ? item.fine : '',
+						publisher: item.reserv_user_logs.publisher,
+						issued_on: item.reserv_user_logs.issued_on,
+						due_date: item.reserv_user_logs.due_date,
+						returned_on: item.reserv_user_logs.returned_on,
+						fine: item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '',
 					};
-					if (item.returned_on) {
+					if (item.reserv_user_logs.returned_on) {
 						this.bookReadTillDate++;
 					}
 
-					if (item.reserv_status === 'issued') {
+					if (item.reserv_user_logs.reserv_status === 'issued') {
 						this.issueBookData.push(item);
 					}
 
@@ -259,7 +260,7 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
 			}
 
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.reserv_id;
+			worksheet.getCell('A' + this.length).value = item.book_no;
 			worksheet.getCell('B' + this.length).value = item.title;
 			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
 			worksheet.getCell('D' + this.length).value = item.publisher;
@@ -395,6 +396,7 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
 export interface BookLogListElement {
 	srno: number;
 	reserv_id: string;
+	book_no:string;
 	title: string;
 	author: string;
 	publisher: string;

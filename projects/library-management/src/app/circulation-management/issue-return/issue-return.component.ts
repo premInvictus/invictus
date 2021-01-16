@@ -753,7 +753,7 @@ export class IssueReturnComponent implements OnInit {
 			}
 
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.book_no;
+			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.book_no;
 			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
 			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
 			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;

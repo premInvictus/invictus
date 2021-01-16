@@ -4,9 +4,10 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
-import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ckconfig } from '../ckeditorconfig';
+import { saveAs } from 'file-saver';
+
 @Component({
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',
