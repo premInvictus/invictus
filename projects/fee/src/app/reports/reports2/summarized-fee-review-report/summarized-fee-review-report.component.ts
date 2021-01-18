@@ -406,18 +406,18 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						obj['adv_end_of_period'] = 0;
 						obj['outstanding_end_of_period']=0;
 					if (repoArray[Number(index)]['inv_opening_balance'] > 0)
-						obj['opening_outstanding'] = repoArray[Number(index)]['inv_opening_balance'];
+						obj['opening_outstanding'] = Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
 					else 
-						obj['opening_advances'] = -repoArray[Number(index)]['opening_advances'];
+						obj['opening_advances'] = -Number(repoArray[Number(index)]['opening_advances'] ? repoArray[Number(index)]['opening_advances'] : 0);
 					
-					obj['due_for_period'] = repoArray[Number(index)]['defaulter_inv_group_amount'];
-					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? repoArray[Number(index)]['defaulter_inv_group_amount'] : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0) + (repoArray[Number(index)]['opening_advances'] ? repoArray[Number(index)]['opening_advances'] : 0 );
-					obj['receipt_during_the_period'] = repoArray[Number(index)]['rpt_net_amount'];
-					obj['balance'] = ((repoArray[Number(index)]['defaulter_inv_group_amount'] ? repoArray[Number(index)]['defaulter_inv_group_amount'] : 0) + (repoArray[Number(index)]['inv_opening_balance']  ?  repoArray[Number(index)]['inv_opening_balance']  : 0)+ (repoArray[Number(index)]['opening_advances'] ? repoArray[Number(index)]['opening_advances'] : 0) - (repoArray[Number(index)]['rpt_net_amount'] ? repoArray[Number(index)]['rpt_net_amount'] : 0));
+					obj['due_for_period'] = Number(repoArray[Number(index)]['defaulter_inv_group_amount']);
+					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0 );
+					obj['receipt_during_the_period'] = repoArray[Number(index)]['rpt_net_amount'] ? Number(repoArray[Number(index)]['rpt_net_amount']) : 0;
+					obj['balance'] = ((repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance']  ?  Number(repoArray[Number(index)]['inv_opening_balance'])  : 0)+ (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0) - (repoArray[Number(index)]['rpt_net_amount'] ? Number(repoArray[Number(index)]['rpt_net_amount']) : 0));
 					if(Number(obj['balance']) > 0)
-						obj['outstanding_end_of_period'] = obj['balance'];
+						obj['outstanding_end_of_period'] = Number(obj['balance']);
 					else 
-						obj['adv_end_of_period'] = -obj['balance'];
+						obj['adv_end_of_period'] = -Number(obj['balance']);
 					
 					
 					obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -448,6 +448,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
 				obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
 				obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
+				obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
 				
 				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
 				//this.dataset.push(obj3);
