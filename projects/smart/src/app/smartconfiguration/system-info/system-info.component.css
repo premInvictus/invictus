@@ -13,3 +13,12 @@
     text-align: left !important;
     padding-left: 5px !important;
 }
+.table-delete-icon {
+    font-size: 16px;
+    color: #fe756d;
+    cursor: pointer;
+    padding-left: 25px;
+}
+.inline-form-radio-spacing {
+     padding-left: 0px; 
+}
