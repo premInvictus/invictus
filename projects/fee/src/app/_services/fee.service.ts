@@ -621,4 +621,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getGroupedFeeHeads', value);
 	}
+	getSummarizedFeeReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getSummarizedFeeReport', value);
+	}
 }
