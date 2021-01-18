@@ -12,11 +12,11 @@ import * as moment from 'moment';
 import { ModeltableComponent } from '../../modeltable/modeltable.component';
 
 @Component({
-  selector: 'app-receipt-mode-wise',
+  selector: 'app-receipt-mode-wise1',
   templateUrl: './receipt-mode-wise.component.html',
   styleUrls: ['./receipt-mode-wise.component.scss']
 })
-export class ReceiptModeWiseComponent implements OnInit {
+export class ReceiptModeWiseComponent1 implements OnInit {
 
   @Input() param: any;
   tableDivFlag = false;

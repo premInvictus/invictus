@@ -9,12 +9,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LoadingModule} from 'ngx-loading';
 import {SimpleNotificationsModule, NotificationsService} from 'angular2-notifications';
 import { CookieModule } from 'ngx-cookie';
+import { AngularSlickgridModule } from 'angular-slickgrid';
 // import Module
 import { UsertypeModule } from './fausertype/usertype.module';
 import { routing } from './app.routing';
 
 // import service
-import {CommonAPIService, SisService, ProcesstypeService, RoutingStateService, SmartService, FaService } from './_services/index';
+import {CommonAPIService, SisService, ProcesstypeService, RoutingStateService, SmartService, FaService, FeeService } from './_services/index';
 import {ResolverService} from './_services/resolver.service';
 
 // import component
@@ -28,7 +29,7 @@ const providers = [CommonAPIService,
 	RoutingStateService,
 	ResolverService,
 	LoaderService, SmartService,
-	FaService,
+	FaService,FeeService,
 	{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}];
 @NgModule({
 	declarations: [
@@ -44,6 +45,7 @@ const providers = [CommonAPIService,
 		BrowserAnimationsModule,
 		CookieModule.forRoot(),
 		SimpleNotificationsModule.forRoot(),
+		AngularSlickgridModule.forRoot(),
 	],
 	providers: [providers],
 	bootstrap: [AppComponent]
