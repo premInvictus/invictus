@@ -309,7 +309,6 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         total += v;
       }
     });
-
     return total;
   }
   getTotal(id) {
