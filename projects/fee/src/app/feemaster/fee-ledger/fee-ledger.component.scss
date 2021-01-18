@@ -6,7 +6,9 @@
     overflow-y: scroll;
     height: 100%
 }
-
+.font-underline {
+    text-decoration: none !important;
+}
 .pointer {
     cursor: pointer;
 }

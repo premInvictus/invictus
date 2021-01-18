@@ -197,6 +197,7 @@
                   </form>
                   <div class="row">
                      <div class="col-12 remove-col-padding text-right ">
+                        <div class="margin-right">
                         <button
                            *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
                            mat-raised-button class=" recalulate-invoice-btn btn-spacer"
@@ -207,7 +208,7 @@
                            (click)="openDeleteDialog(fetchInvId())">Delete</button>
                         <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button> -->
-                           <button mat-raised-button class="btn-filter-grey" (click)="openSearchDialog({})">Filter
+                           <button mat-raised-button class="btn-filter-grey  btn-spacer" (click)="openSearchDialog({})">Filter
                               Search</button>
                         <button *ngIf="ELEMENT_DATA.length > 0" mat-raised-button
                            class=" btn-print-invoice btn-spacer" (click)="printInvoice()">Print</button>
@@ -216,6 +217,7 @@
                               <img style="cursor: pointer; height: 33px !important" src="/assets/images/xml.svg"
                                  matTooltip="Export as excel" (click)="exportAsExcel()" />
                            </div>
+                        </div>
                         </div>
                      </div>
                   </div>

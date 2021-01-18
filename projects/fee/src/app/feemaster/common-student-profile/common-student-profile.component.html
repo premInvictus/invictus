@@ -1,4 +1,4 @@
-<mat-card class="card-padding-5 card-height-115">
+<mat-card class="card-padding-5">
   <form [formGroup]="studentdetailsform">
     <div class="row remove-top-margin">
       <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
@@ -20,7 +20,7 @@
             <div class="row ">
 
 
-              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding" style="display: inline-flex !important;">
                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
                   (click)="firstId(navigation_record.first_record)"><i class="material-icons">
                     first_page
@@ -37,7 +37,7 @@
                     (click)="myInput.select()">
                 </mat-form-field>
               </div>
-              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding" style="display: inline-flex !important;">
                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="nextB"
                   (click)="nextId(navigation_record.next_record)"><i class="material-icons">
                     navigate_next
@@ -102,8 +102,8 @@
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Stop</span><br>
-            <span
-              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize | truncatetext:16) : '-'}}</span>
+            <span [matTooltip]="studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : '-'"
+              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize | truncatetext:11) : '-'}}</span>
           </div>
         </div>
       </div>
@@ -119,7 +119,10 @@
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">{{parent_type_fun(studentdetails)}} </span><br>
-            <span class="font-size-16 font-bold">
+            <span [matTooltip]="
+          studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
+          (studentdetails.parentinfo[0].epd_parent_name | capitalize) : '-'"
+            class="font-size-16 font-bold">
 
               {{studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '1' ? 'Mr.' :
                 studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '2' ? 'Mrs.' :
@@ -136,7 +139,7 @@
 
 
               {{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
-              (studentdetails.parentinfo[0].epd_parent_name | capitalize | truncatetext:11) : '-'}}</span>
+              (studentdetails.parentinfo[0].epd_parent_name | capitalize | truncatetext:8) : '-'}}</span>
           </div>
         </div>
 
@@ -152,7 +155,7 @@
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Category </span><br>
-            <span
+            <span 
               class="font-size-16 font-bold">{{tag_name | titlecase}}</span>
           </div>
         </div>
