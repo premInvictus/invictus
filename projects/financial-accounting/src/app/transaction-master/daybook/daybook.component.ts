@@ -19,7 +19,7 @@ import { saveAs } from 'file-saver';
 })
 export class DaybookComponent implements OnInit {
 
-	currentTabIndex = 3;
+	currentTabIndex = 4;
 	feeMonthArray = [];
 	paramform: FormGroup;
 	adjustmentStatus = 0;
