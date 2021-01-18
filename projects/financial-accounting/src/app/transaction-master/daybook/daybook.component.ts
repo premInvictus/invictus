@@ -602,22 +602,209 @@ export class DaybookComponent implements OnInit {
 			})
 
 		} else if (this.currentTabIndex == 2) {
-			doc.autoTable({
-				head: [[new TitleCasePipe().transform('Receipt(Advance) Report')]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
+			let pdfrowdata = [];
+			let pdfHeadRow = ['Date'];
+			let param: any = {};
+			param.gs_alias = ['fa_partial_payment'];
+			doc.levelHeading = [];
+			doc.levelTotalFooter = [];
+			doc.levelSubtotalFooter = [];
+			this.faService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data && result.data[0]) {
+						if (Number(result.data[0]['gs_value'])) {
+							this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.paramform.value.month) }).subscribe((data: any) => {
+								let dataArray = data.receipt_data;
+								console.log("i am here --------------", dataArray);
+								for (let i = 0; i < dataArray[0].value.length; i++) {
+									pdfHeadRow.push(dataArray[0].value[i].pay_name);
+								}
+								pdfHeadRow.push('Total');
+								console.log("i am here ------------", pdfHeadRow);
+								for (let i = 0; i < dataArray.length; i++) {
+									let a = [];
+									let sum = 0;
+									a.push(this.common.dateConvertion(dataArray[i].date, 'd-MMM-y'));
+									for (let j = 0; j < dataArray[i].value.length; j++) {
+										a.push(dataArray[i].value[j].receipt_amt)
+										sum += dataArray[i].value[j].receipt_amt;
+									}
+									a.push(sum);
+									pdfrowdata.push(a);
+								}
+								let a = [];
+								a.push("Grand Total");
 
-				},
-				headStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 20,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
+								for (let i = 0; i < pdfrowdata[0].length; i++) {
+									let sum = 0
+									for (let j = 0; j < pdfrowdata.length; j++) {
+										sum += pdfrowdata[j][i + 1];
+									}
+									a.push(sum);
+									sum = 0;
+								}
+								pdfrowdata.push(a);
+								for (let i = 1; i < pdfrowdata[0].length; i++) {
+									for (let j = 0; j < pdfrowdata.length; j++) {
+										pdfrowdata[j][i] = new IndianCurrency().transform(pdfrowdata[j][i]);
+									}
+								}
+
+								doc.autoTable({
+									head: [[new TitleCasePipe().transform('Receipt(Current) Report')]],
+									margin: { top: 0 },
+									didDrawPage: function (data) {
+
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#ffffff',
+										textColor: 'black',
+										halign: 'left',
+										fontSize: 20,
+									},
+									useCss: true,
+									theme: 'striped'
+								});
+								doc.autoTable({
+									head: [pdfHeadRow],
+									body: pdfrowdata,
+									startY: doc.previousAutoTable.finalY + 0.5,
+									tableLineColor: 'black',
+									didDrawPage: function (data) {
+										doc.setFontStyle('bold');
+									},
+									willDrawCell: function (data) {
+										// tslint:disable-next-line:no-shadowed-variable
+										const doc = data.doc;
+										const rows = data.table.body;
+
+										// level 0
+										const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+										if (lfIndex !== -1) {
+											doc.setFontStyle('bold');
+											doc.setFontSize('16');
+											doc.setTextColor('#ffffff');
+											doc.setFillColor(0, 62, 120);
+										}
+
+										// level more than 0
+										const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+										if (lsfIndex !== -1) {
+											doc.setFontStyle('bold');
+											doc.setFontSize('16');
+											doc.setTextColor('#ffffff');
+											doc.setFillColor(229, 136, 67);
+										}
+
+										// group heading
+										const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+										if (lhIndex !== -1) {
+											doc.setFontStyle('bold');
+											doc.setFontSize('16');
+											doc.setTextColor('#5e666d');
+											doc.setFillColor('#c8d6e5');
+										}
+
+										// grand total
+										if (data.row.index === rows.length - 1) {
+											doc.setFontStyle('bold');
+											doc.setFontSize('16');
+											doc.setTextColor('#ffffff');
+											doc.setFillColor(67, 160, 71);
+										}
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#c8d6e5',
+										textColor: '#5e666d',
+										fontSize: 16,
+										halign: 'center',
+									},
+									alternateRowStyles: {
+										fillColor: '#f1f4f7'
+									},
+									useCss: true,
+									styles: {
+										rowHeight: 20,
+										fontSize: 18,
+										cellWidth: 'auto',
+										textColor: 'black',
+										lineColor: '#89a8c8',
+										valign: 'middle',
+										halign: 'right',
+									},
+									theme: 'grid'
+								});
+								doc.autoTable({
+									// tslint:disable-next-line:max-line-length
+									head: [['Report Filtered as:  ' + this.feeMonthArray.filter(e => e.fm_id == this.paramform.value.month)[0].fm_name]],
+									didDrawPage: function (data) {
+
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#ffffff',
+										textColor: 'black',
+										halign: 'left',
+										fontSize: 20,
+									},
+									useCss: true,
+									theme: 'striped'
+								});
+								doc.autoTable({
+									// tslint:disable-next-line:max-line-length
+									head: [['No of records: ' + pdfrowdata.length]],
+									didDrawPage: function (data) {
+
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#ffffff',
+										textColor: 'black',
+										halign: 'left',
+										fontSize: 20,
+									},
+									useCss: true,
+									theme: 'striped'
+								});
+								doc.autoTable({
+									// tslint:disable-next-line:max-line-length
+									head: [['Generated On: '
+										+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+									didDrawPage: function (data) {
+
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#ffffff',
+										textColor: 'black',
+										halign: 'left',
+										fontSize: 20,
+									},
+									useCss: true,
+									theme: 'striped'
+								});
+								doc.autoTable({
+									// tslint:disable-next-line:max-line-length
+									head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+									didDrawPage: function (data) {
+
+									},
+									headStyles: {
+										fontStyle: 'bold',
+										fillColor: '#ffffff',
+										textColor: 'black',
+										halign: 'left',
+										fontSize: 20,
+									},
+									useCss: true,
+									theme: 'striped'
+								});
+								doc.save('Reciept_current_report_' + this.paramform.value.month + ".pdf");
+							})
+						}
+					}
 		} else if (this.currentTabIndex == 3) {
 			let pdfrowdata = [];
 			this.faService.getAdjustmentDayBook({ sessionId: this.session.ses_id, monthId: Number(this.paramform.value.month), vc_process: 'automatic/adjustment' }).subscribe(
