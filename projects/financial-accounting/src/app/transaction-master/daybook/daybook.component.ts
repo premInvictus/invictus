@@ -233,7 +233,7 @@ export class DaybookComponent implements OnInit {
 					pdfrowdata.push(a);
 					for (let i = 1; i < 14; i++) {
 						for (let j = 0; j < pdfrowdata.length; j++) {
-							pdfrowdata[j][i] = new IndianCurrency().transform(pdfrowdata[j][i]);
+							pdfrowdata[j][i] = pdfrowdata[j][i] > 0 ? new IndianCurrency().transform(pdfrowdata[j][i]): "-";
 						}
 					}
 					doc.levelHeading = [];
@@ -438,7 +438,7 @@ export class DaybookComponent implements OnInit {
 								pdfrowdata.push(a);
 								for (let i = 1; i < pdfrowdata[0].length; i++) {
 									for (let j = 0; j < pdfrowdata.length; j++) {
-										pdfrowdata[j][i] = new IndianCurrency().transform(pdfrowdata[j][i]);
+										pdfrowdata[j][i] = pdfrowdata[j][i] > 0 ? new IndianCurrency().transform(pdfrowdata[j][i]): '-';
 									}
 								}
 
@@ -646,7 +646,7 @@ export class DaybookComponent implements OnInit {
 								pdfrowdata.push(a);
 								for (let i = 1; i < pdfrowdata[0].length; i++) {
 									for (let j = 0; j < pdfrowdata.length; j++) {
-										pdfrowdata[j][i] = new IndianCurrency().transform(pdfrowdata[j][i]);
+										pdfrowdata[j][i] = pdfrowdata[j][i] > 0 ? new IndianCurrency().transform(pdfrowdata[j][i]): '-';
 									}
 								}
 
@@ -906,7 +906,7 @@ export class DaybookComponent implements OnInit {
 					pdfrowdata.push(a);
 					for (let i = 1; i < 14; i++) {
 						for (let j = 0; j < pdfrowdata.length; j++) {
-							pdfrowdata[j][i] = new IndianCurrency().transform(pdfrowdata[j][i]);
+							pdfrowdata[j][i] =pdfrowdata[j][i] > 0 ?  new IndianCurrency().transform(pdfrowdata[j][i]): '-';
 						}
 					}
 					doc.levelHeading = [];
