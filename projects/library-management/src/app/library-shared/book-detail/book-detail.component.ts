@@ -50,7 +50,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.buildForm();
 		const book_no = this.route.snapshot.queryParams['book_id'];
 		if (book_no) {
-			this.getBookDetail(book_no);
+			//this.getBookDetail(book_no);
 		}
 
 		this.route.queryParams.subscribe(queryParams => {
@@ -126,12 +126,13 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								i++;
 							}
 						}
+						console.log('onfilter',this.BOOK_LOGS);
 						this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 						this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 						this.datasource.sort = this.sort;
 						this.datasource.paginator.length = this.paginator.length = this.totalRecords;
 						this.datasource.paginator = this.paginator;
-						console.log(this.BOOK_LOGS);
+						
 					}
 				});
 			} else {
@@ -247,6 +248,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 						i++;
 					}
 				}
+				console.log('perbook',this.BOOK_LOGS);
 				this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.datasource.sort = this.sort;
