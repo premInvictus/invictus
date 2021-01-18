@@ -13,6 +13,7 @@ import { VoucherEntryComponent } from './voucher-entry/voucher-entry.component';
 import { IncomeDueComponent } from './daybook/income-due/income-due.component';
 import { AdjustmentComponent } from './daybook/adjustment/adjustment.component';
 import { ReceiptModeWiseComponent } from './daybook/receipt-mode-wise/receipt-mode-wise.component';
+import { ReceiptModeWiseComponent1 } from './daybook/receipt_advance/receipt-mode-wise.component';
 import { TotalFeeReceivableComponent } from './daybook/total-fee-receivable/total-fee-receivable.component';
 import { VouchersListComponent } from './daybook/vouchers-list/vouchers-list.component';
 import { VoucherPrintSetupComponent } from './voucher-print-setup/voucher-print-setup.component';
@@ -33,6 +34,7 @@ import { ModeltableComponent } from './modeltable/modeltable.component';
     VoucherEntryComponent,
     IncomeDueComponent,
     ReceiptModeWiseComponent,
+    ReceiptModeWiseComponent1,
     TotalFeeReceivableComponent,
     VouchersListComponent,
     VoucherPrintSetupComponent,
