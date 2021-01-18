@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { IndianCurrency } from '../../../_pipes';
 import * as moment from 'moment';
+import { ModeltableComponent } from '../../modeltable/modeltable.component';
 
 
 @Component({
@@ -47,6 +48,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   previousYearVoucherExists = false;
   previousYearVoucherData:any[] = [];
   globalsetup:any;
+  showLoadingFlag = false;
 
   constructor(
     private fbuild: FormBuilder,
@@ -59,6 +61,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    // this.commonAPIService.startLoading();
     this.session = JSON.parse(localStorage.getItem('session'));
     this.checkPartialPaymentStatus();
     if (this.param.month) {
@@ -69,37 +72,31 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     }
   }
   ngOnChanges() {
+    this.tableDivFlag = false;
     console.log(this.param);
     if (this.param.month) {
       this.getGlobalSetting();
       this.getChartsOfAccount();
       this.getSession();
       this.getInvoiceDayBook();
+      // this.commonAPIService.startLoading();
     }
 
   }
-  // getGlobalSetting() {
-	// 	let param: any = {};
-	// 	param.gs_alias = ['fa_voucher_code_format_yearly_status', 'fee_invoice_includes_adjustments'];
-	// 	this.faService.getGlobalSetting(param).subscribe((result: any) => {
-	// 		if (result && result.status === 'ok') {
-	// 			if (result.data && result.data[0]) {
-  //         for (var i=0; i< result.data.length;i++) {
-  //           if (result.data[i]['gs_alias'] === 'fa_voucher_code_format_yearly_status') {
-  //             this.vcYearlyStatus = Number(result.data[i]['gs_value']);
-  //           } 
-  //           if (result.data[i]['gs_alias'] === 'fee_invoice_includes_adjustments') {
-  //             this.adjustmentStatus = result.data[i]['gs_value'] == '1' ? 1 : 0 ;
-  //           }
-  //         }
-					
-  //         console.log('this.vcYearlyStatus', this.vcYearlyStatus);
-  //         console.log('this.adjustmentStatus', this.adjustmentStatus)
-	// 			}
 
-	// 		}
-	// 	})
-  // }
+  openModel(e) {
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: e.date,
+        reportType: 'feedue'
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
+  }
   getGlobalSetting() {
 		let param: any = {};
 		this.globalsetup = {};
@@ -144,6 +141,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   checkForPreviousYearVoucher() {
     
     this.faService.checkPreviosuDueStatus({vc_narrations: 'Previous Due' }).subscribe((data:any)=> {
+      // this.commonAPIService.startLoading();
       console.log('data--', data);
       if(data && data[0] && data[0]['vc_id']) {
         this.previousYearVoucherData = data[0];
@@ -169,10 +167,12 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       } else {
         this.previousYearVoucherExists = false;
       }
+      // this.commonAPIService.stopLoading();
     })
   }
 
   getInvoiceDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.contoatl = 0;
     this.displayedColumns = [];
@@ -181,6 +181,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.apiReceiptData = [];
     this.previousBalanceObject = {};
     this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
+      // this.commonAPIService.startLoading();
       if (data && data.invoice_due_data.length > 0) {
         this.displayedColumns = [];
         if (Number(this.param.month)==4) {
@@ -287,13 +288,17 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             // console.log('tempelement--',tempelement);
             this.ELEMENT_DATA.push(tempelement);
           });
-          this.tableDivFlag = true;
+          
         }
-        // console.log(this.ELEMENT_DATA);
+        console.log("------------------------", this.ELEMENT_DATA);
         // console.log(this.eachheadtotal_details);
         // console.log(this.con_adj_details);
 
       }
+      
+      // this.commonAPIService.stopLoading();
+      this.showLoadingFlag = false;
+      this.tableDivFlag = true;
     });
   }
   getColumnTotal(item) {
@@ -333,6 +338,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   getChartsOfAccount() {
     this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
+      // this.commonAPIService.startLoading();
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
@@ -347,6 +353,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         }
         
       }
+      // this.commonAPIService.stopLoading();
     });
   }
 

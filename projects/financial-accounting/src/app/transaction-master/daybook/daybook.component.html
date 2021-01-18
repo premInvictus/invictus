@@ -1,3 +1,5 @@
+
+
 <div class="row">
     <div class="col-12">
       <mat-card>
@@ -33,11 +35,16 @@
                         <app-income-due [param]="this.paramform.value"></app-income-due>
                     </ng-template>
                 </mat-tab>
-                <mat-tab label="Receipt (Mode Wise)">
+                <mat-tab label="Receipt (Current)">
                     <ng-template matTabContent>
                         <app-receipt-mode-wise [param]="this.paramform.value"></app-receipt-mode-wise>
                     </ng-template>
                 </mat-tab>
+                <mat-tab label="Receipt (Advance)">
+                  <ng-template matTabContent>
+                      <app-receipt-mode-wise1 [param]="this.paramform.value"></app-receipt-mode-wise1>
+                  </ng-template>
+              </mat-tab>
                 <mat-tab label="Fee Adjustment" *ngIf="adjustmentStatus">
                   <ng-template matTabContent>
                       <app-adjustment [param]="this.paramform.value"></app-adjustment>
@@ -57,7 +64,11 @@
             <div class="text-right">
               <form [formGroup]="paramform">
                 <div class="classwise-container">
-                    <mat-form-field *ngIf="currentTabIndex != 3" appearance="outline" class="margin-left-15 form-field-150">
+                  <img *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                     matTooltip="Download as Pdf" (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
+                    <img *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                      matTooltip="Download as Excel" (click)="downloadExcel()" [matTooltipPosition]="'left'" />
+                    <mat-form-field *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " appearance="outline" class="margin-left-15 form-field-150">
                         <mat-label>Month</mat-label>
                         <mat-select placeholder="Month" formControlName="month"
                             required >
