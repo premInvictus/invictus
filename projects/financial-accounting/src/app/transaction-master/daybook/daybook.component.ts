@@ -651,7 +651,7 @@ export class DaybookComponent implements OnInit {
 								}
 
 								doc.autoTable({
-									head: [[new TitleCasePipe().transform('Receipt(Current) Report')]],
+									head: [[new TitleCasePipe().transform('Receipt(Advance) Report')]],
 									margin: { top: 0 },
 									didDrawPage: function (data) {
 
@@ -801,7 +801,7 @@ export class DaybookComponent implements OnInit {
 									useCss: true,
 									theme: 'striped'
 								});
-								doc.save('Reciept_current_report_' + this.paramform.value.month + ".pdf");
+								doc.save('Reciept_advance_report_' + this.paramform.value.month + ".pdf");
 							})
 						}
 					}
