@@ -116,8 +116,8 @@ export class MessagesAdvancedSearchModalComponent implements OnInit {
     if (Number(this.currentUser.role_id) === 2) {
       this.filterArray = [
         {
-          id: 'reserv_id',
-          name: 'Book Id',
+          id: 'reserv_no',
+          name: 'Book No',
           type: 'text',
           placeholder: 'Search book by Book Id'
         },

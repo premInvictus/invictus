@@ -43,7 +43,7 @@ export class IssueReturnComponent implements OnInit {
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
-	displayedBookLogListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
+	displayedBookLogListColumns: string[] = ['srno', 'book_no', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -95,6 +95,7 @@ export class IssueReturnComponent implements OnInit {
 	length: any;
 	settingData: any;
 	btnDisabled = false;
+	accession_type;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -130,7 +131,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	getGlobalSetting() {
-		this.erpCommonService.getGlobalSetting({}).subscribe((result: any) => {
+		this.erpCommonService.getGlobalSetting({gs_alias:['library_user_setting','accession_type']}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const settings = result.data;
 				for (let i=0; i< settings.length;i++) {
@@ -149,6 +150,8 @@ export class IssueReturnComponent implements OnInit {
 						// 	'book_request_for_student': settingData['book_request_for_student'],
 						// 	'class_book_issue_for_student' : settingData['class_book_issue_for_student'],
 						// });
+					} else if (settings[i]['gs_alias'] === 'accession_type') {
+						this.accession_type = settings[i]['gs_value'];
 					}
 				}
 				
@@ -290,7 +293,7 @@ export class IssueReturnComponent implements OnInit {
 
 				} else {
 					const inputJson = {
-						'reserv_id': Number(this.returnIssueReservoirForm.value.scanBookId),
+						'reserv_no': this.returnIssueReservoirForm.value.scanBookId,
 						'reserv_status': ['available'],
 						'user_login_id': this.userData.au_login_id,
 					};
@@ -392,13 +395,14 @@ export class IssueReturnComponent implements OnInit {
 				for (const item of recordArray) {
 
 					let aval = '';
+					
 					for (const avalue of item.reserv_user_logs.authors) {
 						aval += avalue + ',';
 					}
-
 					element = {
 						srno: pos,
 						reserv_id: item.reserv_user_logs.reserv_id,
+						book_no:item.reserv_user_logs.book_no,
 						title: item.reserv_user_logs.title,
 						author:  item.reserv_user_logs.authors[0],
 						publisher: item.reserv_user_logs.publisher,
@@ -749,7 +753,7 @@ export class IssueReturnComponent implements OnInit {
 			}
 
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.reserv_id;
+			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.book_no;
 			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
 			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
 			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;
@@ -981,6 +985,7 @@ export class IssueReturnComponent implements OnInit {
 export interface BookLogListElement {
 	srno: number;
 	reserv_id: string;
+	book_no:string;
 	title: string;
 	author: string;
 	publisher: string;

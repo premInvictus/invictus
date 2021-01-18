@@ -128,6 +128,7 @@ export class SetupComponent implements OnInit {
     session:any;
     sig_positionArray = ['first','last'];
     hrattendanceArray = ['manual','biometric'];
+    accession_typeArray = ['single','multiple'];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,

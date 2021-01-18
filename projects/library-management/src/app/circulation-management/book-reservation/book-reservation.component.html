@@ -32,11 +32,11 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Request No. </th>
                         <td mat-cell *matCellDef="let item"> {{item.request_id}} </td>
                      </ng-container>
-                  <ng-container matColumnDef="reserv_id">
+                  <ng-container matColumnDef="book_no">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
                      <td mat-cell *matCellDef="let item">
-                        <a (click)="openBookModal(item.reserv_id)" style="color: #258de7; cursor: pointer;">
-                           <u><b>{{item.reserv_id}}</b></u></a></td>
+                        <a (click)="openBookModal(item.book_no)" style="color: #258de7; cursor: pointer;">
+                           <u><b>{{item.book_no}}</b></u></a></td>
                   </ng-container>
                   <ng-container matColumnDef="book_name">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>

@@ -192,7 +192,7 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
   searchBook() {
     if (this.searchBookId) {      
       this.enteredVal = true;
-      const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number(this.searchBookId), "type": "text" }],  "search_from" : 'master' };
+      const inputJson = { "filters": [{ "filter_type": "reserv_no", "filter_value": this.searchBookId, "type": "text" }],  "search_from" : 'master' };
 		  this.erpCommonService.getReservoirDataBasedOnFilter
       this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
         if (result && result.data) {
@@ -215,7 +215,7 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
               }
               element = {
                 srno: pos,
-                book_no: item.reserv_id,
+                book_no: item.book_no,
                 book_name: item.title ? item.title : '-',
                 book_author: aval ? aval.slice(0,-1) : '-',
                 book_publisher: item.publisher ? item.publisher : '-',

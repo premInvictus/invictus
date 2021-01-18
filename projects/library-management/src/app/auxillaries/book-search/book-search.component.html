@@ -56,7 +56,7 @@
               *ngFor="let item of BOOK_ELEMENT_DATA; let i = index;">
               <div class="book-container">
                 <img class="book-cover-img" [src]="item.images_links?.thumbnail ? item.images_links.thumbnail : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png'"
-                  style="cursor: pointer" (click)="openBookDetails(item.reserv_id)" />
+                  style="cursor: pointer" (click)="openBookDetails(item.book_no)" />
                 <div [class]="item.book_container_class">
                   <div class="book-title-content text-center" style="padding: 3px !important">
                     <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
@@ -65,7 +65,7 @@
                     <div class="book-second-content" style="padding: 30px !important;position: relative;top:-30px"
                       (click)="showFirstDetailDiv(i); $event.stopPropagation()">
                       <div class="font-size-12 margin-top-15 font-medium">
-                        <b>BOOK ID</b>: {{item.reserv_id}}
+                        <b>BOOK No</b>: {{item.book_no}}
                       </div>
                       <span
                         class="font-size-16 font-medium"><b>{{item.title ? (item.title| truncatetext : 12) : ''}}</b></span><br />

@@ -40,7 +40,7 @@ export class IssueReturnComponent implements OnInit {
 	stuOutStandingFine = 0;
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
-	displayedBookLogListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
+	displayedBookLogListColumns: string[] = ['srno', 'book_no', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -343,6 +343,7 @@ export class IssueReturnComponent implements OnInit {
 					element = {
 						srno: pos,
 						reserv_id: item.reserv_user_logs.reserv_id,
+						book_no:item.reserv_user_logs.book_no,
 						title: item.reserv_user_logs.title,
 						author: item.reserv_user_logs.authors[0],
 						publisher: item.reserv_user_logs.publisher,
@@ -652,7 +653,7 @@ export class IssueReturnComponent implements OnInit {
 			}
 
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.reserv_id;
+			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.book_no;
 			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
 			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
 			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;
@@ -884,6 +885,7 @@ export class IssueReturnComponent implements OnInit {
 export interface BookLogListElement {
 	srno: number;
 	reserv_id: string;
+	book_no:string;
 	title: string;
 	author: string;
 	publisher: string;
