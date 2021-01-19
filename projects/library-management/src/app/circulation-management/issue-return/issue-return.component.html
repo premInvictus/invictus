@@ -217,20 +217,20 @@
               <tbody>
                 <ng-container *ngFor="let item of bookData; let i=index;">
                   <tr class="custom-tr book-list">
-                    <td width="5%" class="custom-td"
+                    <td width="10%" class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{i+1}}</span></td>
-                    <td width="5%" class="custom-td"
+                    <td width="10%" class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span class="font-skyblue" (click)="openBookModal(item.book_no)">{{item?.book_no}}</span>
                     </td>
-                    <td width="50%" class="custom-td text-left"
+                    <td width="40%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{item?.title | titlecase | truncatetext: 45}}</span>
                     </td>
                     <td width="20%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      {{item?.publisher | titlecase | truncatetext: 20}}
+                      {{item?.publisher | titlecase | truncatetext: 15}}
                     </td>
                     <td width="15%" class="custom-td text-nowrap"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">

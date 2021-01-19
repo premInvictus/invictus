@@ -604,9 +604,10 @@ export class IssueReturnComponent implements OnInit {
 
 	checkForIssueBook(searchBookId) {
 		console.log('this.bookLogData', this.bookLogData);
+		console.log('searchBookId', searchBookId);
 		let flag = { 'status': false, 'index': '' };
 		for (let i = 0; i < this.bookLogData.length; i++) {
-			if (Number(this.bookLogData[i]['reserv_user_logs']['reserv_id']) === Number(searchBookId) && this.bookLogData[i]['reserv_user_logs']['issued_on'] !== '') {
+			if (this.bookLogData[i]['reserv_user_logs']['book_no'] == searchBookId && this.bookLogData[i]['reserv_user_logs']['issued_on'] !== '') {
 				flag = { 'status': true, 'index': i.toString() };
 
 				break;
@@ -616,9 +617,10 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	checkBookAlreadyAdded(value) {
+		console.log(this.bookData);
 		let flag = false;
 		for (let i = 0; i < this.bookData.length; i++) {
-			if (Number(this.bookData[i]['reserv_id']) === Number(value)) {
+			if (this.bookData[i]['book_no'] == value) {
 				flag = true;
 				break;
 			}

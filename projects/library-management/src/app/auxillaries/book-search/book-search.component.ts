@@ -93,7 +93,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 	}
 	searchBook() {
 		this.searchForm.patchValue({
-			page_size: 10,
+			page_size: this.bookpagesize,
 			page_index: 0,
 			role_id: this.currentUser.role_id
 		})
