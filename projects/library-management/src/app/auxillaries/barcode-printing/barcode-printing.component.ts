@@ -34,7 +34,7 @@ export class BarcodePrintingComponent implements OnInit {
   }
   getBarCode() {
     if (this.barCodePrintForm.value.reserv_id) {
-      let inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
+      let inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
       this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.barCodeArray = [];

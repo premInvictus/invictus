@@ -23,10 +23,10 @@ export class BookDetailsModalComponent implements OnInit, AfterViewInit {
 		});
 		this.getBookDetail(book_no);
 	}
-	getBookDetail(book_no) {
+	async getBookDetail(book_no) {
 		this.bookData = {};
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
-		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
+		await this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).toPromise().then((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookData = result.data.resultData[0];
 			} else {

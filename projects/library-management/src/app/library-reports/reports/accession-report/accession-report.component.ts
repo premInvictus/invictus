@@ -702,7 +702,7 @@ export class AccessionReportComponent implements OnInit {
 					const obj: any = {};
 					obj['id'] = (index + 1);
 					obj['srno'] = (index + 1);
-					obj['book_no'] = repoArray[Number(index)]['reserv_id'] ? repoArray[Number(index)]['reserv_id'] : '-';
+					obj['book_no'] = repoArray[Number(index)]['book_no'] ? repoArray[Number(index)]['book_no'] : '-';
 					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['title']) : '-';
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) : '-';

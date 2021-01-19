@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { IndianCurrency } from '../../../_pipes';
 import * as moment from 'moment';
+import { ModeltableComponent } from '../../modeltable/modeltable.component';
 
 @Component({
   selector: 'app-receipt-mode-wise',
@@ -39,6 +40,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   tempChartsOfAccountInvoice: any[] = [];
   vcYearlyStatus = 0;
   feeReceivableAccountId = 0;
+  showLoadingFlag = false;
   feeReceivableAccountName = 'Fee Receivable';
   globalsetup:any;
 
@@ -73,6 +75,19 @@ export class ReceiptModeWiseComponent implements OnInit {
     }
 
 
+  }
+  openModel(e) {
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: e.date,
+        reportType: 'headwise'
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
   }
   // getGlobalSetting() {
 	// 	let param: any = {};
@@ -114,6 +129,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   getInvoiceDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
@@ -192,12 +208,13 @@ export class ReceiptModeWiseComponent implements OnInit {
         //   this.tableDivFlag = true;
         // }
         console.log(this.ELEMENT_DATA);
-
       }
+      this.showLoadingFlag = false;
     });
   }
 
   getNonPartialDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
@@ -278,8 +295,9 @@ export class ReceiptModeWiseComponent implements OnInit {
         //   this.tableDivFlag = true;
         // }
         console.log(this.ELEMENT_DATA);
-
       }
+
+      this.showLoadingFlag = false;
     });
   }
   getColumnTotal(item) {

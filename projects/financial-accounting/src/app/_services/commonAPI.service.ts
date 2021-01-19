@@ -225,4 +225,9 @@ export class CommonAPIService {
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/uploadExcel', value);
 	}
 
+	getClassData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
+
 }

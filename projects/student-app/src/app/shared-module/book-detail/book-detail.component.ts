@@ -63,7 +63,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.BOOK_LOGS = [];
 		this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 		this.bookData = {};
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookData = result.data.resultData[0];
@@ -117,7 +117,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 		this.bookData = {};
 		this.router.navigate([], { relativeTo: this.route, queryParams: { book_id: book_no }, queryParamsHandling: 'merge' });
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'number' }],
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'number' }],
 	    search_from: 'master' };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

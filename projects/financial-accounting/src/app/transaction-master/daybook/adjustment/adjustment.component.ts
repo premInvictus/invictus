@@ -41,7 +41,8 @@ export class AdjustmentComponent implements OnInit, OnChanges {
   vcYearlyStatus   = 0;
   feeAdjustableAccountId = 0;
   feeAdjustableAccountName = 'Fee Adjustment';
-	globalsetup:any;
+  globalsetup:any;
+  showLoadingFlag = false;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -111,6 +112,7 @@ export class AdjustmentComponent implements OnInit, OnChanges {
     })
   }
   getAdjustmentDayBook() {
+    this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.contoatl = 0;
     this.displayedColumns = [];
@@ -119,6 +121,8 @@ export class AdjustmentComponent implements OnInit, OnChanges {
     this.apiReceiptData = [];
     this.faService.getAdjustmentDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month),vc_process: 'automatic/adjustment' }).subscribe((data: any) => {
       if (data && data.invoice_due_data.length > 0) {
+        console.log("i am here -----------", data.invoice_due_date);
+        
         this.apiInvoiceData = data.invoice_due_data;
         this.apiReceiptData = data.receipt_data;
         const tempData: any = data.invoice_due_data;
@@ -170,11 +174,13 @@ export class AdjustmentComponent implements OnInit, OnChanges {
             }
             this.ELEMENT_DATA.push(tempelement);
           });
+          
           this.tableDivFlag = true;
         }
-        console.log(this.ELEMENT_DATA);
+        console.log('------------------------',this.ELEMENT_DATA);
         console.log(this.eachheadtotal_details);
         console.log(this.con_adj_details);
+        this.showLoadingFlag = false;
 
       }
     });

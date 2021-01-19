@@ -880,7 +880,7 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['id'] = (index + 1);
 					obj['srno'] = (index + 1);
 					obj['book_no'] = repoArray[Number(index)]['reserv_user_logs'] ?
-						repoArray[Number(index)]['reserv_user_logs']['reserv_id'] : '-';
+						repoArray[Number(index)]['reserv_user_logs']['book_no'] : '-';
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) : '-';
 					obj['user_login_id'] = login_id ? login_id : '-';					
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) : '-';

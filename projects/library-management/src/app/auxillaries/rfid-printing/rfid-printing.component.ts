@@ -20,7 +20,7 @@ export class RfidPrintingComponent implements OnInit {
 	@ViewChild('searchModal') searchModal;
 	RFID_LIST_ELEMENT: RFIDListElement[] = [];
 	rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
-	displayedRFIDListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'location', 'action'];
+	displayedRFIDListColumns: string[] = ['srno', 'book_no', 'title', 'author', 'location', 'action'];
 	constructor(private common: ErpCommonService, private notif : CommonAPIService, private fbuild: FormBuilder) { }
 	ngOnInit() {
 		this.getReservoirData();
@@ -57,6 +57,7 @@ export class RfidPrintingComponent implements OnInit {
 				for (const item of this.bookData) {
 					element = {
 						srno: pos,
+						book_no:item.book_no,
 						reserv_id: item.reserv_id,
 						title: item.title,
 						author: item.authors,
@@ -133,6 +134,7 @@ export class RfidPrintingComponent implements OnInit {
 					for (const item of this.bookData) {
 						element = {
 							srno: pos,
+							book_no:item.book_no,
 							reserv_id: item.reserv_id,
 							title: item.title,
 							author: item.authors,
@@ -160,6 +162,7 @@ export class RfidPrintingComponent implements OnInit {
 
 export interface RFIDListElement {
 	srno: number;
+	book_no:string;
 	reserv_id: string;
 	title: string;
 	author: string;
