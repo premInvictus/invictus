@@ -169,7 +169,17 @@
             <div class="row">
               <div class="col-12">
                 <div class="row">
-                  <div class="col-3">
+                  <div class="col-2">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Accession Type</mat-label>
+                      <mat-select placeholder="Accession Type" formControlName="accessionsequence" required tabindex="15" disabled>
+                        <mat-option *ngFor="let item of accessionSequenceArray" [value]="item.type_id">
+                          {{item.type_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    </div>
+                  <div class="col-2"> 
                     <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Book Type</mat-label>
                       <mat-select placeholder="Book Type" formControlName="category_id" required tabindex="15">
@@ -182,7 +192,7 @@
                   <div class="col-3">
                     <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Source</mat-label>
-                      <mat-select placeholder="Book Type" placeholder="Source" formControlName="source" tabindex="18">
+                      <mat-select placeholder="Source" formControlName="source" tabindex="18">
                         <mat-option *ngFor="let item of sourceArray" [value]="item.type_id">
                           {{item.type_name}}
                         </mat-option>

@@ -158,6 +158,14 @@ export class AccessionReportComponent implements OnInit {
 		type_id: '4',
 		type_name: 'Sample',
 	}];
+	accessionSequenceArray: any[] = [{
+		type_id: 'G',
+		type_name: 'General',
+	},
+	{
+		type_id: 'S',
+		type_name: 'Specimen',
+	}];
 
 	constructor(translate: TranslateService,
 		private common: CommonAPIService,
@@ -575,6 +583,21 @@ export class AccessionReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'accession_type', name: 'Accession Type', field: 'accession_type', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'accession_type',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
 				id: 'location', name: 'Location', field: 'location', sortable: true,
 				filterable: true,
 				width: 120,
@@ -662,6 +685,7 @@ export class AccessionReportComponent implements OnInit {
 					let currentSubjectName = '';
 					let currentBookType = '';
 					let currentPrintType = '';
+					let currentAccessionType = '';
 					for (let i =0; i < this.vendorData.length;i++) {
 						if (this.vendorData[i]['ven_id'] === repoArray[Number(index)]['vendor_details']['vendor_id']) {
 							currentVendorName = this.vendorData[i]['ven_name'];
@@ -696,6 +720,12 @@ export class AccessionReportComponent implements OnInit {
 							break;
 						}
 					}
+					for (let i =0; i < this.accessionSequenceArray.length;i++) {
+						if (this.accessionSequenceArray[i]['type_id'] === repoArray[Number(index)]['accessionsequence']) {
+							currentAccessionType = this.accessionSequenceArray[i]['type_name'];
+							break;
+						}
+					}
 
 					
 					
@@ -718,6 +748,7 @@ export class AccessionReportComponent implements OnInit {
 					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']) : '-';
 					obj['print_type'] = new CapitalizePipe().transform(currentPrintType) ? new CapitalizePipe().transform(currentPrintType) : '-';
 					obj['book_type'] = new CapitalizePipe().transform(currentBookType) ? new CapitalizePipe().transform(currentBookType) : '-';
+					obj['accession_type'] = new CapitalizePipe().transform(currentAccessionType) ? new CapitalizePipe().transform(currentAccessionType) : '-';
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['location']) ? new CapitalizePipe().transform(repoArray[Number(index)]['location']) : '-';
 					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
 					obj['subject'] = new CapitalizePipe().transform(currentSubjectName) ? new CapitalizePipe().transform(currentSubjectName) : '-';

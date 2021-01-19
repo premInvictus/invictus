@@ -285,8 +285,8 @@
               <div class="row">
                 <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Book Type</mat-label>
-                    <mat-select placeholder="Accession Sequence" formControlName="accessionsequence" required tabindex="15">
+                    <mat-label>Accession Type</mat-label>
+                    <mat-select placeholder="Accession Type" formControlName="accessionsequence" required tabindex="15">
                       <mat-option *ngFor="let item of accessionSequenceArray" [value]="item.type_id">
                         {{item.type_name}}
                       </mat-option>
