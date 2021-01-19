@@ -61,11 +61,15 @@
           </div>
         </div>
       </div>
-      <div class="col-1 smart-col-11 ">
+      <div class="col-1 smart-col-13">
         <div class="row margin-top-15">
           <div class="col-12 text-left">
+ 
             <span
-              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><i
+              class="font-size-16 font-bold">
+
+              {{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}
+            </span><i
               style="cursor: pointer;" class="fas fa-search margin-left-10" matTooltip="Search Students"
               (click)="openSearchDialog()"></i><br>
             <span class="font-size-14">Class : {{class_sec}}</span><br>
@@ -115,7 +119,7 @@
           </div>
         </div>
       </div> -->
-      <div class="col-2  smart-col-11 tab-col-14">
+      <div class="col-2  smart-col-13 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">{{parent_type_fun(studentdetails)}} </span><br>
@@ -139,7 +143,7 @@
 
 
               {{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
-              (studentdetails.parentinfo[0].epd_parent_name | capitalize | truncatetext:8) : '-'}}</span>
+              (studentdetails.parentinfo[0].epd_parent_name | capitalize | truncatetext:11) : '-'}}</span>
           </div>
         </div>
 

@@ -1,6 +1,11 @@
 .description{
     width:25%!important;
 }
+.decrease-right {
+  /* margin-right: 15px !important; */
+  position: relative;
+  right: 15px;
+}
 th.custom-th{
     color: rgba(0, 0, 0, 0.54)!important;
     height: 40px!important;

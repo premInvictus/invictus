@@ -56,6 +56,7 @@
                 <span *ngIf="startDate" class="session_start_date">
                     {{startDate | date: 'dd MMM, yyyy'}} </span>
             </div>
+            <div class="decrease-right">
             <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
                 <div>
                     <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
@@ -68,6 +69,7 @@
                         matTooltip="Export as excel" (click)="exportAsExcel()" />
                 </div>
             </div>
+        </div>
             <div class="row">
                 <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table" id="report_table">
