@@ -83,7 +83,7 @@
             </div>
           </div>
         </div>
-        <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions" showFirstLastButtons
+        <mat-paginator [length]="totalRecords" #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions" showFirstLastButtons
           (page)="pageEvent = fetchData($event)"></mat-paginator>
       </mat-card>
     </div>

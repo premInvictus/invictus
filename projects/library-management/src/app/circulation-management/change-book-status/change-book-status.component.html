@@ -111,6 +111,17 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '5'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Book Type</mat-label>
+                  <mat-select placeholder="Book Type" formControlName="accession_type"
+                    [required]="changeStatusForm?.value?.filters === '5'">
+                    <mat-option *ngFor="let item of accessionTypeArray" [value]="item.type_id" required>
+                      {{item.type_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
               <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '1'">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Book Type</mat-label>
