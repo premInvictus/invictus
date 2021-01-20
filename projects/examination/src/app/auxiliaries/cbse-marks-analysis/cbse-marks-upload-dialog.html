@@ -29,7 +29,7 @@
                  <div class="col-12 text-center">
                     <button mat-button class="btn-success-green" [disabled]="!(class_id && ses_id)"
                     style="position: relative;top:8px">
-                    <label for="file">Upload</label></button>
+                    <label for="file" class="label-name" style="position: relative; top: 3px;">Upload</label></button>
                  </div>
                  <input type="file" (change)="upload($event)" hidden id="file" [disabled]="!(class_id && ses_id)">
               </div>

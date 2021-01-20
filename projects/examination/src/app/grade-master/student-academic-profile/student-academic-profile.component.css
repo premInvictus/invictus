@@ -4,17 +4,35 @@
     top: -83px;
     color: #4db848;
     font-size: 20px;
-}
-.tittleAttendance{
+    }
+    .vertical-line-divider {
+    border-left: 2px solid #dee2e6;
+    height: 95%;
+    margin-left: 0%; 
+    }
+    .sis-col-17 {
+    max-width: 18%;
+    flex: 0 0 18%;
+    }
+    .student-name-col-14 {
+    max-width: 14%;
+    flex: 0 0 14%;
+    }
+    .divider-col-13 {
+    max-width: 10% !important;
+    flex: 0 0 3% !important;
+    }
+    .tittleAttendance{
     position: relative;
     top: -67px;
     font-size: 9px;
     left: -22px;
     font-weight: 600;
-}
-.mat-card{
+    }
+    .mat-card{
     padding: 5px;
-}
-.h-120{
+    }
+    .h-120{
     height: 120px !important;
-}
+    }
+    
