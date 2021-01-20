@@ -11,7 +11,7 @@
                     <div class="row">
                         <ng-container *ngFor="let item of admissionRemarkFields.controls; let i = index"
                             [formGroupName]="i">
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                            <div *ngIf="item.equs_status != 0" class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                                 <p><input type="hidden" formControlName="equs_id"
                                         value="{{item.controls?.equs_id.value}}">
                                     <label><b>Q.{{i+1}}</b> {{item.controls?.equs_name.value}}</label></p>
@@ -29,7 +29,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <span class="text-uppercase"><b>How to you learn about the school</b></span>
+                <span class="text-uppercase"><b>How did you learn about the school</b></span>
             </div>
         </div>
         <br>
