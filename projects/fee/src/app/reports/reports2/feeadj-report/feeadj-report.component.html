@@ -1,5 +1,15 @@
 <form [formGroup]="reportFilterForm">
   <div class="row">
+      <div class="col-2">
+          <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Report Type</mat-label>
+              <mat-select formControlName="report_type" (selectionChange)="changeReportType($event)">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of reportTypeArray" [value]="item.report_type">
+                      {{item.report_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
     <div *ngIf="filterFlag" class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>From Date</mat-label>
