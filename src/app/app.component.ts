@@ -168,7 +168,7 @@ export class AppComponent implements OnInit {
 		}, 1);
 		this.loaderService.counterTimer = 4;
 		this.idle.onTimerStart().subscribe((count: any) => {
-			console.log("i am count", count);
+			// console.log("i am count", count);
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
 			const routeUrl: String = routeData._routerState.url;

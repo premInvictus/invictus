@@ -221,8 +221,8 @@
                     <tr class="custom-tr">
                         <th class="custom-th">&nbsp;</th>
                         <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
-                            <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span>
-                            <span *ngIf='item.value["mf_type"]==="others"'>{{item.value["mf_value"]}}</span>
+                            <span>{{item.value["sub_name"]}}</span>
+                            
                         </th>
                         <th *ngIf="viewOnly" class="custom-th">
                             <span>Total</span>

@@ -109,7 +109,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		this.managementRemarkData = [];
 		this.admissionRemarkData = [];
 		if (login_id) {
-			this.sisService.getStudentRemarkDataThemeTwo({ au_login_id: login_id }).subscribe((result: any) => {
+			this.sisService.getStudentRemarkDataThemeTwo({ au_login_id: login_id, class_id: this.context.studentdetails.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					const remarkData = result.data;
 					this.generalRemarkData = remarkData[0]['remarksGeneral'];
