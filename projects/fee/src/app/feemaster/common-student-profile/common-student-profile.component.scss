@@ -59,3 +59,9 @@ button.nav-button.mat-mini-fab.mat-accent {
             right:20px !important;
         }
     }
+    @media screen and (max-width:1800px) and (min-width: 1336px){
+        .smart-col-13 {
+            max-width: 12% !important;
+            flex: 0 0 12% !important;
+        }
+    }
