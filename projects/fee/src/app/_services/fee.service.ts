@@ -625,4 +625,14 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getSummarizedFeeReport', value);
 	}
+
+	getFeeCumulativeConcessionAdjustmentReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeCumulativeConcessionAdjustmentReport', value);
+	}
+
+	getConcessionDetailReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionDetailReport', value);
+	}
 }
