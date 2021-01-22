@@ -2812,7 +2812,7 @@ export class OutstandingReportComponent implements OnInit {
 												}
 												obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
 													repoArray[Number(keys)]['invoice_id'] : '-';
-												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
 												obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
 													repoArray[Number(keys)]['fp_name'] : '-';
 												obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
