@@ -1476,7 +1476,7 @@ export class ModeltableComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		if (this.reportType === 'headwise') {
+		if (this.reportType === 'cumulativeheadwise') {
 			this.gridOptions.rowHeight = 65;
 			var fhArrr = [];
 			var gfhArr = [];
@@ -1486,7 +1486,7 @@ export class ModeltableComponent implements OnInit {
 			const collectionJSON: any = {
 				'admission_no': '',
 				'studentName': '',
-				'report_type': 'headwise',
+				'report_type': 'cumulativeheadwise',
 				'feeHeadId': fhArrr,
 				'groupFeeHeadId': gfhArr,
 				'from_date': value.from_date,
