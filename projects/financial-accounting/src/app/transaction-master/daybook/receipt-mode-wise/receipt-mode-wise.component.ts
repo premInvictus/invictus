@@ -83,7 +83,7 @@ export class ReceiptModeWiseComponent implements OnInit {
 			data: {
         month_id: this.param.month,
         date: e.date,
-        reportType: 'headwise'
+        reportType: 'cumulativeheadwise'
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
