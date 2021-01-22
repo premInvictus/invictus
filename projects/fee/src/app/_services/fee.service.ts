@@ -590,6 +590,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/getWallets',value);
 	}
+	getWalletsReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/getWalletsReport',value);
+	}
 
 	insertWallets(value) {
 		this.service.startLoading();
