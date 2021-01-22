@@ -152,6 +152,7 @@ export class ModeltableComponent implements OnInit {
     ) { }
 
 	ngOnInit() {
+		console.log('this.data-->', this.data);
 		this.reportType = this.data.reportType;
 
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -884,6 +885,7 @@ export class ModeltableComponent implements OnInit {
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
 					'downloadAll': true,
+					'faduedate' : this.data.date,
 					'school_branch': this.reportFilterForm.value.school_branch
 				};
 
@@ -893,7 +895,7 @@ export class ModeltableComponent implements OnInit {
 					this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
 							this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-							repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_due_date == this.data.date): [];
+							repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.data.date): [];
 							console.log("-------------------", repoArray);
               
 							this.totalRecords = Number(result.data.totalRecords);
@@ -1160,6 +1162,7 @@ export class ModeltableComponent implements OnInit {
 								}
 									for (const titem of commonHeadsArray) {
 										Object.keys(titem).forEach((key2: any) => {
+											console.log('titem', titem);
 											if (key2 === 'fh_name' && Number(keys) === 0) {
 												const feeObj: any = {};
 												this.columnDefinitions.push({
@@ -1180,6 +1183,7 @@ export class ModeltableComponent implements OnInit {
 												this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
 												j++;
 											}
+
 											if (key2 === 'fh_name') {
 												obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 													repoArray[Number(keys)]['rpt_id'];
@@ -1213,19 +1217,35 @@ export class ModeltableComponent implements OnInit {
 												// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 												for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
 													if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+															obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															tot = tot + repoArray[Number(keys)]['inv_opening_balance']
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															break;
+														} else {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+															break;
+														}
+														
+													} 
+
+													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-														console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
 														
 													} 
 												}
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-												obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-													? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+												obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 												obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
-													? Number(repoArray[Number(keys)]['inv_due_total_amt']) : 0;
+													? Number(repoArray[Number(keys)]['inv_due_total_amt'])+(repoArray[Number(keys)]['inv_fine_amount'] ? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : 0;
 												obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
 												obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
 														repoArray[Number(keys)]['epd_contact_no'] : '-';
@@ -1240,15 +1260,15 @@ export class ModeltableComponent implements OnInit {
 								}
 							});
 							this.columnDefinitions.push(
-								// {
-								// 	id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-								// 	filterable: true,
-								// 	filterSearchType: FieldType.number,
-								// 	filter: { model: Filters.compoundInputNumber },
-								// 	sortable: true,
-								// 	formatter: this.checkFeeFormatter,
-								// 	groupTotalsFormatter: this.sumTotalsFormatter
-								// },
+								{
+									id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+									filterable: true,
+									filterSearchType: FieldType.number,
+									filter: { model: Filters.compoundInputNumber },
+									sortable: true,
+									formatter: this.checkFeeFormatter,
+									groupTotalsFormatter: this.sumTotalsFormatter
+								},
 								{
 									id: 'total', name: 'Total', field: 'total',
 									filterable: true,

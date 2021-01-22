@@ -2849,10 +2849,12 @@ export class OutstandingReportComponent implements OnInit {
 												}
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-												obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-													? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+												obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 												obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
-													? Number(repoArray[Number(keys)]['inv_due_total_amt']) : 0;
+													? Number(repoArray[Number(keys)]['inv_due_total_amt']) + (repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : (repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0);
 												obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
 												obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
 														repoArray[Number(keys)]['epd_contact_no'] : '-';
@@ -2870,15 +2872,15 @@ export class OutstandingReportComponent implements OnInit {
 								}
 							});
 							this.columnDefinitions.push(
-								// {
-								// 	id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-								// 	filterable: true,
-								// 	filterSearchType: FieldType.number,
-								// 	filter: { model: Filters.compoundInputNumber },
-								// 	sortable: true,
-								// 	formatter: this.checkFeeFormatter,
-								// 	groupTotalsFormatter: this.sumTotalsFormatter
-								// },
+								{
+									id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+									filterable: true,
+									filterSearchType: FieldType.number,
+									filter: { model: Filters.compoundInputNumber },
+									sortable: true,
+									formatter: this.checkFeeFormatter,
+									groupTotalsFormatter: this.sumTotalsFormatter
+								},
 								{
 									id: 'total', name: 'Total', field: 'total',
 									filterable: true,
