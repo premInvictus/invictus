@@ -165,7 +165,7 @@ export class ModeltableComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.reportTypeArray.push({report_type: 'feedue', report_name: 'Fee dues'});
-		this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
+		this.reportTypeArray.push({report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise'});
 		if (this.sessionName) {
 			const date = new Date(this.data.date);
 			const firstDay = new Date(this.data.date);
@@ -179,7 +179,7 @@ export class ModeltableComponent implements OnInit {
 	if (this.reportType == 'feedue') {
 		this.getOutstandingReport(this.reportFilterForm.value);
 	}
-	if (this.reportType == 'headwise') {
+	if (this.reportType == 'cumulativeheadwise') {
 		this.getCollectionReport(this.reportFilterForm.value);
 	}
     
