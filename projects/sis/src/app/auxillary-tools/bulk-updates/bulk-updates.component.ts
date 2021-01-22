@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { saveAs } from 'file-saver';
+import * as Excel from 'exceljs/dist/exceljs';
+
 @Component({
 	selector: 'app-bulk-updates',
 	templateUrl: './bulk-updates.component.html',
@@ -27,9 +29,9 @@ export class BulkUpdatesComponent implements OnInit {
 			const formData = new FormData();
 			const component = this.uploadComponent;
 			formData.append('uploadFile', file, file.name);
-			formData.append('module' , 'auxillary');
+			formData.append('module', 'auxillary');
 			formData.append('component', component);
-			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
+			const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
 			this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
@@ -49,15 +51,15 @@ export class BulkUpdatesComponent implements OnInit {
 		console.log('file--', files);
 		if (files.length > 1) {
 			for (let i = 0; i < files.length; i++) {
-				if (files[i]['type'] === 'application/vnd.ms-excel' || files[i]['type'] === 'application/octet-stream' || (files[i]['type'] === '' && files[i]['size'] > 0) ) {
+				if (files[i]['type'] === 'application/vnd.ms-excel' || files[i]['type'] === 'application/octet-stream' || (files[i]['type'] === '' && files[i]['size'] > 0)) {
 					formData.append('uploadFile', files[i], files[i].name);
-				}else if ((files[i]['type'] === 'application/zip' || files[i]['type'] === 'application/x-zip-compressed') && files[i]['size'] > 0) {
+				} else if ((files[i]['type'] === 'application/zip' || files[i]['type'] === 'application/x-zip-compressed') && files[i]['size'] > 0) {
 					formData.append('zipFile', files[i], files[i].name);
 				}
 			}
-			formData.append('module' , 'auxillary');
+			formData.append('module', 'auxillary');
 			formData.append('component', component);
-			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
+			const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
 			this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
@@ -81,9 +83,9 @@ export class BulkUpdatesComponent implements OnInit {
 	downloadTemplate() {
 		if (this.uploadComponent === '') {
 			this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to download template', 'error');
-		} else {
+		}  else {
 			this.sisService.downloadBulkUpdateTemplate([
-				{ component: this.uploadComponent}]).subscribe((result: any) => {
+				{ component: this.uploadComponent }]).subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
 						const length = result.data.split('/').length;
