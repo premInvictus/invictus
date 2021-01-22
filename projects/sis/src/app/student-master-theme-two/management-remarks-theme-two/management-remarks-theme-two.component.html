@@ -215,63 +215,70 @@
     </div>
     <div class="row">
         <div class="col-12 text-center">
-            <table class="table table-borderd table-stripped custom-table "
-                *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
-                <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                        <th class="custom-th">&nbsp;</th>
-                        <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
-                            <span>{{item.value["sub_name"]}}</span>
-                            
-                        </th>
-                        <th *ngIf="viewOnly" class="custom-th">
-                            <span>Total</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="marks_remark" class="table-skill__body text-center">
-                    <ng-container>
-                        <tr class="custom-tr" *ngFor="let item of marksTableJson;let i=index;">
-                            <td class="custom-td">{{item['gt_name']}}</td>
-                            <td class="custom-td" *ngFor="let colItem of item['data'] | keyvalue; let j=index">
-                                <!-- [formGroup]="dynamicMarksForm[i]"-->
-                                <form [formGroup]="dynamicMarksForm[i]">
+            <table class="table table-borderd table-stripped custom-table"
+            *ngIf="marksTableJson2.length > 0">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">S.No</th>
+                <th class="custom-th">Parameters</th>
+                <th class="custom-th" *ngFor="let item of marksTableJson">
+                  <!-- <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span> -->
+                  {{item.gt_name}}
+                </th>
+              </tr>
+            </thead>
+            <tbody id="marks_remark" class="table-skill__body text-center">
+              <ng-container>
+                <tr class="custom-tr" *ngFor="let item of marksTableJson2;let i=index;">
+                  <td class="custom-td">{{i + 1}}</td>
+                  <td class="custom-td">{{item['sub_name']}}</td>
+                 
+                  <!-- <td class="custom-td">{{item['erms_value']}}</td> -->
 
-                                    <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
-                                    <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
-                                    <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field"
-                                        appearance="outline">
+                  <!-- <td class="custom-td" *ngFor="let colItem of item['data'] | keyvalue; let j=index"> -->
+                    <!-- [formGroup]="dynamicMarksForm[i]"-->
+                    
+                  <td class="custom-td" *ngFor="let type of marksTableJson3">
+                    <form [formGroup]="dynamicMarksForm[i]" *ngIf="item['gt_name'] == type">
 
-                                        <input type="number" matInput [formControlName]="'col'+colItem?.key"
-                                            class="margin-bottom-15">
-                                    </mat-form-field>
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field"
-                                        appearance="outline">
+                      <span *ngIf="viewOnly">{{item['erms_value']}}</span>
+                      <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
+                      <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
+                      <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'"
+                        class="form-field remark-input-form">
+                        <input type="number" matInput formControlName="col0">
+                      </mat-form-field>
+                      <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'"
+                        class="form-field remark-input-form">
+                        <input type="text" matInput formControlName="col0">
+                      </mat-form-field>
+                      <!-- </span> -->
+                      <!-- <span *ngIf="!viewOnly && j == 0">
+                              {{colItem.value["mf_value"]}}
+                          </span>
+                          <span *ngIf="!viewOnly && (j == (markObjectLength -1))">
+                              {{colItem.value["mf_value"]}}
+                          </span> -->
+                    </form>
+                  </td>
 
-                                        <input type="text" matInput [formControlName]="'col'+colItem?.key"
-                                            class="margin-bottom-15">
-                                    </mat-form-field>
-                                    <!-- </span> -->
-                                    <!-- <span *ngIf="!viewOnly && j == 0">
-                                        {{colItem.value["mf_value"]}}
-                                    </span>
-                                    <span *ngIf="!viewOnly && (j == (markObjectLength -1))">
-                                        {{colItem.value["mf_value"]}}
-                                    </span> -->
-                                </form>
-                            </td>
-                            <td *ngIf="viewOnly" class="custom-td">{{item['total']}}</td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-                <tbody *ngIf="!(marksTableJson.length > 0)">
-
-                    <tr>
-                        <td colspan="6" class="text-center">No Record Found</td>
-                    </tr>
-                </tbody>
-            </table>
+                  
+                </tr>
+                <tr class="custom-tr">
+                  <td>&nbsp;</td>
+                  <td>Total</td>
+                  <td *ngFor="let item of marksTableJson">
+                    {{item.total}}
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+            <tbody *ngIf="!(marksTableJson.length > 0)">
+              <tr>
+                <td colspan="6" class="text-center">No Record Found</td>
+              </tr>
+            </tbody>
+          </table>
 
 
         </div>

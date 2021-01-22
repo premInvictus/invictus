@@ -967,7 +967,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				});
 				pos++;
 			}
-			this.CONFIG_ELEMENT_DATA.sort((a,b) => (a.order > b.order? 1:-1));
+			that.CONFIG_ELEMENT_DATA.sort((a,b) => (a.order > b.order? 1:-1));
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);

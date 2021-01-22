@@ -56,6 +56,8 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
 	marksTableJson: any[] = [];
+	marksTableJson2: any[] = [];
+	marksTableJson3: any[] = [];
 	markObjectLength;
 	showForm = false;
 	constructor(
@@ -319,33 +321,28 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 
 	prepareMarkSplitTable(markSplitData) {
 		this.marksTableJson = markSplitData;
-		this.markObjectLength = this.marksTableJson.length;
+		this.marksTableJson2 = [];
+		this.marksTableJson3 =  [];
+		// console.log("i am mark table", this.marksTableJson);
 		const fGroupArr = [];
-		for (let i = 0; i < markSplitData.length; i++) {
-			const markFormControlArr = [];
-			const inputJson = {};
-			const formControlArr = [];
-			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
-				const key = 'col' + j;
-				inputJson[key] = markSplitData[i]['data'][j]['erms_value'];
-			}
-			fGroupArr.push(this.fbuild.group(inputJson));
-		}
-
-		// for(let k=0; k < fGroupArr.length; k++) {
-		// 	const temp = <FormGroup>fGroupArr[k];
-		// 	for (let l = 0; l < markSplitData[k]['data'].length; l++) {
-		// 		const key = 'col' + l;
-		// 		temp.patchValue({
-		// 			au_final_remark: '',
-		// 			au_is_eligible_adimission: '',
-		// 			au_process_class: ''
-		// 		});
-		// 		temp.value[key]['erms_value'] = markSplitData[k]['data'][l]['erms_value'];
-		// 	}
-		// }
-
+		// let count = 0;
+		markSplitData.forEach(element => {
+			this.marksTableJson3.push(element.gt_name)
+			element.data.forEach(element1 => {
+				const inputJson = {};
+				this.marksTableJson2.push(element1);
+				const key = 'col0';
+				inputJson[key] = element1.erms_value;
+				fGroupArr.push(this.fbuild.group(inputJson));
+			});
+		});
+		// console.log("i am this.mak", this.marksTableJson2);
+		
+		
+		this.markObjectLength = this.marksTableJson.length;
 		this.dynamicMarksForm = fGroupArr;
+		console.log("i am dynamic form", this.marksTableJson3);
+		
 	}
 
 	getArea() {
