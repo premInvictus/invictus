@@ -1549,6 +1549,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						console.log("i am result", result);
 						this.resetForm(this.configValue);
 						this.getParameterTable(this);
+						this.disableApiCall = false;
 					})
 					break;
 
@@ -1951,11 +1952,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (serviceName == 'deleteSubjectStatusId') {
 			console.log("i am delete data", deletedData);
 			let array_id = [];
+			let mf_id = [];
 			deletedData.forEach(element => {
-				array_id.push(element.gf_id)
+				array_id.push(element.gf_id);
+				mf_id.push(element.mf_id);
 			});
 			console.log("i am value", array_id);
-			this.sisService.deleteSubjectStatusId({ array_id: array_id }).subscribe((result: any) => {
+			this.sisService.deleteSubjectStatusId({ array_id: array_id, mf_id: mf_id }).subscribe((result: any) => {
 				next(this);
 				this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
 			})
