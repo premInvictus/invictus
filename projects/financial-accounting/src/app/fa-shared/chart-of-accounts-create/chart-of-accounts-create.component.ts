@@ -112,6 +112,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-8', name: 'Gratuity'},
 		{id:'fr-1', name: 'Fee Receivable'},
 		{id:'adj-1', name: 'Fee Adjustment'},
+		{id:'wl-1', name: 'Wallet'},
 		
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
