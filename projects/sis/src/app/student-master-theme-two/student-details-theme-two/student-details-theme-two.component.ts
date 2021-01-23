@@ -663,14 +663,14 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_email: this.studentdetails.au_email,
 			au_hou_id: this.studentdetails.au_hou_id,
 			au_sec_id: this.studentdetails.au_sec_id,
-			epd_parent_name: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_name : '',
-			epd_contact_no: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',
-			epd_whatsapp_no: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '',
-			epd_parent_type: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
-			mi_emergency_contact_name: this.studentdetails.medicalinfo.length > 0 ?
+			epd_parent_name: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_name : '',
+			epd_contact_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',
+			epd_whatsapp_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '',
+			epd_parent_type: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
+			mi_emergency_contact_name: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ?
 				this.studentdetails.medicalinfo[0].mi_emergency_contact_name : '',
-			mi_emergency_contact_no: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : '',
-			mi_blood_group: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_blood_group : '',
+			mi_emergency_contact_no: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : '',
+			mi_blood_group: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_blood_group : '',
 		});
 	}
 	uploadImage(fileName, au_profileimage) {

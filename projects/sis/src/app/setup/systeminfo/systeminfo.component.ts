@@ -4,6 +4,7 @@ import { SisService, CommonAPIService, SmartService } from '../../_services/inde
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
+import { element } from 'protractor';
 @Component({
 	selector: 'app-systeminfo',
 	templateUrl: './systeminfo.component.html',
@@ -45,6 +46,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	configFlag = false;
 	updateFlag = false;
 	classArray: any[] = [];
+	subjectArray: any[] = [];
+	subjectArray1: any[] = [];
+	typeArray: any[] = [];
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
 	{ docreq_is_required: '0', docreq_is_required_name: 'No' }];
 	reason_type: any = '1';
@@ -59,12 +63,39 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.getReasonType();
 		this.getVaccinations();
 		this.getClassAll();
+		this.getSubjectAll();
+		this.getTypeAll();
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
 		this.configDataSource.paginator = this.paginator;
 	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
+	getSubjectAll() {
+		this.sisService.getAllSubject().subscribe((result: any) => {
+			console.log(" i am result", result);
+			this.subjectArray = result;
+			this.subjectArray1 = result;
+
+		})
+	}
+
+	getTypeAll() {
+		this.sisService.getTypeAll().subscribe((res: any) => {
+			this.typeArray = res;
+			console.log("i am type array", this.typeArray);
+		})
+	}
+
+	filterSubject($event) {
+		// keyCode
+		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+			if ($event.target.value !== '' && $event.target.value.length >= 1) {
+				this.subjectArray = this.subjectArray1.filter(e => e.parameter_value.toLowerCase().includes($event.target.value.toLowerCase()))
+			}
+		}
+	}
+
 	buildForm() {
 		this.formGroupArray = [{
 			formGroup: this.fbuild.group({
@@ -258,9 +289,22 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				equs_placeholder: '',
 				equs_status: ''
 			})
-		},];
+		},
+		{
+			formGroup: this.fbuild.group({
+				parameter_id: '',
+				parameter_name: '',
+				parameter_type: '',
+				parameter_class: [],
+				parameter_status: '',
+				parameter_order: 0
+			})
+		},
+		];
 	}
 	loadConfiguration($event) {
+		console.log("check me");
+
 		this.displayedColumns = ['position', 'name', 'alias', 'action', 'modify'];
 		this.configFlag = false;
 		this.updateFlag = false;
@@ -336,6 +380,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 23) {
 			this.getCustomAll(this);
 			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'action', 'modify'];
+			this.configFlag = true;
+		} else if (Number(this.configValue) === 24) {
+			this.getParameterTable(this);
+			this.displayedColumns = [ 'parameter', 'type', 'class', 'action', 'modify']
 			this.configFlag = true;
 		}
 	}
@@ -431,6 +479,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		}
 		else if (Number(this.configValue) === 23) {
 			if (value.equs_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 24) {
+			if (value[0].gf_status === '1') {
 				return true;
 			}
 		}
@@ -727,6 +779,22 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 			});
 		}
+		else if (Number(this.configValue) === 24) {
+			let array_id = [];
+			let status = '0'
+			value.forEach(element => {
+				array_id.push(element.gf_id)
+			});
+			if (value[0].gf_status == '0') {
+				status = '1'
+			}
+			console.log("i am value", array_id);
+			this.sisService.changeSubjectStatusId({ array_id: array_id, status: status }).subscribe((result: any) => {
+				console.log("i am result")
+			})
+
+
+		}
 	}
 	changeTypeQues($event) {
 		if ($event.value === 'custom') {
@@ -807,6 +875,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				data.equs_status = '5';
 				this.deleteEntry(data, 'updateCustomRemarks', this.getCustomAll);
 				break;
+			case '24':
+				data.equs_status = '5';
+				this.deleteEntry(data, 'deleteSubjectStatusId', this.getParameterTable);
+				break;
 		}
 	}
 	getVaccinations() {
@@ -839,6 +911,72 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	getParameterTable(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.sisService.getParameterForRemarks().subscribe((result: any) => {
+			console.log("-------------------------------", that.classArray);
+			let arr_sub_id = [];
+			let arr_type_id = [];
+			result.forEach(element => {
+				if (arr_sub_id.filter(e => e == element.parameter_id).length == 0) {
+					if (element.parameter_id != null)
+						arr_sub_id.push(element.parameter_id);
+				}
+				if (arr_type_id.filter(e => e == element.gt_id).length == 0) {
+					arr_type_id.push(element.gt_id)
+				}
+			});
+
+			let super_arr = [];
+			for (let i = 0; i < arr_sub_id.length; i++) {
+				let a1 = [];
+				let a2 = [];
+				for (let j = 0; j < arr_type_id.length; j++) {
+					a1 = result.filter(e => e.parameter_id == arr_sub_id[i] && e.gt_id == arr_type_id[j] && e.gt_status == '0');
+					a2 = result.filter(e => e.parameter_id == arr_sub_id[i] && e.gt_id == arr_type_id[j] && e.gt_status == '1');
+					if (a1.length > 0)
+						super_arr.push(a1);
+					if (a2.length > 0)
+						super_arr.push(a2);
+				}
+				// a1 = result.filter(e => )
+			}
+			
+			let pos = 1;
+			for (const item of super_arr) {
+				let s = [];
+				// let ids = [];
+				item.forEach(element => {
+					// ids.push(element.gf_id);
+					if (element.class_id)
+						s.push(that.classArray.filter(e => e.class_id == element.class_id)[0].class_name);
+				});
+
+				// console.log("i am here", item[0].gt_status);
+
+				that.CONFIG_ELEMENT_DATA.push({
+					position: pos,
+					parameter: item[0].parameter_value,
+					type: item[0].gt_name,
+					class: s,
+					action: item,
+					order: parseInt(item[0].parameter_order)
+					// id: ids
+				});
+				pos++;
+			}
+			that.CONFIG_ELEMENT_DATA.sort((a,b) => (a.order > b.order? 1:-1));
+			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+			that.configDataSource.paginator = that.paginator;
+			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+			that.configDataSource.sort = that.sort;
+
+
+		})
+	}
+
 	getBloodGroupAll(that) {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -1390,6 +1528,31 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					}
 
 					break;
+				case '24':
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					let checkNewSubject = true;
+					let subject_id = this.subjectArray1.length;
+					let checkforsubject = this.subjectArray1.filter(e => e.parameter_value.toLowerCase().includes(this.formGroupArray[value - 1].formGroup.value.parameter_name.toLowerCase()));
+					if (checkforsubject.length > 0) {
+						subject_id = checkforsubject[0].parameter_id,
+							checkNewSubject = false
+					}
+					let obj: any = {
+						checkNewSubject: checkNewSubject,
+						subject_id: subject_id,
+						parameter_type: this.formGroupArray[value - 1].formGroup.value.parameter_type,
+						parameter_name: this.formGroupArray[value - 1].formGroup.value.parameter_name,
+						parameter_class: this.formGroupArray[value - 1].formGroup.value.parameter_class,
+						parameter_order: this.formGroupArray[value - 1].formGroup.value.parameter_order,
+					}
+					this.sisService.addNewRemarkParameterAndClass(obj).subscribe((result: any) => {
+						console.log("i am result", result);
+						this.resetForm(this.configValue);
+						this.getParameterTable(this);
+						this.disableApiCall = false;
+					})
+					break;
+
 			}
 		}
 	}
@@ -1589,6 +1752,31 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				equs_status: value.equs_status
 			});
 		}
+		else if (Number(this.configValue) === 24) {
+			this.updateFlag = true;
+			let id = [];
+			let class1 = [];
+			value.forEach(element => {
+				id.push(element.gf_id);
+				class1.push(element.class_id)
+			});
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				parameter_name: value[0].parameter_value,
+				parameter_type: value[0].gt_id,
+				parameter_class: class1,
+				parameter_id: value,
+				parameter_order: value[0].parameter_order
+			});
+			// console.log("i am value", value);
+
+		}
+	}
+	getOrderValue(value) {
+		console.log("i am value")
+		this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+			parameter_name: value.parameter_value,
+			parameter_order: value.parameter_order
+		})
 	}
 	updateConfiguration(value) {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
@@ -1688,18 +1876,102 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateCustomRemarks', this.getCustomAll);
 					}
 					break;
+				case '24':
+					//check for grade change
+					if(this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_order != this.formGroupArray[value - 1].formGroup.value.parameter_order) {
+						this.sisService.updateOrderType({parameter_order: this.formGroupArray[value - 1].formGroup.value.parameter_order, parameter_name:this.formGroupArray[value - 1].formGroup.value.parameter_name }).subscribe((res:any) => {
+							this.getParameterTable(this);
+						});
+					}
+					//lets check for cases such as remark type
+					if (this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gt_id != this.formGroupArray[value - 1].formGroup.value.parameter_type) {
+						let arr = [];
+						this.formGroupArray[value - 1].formGroup.value.parameter_id.forEach(element => {
+							arr.push(element.gf_id);
+						});
+						this.sisService.updateGradeType({ id_arr: arr, type: this.formGroupArray[value - 1].formGroup.value.parameter_type }).subscribe((res:any) => {
+							this.getParameterTable(this);
+						})
+					}
+					let barr = [];
+					this.formGroupArray[value - 1].formGroup.value.parameter_id.forEach(element => {
+						barr.push(element.class_id);
+					});
+					if (JSON.stringify(barr) != JSON.stringify(this.formGroupArray[value - 1].formGroup.value.parameter_class)) {
+						//check for remove
+						let remove_id = []
+						for (let i = 0; i < barr.length; i++) {
+							if (!this.formGroupArray[value - 1].formGroup.value.parameter_class.includes(barr[i])) {
+								remove_id.push(barr[i]);
+							}
+						}
+
+						let obj: any = [];
+						remove_id.forEach(e => {
+							let temp = this.formGroupArray[value - 1].formGroup.value.parameter_id.filter(element => element.class_id == e);
+							let obj1: any = {
+								'gf_id': temp[0].gf_id,
+								'mf_id': temp[0].mf_id
+							}
+							obj.push(obj1);
+						});
+						if (obj.length > 0)
+							this.sisService.removeClassFromList({ obj: obj }).subscribe((result: any) => {
+								this.getParameterTable(this);
+							});
+						obj = [];
+						this.formGroupArray[value - 1].formGroup.value.parameter_class.forEach(element => {
+							if(!barr.includes(element)) {
+								let obj1 : any = {
+									gf_status : this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gf_status,
+									gf_gt_id: this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gf_gt_id,
+									class_id: element,
+									mf_value: this.formGroupArray[value - 1].formGroup.value.parameter_id[0].mf_value
+								}
+								obj.push(obj1);
+							}
+						});
+						if(obj.length > 0) {
+							this.sisService.addClassToList({obj:obj}).subscribe((res:any) => {
+								this.getParameterTable(this);
+							});
+						}
+					}
+					this.resetForm(this.configValue);
+					this.updateFlag = false;
+					this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+					// this.updateEntry('', 'getParameterForRemarks', this.getParameterTable);
+					
+					break;
 			}
 		}
 	}
 	applyFilter(event) { }
 	deleteCancel() { }
 	deleteEntry(deletedData, serviceName, next) {
-		this.sisService[serviceName](deletedData).subscribe((result: any) => {
-			if (result.status === 'ok') {
+		if (serviceName == 'deleteSubjectStatusId') {
+			console.log("i am delete data", deletedData);
+			let array_id = [];
+			let mf_id = [];
+			deletedData.forEach(element => {
+				array_id.push(element.gf_id);
+				mf_id.push(element.mf_id);
+			});
+			console.log("i am value", array_id);
+			this.sisService.deleteSubjectStatusId({ array_id: array_id, mf_id: mf_id }).subscribe((result: any) => {
 				next(this);
 				this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
-			}
-		});
+			})
+		}
+		else {
+			this.sisService[serviceName](deletedData).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					next(this);
+					this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
+				}
+			});
+		}
+
 	}
 	addEntry(data, serviceName, next) {
 		this.sisService[serviceName](data).subscribe((result: any) => {

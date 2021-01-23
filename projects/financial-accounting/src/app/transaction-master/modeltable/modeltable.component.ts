@@ -446,19 +446,19 @@ export class ModeltableComponent implements OnInit {
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
-					'report_type': value.report_type,
+					'report_type': "cumulativeheadwise",
 					'feeHeadId': value.fee_value,
 					'from_date': value.from_date,
 					'to_date': value.to_date,
 					'pageSize': '10',
 					'pageIndex': '0',
-					'filterReportBy': 'outstanding',
+					'filterReportBy': 'collection',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
 				};
-				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data != null ? result.data.reportData: [];
@@ -882,9 +882,9 @@ export class ModeltableComponent implements OnInit {
 					'studentName': '',
 					'report_type': value.report_type,
 					'feeHeadId': value.fee_value,
-					// 'from_date': value.from_date,
-					// 'to_date': value.to_date,
-					'month_id': this.reportFilterForm.value.month_id,
+					'from_date': value.from_date,
+					'to_date': value.from_date,
+					// 'month_id': this.reportFilterForm.value.month_id,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',

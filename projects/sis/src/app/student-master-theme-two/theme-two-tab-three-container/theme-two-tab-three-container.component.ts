@@ -109,7 +109,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		this.managementRemarkData = [];
 		this.admissionRemarkData = [];
 		if (login_id) {
-			this.sisService.getStudentRemarkDataThemeTwo({ au_login_id: login_id }).subscribe((result: any) => {
+			this.sisService.getStudentRemarkDataThemeTwo({ au_login_id: login_id, class_id: this.context.studentdetails.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					const remarkData = result.data;
 					this.generalRemarkData = remarkData[0]['remarksGeneral'];
@@ -267,10 +267,10 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		const markSplitData = this.managementRemarkData['markSplit'];
 		console.log('markSplitData',markSplitData);
 		const dynamicRemarkForm = this.management_remark && this.management_remark.dynamicMarksForm ? this.management_remark.dynamicMarksForm : [];
-
+		let count = 0;
 		for (let i = 0; i < markSplitData.length; i++) {
 			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
-				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[i] ? dynamicRemarkForm[i]['value']['col' + j] : '';
+				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[count] ? dynamicRemarkForm[i]['value']['col0'] : '';
 			}
 		}
 		return markSplitData;

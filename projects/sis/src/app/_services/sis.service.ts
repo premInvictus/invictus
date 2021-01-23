@@ -992,6 +992,15 @@ export class SisService {
 		return this.http.get(environment.apiSisUrl + '/dashboardSis/getCountStudentDashboard');
 	}
 
+	getSchoolRemarkSubject() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/studentinfo/getSchoolRemarkSubject');
+	}
+	getParameterForRemarks() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/studentinfo/getParameterForRemarks');
+	}
+
 	getStudentClasswiseDashboard() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/dashboardSis/getStudentClasswiseDashboard');
@@ -1131,5 +1140,41 @@ export class SisService {
 	printReceipt(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/wallets/printReceipt',value);
+	}
+	changeSubjectStatusId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/changeSubjectStatusId', value);
+	}
+	deleteSubjectStatusId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/deleteSubjectStatusId', value);
+	}
+	getAllSubject() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/studentinfo/subject');
+	}
+	getTypeAll() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/studentinfo/getTypeAll');
+	}
+	addNewRemarkParameterAndClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addNewRemarkParameterAndClass', value);
+	}
+	updateGradeType(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/updateGradeType', value);
+	}
+	removeClassFromList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/removeClassFromList', value);
+	}
+	addClassToList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addClassToList', value);
+	}
+	updateOrderType(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/updateOrderType', value);
 	}
 }

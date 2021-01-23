@@ -41,6 +41,7 @@
                                     <mat-option value="21">Nationality</mat-option>
                                     <mat-option value="22">Student Tags</mat-option>
                                     <mat-option value="23">Custom Questions</mat-option>
+                                    <mat-option value="24">Admission Test Parameters</mat-option>
                                  </mat-select>
                               </mat-form-field>
                               <div *ngIf="configValue == 1">
@@ -520,7 +521,48 @@
                                  </mat-form-field>
                                  </form>
                               </div>
-                              <div *ngIf="configValue < 24">
+                              <div *ngIf="configValue == 24">
+                                 <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <input matInput placeholder="Subject" aria-label="Subject" [matAutocomplete]="auto" (keyup)="filterSubject($event)" formControlName="parameter_name">
+                                       <mat-autocomplete #auto="matAutocomplete">
+                                         <mat-option *ngFor="let item of subjectArray" (onSelectionChange)="getOrderValue(item)" (click)="getOrderValue(item)" [value]="item.parameter_value">
+                                           <span>{{ item.parameter_value }}</span>
+                                         </mat-option>
+                                       </mat-autocomplete>
+                                     </mat-form-field>
+                                     <mat-form-field class="form-field" appearance="outline">
+                                       <input matInput placeholder="Order" aria-label="Order" type="number" min="0" formControlName="parameter_order">
+                                     </mat-form-field>
+                                     <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Type</mat-label>
+                                       <mat-select formControlName="parameter_type" placeholder="Type" required 
+                                         [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
+                                         <mat-option value="">Please Select</mat-option>
+                                         <mat-option *ngFor="let item of typeArray" [value]="item.gt_id">
+                                           {{item.gt_name}}
+                                         </mat-option>
+                                       </mat-select>
+                                       <mat-error>
+                                         This field is required
+                                       </mat-error>
+                                     </mat-form-field>
+                                     <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Classes</mat-label>
+                                       <mat-select formControlName="parameter_class" placeholder="Type" required 
+                                         [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl multiple>
+                                         <mat-option value="">Please Select</mat-option>
+                                         <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                           {{item.class_name}}
+                                         </mat-option>
+                                       </mat-select>
+                                       <mat-error>
+                                         This field is required
+                                       </mat-error>
+                                     </mat-form-field>
+                                 </form>
+                              </div>
+                              <div *ngIf="configValue < 25">
                                  <div class="text-center margin-top-15">
                                     <button *ngIf="!updateFlag" mat-raised-button class="btn-success"
                                        [disabled]="disableApiCall" (click)="addConfiguration(configValue)">Add</button>
@@ -578,6 +620,30 @@
                                                                {{ item.name }}
                                                             </td>
                                                          </ng-container>
+                                                         <ng-container matColumnDef="parameter">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               Parameter
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let item">
+                                                               {{ item.parameter }}
+                                                            </td>
+                                                         </ng-container>
+                                                         <ng-container matColumnDef="type">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               Type
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let item">
+                                                               {{ item.type }}
+                                                            </td>
+                                                         </ng-container>
+                                                         <!-- <ng-container matColumnDef="class">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               {{firstHeaderArray[configValue-1]}}
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let item">
+                                                               {{ item.name }}
+                                                            </td>
+                                                         </ng-container> -->
                                                          <!-- Class Column -->
                                                          <ng-container matColumnDef="alias">
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
