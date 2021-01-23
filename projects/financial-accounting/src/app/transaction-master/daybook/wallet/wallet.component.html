@@ -14,8 +14,9 @@
           <th class="mat-header-cell">Date</th>
           <th class="mat-header-cell">Received</th>
           <th class="mat-header-cell">Withdrawal</th>
-          <th class="mat-header-cell">Purchase</th>
           <th class="mat-header-cell">Total</th>
+          <th class="mat-header-cell">Purchase</th>
+          <th class="mat-header-cell">Grand Total</th>
           <th class="mat-header-cell">Action</th>
         </tr>
       </thead>
@@ -24,11 +25,11 @@
           <td>{{item['date'] | date: 'd-MMM-yyyy'}}</td>
           <td>{{item['deposit_amt'] | indianCurrency}}</td>
           <td>{{item['withdrawal_amt'] | indianCurrency}}</td>
+          <td>{{item['total_cash'] | indianCurrency}}</td>
           <td>{{item['purchase_amt'] | indianCurrency}}</td>
           <td style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{item.total | indianCurrency}}</td>
           <td class="action-btn">
-              <span *ngIf="item.total"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
-              <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('748') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))" [ngClass]="item.be_back_status ? 'dotted_border':''"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,'update'); ">Update Voucher</button></span>
+              <span *ngIf="item.total && !(item.voucherExists) && isExistUserAccessMenu('788')"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
           </td>
         </tr>
         <tr>

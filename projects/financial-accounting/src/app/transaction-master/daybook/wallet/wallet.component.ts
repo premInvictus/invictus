@@ -8,6 +8,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { IndianCurrency } from '../../../_pipes';
 import * as moment from 'moment';
 import { WalletModalComponent } from '../../wallet-modal/wallet-modal.component';
+import { element } from '@angular/core/src/render3/instructions';
 
 @Component({
   selector: 'app-wallet',
@@ -113,11 +114,12 @@ export class WalletComponent implements OnInit {
   getDaysInMonth(month, year) {
 		return new Date(year, month, 0).getDate();
 	};
-  getWalletsReport() {
+  async getWalletsReport() {
     this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.ELEMENT_DATA = [];
-    this.feeService.getWalletsReport({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((result: any) => {
+    
+    this.feeService.getWalletsReport({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe(async (result: any) => {
       if (result && result.status === 'ok') {
         this.showLoadingFlag = true;
         const tempData: any[] = result.data;     
@@ -144,6 +146,17 @@ export class WalletComponent implements OnInit {
           this.eachheadtotal_details['purchase_amt']=0;
           this.eachheadtotal_details['total']=0;
           if (tempData.length > 0) {
+            let param:any = {};
+            param.from_date = dateArray[0];
+            param.to_date = dateArray[dateArray.length - 1];
+            param.vc_process = 'automatic/wallet';
+            let apiVoucherData = [];
+            await this.faService.getAllVoucherEntry(param).toPromise().then((data:any)=>{
+              if(data) {
+                apiVoucherData = data;
+              }
+            });
+            console.log('apiVoucherData',apiVoucherData);
             dateArray.forEach(e => {
               const tempelement: any = {};
               tempelement['date'] = e;
@@ -152,6 +165,7 @@ export class WalletComponent implements OnInit {
               // tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
               // tempelement['be_back_status'] = e.be_back_status;
               let tempvalue = tempData.filter(element => element.w_transaction_date == e);
+              let apiVoucherDataEach = apiVoucherData.filter(element => element.vc_date == e);
               console.log('tempvalue',tempvalue);
               if (tempvalue && tempvalue.length > 0) {
                 let deposit_amt = 0;
@@ -170,12 +184,19 @@ export class WalletComponent implements OnInit {
                 });
                 tempelement['deposit_amt'] = deposit_amt;
                 tempelement['withdrawal_amt'] = withdrawal_amt;
+                tempelement['total_cash'] = deposit_amt-withdrawal_amt;
                 tempelement['purchase_amt'] = purchase_amt;					
                 tempelement['total'] = deposit_amt-withdrawal_amt-purchase_amt;
                 this.eachheadtotal_details['deposit_amt'] += deposit_amt;
                 this.eachheadtotal_details['withdrawal_amt'] += withdrawal_amt;
                 this.eachheadtotal_details['purchase_amt'] += purchase_amt;
                 this.eachheadtotal_details['total'] += tempelement['total'];
+                tempelement['voucherExists'] = false;
+                if(apiVoucherDataEach.length > 0){
+                  if(apiVoucherDataEach[0].vc_state != 'delete'){
+                    tempelement['voucherExists'] = true;                  
+                  }
+                }
               }
               this.ELEMENT_DATA.push(tempelement);
             });
@@ -226,7 +247,7 @@ export class WalletComponent implements OnInit {
           this.chartsOfAccount.push(result[i]);
           console.log('charts of account receipt,', this.chartsOfAccount);
         }
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "store") {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "store" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "wallet")) {
           //console.log('result--', result[i]);
           this.chartsOfAccountInvoice.push(result[i]);
           this.tempChartsOfAccountInvoice.push(result[i]['coa_dependencies'][0]['dependency_name']);
@@ -263,10 +284,12 @@ export class WalletComponent implements OnInit {
       if(voucherData.deposit_amt || voucherData.withdrawal_amt){
         let voucherEntryArray = [];
         const voucheramt = voucherData.deposit_amt - voucherData.withdrawal_amt;
-        if(voucheramt >= 0){
+        let tempnaration = 'Being Net Amount Received against Pocket Money';
+        if(voucheramt > 0){
           debitac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Cash Collection') ;
           creditac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Wallet') ;  
         } else {
+          tempnaration = 'Being Net Amount Paid against Pocket Money';
           debitac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Wallet') ; 
           creditac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Cash Collection') ; 
         }
@@ -288,19 +311,25 @@ export class WalletComponent implements OnInit {
             vc_particulars: creditac['coa_acc_name'],
             vc_grno: '',
             vc_invoiceno: '',
-            vc_debit: voucheramt,
-            vc_credit: 0
+            vc_debit: 0,
+            vc_credit: voucheramt
           };
           voucherEntryArray.push(vFormJson);
-          this.getVoucherTypeMaxId(voucherEntryArray,'Receipt');
+          this.getVoucherTypeMaxId(voucherEntryArray,'Receipt',tempnaration);
+        } else {
+          this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
         }
       }
+      
       if(voucherData.purchase_amt > 0){
+        console.log(voucherData.purchase_amt);
         let voucherEntryArray1 = [];
         debitac=null;
         creditac =null;
         debitac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Wallet') ;
         creditac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Store') ;  
+        console.log('debitact',debitac);
+        console.log('creditac',creditac);
         if(debitac && creditac) {
           let vFormJson = {};
           vFormJson = {
@@ -319,17 +348,19 @@ export class WalletComponent implements OnInit {
             vc_particulars: creditac['coa_acc_name'],
             vc_grno: '',
             vc_invoiceno: '',
-            vc_debit: voucherData.purchase_amt,
-            vc_credit: 0
+            vc_debit: 0,
+            vc_credit: voucherData.purchase_amt
           };
           voucherEntryArray1.push(vFormJson);
-          this.getVoucherTypeMaxId(voucherEntryArray1,'Journal');
+          this.getVoucherTypeMaxId(voucherEntryArray1,'Journal','Being Non cash purchases made through pocket money account');
+        } else {
+          this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
         }
       }
     }
   }
 
-  async getVoucherTypeMaxId(voucherEntryArray,vc_type) {
+  async getVoucherTypeMaxId(voucherEntryArray,vc_type,vc_narrations) {
     let param: any = {};
     param.vc_type = vc_type;
     param.vc_date = this.currentVoucherData.date;
@@ -340,6 +371,7 @@ export class WalletComponent implements OnInit {
       if (data) {
         flag = 1;
         result = data;
+        result['vc_narrations'] = vc_narrations;
 
         this.getVcName(result, voucherEntryArray);
 
@@ -348,8 +380,9 @@ export class WalletComponent implements OnInit {
 
   }
 
-  getVcName(vcData, voucherEntryArray) {
+  async getVcName(vcData, voucherEntryArray) {
     let vcType = vcData.vc_type.substr(0,1)+'V';
+    let tempvc_narrations = vcData.vc_narrations;
     console.log('vcData---',vcData);
     console.log('voucherEntryArray------',voucherEntryArray);
     let currentSessionFirst = this.sessionName.split('-')[0];
@@ -373,56 +406,55 @@ export class WalletComponent implements OnInit {
     let vcNumber = vcData.vc_code;
     this.vcData = { vc_code: vcData.vc_code, vc_name: this.vcYearlyStatus ? vcType + '/' + ((vcNumber.toString()).padStart(4, '0')) : vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
 
-
     if (this.vcData) {
       var fJson = {
         vc_id: this.currentVoucherData && this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
         vc_type: vcData.vc_type,
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
-        vc_narrations: 'Receipt Computation of Date ' + this.voucherDate,
+        vc_narrations: tempvc_narrations + ' Date ' + this.voucherDate,
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
         vc_state: 'draft',
-        vc_process: 'automatic/'+vcData.vc_type.toLowerCase()
+        vc_process: 'automatic/wallet'
+        // vc_process: 'automatic/'+vcData.vc_type.toLowerCase()
 
       }
       console.log('fJson--', fJson);
-      // if (!this.currentVoucherData.vc_id) {
-      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-      //     if (data) {
-      //       if(this.currentVoucherData.be_back_status) {
-      //         this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
+      if (!this.currentVoucherData.vc_id) {
+        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+          if (data) {
+            // if(this.currentVoucherData.be_back_status) {
+            //   this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
       
-      //         });
-      //       }
-      //       this.getWalletsReport();
-      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
+            //   });
+            // }
+            this.getWalletsReport();
+            this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
 
 
-      //     } else {
-      //       this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
-      //     }
-      //   });
-      // } else {
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+          }
+        });
+      } else {
 
-      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-      //     if (data) {
-      //       this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
+        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+          if (data) {
+            // this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
       
-      //       });
-      //       this.getWalletsReport();
-      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
+            // });
+            this.getWalletsReport();
+            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
 
 
-      //     } else {
-      //       this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-      //     }
-      //   });
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
+          }
+        });
 
-      // }
+      }
     }
-
 
   }
   isExistUserAccessMenu(mod_id) {
