@@ -105,7 +105,7 @@ export class SearchDialogComponent implements OnInit {
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 
 				
-
+				console.log('this.invoiceArray->',this.invoiceArray);
 				
 				let pos = 1;
 				this.invoiceTotal = 0;
@@ -141,6 +141,10 @@ export class SearchDialogComponent implements OnInit {
 					// this.invoiceArrayForm.push(fb);
 				}
 				for (const item of this.invoiceArray) {
+					let head_amt =0;
+					let ccamount =0;
+					let adjamount =0;
+					let total_amt =0;
 					if (Number(item.head_bal_amount) != 0 ) {
 					this.INVOICE_ELEMENT_DATA.push({
 						srno: pos,
@@ -153,6 +157,7 @@ export class SearchDialogComponent implements OnInit {
 						netpay: Number(item.head_bal_amount)
 					});
 					// tslint:disable-next-line: max-line-length
+					console.log('item.invg_fh_name--',item.invg_fh_name);
 					if (item.invg_fh_name != 'Previous Received Amt.') {
 					var fb = this.fbuild.group({
 						rm_inv_id:item.invg_inv_id,
@@ -170,11 +175,54 @@ export class SearchDialogComponent implements OnInit {
 						netpay: Number(item.head_bal_amount)
 					});
 					this.invoiceArrayForm.push(fb);
-					this.invoiceFormArrayClone.push(fb);}
+					console.log('this.invoiceArrayForm 173-->',this.invoiceArrayForm)
+					this.invoiceFormArrayClone.push(fb);
+				}
+					pos++;
+				} else {
+					this.INVOICE_ELEMENT_DATA.push({
+						srno: pos,
+						feehead: item.invg_fh_name,
+						feedue: item.invg_fh_amount,
+						concession: item.invg_fcc_amount,
+						adjustment: item.invg_adj_amount,
+						// tslint:disable-next-line: max-line-length
+						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - Number(item.invg_adj_amount) ,
+						//netpay: Number(item.head_bal_amount)
+					});
+					// tslint:disable-next-line: max-line-length
+					console.log('item.invg_fh_name--',Number(item.invg_adj_amount));
+					
+					if (item.invg_fh_name != 'Previous Received Amt.') {
+						head_amt= Number(item.invg_fh_amount);
+						ccamount= Number(item.invg_fcc_amount);
+						adjamount= Number(item.invg_adj_amount);
+						total_amt = head_amt-ccamount-adjamount;
+						console.log(total_amt);
+					var fb = this.fbuild.group({
+						rm_inv_id:item.invg_inv_id,
+						rm_head_type:item.invg_head_type,
+						rm_fm_id:item.invg_fm_id,
+						rm_fh_id:item.invg_fh_id,
+						rm_fh_name:item.invg_fh_name,
+						rm_fh_amount:item.invg_fh_amount,
+						rm_fcc_id:item.invg_fcc_id,
+						rm_fcc_name:item.invg_fcc_name,
+						rm_fcc_amount:item.invg_fcc_amount,
+						rm_adj_amount:item.invg_adj_amount,
+						rm_total_amount:total_amt,
+						netpay:total_amt
+						//netpay: Number(item.head_bal_amount)
+					});
+					
+					this.invoiceArrayForm.push(fb);
+					console.log('this.invoiceArrayForm 207-->',Number(item.invg_fh_amount),Number(item.invg_fcc_amount), Number(item.invg_adj_amount))
+					this.invoiceFormArrayClone.push(fb);
+				}
 					pos++;
 				}
 					
-					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
+					this.invoiceTotal += total_amt;
 					
 					
 					
@@ -206,8 +254,11 @@ export class SearchDialogComponent implements OnInit {
 					// });
 					// this.invoiceArrayForm.push(fb);
 				}
+				console.log('this.INVOICE_ELEMENT_DATA-->',this.INVOICE_ELEMENT_DATA,this.invoiceTotal);
+				setTimeout(() => {
+					this.dataSource = new MatTableDataSource<any>(this.INVOICE_ELEMENT_DATA);	
+				}, 1000);
 				
-				this.dataSource = new MatTableDataSource<any>(this.INVOICE_ELEMENT_DATA);
 			}
 		});
 	}
