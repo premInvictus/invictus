@@ -276,6 +276,7 @@ export class WalletModalComponent implements OnInit {
       'from_date': this.data.date,
       'to_date': this.data.date,
     });
+    this.reportType = 'wallet_transaction_all';
     this.changeReportType();
   }
   getClassName(classArray) {

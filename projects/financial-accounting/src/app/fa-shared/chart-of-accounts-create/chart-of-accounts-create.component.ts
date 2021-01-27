@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { SisService, CommonAPIService, SmartService, FaService } from '../../_services';
+import { SisService, CommonAPIService, SmartService, FaService,FeeService } from '../../_services';
 import { forEach } from '@angular/router/src/utils/collection';
 import * as moment from 'moment';
 
@@ -28,13 +28,15 @@ export class ChartOfAccountsCreateComponent implements OnInit {
   maxVCNumber = '';
   tempAccountGroup: any[] = [];
   feeHeadArr:any[] = [];
+  locationArray:any[] = [];
   constructor(
     public dialogRef: MatDialogRef<ChartOfAccountsCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private fbuild: FormBuilder,
     private fb: FormBuilder,
 		private commonAPIService: CommonAPIService,
-		private faService:FaService
+		private faService:FaService,
+		private feeService: FeeService
   ) { }
 
   ngOnInit() {
@@ -99,6 +101,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 
   }
   async getDependancy(){
+	this.locationArray = [];
 	this.dependancyeArr.push(
 		{id:'ca-1', name: 'Cash Collection'},
 		{id:'ca-9', name: 'Cash Payment'},
@@ -113,7 +116,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'fr-1', name: 'Fee Receivable'},
 		{id:'adj-1', name: 'Fee Adjustment'},
 		{id:'wl-1', name: 'Wallet'},	
-		{id:'st-1', name: 'Store'},	
+		// {id:'st-1', name: 'Store'},	
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
 		if(result && result.status == 'ok') {
@@ -138,6 +141,18 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			}
 		}
 	})
+	await this.feeService.getLocation({}).subscribe((result: any) => {
+		if (result) {
+			this.locationArray = result;
+			for (const item of result) {
+				if(item.location_status=="1"){ //Deducation
+					this.dependancyeArr.push(
+						{id:'st-'+item.location_id, name: item.location_name}
+					);
+				}
+			}
+		}
+	});
 	console.log('middle')
   }
   checkFeeHead() {
