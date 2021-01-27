@@ -83,7 +83,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
 			data: {
         month_id: this.param.month,
         date: e.date,
-        reportType: 'headwise'
+        reportType: 'cumulativeheadwise_advance',
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
@@ -133,7 +133,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
-    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), advance:true }).subscribe((data: any) => {
       if (data) {
 
         const tempData: any = data.receipt_data;
@@ -218,7 +218,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
-    this.faService.getNonPartialDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+    this.faService.getNonPartialDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) , advance: true}).subscribe((data: any) => {
       if (data) {
 
         const tempData: any = data.receipt_data;

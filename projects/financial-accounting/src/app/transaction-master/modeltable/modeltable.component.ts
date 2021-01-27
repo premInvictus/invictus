@@ -180,7 +180,10 @@ export class ModeltableComponent implements OnInit {
 		this.getOutstandingReport(this.reportFilterForm.value);
 	}
 	if (this.reportType == 'cumulativeheadwise') {
-		this.getCollectionReport(this.reportFilterForm.value);
+		this.getCollectionReport(this.reportFilterForm.value,false);
+	}
+	if (this.reportType == 'cumulativeheadwise_advance') {
+		this.getCollectionReport(this.reportFilterForm.value,true);
 	}
     
 	}
@@ -1351,7 +1354,7 @@ export class ModeltableComponent implements OnInit {
 		} 
 	}
 
-	getCollectionReport(value:any) {
+	getCollectionReport(value:any,advance) {
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
@@ -1476,7 +1479,7 @@ export class ModeltableComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		if (this.reportType === 'cumulativeheadwise') {
+		if (this.reportType === 'cumulativeheadwise' || this.reportType === 'cumulativeheadwise_advance') {
 			this.gridOptions.rowHeight = 65;
 			var fhArrr = [];
 			var gfhArr = [];
@@ -1497,7 +1500,8 @@ export class ModeltableComponent implements OnInit {
 				'login_id': value.login_id,
 				'orderBy': value.orderBy,
 				'downloadAll': true,
-				'school_branch': value.school_branch
+				'school_branch': value.school_branch,
+				'report_advance':advance
 			};
 			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
