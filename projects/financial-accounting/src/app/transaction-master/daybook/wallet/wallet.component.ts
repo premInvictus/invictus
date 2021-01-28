@@ -27,6 +27,7 @@ export class WalletComponent implements OnInit {
   partialPaymentStatus = 1;
   apiInvoiceData = [];
   apiReceiptData = [];
+  walletData = [];
   chartsOfAccount: any[] = [];
   chartsOfAccountInvoice: any[] = [];
   vcData: any;
@@ -41,7 +42,7 @@ export class WalletComponent implements OnInit {
   showLoadingFlag = false;
   feeReceivableAccountName = 'Fee Receivable';
   globalsetup:any;
-
+  errorMessage:any[]=[];
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -118,11 +119,11 @@ export class WalletComponent implements OnInit {
     this.showLoadingFlag = true;
     this.headtoatl = 0;
     this.ELEMENT_DATA = [];
-    
     this.feeService.getWalletsReport({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe(async (result: any) => {
       if (result && result.status === 'ok') {
         this.showLoadingFlag = true;
-        const tempData: any[] = result.data;     
+        const tempData: any[] = result.data;   
+        this.walletData = result.data;  
         const dateArray: any[] = [];
         const no_of_days2 = this.getDaysInMonth(this.param.month, new Date().getFullYear());
         if(tempData.length > 0){
@@ -157,6 +158,7 @@ export class WalletComponent implements OnInit {
               }
             });
             console.log('apiVoucherData',apiVoucherData);
+            console.log('apiVoucherData',apiVoucherData);
             dateArray.forEach(e => {
               const tempelement: any = {};
               tempelement['date'] = e;
@@ -171,17 +173,44 @@ export class WalletComponent implements OnInit {
                 let deposit_amt = 0;
                 let withdrawal_amt = 0;
                 let purchase_amt = 0;
+                let tempreceiptHeadArr:any[] = [];
+                let tempstoredArr:any[] = [];
                 tempvalue.forEach(element => {
+                  let pay_name;
+                  if(element.pay_id == 1){
+                      pay_name = element.pay_name;
+                  } else {
+                    pay_name = element.tb_name_bnk ? element.tb_name_bnk : null;
+                  }
+                  if(pay_name){
+                    element['pay_name']=pay_name;
+                    tempreceiptHeadArr[pay_name] = tempreceiptHeadArr[pay_name] ? tempreceiptHeadArr[pay_name] : 0;
+                  }                  
                   if(element.w_opening == 1){
-                    deposit_amt += parseInt(element.w_amount);
+                    // deposit_amt += parseInt(element.w_amount);
+                    // if(pay_name) {
+                    //   tempreceiptHeadArr[pay_name] += parseInt(element.w_amount);
+                    // }                    
                   } else if(element.w_amount_status == 'deposit'){
                     deposit_amt += parseInt(element.w_amount);
+                    if(pay_name) {
+                      tempreceiptHeadArr[pay_name] += parseInt(element.w_amount);
+                    } 
                   } else if(element.w_amount_status == 'withdrawal'){
                     withdrawal_amt += parseInt(element.w_amount);
+                    if(pay_name) {
+                      tempreceiptHeadArr[pay_name] -= parseInt(element.w_amount);
+                    } 
                   } else if(element.w_amount_status == 'purchase'){
+                    if(element.w_ref_location_id){
+                      tempstoredArr[element.w_ref_location_id] = tempstoredArr[element.w_ref_location_id] ? tempstoredArr[element.w_ref_location_id] : 0
+                      tempstoredArr[element.w_ref_location_id] += parseInt(element.w_amount);
+                    }
                     purchase_amt += parseInt(element.w_amount);
                   }
                 });
+                tempelement['storewise_total_amt'] = tempstoredArr;
+                tempelement['modewise_total_amt'] = tempreceiptHeadArr;
                 tempelement['deposit_amt'] = deposit_amt;
                 tempelement['withdrawal_amt'] = withdrawal_amt;
                 tempelement['total_cash'] = deposit_amt-withdrawal_amt;
@@ -240,18 +269,18 @@ export class WalletComponent implements OnInit {
     this.chartsOfAccount = [];
     this.chartsOfAccountInvoice = [];
     this.tempChartsOfAccountInvoice = [];
-    this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
+    this.faService.getAllChartsOfAccount({coa_status:'active'}).subscribe((result: any) => {
       
       for (var i = 0; i < result.length; i++) {
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "wallet" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "wallet" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_collection")) {
           this.chartsOfAccount.push(result[i]);
-          console.log('charts of account receipt,', this.chartsOfAccount);
+          console.log('chartsOfAccount,', this.chartsOfAccount);
         }
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "store" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "wallet")) {
           //console.log('result--', result[i]);
           this.chartsOfAccountInvoice.push(result[i]);
           this.tempChartsOfAccountInvoice.push(result[i]['coa_dependencies'][0]['dependency_name']);
-          console.log('charts of account invoice,', this.chartsOfAccountInvoice)
+          console.log('chartsOfAccountInvoice,', this.chartsOfAccountInvoice)
         }
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
           //console.log('result--', result[i]);
@@ -265,6 +294,7 @@ export class WalletComponent implements OnInit {
 
   createVoucher(item, action) {
     console.log('item--', item);
+    this.errorMessage = [];
     this.currentVoucherData = item;
     this.voucherDate = item.date;
     this.checkForHeadData(this.currentVoucherData, action);
@@ -281,9 +311,11 @@ export class WalletComponent implements OnInit {
     if (action != 'update') {
       let debitac;
       let creditac;
-      if(voucherData.deposit_amt || voucherData.withdrawal_amt){
+      let dateWalletData = this.walletData.filter(e => e.w_transaction_date == voucherData.date);
+      console.log(voucherData.modewise_total_amt['Cash']);
+      if(voucherData.modewise_total_amt['Cash']){
         let voucherEntryArray = [];
-        const voucheramt = voucherData.deposit_amt - voucherData.withdrawal_amt;
+        let voucheramt = voucherData.modewise_total_amt['Cash'];
         let tempnaration = 'Being Net Amount Received against Pocket Money';
         if(voucheramt > 0){
           debitac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Cash Collection') ;
@@ -292,6 +324,7 @@ export class WalletComponent implements OnInit {
           tempnaration = 'Being Net Amount Paid against Pocket Money';
           debitac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Wallet') ; 
           creditac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Cash Collection') ; 
+          voucheramt  = -voucheramt ;
         }
         if(debitac && creditac) {
           let vFormJson = {};
@@ -317,20 +350,85 @@ export class WalletComponent implements OnInit {
           voucherEntryArray.push(vFormJson);
           this.getVoucherTypeMaxId(voucherEntryArray,'Receipt',tempnaration);
         } else {
-          this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+          this.errorMessage.push('Error While Creating Voucher Entry');
+          // this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
         }
       }
-      
+      let receiptHeadArr = []
+      for(let mod in voucherData.modewise_total_amt){
+        if(mod != 'Cash') {
+          receiptHeadArr[mod] = voucherData.modewise_total_amt[mod];
+        }
+      }
+      console.log('receiptHeadArr',receiptHeadArr);
+      console.log('receiptHeadArr.length',Object.keys(receiptHeadArr).length);
+      if(Object.keys(receiptHeadArr).length > 0){
+        let tempnaration = 'Being Net Amount Received against Pocket Money';
+        let feeReceivableAmt = 0;
+        let voucherEntryArray = [];
+        let total_debit_amt = 0;
+        let total_credit_amt = 0;
+        for (let mod in receiptHeadArr) {
+          total_debit_amt += receiptHeadArr[mod];
+        }
+        for (let mod in receiptHeadArr) {
+          for (let j = 0; j < this.chartsOfAccount.length; j++) {
+            if ((this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === mod+' Collection') || (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === mod) ) {
+              if (receiptHeadArr[mod] != 0) {
+                let vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: receiptHeadArr[mod],
+                  vc_credit: 0
+                };
+                feeReceivableAmt = feeReceivableAmt + receiptHeadArr[mod]
+                voucherEntryArray.push(vFormJson);
+                break;
+              }
+            }
+          }
+        }
+        if (voucherEntryArray.length > 0) {
+          creditac = this.chartsOfAccount.find(e => e['coa_dependencies'][0]['dependenecy_component'] == 'wallet') ; 
+          if(creditac) {
+            let vFormJson = {
+              vc_account_type: creditac['coa_acc_name'],
+              vc_account_type_id: creditac['coa_id'],
+              vc_particulars: creditac['coa_acc_name'],
+              vc_grno: '',
+              vc_invoiceno: '',
+              vc_debit: 0,
+              vc_credit: feeReceivableAmt
+            };
+            total_credit_amt += feeReceivableAmt;
+            voucherEntryArray.push(vFormJson);
+            if(total_debit_amt == total_credit_amt) {
+              this.getVoucherTypeMaxId(voucherEntryArray,'Receipt',tempnaration);
+            } else {
+              this.errorMessage.push('Error Mismatch amount in modewise collention');
+            }
+          } else {
+            this.errorMessage.push('Error While Creating Voucher Entry');
+            // this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+          }
+        }
+      }
       if(voucherData.purchase_amt > 0){
+        let dateWalletData = this.walletData.filter(e => e.w_transaction_date == voucherData.date);
         console.log(voucherData.purchase_amt);
         let voucherEntryArray1 = [];
         debitac=null;
         creditac =null;
-        debitac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Wallet') ;
-        creditac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependency_name'] == 'Store') ;  
+        debitac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependenecy_component'] == 'wallet') ;
+        creditac = this.chartsOfAccountInvoice.find(e => e['coa_dependencies'][0]['dependenecy_component'] == 'store') ;  
         console.log('debitact',debitac);
         console.log('creditac',creditac);
         if(debitac && creditac) {
+          let total_debit_amt = 0;
+          let total_credit_amt = 0;
           let vFormJson = {};
           vFormJson = {
             vc_account_type: debitac['coa_acc_name'],
@@ -341,22 +439,40 @@ export class WalletComponent implements OnInit {
             vc_debit: voucherData.purchase_amt,
             vc_credit: 0
           };
+          total_debit_amt += voucherData.purchase_amt;
           voucherEntryArray1.push(vFormJson);
-          vFormJson = {
-            vc_account_type: creditac['coa_acc_name'],
-            vc_account_type_id: creditac['coa_id'],
-            vc_particulars: creditac['coa_acc_name'],
-            vc_grno: '',
-            vc_invoiceno: '',
-            vc_debit: 0,
-            vc_credit: voucherData.purchase_amt
-          };
-          voucherEntryArray1.push(vFormJson);
-          this.getVoucherTypeMaxId(voucherEntryArray1,'Journal','Being Non cash purchases made through pocket money account');
+          let storewise_total_amt =  voucherData.storewise_total_amt;
+          for (let storeid in storewise_total_amt) {
+            for (let j = 0; j < this.chartsOfAccountInvoice.length; j++) {
+              if ((this.chartsOfAccountInvoice[j]['coa_dependencies'][0]['dependancy_id'] === storeid) && (this.chartsOfAccountInvoice[j]['coa_dependencies'][0]['dependenecy_component'] === 'store') ) {
+                if (storewise_total_amt[storeid] != 0) {
+                  let vFormJson = {
+                    vc_account_type: this.chartsOfAccountInvoice[j]['coa_acc_name'],
+                    vc_account_type_id: this.chartsOfAccountInvoice[j]['coa_id'],
+                    vc_particulars: this.chartsOfAccountInvoice[j]['coa_acc_name'],
+                    vc_grno: '',
+                    vc_invoiceno: '',
+                    vc_debit: 0,
+                    vc_credit: storewise_total_amt[storeid]
+                  };
+                  total_credit_amt += (storewise_total_amt[storeid] ? parseInt(storewise_total_amt[storeid]) : 0);
+                  voucherEntryArray1.push(vFormJson);
+                  break;
+                }
+              }
+            }
+          }
+          if(total_debit_amt == total_credit_amt) {
+            this.getVoucherTypeMaxId(voucherEntryArray1,'Journal','Being Non cash purchases made through pocket money account');
+          } else {
+            this.errorMessage.push('Error Mismatch amount in storewise collention');
+          }
         } else {
-          this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+          this.errorMessage.push('Error While Creating Voucher Entry');
+          // this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
         }
       }
+
     }
   }
 
@@ -422,37 +538,25 @@ export class WalletComponent implements OnInit {
       }
       console.log('fJson--', fJson);
       if (!this.currentVoucherData.vc_id) {
-        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-          if (data) {
-            // if(this.currentVoucherData.be_back_status) {
-            //   this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
-      
-            //   });
-            // }
-            this.getWalletsReport();
-            this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
-
-
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
-          }
-        });
-      } else {
-
-        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-          if (data) {
-            // this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
-      
-            // });
-            this.getWalletsReport();
-            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
-
-
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-          }
-        });
-
+        if(this.errorMessage.length == 0){
+          this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+            if (data) {
+              // if(this.currentVoucherData.be_back_status) {
+              //   this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
+        
+              //   });
+              // }
+              this.getWalletsReport();
+              this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
+  
+  
+            } else {
+              this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+            }
+          });
+        } else {
+          this.commonAPIService.showSuccessErrorMessage(this.errorMessage[0], 'error');
+        }
       }
     }
 
