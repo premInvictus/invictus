@@ -239,18 +239,18 @@
                     <!-- [formGroup]="dynamicMarksForm[i]"-->
                     
                   <td class="custom-td" *ngFor="let type of marksTableJson3">
-                    <form [formGroup]="dynamicMarksForm[i]" *ngIf="item['gt_name'] == type">
+                    <form [formGroup]="dynamicMarksForm[i]"   *ngIf="item['gt_name'] == type">
 
                       <span *ngIf="viewOnly">{{item['erms_value']}}</span>
                       <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
                       <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
                       <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'"
-                        class="form-field remark-input-form">
-                        <input type="number" matInput formControlName="col0">
+                        class="form-field remark-input-form" >
+                        <input  matInput type="number" formControlName="col0" (keyup)="letchecktotal($event)" >
                       </mat-form-field>
                       <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'"
                         class="form-field remark-input-form">
-                        <input type="text" matInput formControlName="col0">
+                        <input type="text" matInput formControlName="col0" (keyup)="letchecktotal($event)">
                       </mat-form-field>
                       <!-- </span> -->
                       <!-- <span *ngIf="!viewOnly && j == 0">

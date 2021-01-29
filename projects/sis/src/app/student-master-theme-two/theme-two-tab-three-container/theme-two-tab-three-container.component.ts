@@ -125,12 +125,15 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		const managementRemarkFormData = this.getManagementRemarkFormData();
 		const admissionRemarkFormData = this.getAdmissionRemarkFormData();
 		const remarkQuestionData = [];
+		const remarkLearnData = [];
 		const markSplitData = this.prepareMarkSplitData();
 		if (admissionRemarkFormData && admissionRemarkFormData['admissionRemarkFieldData']) {
 			for (let i = 0; i < admissionRemarkFormData['admissionRemarkFieldData'].length; i++) {
 				remarkQuestionData.push(admissionRemarkFormData['admissionRemarkFieldData'][i]);
 			}
 		}
+		console.log("i am here tocheck", admissionRemarkFormData['learnFieldData']);
+		
 
 		const remarkJson = {
 			'au_login_id': this.context.studentdetails.studentdetailsform.value.au_login_id ?
@@ -243,8 +246,8 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 	getAdmissionRemarkFormData() {
 		const admissionRemarkFieldData = (this.admission_remark && this.admission_remark.admissionRemarkFields
 			&& this.admission_remark.admissionRemarkFields.value) ? this.admission_remark.admissionRemarkFields.value : [];
-		const learnFieldData = (this.admission_remark && this.admission_remark.learnFieldData
-			&& this.admission_remark.learnFieldData.value) ? this.admission_remark.learnFields.value : [];
+		const learnFieldData = (this.admission_remark && this.admission_remark.learnFields
+			&& this.admission_remark.learnFields.value) ? this.admission_remark.learnFields.value : [];
 		return { admissionRemarkFieldData, learnFieldData };
 	}
 
@@ -265,12 +268,16 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 
 	prepareMarkSplitData() {
 		const markSplitData = this.managementRemarkData['markSplit'];
-		console.log('markSplitData',markSplitData);
+		
 		const dynamicRemarkForm = this.management_remark && this.management_remark.dynamicMarksForm ? this.management_remark.dynamicMarksForm : [];
+		console.log('markSplitData',dynamicRemarkForm);
 		let count = 0;
 		for (let i = 0; i < markSplitData.length; i++) {
 			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
-				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[count] ? dynamicRemarkForm[i]['value']['col0'] : '';
+				console.log("i am here", dynamicRemarkForm[count]['value']['col0']);
+				
+				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[count]['value']['col0'] ;
+				count++;
 			}
 		}
 		return markSplitData;
