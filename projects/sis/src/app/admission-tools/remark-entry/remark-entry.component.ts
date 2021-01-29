@@ -82,7 +82,8 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 			class_id: '',
 			father_name: '',
 			mother_name: '',
-			au_mobile: '',
+			father_contact_no: '',
+			mother_contact_no: '',
 			upd_dob: '',
 			upd_doj: '',
 			au_test_date: '',
@@ -147,10 +148,13 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 					this.getManagementRemarks(this.login_id);
 					this.getDocumentRequired();
 					this.studentdetials = result.data[0];
+					console.log("i am here ", this.studentdetials.active_parent === 'M', this.studentdetials.active_parent === 'F');
+					
 					this.studentdetailsform.patchValue({
 						au_full_name: this.studentdetials.au_full_name,
 						class_id: this.studentdetials.class_id,
-						au_mobile: this.studentdetials.au_mobile,
+						mother_contact_no: this.studentdetials.active_parent === 'M' ? this.studentdetials.mother_contact_no: '',
+						father_contact_no: this.studentdetials.active_parent === 'F' ? this.studentdetials.father_contact_no: '',
 						upd_dob: this.studentdetials.upd_dob,
 						upd_doj: this.studentdetials.upd_doj,
 						father_name: this.studentdetials.father_name,
