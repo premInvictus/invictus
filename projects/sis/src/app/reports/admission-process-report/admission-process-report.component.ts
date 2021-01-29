@@ -23,13 +23,13 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-  selector: 'app-admission-process-report',
-  templateUrl: './admission-process-report.component.html',
-  styleUrls: ['./admission-process-report.component.css']
+	selector: 'app-admission-process-report',
+	templateUrl: './admission-process-report.component.html',
+	styleUrls: ['./admission-process-report.component.css']
 })
 export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 
-  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -81,7 +81,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 	levelHeading: any[] = [];
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
-	
+
 	showDate = true;
 	showDateRange = false;
 	events: any;
@@ -105,8 +105,8 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 
 	birthdayReportForm: FormGroup;
 
-  reportProcessWiseData: any;
-  rowsChosen: any[] = [];
+	reportProcessWiseData: any;
+	rowsChosen: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
@@ -117,88 +117,6 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		this.getSchool();
 		this.getSession();
 		this.buildForm();
-		this.gridOptions = {
-			enableDraggableGrouping: true,
-			enableGrouping: true,
-			createPreHeaderPanel: true,
-			showPreHeaderPanel: true,
-			enableHeaderMenu: true,
-			preHeaderPanelHeight: 40,
-			enableFiltering: true,
-			enableSorting: true,
-			enableColumnReorder: true,
-			createFooterRow: true,
-			showFooterRow: true,
-			footerRowHeight: 35,
-			enableExcelCopyBuffer: true,
-			fullWidthRows: true,
-			enableAutoTooltip: true,
-      enableCellNavigation: true,
-      enableCheckboxSelector: true,
-			checkboxSelector: {
-				columnId: 'checkbox_select'
-			},
-			rowSelectionOptions: {
-				selectActiveRow: false
-			},
-			enableRowSelection: true,
-			headerMenu: {
-				iconColumnHideCommand: 'fas fa-times',
-				iconSortAscCommand: 'fas fa-sort-up',
-				iconSortDescCommand: 'fas fa-sort-down',
-				title: 'Sort'
-			},
-			exportOptions: {
-				sanitizeDataExport: true,
-				exportWithFormatter: true
-			},
-			gridMenu: {
-				customItems: [{
-					title: 'pdf',
-					titleKey: 'Export as PDF',
-					command: 'exportAsPDF',
-					iconCssClass: 'fas fa-download'
-				},
-				{
-					title: 'excel',
-					titleKey: 'Export Excel',
-					command: 'exportAsExcel',
-					iconCssClass: 'fas fa-download'
-				}
-				],
-				onCommand: (e, args) => {
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
-					}
-					if (args.command === 'exportAsExcel') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
-					}
-					if (args.command === 'export-csv') {
-						this.exportToFile('csv');
-					}
-				},
-				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-					this.updateTotalRow(this.angularGrid.slickGrid);
-				},
-			},
-			draggableGrouping: {
-				dropPlaceHolderText: 'Drop a column header here to group by the column',
-				// groupIconCssClass: 'fa fa-outdent',
-				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => {
-					this.groupColumns = [];
-					this.groupColumns = args.groupColumns;
-					this.onGroupChanged(args && args.groupColumns);
-					setTimeout(() => {
-						this.updateTotalRow(this.angularGrid.slickGrid);
-					}, 100);
-				},
-				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-			}
-		};
 	}
 
 	ngAfterViewInit() {
@@ -208,7 +126,8 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		this.birthdayReportForm = this.fbuild.group({
 			fdate: new Date(),
 			cdate: new Date(),
-			tdate: new Date()
+			tdate: new Date(),
+			reviewReport: '1'
 		});
 	}
 	getSchool() {
@@ -288,7 +207,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		this.levelHeading = [];
 		this.levelTotalFooter = [];
 		this.levelSubtotalFooter = [];
-		const reportType = this.getReportHeader() ;
+		const reportType = this.getReportHeader();
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -514,7 +433,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'regd_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -543,7 +462,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'regd_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -569,7 +488,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -722,7 +641,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			});
 			columValue.push(item.name);
 		}
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
@@ -861,7 +780,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -924,7 +843,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Account Wise Ledger';
+		return 'Admission Process Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -938,7 +857,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -984,18 +903,18 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 	submit() {
 		this.resetGrid();
 		const inputJson = {};
-		// if (this.showDate) {
-		// 	inputJson['from_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.cdate, 'yyyy-MM-dd');
-		// } else {
-		// 	inputJson['from_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.fdate, 'yyyy-MM-dd');
-		// 	inputJson['to_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.tdate, 'yyyy-MM-dd');
-		// }
-    inputJson['enrollment_type'] = 2;
+		if (this.showDate) {
+			inputJson['to_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.cdate, 'yyyy-MM-dd');
+		} else {
+			inputJson['from_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.fdate, 'yyyy-MM-dd');
+			inputJson['to_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.tdate, 'yyyy-MM-dd');
+		}
+		inputJson['enrollment_type'] = 2;
 		const validateFlag = this.checkValidation();
 		if (validateFlag) {
 			this.sisService.processAdmissionReport(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
-          this.reportProcessWiseData = result.data;
+					this.reportProcessWiseData = result.data;
 					this.prepareDataSource();
 					this.tableFlag = true;
 				} else {
@@ -1027,11 +946,11 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 	}
 	valueAndDash(value) {
 		return value && value !== '0' ? value : '-';
-  }
-  onSelectedRowsChanged(e, args) {
-    // console.log('eeeeeeee',e);
+	}
+	onSelectedRowsChanged(e, args) {
+		// console.log('eeeeeeee',e);
 		// console.log('aaaaaaaaa',args);
-    if (args.rows.length === this.dataset.length) {
+		if (args.rows.length === this.dataset.length) {
 			this.rowsChosen = args.rows;
 			this.gridObj.setSelectedRows(this.rowsChosen);
 		} else if (args.rows.length === 0) {
@@ -1040,10 +959,10 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridObj.setSelectedRows(this.rowsChosen);
 		}
-    console.log('this.rowsChosen',this.rowsChosen)
-  }
-  onCellClicked(e, args) {
-    // console.log('onCellClicked eeeeeeee',e);
+		console.log('this.rowsChosen', this.rowsChosen)
+	}
+	onCellClicked(e, args) {
+		// console.log('onCellClicked eeeeeeee',e);
 		// console.log('onCellClicked aaaaaaaaa',args);
 		if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
 			const index = this.rowsChosen.indexOf(args.row);
@@ -1055,108 +974,274 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			const item = args.grid.getDataItem(args.row);
 		}
 	}
-  onCellChanged(e, args) {
+	onCellChanged(e, args) {
 		console.log(e);
 		console.log(args);
 	}
+	resetDataset() {
+		this.dataset = [];
+		this.columnDefinitions = [];
+		this.tableFlag = false;
+	}
+	remarkFormater (row, cell, value, columnDef, dataContext) {
+        if (value == null || value === "" || value === "-") {
+			return "-";
+		} else if (value.toLowerCase() == 'qualified') {
+			return "<span style='color:green'>" + value + "</span>";
+		} else {
+			return value;
+		}
+	}
+	checkFeeFormatter(row, cell, value, columnDef, dataContext) {
+		if (value === 0) {
+			return '-';
+		} else {
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
+		}
+	}
 	prepareDataSource() {
-    this.columnDefinitions = [];
-    if(this.reportProcessWiseData.parameter && this.reportProcessWiseData.parameter.length > 0){
-      this.columnDefinitions.push({ id: 'regd_no', name: 'Reg.No.', field: 'regd_no', sortable: true, filterable: true,
-      grouping: {
-        getter: 'regd_no',
-        formatter: (g) => {
-          return `${g.value}  <span style="color:green">(${g.count})</span>`;
-        },
-        aggregators: this.aggregatearray,
-        aggregateCollapsed: true,
-        collapsed: false,
-      },
-      groupTotalsFormatter: this.srnTotalsFormatter });
-      this.columnDefinitions.push({ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-      groupTotalsFormatter: this.countTotalsFormatter });
-      this.columnDefinitions.push({ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-      grouping: {
-        getter: 'class_name',
-        formatter: (g) => {
-          return `${g.value}  <span style="color:green">(${g.count})</span>`;
-        },
-        aggregators: this.aggregatearray,
-        aggregateCollapsed: true,
-        collapsed: false,
-      }});
-      this.reportProcessWiseData.parameter.forEach(element => {
-        this.columnDefinitions.push(
-          { 
-            id: 'pm'+element.parameter_id, 
-            name: element.parameter_value, 
-            field: 'pm'+element.parameter_id, 
-            sortable: true, 
-            filterable: true
-          }
-        );
-      });
-      this.columnDefinitions.push(
-        { 
-          id: 'admission_remark', 
-          name:'Admission Remark', 
-          field: 'admission_remark', 
-          sortable: true, 
-          filterable: true
-        }
-      );
-      this.columnDefinitions.push(
-        { 
-          id: 'parent_remark', 
-          name:'Parent Remark', 
-          field: 'parent_remark', 
-          sortable: true, 
-          filterable: true
-        }
-      )
-      this.columnDefinitions.push(
-        { 
-          id: 'student_remark', 
-          name:'Student Remark', 
-          field: 'student_remark', 
-          sortable: true, 
-          filterable: true
-        }
-      )
-      this.columnDefinitions.push(
-        { 
-          id: 'status', 
-          name:'Status', 
-          field: 'status', 
-          sortable: true, 
-          filterable: true
-        }
-      )
+		this.gridOptions = {
+			enableDraggableGrouping: true,
+			enableGrouping: true,
+			createPreHeaderPanel: true,
+			showPreHeaderPanel: true,
+			enableHeaderMenu: true,
+			preHeaderPanelHeight: 40,
+			enableFiltering: true,
+			enableSorting: true,
+			enableColumnReorder: true,
+			createFooterRow: true,
+			showFooterRow: true,
+			footerRowHeight: 35,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
+			
+			headerMenu: {
+				iconColumnHideCommand: 'fas fa-times',
+				iconSortAscCommand: 'fas fa-sort-up',
+				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
+			},
+			exportOptions: {
+				sanitizeDataExport: true,
+				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF(this.dataset);
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => {
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
+					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
+				},
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+			}
+		};
+		if (this.birthdayReportForm.value.reviewReport == '2') {
+			this.gridOptions['enableCheckboxSelector'] = true;
+			this.gridOptions['checkboxSelector'] = {
+				columnId: 'checkbox_select'
+			};
+			this.gridOptions['rowSelectionOptions'] = {
+				selectActiveRow: false
+			};
+			this.gridOptions['enableRowSelection'] = true;
+		}
+		this.columnDefinitions = [];
+		if (this.reportProcessWiseData.parameter && this.reportProcessWiseData.parameter.length > 0) {
+			this.columnDefinitions.push({
+				id: 'regd_no', name: 'Reg.No.', field: 'regd_no', sortable: true, filterable: true,
+				grouping: {
+					getter: 'regd_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			});
+			this.columnDefinitions.push({
+				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+				groupTotalsFormatter: this.countTotalsFormatter
+			});
+			this.columnDefinitions.push({
+				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			});
+			this.columnDefinitions.push({ id: 'tag_name', name: 'Tag Name', field: 'tag_name', sortable: true, filterable: true,
+			grouping: {
+				getter: 'tag_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} });
+			this.columnDefinitions.push({ id: 'parent_name', name: 'Active Parent Name', field: 'parent_name', sortable: true, filterable: true });
 
-    }
-    let counter = 1;
-    this.reportProcessWiseData.studentdata.forEach(student => {
-      const tempObj = {};
+			this.columnDefinitions.push({ id: 'parent_contact_no', name: 'Mobile No', field: 'parent_contact_no', sortable: true, filterable: true });
+			
+			this.reportProcessWiseData.parameter.forEach(element => {
+				this.columnDefinitions.push(
+					{
+						id: 'pm' + element.parameter_id,
+						name: element.parameter_value,
+						field: 'pm' + element.parameter_id,
+						sortable: true,
+						filterable: true
+					}
+				);
+			});
+			if (this.birthdayReportForm.value.reviewReport == '1') {
+				this.columnDefinitions.push(
+					{
+						id: 'obtained_marks',
+						name: 'Total',
+						field: 'obtained_marks',
+						sortable: true,
+						filterable: true
+					}
+				);
+				this.columnDefinitions.push(
+					{
+						id: 'remarks',
+						name: 'Remarks',
+						field: 'remarks',
+						sortable: true,
+						filterable: true,
+						formatter:this.remarkFormater,
+						grouping: {
+							getter: 'remarks',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						}
+					}
+				)
+			} else {
+				this.columnDefinitions.push(
+					{
+						id: 'admission_remark',
+						name: 'Admission Test Remark',
+						field: 'admission_remark',
+						sortable: true,
+						filterable: true
+					}
+				);
+				this.columnDefinitions.push(
+					{
+						id: 'parent_remark',
+						name: 'Parent Interaction Remark',
+						field: 'parent_remark',
+						sortable: true,
+						filterable: true
+					}
+				)
+				this.columnDefinitions.push(
+					{
+						id: 'student_remark',
+						name: 'Student Interaction Remark',
+						field: 'student_remark',
+						sortable: true,
+						filterable: true
+					}
+				)
+				this.columnDefinitions.push(
+					{
+						id: 'status',
+						name: 'Status',
+						field: 'status',
+						sortable: true,
+						filterable: true
+					}
+				)
+			}
+
+		}
+		let counter = 1;
+		this.reportProcessWiseData.studentdata.forEach(student => {
+			const tempObj = {};
 			tempObj['id'] = counter;
 			tempObj['counter'] = counter;
-			tempObj['class_name'] = student['class_name'];
 			tempObj['regd_no'] = student['regd_no'];
-      tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(student['au_full_name']));
-      this.reportProcessWiseData.parameter.forEach(element => {
-        const tdata = student.parameter_marks.find(e => e.parameter_id == element.parameter_id);
-        if(tdata) {
-          tempObj['pm'+element.parameter_id] = tdata['erms_value'];
-        } else {
-          tempObj['pm'+element.parameter_id] = '';
-        }
-      });
-      tempObj['student_remark'] = student['student_remark'];
-      tempObj['parent_remark'] = student['parent_remark'];
-      tempObj['admission_remark'] = student['admission_remark'];
-      tempObj['status'] = student['status'] == 'Y' ? 'Approved' : student['status'] == 'N' ? 'Rejected' : 'Pending';
+			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(student['au_full_name']));
+			tempObj['parent_name'] = new TitleCasePipe().transform(this.valueAndDash(student['parent_name']));
+			tempObj['parent_contact_no'] = student['parent_contact_no'];
+			tempObj['tag_name'] = student['tag_name'];
+			tempObj['class_name'] = student['class_name'];
+			this.reportProcessWiseData.parameter.forEach(element => {
+				const tdata = student.parameter_marks.find(e => e.parameter_id == element.parameter_id);
+				if (tdata) {
+					tempObj['pm' + element.parameter_id] = tdata['erms_value'];
+				} else {
+					tempObj['pm' + element.parameter_id] = '';
+				}
+			});
+			tempObj['obtained_marks'] = student['obtained_marks'];
+			tempObj['remarks'] = new TitleCasePipe().transform(this.valueAndDash(student['remarks']));
+			tempObj['student_remark'] = student['student_remark'];
+			tempObj['parent_remark'] = student['parent_remark'];
+			tempObj['admission_remark'] = student['admission_remark'];
+			tempObj['status'] = student['status'] == 'Y' ? 'Approved' : student['status'] == 'N' ? 'Rejected' : 'Pending';
 			this.dataset.push(tempObj);
 			counter++;
-    });
+		});
 		const blankTempObj = {};
 		this.columnDefinitions.forEach(element => {
 			if (element.id === 'regd_no') {
@@ -1178,6 +1263,8 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('regd_no'));
+		this.aggregatearray.push(new Aggregators.Sum('remarks'));
+		this.aggregatearray.push(new Aggregators.Sum('tag_name'));
 	}
 
 
@@ -1196,12 +1283,12 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Birthday Student Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
-  }
-  
+	}
+
 
 
 
