@@ -1,0 +1,66 @@
+<form [formGroup]="birthdayReportForm" autocomplete="off">
+  <div class="row">
+        <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Report Type</mat-label>
+                <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="resetDataset()">
+                    <mat-option  value="1" selected>Cutoff</mat-option>
+                    <mat-option  value="2">Detailed</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+      <div class="col-2" *ngIf="showDate">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
+              <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
+              </mat-datepicker-toggle>
+              <mat-datepicker #cpicker></mat-datepicker>
+          </mat-form-field>
+      </div>
+      <div class="col-2" *ngIf="showDateRange">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>From</mat-label>
+              <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
+              <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
+              </mat-datepicker-toggle>
+              <mat-datepicker #fpicker></mat-datepicker>
+          </mat-form-field>
+      </div>
+
+
+      <div class="col-2" *ngIf="showDateRange">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>To</mat-label>
+              <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
+              <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
+              </mat-datepicker-toggle>
+              <mat-datepicker #tpicker></mat-datepicker>
+          </mat-form-field>
+      </div>
+      <div class="col-2 margin-top-10">
+          <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+      </div>
+      <div class="col-2">
+          <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
+      </div>
+      <div *ngIf="rowsChosen?.length > 0">
+          <button class="btn-success margin-top-12 btn-spacer" mat-raised-button (click)="$event.approve();sendMessage()">Approve</button>
+          <button class="btn-danger margin-top-12 btn-spacer" mat-raised-button (click)="$event.reject();sendMessage()">Reject</button>
+      </div>
+  </div>
+</form>
+
+<div *ngIf="tableFlag && dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+      [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+      (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+      (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+      (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+      No Records Found
+  </div>
+</div>

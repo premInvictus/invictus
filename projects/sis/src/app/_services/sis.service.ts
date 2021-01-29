@@ -1177,6 +1177,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/updateOrderType', value);
 	}
+	processAdmissionReport(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/processAdmissionReport', value);
+	}
 	updateAccordingToClass(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/updateAccordingToClass', value);
