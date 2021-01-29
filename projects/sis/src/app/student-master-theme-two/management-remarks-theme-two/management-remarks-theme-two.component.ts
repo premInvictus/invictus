@@ -138,6 +138,21 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 		}
 	}
 
+	letchecktotal($event) {
+		let markSplitData = this.marksTableJson;
+		const dynamicRemarkForm = this.dynamicMarksForm;
+		let count = 0
+		for (let i = 0; i < markSplitData.length; i++) {
+			markSplitData[i].total = 0;
+			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
+				markSplitData[i].total += Number(dynamicRemarkForm[count]['value']['col0']);
+				count++;
+			}
+		}
+		this.marksTableJson = markSplitData;
+		
+	}
+
 	buildForm() {
 		this.admissionremarkform = this.fbuild.group({
 			erm_id: '',

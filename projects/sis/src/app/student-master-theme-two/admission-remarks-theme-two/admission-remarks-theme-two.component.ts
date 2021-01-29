@@ -62,10 +62,11 @@ export class AdmissionRemarksThemeTwoComponent implements OnInit, OnChanges {
 	}
 
 	setFormDataAndState() {
-
+		console.log("i am here", this.formData);
+		
 		this.admissionRemarkFieldArray = this.formData && this.formData.remarkQuestion ? this.formData.remarkQuestion : [];
 		this.learnFieldArray = this.formData && this.formData.remarkLearn ? this.formData.remarkLearn : [];
-
+		console.log("i am here 2", this.learnFieldArray, this.admissionRemarkFieldArray);
 		if (this.admissionRemarkFields) {
 			for (let ri = this.admissionRemarkFields.length - 1; ri >= 0; ri--) {
 				this.admissionRemarkFields.removeAt(ri);
@@ -89,6 +90,9 @@ export class AdmissionRemarksThemeTwoComponent implements OnInit, OnChanges {
 				this.learnFields.push(this.fbuild.group(arfa));
 			}
 		}
+
+		console.log("i am here", this.learnFieldArray);
+		
 
 		this.addOnly = this.addOnly ? this.addOnly : false;
 		this.editOnly = this.editOnly ? this.editOnly : false;

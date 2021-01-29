@@ -248,11 +248,11 @@
                       <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
                       <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'"
                         class="form-field remark-input-form">
-                        <input type="number" matInput formControlName="col0">
+                        <input type="number" matInput formControlName="col0" (keyup)="letchecktotal($event)" (click)="letchecktotal($event)">
                       </mat-form-field>
                       <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'"
                         class="form-field remark-input-form">
-                        <input type="text" matInput formControlName="col0">
+                        <input type="text" matInput formControlName="col0" (click)="letchecktotal($event)">
                       </mat-form-field>
                       <!-- </span> -->
                       <!-- <span *ngIf="!viewOnly && j == 0">
@@ -417,8 +417,16 @@
               <textarea (keyup)="capitalizeString($event)" formControlName="au_final_remark" rows="5" matInput
                 placeholder="Final Management Remarks"></textarea>
             </mat-form-field>
-            <mat-checkbox *ngIf="isExistUserAccessMenu('278')" formControlName="au_is_eligible_adimission">Approve
-              Admission</mat-checkbox>
+            <!-- <mat-checkbox *ngIf="isExistUserAccessMenu('278')" formControlName="au_is_eligible_adimission">Approve
+              Admission</mat-checkbox> -->
+              <span class="form-field">
+              <label>Admission Status: </label>
+              <mat-radio-group formControlName="au_is_eligible_adimission">
+                <mat-radio-button style="margin-right: 4%;margin-left: 2%;" value="Y">Approve</mat-radio-button>
+                <mat-radio-button style="margin-right: 4%;" value="N">Reject</mat-radio-button>
+                <mat-radio-button value="">Pending</mat-radio-button>
+              </mat-radio-group>
+            </span>
             <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == true" class="form-field" appearance="outline">
               <mat-label>Proposed Class</mat-label>
               <mat-select formControlName="au_process_class" placeholder="Proposed Class" required>

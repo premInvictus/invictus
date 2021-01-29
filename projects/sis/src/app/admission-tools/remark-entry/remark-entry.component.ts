@@ -264,8 +264,9 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 		}
 
 		if (managementRemark['finalRemark'] && this.finalremarksform) {
+			console.log(' sssssssssss' ,managementRemark.finalRemark[0].au_is_eligible_adimission);
 			this.finalremarksform.patchValue({
-				au_is_eligible_adimission: managementRemark.finalRemark[0].au_is_eligible_adimission === 'Y' ? true : false,
+				au_is_eligible_adimission: managementRemark.finalRemark[0].au_is_eligible_adimission ,
 				au_process_class: managementRemark.finalRemark[0].au_process_class,
 				au_final_remark: managementRemark.finalRemark[0].au_final_remark
 			});
@@ -352,7 +353,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 			this.parentremarkform.valid &&
 			this.finalremarksform.valid) {
 			this.finalremarksform.patchValue({
-				au_is_eligible_adimission: this.finalremarksform.value.au_is_eligible_adimission === true ? 'Y' : 'N',
+				au_is_eligible_adimission: this.finalremarksform.value.au_is_eligible_adimission,
 				au_test_date: this.commonAPIService.dateConvertion(this.studentdetailsform.value.au_test_date, 'yyyy-MM-dd'),
 				au_interview_date: this.commonAPIService.dateConvertion(this.studentdetailsform.value.au_interview_date, 'yyyy-MM-dd')
 			});
@@ -640,6 +641,21 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 	}
 	capitalizeString($event) {
 		$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1);
+	}
+
+	letchecktotal($event) {
+		let markSplitData = this.marksTableJson;
+		const dynamicRemarkForm = this.dynamicMarksForm;
+		let count = 0
+		for (let i = 0; i < markSplitData.length; i++) {
+			markSplitData[i].total = 0;
+			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
+				markSplitData[i].total += Number(dynamicRemarkForm[count]['value']['col0']);
+				count++;
+			}
+		}
+		this.marksTableJson = markSplitData;
+		
 	}
 
 }

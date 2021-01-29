@@ -188,7 +188,7 @@ export class CommonAPIService {
 		return this.homeUrl;
 	}
 
-	isExistUserAccessMenuByLabel(parent_id, mod_name) {
+	isExistUserAccessMenuByLabel(parent_id, mod_name) {	
 		if (this.menus.length === 0) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
 				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];

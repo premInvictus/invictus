@@ -54,6 +54,7 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 		'contact',
 		'dates',
 		'score',
+		'marks',
 		'status',
 		'admit'
 	];
@@ -117,7 +118,9 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 				? 'Pending' : 'Declined';
 			tempObj['dates'] = this.processAdmissionData[i]['dates'];
 			tempObj['score'] = this.processAdmissionData[i]['score'];
+			tempObj['marks'] = this.processAdmissionData[i]['marks'];
 			tempObj['regd_no'] = this.processAdmissionData[i]['regd_no'];
+			// console.log('sssssss', tempObj['marks']);
 			this.PROCESS_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
