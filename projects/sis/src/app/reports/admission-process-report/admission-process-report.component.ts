@@ -981,6 +981,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 	resetDataset() {
 		this.dataset = [];
 		this.columnDefinitions = [];
+		this.rowsChosen = [];
 		this.tableFlag = false;
 	}
 	remarkFormater (row, cell, value, columnDef, dataContext) {
