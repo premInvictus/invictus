@@ -10,6 +10,7 @@ import { PreviewDocumentComponent } from '../student-master/documents/preview-do
 
 import { MatTableModule } from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import { MatRadioModule } from '@angular/material';
 
 @NgModule({
 	imports: [
@@ -17,7 +18,8 @@ import {MatSortModule} from '@angular/material/sort';
 		AdmissionToolsRoutingModule,
 		SharedmoduleModule,
 		MatTableModule,
-		MatSortModule
+		MatSortModule,
+		MatRadioModule
 	],
 	declarations: [RemarkEntryComponent, ProcessAdmissionComponent],
 	entryComponents: []

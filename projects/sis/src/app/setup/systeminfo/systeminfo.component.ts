@@ -1883,6 +1883,21 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 							this.getParameterTable(this);
 						});
 					}
+					console.log('++++++++++++++++++++++++++++', this.formGroupArray[value - 1].formGroup.value);
+					if(this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_value != this.formGroupArray[value - 1].formGroup.value.parameter_name ) {
+						
+						let obj = this.subjectArray.filter((e:any) => e.parameter_value === this.formGroupArray[value - 1].formGroup.value.parameter_name);
+						let arr = [];
+						this.formGroupArray[value - 1].formGroup.value.parameter_id.forEach(element => {
+							arr.push(element.mf_id)
+						});
+						console.log("i am here", obj[0]);
+						this.sisService.updateAccordingToClass({subject_id: obj[0] ? obj[0].parameter_id: '', mf_id_array: arr, parameter_name: this.formGroupArray[value - 1].formGroup.value.parameter_name}).subscribe((res:any) => {
+							console.log("i am here");
+							this.getParameterTable(this);
+						})
+					}
+					
 					//lets check for cases such as remark type
 					if (this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gt_id != this.formGroupArray[value - 1].formGroup.value.parameter_type) {
 						let arr = [];
