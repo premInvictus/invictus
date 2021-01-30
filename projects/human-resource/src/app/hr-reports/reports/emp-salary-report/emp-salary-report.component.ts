@@ -597,11 +597,17 @@ export class EmpSalaryReportComponent implements OnInit {
             if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
               var value = 0;
               this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
-
+              let count = 0;
+              if(item.emp_salary_detail.emp_salary_structure.security_details && item.emp_salary_detail.emp_salary_structure.emp_salary_heads.filter(e =>e.sc_name == 'Security Deduction').length === 0) {
+                // console.log("i am here", this.empShdcolumns[i].columnDef);
+                count += 1;
+                console.log("i am count", count, this.shdcolumns);
+                // console.log("check mwe", item.emp_salary_detail.emp_salary_structure.emp_salary_heads.filter(e =>e.sc_name == 'Security Deduction'));
+              }
               if (item.emp_salary_detail
                 && item.emp_salary_detail.emp_salary_structure
                 && item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
-                for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
+                for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length + count; j++) {
                   if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
 
                     if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
@@ -616,14 +622,41 @@ export class EmpSalaryReportComponent implements OnInit {
                         value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
 
                       }
+                      // console.log("i am ++++++++++++++++++", this.shdcolumns[i]);
+                      
+                      // if (this.empShdcolumns[i].columnDef == "Security Deduction" && item.emp_salary_detail.emp_salary_structure.security_details ) {
+                      //   console.log("called", item.emp_salary_detail.emp_salary_structure.security_details);
+                        
+                      //   value = Number(item.emp_salary_detail.emp_salary_structure.security_details ? item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount : 0)
+                      //   console.log("i am cals", value, item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount);
+                        
+                      // }
+                      console.log("check hwew", value);
+                      
                       this.empShdcolumns[i]['value'] = value.toFixed(2);
                       this.shdcolumns[i]['value'] = value.toFixed(2);
                       total_deductions = total_deductions - Number(value);
 
+                    } else if (this.empShdcolumns[i].columnDef == "Security Deduction" && item.emp_salary_detail.emp_salary_structure.security_details ) {
+                      console.log("called", item.emp_salary_detail.emp_salary_structure.security_details);
+                      
+                      value = Number(item.emp_salary_detail.emp_salary_structure.security_details ? item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount : 0)
+                      console.log("i am cals", value, item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount);
+                      this.empShdcolumns[i]['value'] = value.toFixed(2);
+                      this.shdcolumns[i]['value'] = value.toFixed(2);
+                      total_deductions = total_deductions - Number(value);
                     } else {
                       this.shdcolumns[i]['value'] = 0;
                       this.empShdcolumns[i]['value'] = 0;
                     }
+                  } else if (this.empShdcolumns[i].columnDef == "Security Deduction" && item.emp_salary_detail.emp_salary_structure.security_details ) {
+                    console.log("called", item.emp_salary_detail.emp_salary_structure.security_details);
+                    
+                    value = Number(item.emp_salary_detail.emp_salary_structure.security_details ? item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount : 0)
+                    console.log("i am cals", value, item.emp_salary_detail.emp_salary_structure.security_details[0].security_month_amount);
+                    this.empShdcolumns[i]['value'] = value.toFixed(2);
+                    this.shdcolumns[i]['value'] = value.toFixed(2);
+                    total_deductions = total_deductions - Number(value);
                   }
                 }
               }

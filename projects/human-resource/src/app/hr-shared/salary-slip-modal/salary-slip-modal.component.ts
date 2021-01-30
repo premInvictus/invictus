@@ -13,13 +13,14 @@ export class SalarySlipModalComponent implements OnInit {
   header: string = '';
   schoolInfo: any = '';
   values: any = {};
+  ch:any = {};
   constructor(private dialogRef: MatDialogRef<SalarySlipModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data, private common: CommonAPIService,
     private sis: SisService,
     private erp: ErpCommonService) { }
 
   ngOnInit() {
-    console.log('this.data',this.data);
+    // console.log('this.data',this.data, this.data.values);
     this.values = this.data.values;
     // if(this.values.action.leaves && this.values.action.leaves.emp_leave_availed){
     //   let emp_leave_availed = 0;
@@ -28,7 +29,8 @@ export class SalarySlipModalComponent implements OnInit {
     //   });
     //   this.values.action.leaves.emp_leave_availed = emp_leave_availed;
     // }
-    console.log(this.values);
+    this.ch = this.data.ch;
+    console.log(this.ch.security_details[0].security_month_amount);
     this.getSchoolInfo();
   }
   getEmployeeDetails(emp_id) {
@@ -83,7 +85,8 @@ export class SalarySlipModalComponent implements OnInit {
 
   getTotalDeductions(values: any[], value2: any, value3) {
     let tds = 0;
-    
+      console.log("i am value", value2, 'ssss', values);
+      
       tds = value2 && value2.emp_salary_structure && value2.emp_salary_structure.tds ?
         Math.round(Number(value2.emp_salary_structure.tds)) : 0;
     

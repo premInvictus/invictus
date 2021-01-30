@@ -32,7 +32,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	];
 	EMPLOYEE_LEDGER_ELEMENT: any[] = [];
 	ledgerDisplayedColumns: any[] = ['sno', 'particulars', 'month', 'attendance', 'netearnings',
-		'deductions', 'advances', 'salarypayable', 'salarypaid', 'balance', 'mop', 'remarks'];
+		'deductions', 'advances', 'security', 'salarypayable', 'salarypaid', 'balance', 'mop', 'remarks'];
 	ledgerDataSource = new MatTableDataSource<any>(this.EMPLOYEE_LEDGER_ELEMENT);
 	@ViewChild('paginator') paginator: MatPaginator;
 	sessionArray: any[] = [];
@@ -228,6 +228,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							obj3['netearnings'] = '';
 							obj3['deductions'] = '';
 							obj3['advance'] = '';
+							obj3['security'] = '';
 							obj3['salarypayable'] = '';
 							obj3['salarypaid'] = '';
 							obj3['balance'] = item.advance_details.advance;
@@ -253,6 +254,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 								obj3['netearnings'] = '';
 								obj3['deductions'] = '';
 								obj3['advance'] = '';
+								obj3['security'] = '';
 								obj3['salarypayable'] = '';
 								obj3['salarypaid'] = '';
 								obj3['balance'] = st.advance;
@@ -283,6 +285,9 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 					obj['advance'] = item && item.details &&
 						item.details.emp_modes_data && item.details.emp_modes_data.advance
 						? Number(item.details.emp_modes_data.advance) : 0;
+					obj['security'] = item && item.details &&
+						item.details.emp_modes_data && item.details.emp_modes_data.security
+						? Number(item.details.emp_modes_data.security) : 0;
 					obj['salarypayable'] = item && item.details &&
 						item.details.emp_salary_payable ?
 						Number(item.details.emp_salary_payable) : 0;
@@ -327,6 +332,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							netearnings: next.netearnings,
 							deductions: next.deductions,
 							advance: next.advance,
+							security: next.security,
 							salarypayable: Number(next.salarypayable),
 							salarypaid: Number(next.salarypaid),
 							balance: next.balance,
@@ -347,6 +353,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				this.cacheSpan('netearnings', d => d.netearnings);
 				this.cacheSpan('deductions', d => d.deductions);
 				this.cacheSpan('advance', d => d.advance);
+				this.cacheSpan('security', d => d.security);
 				this.cacheSpan('salarypayable', d => d.salarypayable);
 				this.cacheSpan('salarypaid', d => d.salarypaid);
 				this.cacheSpan('balance', d => d.balance);
@@ -358,12 +365,16 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				this.totalObj['netearnings'] = this.tempData.map(f => Math.round(Number(f.netearnings))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['deductions'] = this.tempData.map(f => Math.round(Number(f.deductions))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['advance'] = this.tempData.map(f => Math.round(Number(f.advance))).reduce((acc, val) => acc + val, 0);
+				this.totalObj['security'] = this.tempData.map(f => Math.round(Number(f.security))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['salarypayable'] = this.tempData.map(f => Math.round(Number(f.salarypayable))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['salarypaid'] = this.tempData.map(f => Math.round(Number(f.salarypaid))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['mop'] = this.tempData.map(f => Math.round(Number(f.sum))).reduce((acc, val) => acc + val, 0);;
 				this.totalObj['balance'] = this.tempData.map(f => Math.round(Number(f.balance))).reduce((acc, val) => acc + val, 0);
 				this.ledgerDataSource = new MatTableDataSource<any>(this.EMPLOYEE_LEDGER_ELEMENT);
 				this.ledgerDataSource.paginator = this.paginator;
+				this.tempData.map(f => console.log("i am f", f));
+				console.log("i am check", this.totalObj['security']);
+				
 			}
 		});
 	}
@@ -410,13 +421,14 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 			return '';
 		}
 	}
-	openSalarySlip(item, emp_id) {
+	openSalarySlip(item, emp_id, ch) {
 		item['configs'] = this.deductions;
 		if (item.netearnings !== '-') {
 			const dialogRef: any = this.dialog.open(SalarySlipModalComponent, {
 				data: {
 					values: item,
-					emp_id: emp_id
+					emp_id: emp_id,
+					ch:ch
 				},
 				height: '70%',
 				width: '55%'
@@ -465,6 +477,10 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 			width: this.checkWidth('advance', 'Advance')
 		});
 		columns.push({
+			key: 'security',
+			width: this.checkWidth('security', 'Security')
+		});
+		columns.push({
 			key: 'salarypayable',
 			width: this.checkWidth('salarypayable', 'Salary Payable')
 		});
@@ -501,11 +517,12 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		worksheet.getCell('E4').value = "Net Earnings";
 		worksheet.getCell('F4').value = "Deductions";
 		worksheet.getCell('G4').value = "Advances";
-		worksheet.getCell('H4').value = "Salary Payable";
-		worksheet.getCell('I4').value = "Salary Paid";
-		worksheet.getCell('J4').value = "Balance";
-		worksheet.getCell('K4').value = "MOP";
-		worksheet.getCell('L4').value = "Remarks";
+		worksheet.getCell('H4').value = "Security Deposit";
+		worksheet.getCell('I4').value = "Salary Payable";
+		worksheet.getCell('J4').value = "Salary Paid";
+		worksheet.getCell('K4').value = "Balance";
+		worksheet.getCell('L4').value = "MOP";
+		worksheet.getCell('M4').value = "Remarks";
 		// worksheet.getCell(this.alphabetJSON[count + 1] + '4').value = "Balance";
 		//worksheet.columns = columns;
 		this.length = worksheet._rows.length;
@@ -527,19 +544,21 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 			worksheet.getCell('F' + intialLength).value = item.deductions;
 			worksheet.mergeCells('G' + intialLength + ': G' + this.length);
 			worksheet.getCell('G' + intialLength).value = item.advance;
-			worksheet.mergeCells('H' + intialLength + ': H' + this.length);
-			worksheet.getCell('H' + intialLength).value = item.salarypayable;
+			worksheet.mergeCells('H' + intialLength + ': G' + this.length);
+			worksheet.getCell('H' + intialLength).value = item.security;
 			worksheet.mergeCells('I' + intialLength + ': I' + this.length);
-			worksheet.getCell('I' + intialLength).value = item.salarypaid;
+			worksheet.getCell('I' + intialLength).value = item.salarypayable;
 			worksheet.mergeCells('J' + intialLength + ': J' + this.length);
-			worksheet.getCell('J' + intialLength).value = item.balance;
+			worksheet.getCell('J' + intialLength).value = item.salarypaid;
+			worksheet.mergeCells('K' + intialLength + ': K' + this.length);
+			worksheet.getCell('K' + intialLength).value = item.balance;
 			let ind = 0;
 			for (const mp of item.mop) {
-				worksheet.getCell('K' + (intialLength + ind)).value = mp;
+				worksheet.getCell('L' + (intialLength + ind)).value = mp;
 				ind++;
 			}
-			worksheet.mergeCells('L' + intialLength + ': L' + this.length);
-			worksheet.getCell('L' + intialLength).value = item.remarks;
+			worksheet.mergeCells('M' + intialLength + ': M' + this.length);
+			worksheet.getCell('M' + intialLength).value = item.remarks;
 		}
 		// this.length = worksheet._rows.length;
 		let gtRow = worksheet._rows.length + 1;
@@ -550,11 +569,12 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		worksheet.getCell('E' + gtRow).value = this.totalObj.netearnings;
 		worksheet.getCell('F' + gtRow).value = this.totalObj.deductions;
 		worksheet.getCell('G' + gtRow).value = this.totalObj.advance;
-		worksheet.getCell('H' + gtRow).value = this.totalObj.salarypayable;
-		worksheet.getCell('I' + gtRow).value = this.totalObj.salarypaid;
-		worksheet.getCell('J' + gtRow).value = this.totalObj.balance;
-		worksheet.getCell('K' + gtRow).value = this.totalObj.mop;
-		worksheet.getCell('L' + gtRow).value = "";
+		worksheet.getCell('H' + gtRow).value = this.totalObj.security;
+		worksheet.getCell('I' + gtRow).value = this.totalObj.salarypayable;
+		worksheet.getCell('J' + gtRow).value = this.totalObj.salarypaid;
+		worksheet.getCell('K' + gtRow).value = this.totalObj.balance;
+		worksheet.getCell('L' + gtRow).value = this.totalObj.mop;
+		worksheet.getCell('M' + gtRow).value = "";
 		let totRow = gtRow + 6;
 
 		worksheet.mergeCells('A' + totRow + ':' + 'E' + totRow);

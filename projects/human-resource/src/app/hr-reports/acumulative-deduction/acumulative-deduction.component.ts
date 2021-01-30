@@ -22,6 +22,7 @@ import { ErpCommonService } from 'src/app/_services';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { ignoreElements } from 'rxjs/operators';
 
 @Component({
   selector: 'app-acumulative-deduction',
@@ -67,6 +68,7 @@ export class AcumulativeDeductionComponent implements OnInit {
   requiredAll = true;
   employeeCatDeptAvail = false;
   nodataFlag = true;
+  total_security_check = 0;
   dataArr: any[] = [];
   groupColumns: any[] = [];
   groupLength: any;
@@ -157,6 +159,8 @@ export class AcumulativeDeductionComponent implements OnInit {
       {name:'total',value:'Total Deduction',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['tds_deducted_previous','tds_deducted']},
 
     ]
+    },
+    {id:'Security',head:'Security Deposit',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'TDS Deducted for the month of ',keyname:'deposite_amount',
     }
   ];
   currentDeduction:any;
@@ -293,6 +297,8 @@ export class AcumulativeDeductionComponent implements OnInit {
   getEmployeeDeduction() {
     if(this.acumulativeReport.valid) {
       this.currentDeduction = this.deductionArray.find(e => e.sc_id == this.acumulativeReport.value.deduction_id);
+      console.log("i am here", this.acumulativeReport.value.deduction_id, this.currentDeduction);
+      
       if(this.currentDeduction){
         this.dataArr = [];
         this.aggregatearray = [];
@@ -463,6 +469,8 @@ export class AcumulativeDeductionComponent implements OnInit {
                 if(this.currentDeduction.deductiontype) {
                   const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
                   if(deductiondetails) {
+                    console.log("i am one");
+                    if(deductiondetails.moreColumn)
                     deductiondetails.moreColumn.forEach(element => {
                       this.columnDefinitions.push({
                         id: element.name, name: element.value, field: element.name, sortable: true,
@@ -472,7 +480,8 @@ export class AcumulativeDeductionComponent implements OnInit {
                     });
                   }
                 } else {
-                  const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+                  const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase());
+                  console.log("i am two");
                   if(shdcolumns) {
                     this.columnDefinitions.push({
                       id: shdcolumns.columnDef.toLowerCase().split(' ').join('_'), name: shdcolumns.header, field: shdcolumns.columnDef.toLowerCase().split(' ').join('_'), sortable: true,
@@ -505,8 +514,10 @@ export class AcumulativeDeductionComponent implements OnInit {
               obj['srno'] = (index + 1);
               obj['full_name'] = item.relations.emp_name ? new CapitalizePipe().transform(item.relations.emp_name) : '-';
               obj['emp_code_no'] = item.relations.emp_code_no ? item.relations.emp_code_no : '-';
-              if(this.currentDeduction.deductiontype) {
-                const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+              if(this.currentDeduction.deductiontype && this.currentDeduction.deductiontype != 'Security') {
+                const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase());
+                // console.log("ssssssssssss ",this.currentDeduction.deductiontype, ' sssssssssssss',  obj[deductiondetails.keyname], deductiondetails.keyname);
+                
                 obj[deductiondetails.keyname] = item.relations.emp_salary_detail.account_docment_detail[deductiondetails.keyname]
                 const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
                 if(deductiondetails) {
@@ -547,6 +558,16 @@ export class AcumulativeDeductionComponent implements OnInit {
                     
                   });
                 }
+              } else  if(this.currentDeduction.deductiontype && this.currentDeduction.deductiontype == 'Security') {
+                const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase());
+                console.log("ssssssssssss ",item.relations, ' sssssssssssss');
+                let ch = item.relations.emp_salary_detail.emp_salary_structure.security_month_wise.filter((a:any) => (a && a.month_id == this.acumulativeReport.value.month_id))[0];
+                obj[deductiondetails.keyname] = ch? (ch.deposite_amount ? ch.deposite_amount : 0): 0;
+                this.total_security_check += obj[deductiondetails.keyname];
+                const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase());
+                console.log("i am shdcolumn", shdcolumns);
+                
+                
               } else {
                 const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
                 if(shdcolumns) {
@@ -586,7 +607,7 @@ export class AcumulativeDeductionComponent implements OnInit {
             obj3['srno'] = '';
             obj3['full_name'] = 'Grand Total';
             obj3['emp_code_no'] = '';
-            if(this.currentDeduction.deductiontype) {
+            if(this.currentDeduction.deductiontype && (this.currentDeduction.deductiontype != 'Security')) {
               const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
               if(deductiondetails) {
                 obj3[deductiondetails.keyname]='';
@@ -604,6 +625,8 @@ export class AcumulativeDeductionComponent implements OnInit {
                   
                 });
               }
+            } else if(this.currentDeduction.deductiontype && (this.currentDeduction.deductiontype == 'Security')) {
+              obj3['deposite_amount'] = this.total_security_check;
             } else {
               const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
               if(shdcolumns) {

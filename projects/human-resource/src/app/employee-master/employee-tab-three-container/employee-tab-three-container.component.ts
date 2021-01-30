@@ -25,6 +25,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	isSubmit = false;
 	login_id;
 	parentId;
+	showSecurity = false
 	currentDate = new Date();
 	payScArr: any[] = [];
 	generalRemarkData: any[] = [];
@@ -56,6 +57,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	session_id: any;
 	year: any;
 	currentYear: any;
+	security_deposit_till = 0;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Transfer' },
@@ -78,12 +80,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
     { hon_id: "10", hon_name: 'Md.' }
 
 	];
+	security_details_data: any[] = [];
 	departmentArray;
 	designationArray;
 	wingArray;
 	empBankDetail: any[] = [];
 	empPaymentModeDetail: any[] = [];
 	advanceDetails: any[] = [];
+	securityDetails: any[] = [];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
@@ -223,6 +227,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	}
 	ngOnChanges() {
+		this.security_deposit_till = 0;
 		this.empBankDetail = [];
 		this.getPayMode();
 		this.empPaymentModeDetail = [];
@@ -242,6 +247,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			console.log('ngOnChange employeedetails', this.employeedetails);
 			this.getSalartDetails();
 			this.onChangeData();
+		}
+	}
+	getSecurityAmountIfAny() {
+		if(this.employeedetails && this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
+			this.security_deposit_till = this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0);
+			console.log("i am here", this.security_deposit_till);
+			
 		}
 	}
 
@@ -297,6 +309,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			freezed: false
 		}));
 	}
+	addSecurity() {
+		this.securityDetails.push(this.fbuild.group({
+			security: '',
+			security_month_amount: '',
+			starting_month: '',
+			remaining_security: '',
+			freezed: false
+		}));
+	}
 	addAdvanceCheck() {
 		if (this.advanceDetails.length > 0) {
 			const currentMonth = new Date().getMonth() + 1;
@@ -316,6 +337,24 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 
+	addSecurityCheck() {
+		if (this.securityDetails.length > 0) {
+			const currentMonth = new Date().getMonth() + 1;
+			for (const item of this.securityDetails) {
+				if (item.value.security
+					&& item.value.security_month_amount && item.value.starting_month && !item.value.freezed) {
+					const monthPay = Math.round(Number(item.value.security) / Number(item.value.security_month_amount));
+					if (Number(item.value.remaining_security) == 0) {
+						item.value.freezed = true;
+						this.addSecurity();
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Please wait for previous advance to settle to move to next', 'error');
+					}
+				}
+			}
+		}
+	}
+
 	removePaymentMode(index) {
 		if (this.empPaymentModeDetail.length > 1) {
 			this.empPaymentModeDetail.splice(index, 1);
@@ -326,6 +365,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	delAdvanceDetails(index) {
 		if (this.advanceDetails.length > 1) {
 			this.advanceDetails.splice(index, 1);
+		}
+
+	}
+
+	delSecurityDetails(index) {
+		if (this.securityDetails.length > 1) {
+			this.securityDetails.splice(index, 1);
 		}
 
 	}
@@ -459,6 +505,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 
 	onChangeData() {
+		this.getSecurityAmountIfAny();
+		this.security_details_data = [];
 		this.tempData = [];
 		this.scaleData = [];
 		this.formGroupArray2 = [];
@@ -475,8 +523,24 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 		for (let item of this.tempData) {
 			if (item.sc_type.type_id === '2' || Number(item.sc_type.type_id) === 2) {
-				this.scaleData.push(item);
+				if(item.sc_name == 'Security Deduction' ) {
+					console.log('i am item ss', item);
+					if(item.sc_calculation_type == '%') {
+						this.showSecurity = false;
+					}
+					this.security_details_data.push(item);
+				}
+				else {
+					this.scaleData.push(item);
+				}
+				
 			}
+			
+			
+		}
+		console.log("i am check", this.security_details_data.length);
+		if(this.security_details_data.length === 0) {
+			this.showSecurity = true;
 		}
 		let i = 0;
 		console.log('this.scaleData',this.scaleData);
@@ -514,6 +578,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			return false;
 		}
+	}
+	showSecurityfun($event) {
+		console.log("i am event", $event);
+		this.showSecurity = $event.checked;
+		
 	}
 	checkValS(i, $event) {
 		if ($event.checked) {
@@ -578,6 +647,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}));
 		}
 		this.advanceDetails = [];
+		this.securityDetails = [];
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.empPaymentModeDetail && this.employeedetails.emp_salary_detail.empPaymentModeDetail.length > 0) {
 			this.empPaymentModeDetail = [];
 			for (let i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
@@ -622,6 +692,102 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.addAdvance();
 		}
+
+		if (this.employeedetails.emp_salary_detail &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure.security_details) {
+			const obj: any = this.employeedetails.emp_salary_detail.emp_salary_structure.security_details;
+			const objArr: any[] = this.employeedetails.emp_salary_detail.emp_salary_structure.security_details;
+			if (obj.constructor === Object) {
+				console.log("here");
+				if(this.security_details_data.length > 0) {
+					if(this.security_details_data[0]['sc_calculation_type'] == '%') {
+						let sam =  this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_month_amount : '';
+						if(sam == '')
+						sam = this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security ? 
+								(this.security_details_data[0]['sc_type'].upper_value?
+									 (Number(this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security)*Number(this.security_details_data[0]['sc_value'])/100 < Number(this.security_details_data[0]['sc_type'].upper_value)? 
+									 Number(this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security)*Number(this.security_details_data[0]['sc_value'])/100: Number(this.security_details_data[0]['sc_type'].upper_value)): Number(this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security)*Number(this.security_details_data[0]['sc_value'])/100 ): '';
+						
+						
+						this.securityDetails.push(this.fbuild.group({
+							security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
+							security_month_amount: sam,
+							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
+							// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
+						}));
+					} else {
+						this.securityDetails.push(this.fbuild.group({
+							security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
+							security_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_month_amount : '',
+							remaining_security:this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
+							// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
+						}));
+					}
+				}
+				else {
+					this.securityDetails.push(this.fbuild.group({
+						security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
+						security_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_month_amount : '',
+						starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
+						remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+						// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
+					}));
+				}
+				
+			}
+			if (Array.isArray(objArr)) {
+				if(this.security_details_data.length > 0) {
+					if(this.security_details_data[0]['sc_calculation_type'] == '%') {
+						for (const t of objArr) {
+							console.log("i am here", this.security_details_data[0]);
+							let sam = t.security_month_amount;
+							if(!sam)
+							sam = t.security ? 
+								(this.security_details_data[0].sc_type.upper_value?
+									 (Number(t.security)*Number(this.security_details_data[0]['sc_value'])/100 < Number(this.security_details_data[0].sc_type.upper_value)? 
+									 Number(t.security)*Number(this.security_details_data[0]['sc_value'])/100: Number(this.security_details_data[0].sc_type.upper_value)): Number(t.security)*Number(this.security_details_data[0]['sc_value'])/100 ): '';
+							this.securityDetails.push(this.fbuild.group({
+								security: t.security ? t.security : '',
+								security_month_amount: sam,
+								starting_month: t.starting_month ? t.starting_month : '',
+								// security_start_date: t.security_start_date ? t.security_start_date : '',
+								remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ?b['deposite_amount']  : 0), 0): '',
+								freezed: t.freezed ? t.freezed : false
+							}))
+						}
+					} else {
+						for (const t of objArr) {
+							this.securityDetails.push(this.fbuild.group({
+								security: t.security ? t.security : '',
+								security_month_amount: t.security_month_amount ? t.security_month_amount : '',
+								starting_month: t.starting_month ? t.starting_month : '',
+								// security_start_date: t.security_start_date ? t.security_start_date : '',
+								remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0): '',
+								freezed: t.freezed ? t.freezed : false
+							}))
+						}
+					}
+					
+				} else {
+					for (const t of objArr) {
+						this.securityDetails.push(this.fbuild.group({
+							security: t.security ? t.security : '',
+							security_month_amount: t.security_month_amount ? t.security_month_amount : '',
+							starting_month: t.starting_month ? t.starting_month : '',
+							// security_start_date: t.security_start_date ? t.security_start_date : '',
+							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							freezed: t.freezed ? t.freezed : false
+						}))
+					}
+				}
+			}
+		} else {
+			this.addSecurity();
+		}
+
 
 		console.log(this.employeedetails);
 		this.salaryDetails.patchValue({
@@ -720,6 +886,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				freezed: it.freezed ? it.freezed : ''
 			})
 		}
+		const sec: any[] = [];
+		for (const it of this.securityDetails) {
+			sec.push({
+				session_id: this.session_id.ses_id,
+				currentYear: this.currentYear,
+				// advance_start_date: this.dateConversion(it.value.advance_start_date, 'yyyy-MM-dd'),
+				security: Number(it.value.security),
+				remaining_security: Number(it.value.remaining_security),
+				security_month_amount: Number(it.value.security_month_amount),
+				starting_month: it.value.starting_month,
+				freezed: it.freezed ? it.freezed : ''
+			})
+		}
 		//this.salaryDetails.valid
 		if (this.salaryDetails.valid) {
 			this.disabledApiButton = true;
@@ -785,6 +964,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						}
 					],
 					advance_details: adv,
+					security_details: sec,
+					security_month_wise: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise,
 					td: this.salaryDetails.value.td,
 					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,
@@ -888,6 +1069,29 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				freezed: it.freezed ? it.freezed : ''
 			})
 		}
+		const sec: any[] = [];
+		for (const it of this.securityDetails) {
+			console.log("i am it",this.security_details_data[0]['sc_type'].upper_value);
+			let sam = Number(it.value.security_month_amount);
+			if(!sam && this.security_details_data.length > 0 && this.security_details_data[0]['sc_calculation_type'] == '%') {	
+			sam = Number(it.value.security) ? 
+					(this.security_details_data[0]['sc_type'].upper_value?
+						 (Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100 < Number(this.security_details_data[0]['sc_type'].upper_value)? 
+						 Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100: Number(this.security_details_data[0]['sc_type'].upper_value)): Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100 ): 0;
+			}
+			console.log("i am sam", sam);
+						
+			sec.push({
+				session_id: this.session_id.ses_id,
+				currentYear: this.currentYear,
+				// advance_start_date: this.dateConversion(it.value.advance_start_date, 'yyyy-MM-dd'),
+				security: Number(it.value.security),
+				remaining_advance: Number(it.value.remaining_security),
+				security_month_amount: sam,
+				starting_month: it.value.starting_month,
+				freezed: it.freezed ? it.freezed : ''
+			})
+		}
 		//this.salaryDetails.valid
 		if (true) {
 			this.disabledApiButton = true;
@@ -949,6 +1153,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						}
 					],
 					advance_details: adv,
+					security_details: sec,
+					security_month_wise: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise,
 					td: this.salaryDetails.value.td,
 					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,
