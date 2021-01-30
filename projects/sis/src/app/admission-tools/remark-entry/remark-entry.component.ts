@@ -270,7 +270,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 		if (managementRemark['finalRemark'] && this.finalremarksform) {
 			console.log(' sssssssssss' ,managementRemark.finalRemark[0].au_is_eligible_adimission);
 			this.finalremarksform.patchValue({
-				au_is_eligible_adimission: managementRemark.finalRemark[0].au_is_eligible_adimission ,
+				au_is_eligible_adimission: managementRemark.finalRemark[0].au_is_eligible_adimission == 'P' ? '': managementRemark.finalRemark[0].au_is_eligible_adimission ,
 				au_process_class: managementRemark.finalRemark[0].au_process_class,
 				au_final_remark: managementRemark.finalRemark[0].au_final_remark
 			});

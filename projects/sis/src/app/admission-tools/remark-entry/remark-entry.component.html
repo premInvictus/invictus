@@ -445,7 +445,7 @@
                 <mat-radio-button value="">Pending</mat-radio-button>
               </mat-radio-group>
             </span>
-            <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == true" class="form-field" appearance="outline">
+            <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == 'Y'" class="form-field" appearance="outline">
               <mat-label>Proposed Class</mat-label>
               <mat-select formControlName="au_process_class" placeholder="Proposed Class" required>
                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">
