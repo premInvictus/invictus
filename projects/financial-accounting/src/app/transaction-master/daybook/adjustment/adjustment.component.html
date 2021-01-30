@@ -22,7 +22,8 @@
           <ng-container *ngFor="let itm of displayedColumns">
            <td>{{item['id_'+itm.id] | indianCurrency}}</td>
           </ng-container>
-          <td>{{getColumnTotal(item) | indianCurrency}}</td>
+          <td *ngIf="getColumnTotal(item) > 0" style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{getColumnTotal(item) | indianCurrency}}</td>
+          <td *ngIf="getColumnTotal(item) == 0" >{{getColumnTotal(item) | indianCurrency}}</td>
           <!-- <td *ngIf="getColumnTotal(item) > 0" style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{getColumnTotal(item) | indianCurrency}}</td>
           <td *ngIf="getColumnTotal(item) == 0" >{{getColumnTotal(item) | indianCurrency}}</td> -->
           <td class="action-btn">
