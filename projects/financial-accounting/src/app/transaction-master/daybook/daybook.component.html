@@ -40,11 +40,11 @@
                         <app-receipt-mode-wise [param]="this.paramform.value"></app-receipt-mode-wise>
                     </ng-template>
                 </mat-tab>
-                <!-- <mat-tab label="Receipt (Advance)">
+                <mat-tab label="Receipt (Advance)">
                   <ng-template matTabContent>
                       <app-receipt-mode-wise1 [param]="this.paramform.value"></app-receipt-mode-wise1>
                   </ng-template>
-              </mat-tab> -->
+              </mat-tab>
                 <mat-tab label="Fee Adjustment" *ngIf="adjustmentStatus">
                   <ng-template matTabContent>
                       <app-adjustment [param]="this.paramform.value"></app-adjustment>
@@ -55,11 +55,11 @@
                     <app-wallet [param]="this.paramform.value"></app-wallet>
                 </ng-template>
               </mat-tab>
-                <!-- <mat-tab label="Total Fee Receivable">
+                <mat-tab label="Total Fee Receivable">
                   <ng-template matTabContent>
                       <app-total-fee-receivable [param]="this.paramform.value"></app-total-fee-receivable>
                   </ng-template>
-                </mat-tab> -->
+                </mat-tab>
                 <mat-tab label="Voucher List">
                   <ng-template matTabContent>
                       <app-vouchers-list></app-vouchers-list>
