@@ -283,6 +283,28 @@
                                         </ng-container>
                                       </ng-container>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'admission_process_cutoff'">
+                                      <ng-container [formArrayName]="control.gs_alias">
+                                        <ng-container
+                                          *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;"
+                                          [formGroupName]="i">
+                                          <ng-container *ngFor="let class of classArray;">
+                                            <div class="row" *ngIf="class.class_id == item.value.class_id">
+                                              <div class="col-2 middle">
+                                                {{class.class_name}}
+                                              </div>
+                                              <div class="col-10">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                  <input type="number" matInput placeholder="Cutoff marks"
+                                                    class="text-capitalize" type="text"
+                                                    formControlName="cutoff_marks">
+                                                </mat-form-field>
+                                              </div>
+                                            </div>
+                                          </ng-container>
+                                        </ng-container>
+                                      </ng-container>
+                                    </ng-container>
                                     <ng-container *ngIf="control.gs_alias == 'school_push_notif'">
                                       <ng-container *ngFor="let item of notifConfigArray">
                                         <div class="row">

@@ -389,6 +389,17 @@ export class SetupComponent implements OnInit {
 
                 }
                 return this.fbuild.array(jsontemp);
+            } else if (element.gs_alias === 'admission_process_cutoff') {
+                const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+                const jsontemp = [];
+                for (let i = 0; i < this.classArray.length; i++) {
+                    jsontemp.push(this.fbuild.group({
+                        class_id: this.classArray[i]['class_id'],
+                        cutoff_marks: temp[i] ? temp[i]['cutoff_marks'] : ''
+                    }))
+
+                }
+                return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'school_push_notif') {
                 this.notifConfigArray = JSON.parse(element.gs_value);
             } else if (element.gs_alias === 'curl_call_url') {
@@ -1333,6 +1344,9 @@ export class SetupComponent implements OnInit {
         }
         if (this.settingForm.value && this.settingForm.value.employee_monthly_leave_credit) {
             this.settingForm.value.employee_monthly_leave_credit = JSON.stringify(this.settingForm.value.employee_monthly_leave_credit);
+        }
+        if (this.settingForm.value && this.settingForm.value.admission_process_cutoff) {
+            this.settingForm.value.admission_process_cutoff = JSON.stringify(this.settingForm.value.admission_process_cutoff);
         }
         if (this.settingForm.value && this.settingForm.value.school_push_notif) {
             this.settingForm.value.school_push_notif = JSON.stringify(this.notifConfigArray);
