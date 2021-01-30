@@ -107,6 +107,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 
 	reportProcessWiseData: any;
 	rowsChosen: any[] = [];
+	rowChosenData: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
@@ -951,10 +952,19 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		// console.log('eeeeeeee',e);
 		// console.log('aaaaaaaaa',args);
 		if (args.rows.length === this.dataset.length) {
+			this.rowChosenData = [];
 			this.rowsChosen = args.rows;
+			for (const item of this.rowsChosen) {
+				this.rowChosenData.push({
+					login_id: this.dataset[item].login_id,
+					data: this.dataset[item],
+					index: item
+				});
+			}
 			this.gridObj.setSelectedRows(this.rowsChosen);
 		} else if (args.rows.length === 0) {
 			this.rowsChosen = [];
+			this.rowChosenData = [];
 			this.gridObj.setSelectedRows(this.rowsChosen);
 		} else {
 			this.gridObj.setSelectedRows(this.rowsChosen);
@@ -962,8 +972,6 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		console.log('this.rowsChosen', this.rowsChosen)
 	}
 	onCellClicked(e, args) {
-		// console.log('onCellClicked eeeeeeee',e);
-		// console.log('onCellClicked aaaaaaaaa',args);
 		if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
 			const index = this.rowsChosen.indexOf(args.row);
 			if (index === -1) {
@@ -972,6 +980,17 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 				this.rowsChosen.splice(index, 1);
 			}
 			const item = args.grid.getDataItem(args.row);
+			const index2 = this.rowChosenData.findIndex(f => Number(f.login_id) === Number(item['login_id']));
+			if (index2 === -1) {
+				this.rowChosenData.push({
+					login_id: Number(item['login_id']),
+					data: item,
+					index: args.row
+				});
+			} else {
+				this.rowChosenData.splice(index2, 1);
+			}
+			console.log(this.rowChosenData);
 		}
 	}
 	onCellChanged(e, args) {
@@ -982,6 +1001,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 		this.dataset = [];
 		this.columnDefinitions = [];
 		this.rowsChosen = [];
+		this.rowChosenData = [];
 		this.tableFlag = false;
 	}
 	remarkFormater (row, cell, value, columnDef, dataContext) {
@@ -989,6 +1009,19 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			return "-";
 		} else if (value.toLowerCase() == 'qualified') {
 			return "<span style='color:green'>" + value + "</span>";
+		} else {
+			return value;
+		}
+	}
+	statusFormater (row, cell, value, columnDef, dataContext) {
+        if (value == null || value === "" || value === "-") {
+			return "-";
+		} else if (value.toLowerCase() == 'approved') {
+			return "<span style='color:#02ed10'>" + value + "</span>";
+		} else if (value.toLowerCase() == 'declined') {
+			return "<span style='color:#e11022'>" + value + "</span>";
+		} else if (value.toLowerCase() == 'pending') {
+			return "<span style='color:#0091EA'>" + value + "</span>";
 		} else {
 			return value;
 		}
@@ -1209,7 +1242,8 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 						name: 'Status',
 						field: 'status',
 						sortable: true,
-						filterable: true
+						filterable: true,
+						formatter: this.statusFormater
 					}
 				)
 			}
@@ -1220,6 +1254,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			const tempObj = {};
 			tempObj['id'] = counter;
 			tempObj['counter'] = counter;
+			tempObj['login_id'] = student['au_login_id'];
 			tempObj['regd_no'] = student['regd_no'];
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(student['au_full_name']));
 			tempObj['parent_name'] = new TitleCasePipe().transform(this.valueAndDash(student['parent_name']));
@@ -1239,7 +1274,17 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			tempObj['student_remark'] = student['student_remark'];
 			tempObj['parent_remark'] = student['parent_remark'];
 			tempObj['admission_remark'] = student['admission_remark'];
-			tempObj['status'] = student['status'] == 'Y' ? 'Approved' : student['status'] == 'N' ? 'Rejected' : 'Pending';
+			if(student['status'] == 'Y'){
+				tempObj['status'] = 'Approved';
+			} else if(student['status'] == 'N'){
+				tempObj['status'] = 'Declined';
+			} else if(student['status'] == 'P'){
+				tempObj['status'] = 'Pending';
+			} else if(student['status'] == 'D'){
+				tempObj['status'] = 'No Show';
+			} else {
+				tempObj['status'] = 'Pending';
+			}
 			this.dataset.push(tempObj);
 			counter++;
 		});
@@ -1288,6 +1333,22 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Birthday Student Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
+	}
+	admissionChangeStatus(au_is_eligible_adimission){
+		if(this.rowChosenData.length > 0){
+			const param:any = {};
+			param.students = this.rowChosenData;
+			param.au_is_eligible_adimission = au_is_eligible_adimission;
+			this.sisService.changeEnquiryAdmissionStatus(param).subscribe((result:any) => {
+				if(result && result.status == 'ok'){
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+					this.resetDataset();
+					this.submit();
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			})
+		}
 	}
 
 

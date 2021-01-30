@@ -114,7 +114,7 @@
                             Marks
                         </th>
                         <td mat-cell  *matCellDef="let element">
-                          <ul class="process-adm-ul" *ngIf="element.marks.length > 0">
+                          <ul class="process-adm-ul" *ngIf="element?.marks.length > 0">
                             <!-- <li>Document Status: 
                             <span *ngIf="element.score?.documentStatus == '1'">Completed</span>
                             <span *ngIf="element.score?.documentStatus == '0'">Pending</span>
@@ -133,7 +133,7 @@
                             </li> 
 
                           </ul> -->
-                          <li *ngFor="let item of element.marks">
+                          <li *ngFor="let item of element?.marks">
                               {{item.sub_name}} : {{item.erms_value != '' ? item.erms_value: '-'}} 
                           </li>
                           </ul>

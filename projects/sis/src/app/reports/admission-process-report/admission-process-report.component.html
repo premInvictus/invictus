@@ -45,8 +45,9 @@
           <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
       </div>
       <div *ngIf="rowsChosen?.length > 0">
-          <button class="btn-success margin-top-12 btn-spacer" mat-raised-button (click)="$event.approve();sendMessage()">Approve</button>
-          <button class="btn-danger margin-top-12 btn-spacer" mat-raised-button (click)="$event.reject();sendMessage()">Reject</button>
+          <button class="btn-success margin-top-12 btn-spacer" mat-raised-button (click)="admissionChangeStatus('Y')">Approve</button>
+          <button class="btn-danger margin-top-12 btn-spacer" mat-raised-button (click)="admissionChangeStatus('N')">Decline</button>
+          <button class="btn-danger margin-top-12 btn-spacer" mat-raised-button (click)="admissionChangeStatus('D')">No Show</button>
       </div>
   </div>
 </form>

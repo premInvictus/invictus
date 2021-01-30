@@ -114,8 +114,15 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 			tempObj['class'] = this.processAdmissionData[i]['class_name'];
 			tempObj['section'] = this.processAdmissionData[i]['sec_name'];
 			tempObj['contact'] = this.processAdmissionData[i]['au_mobile'];
-			tempObj['status'] = this.processAdmissionData[i]['status'] === '1' ? 'Approved' : this.processAdmissionData[i]['status'] === '0'
-				? 'Pending' : 'Declined';
+			if(this.processAdmissionData[i]['status'] === '1') {
+				tempObj['status'] = 'Approved';
+			} else if(this.processAdmissionData[i]['status'] === '2') {
+				tempObj['status'] = 'Declined';
+			} else if(this.processAdmissionData[i]['status'] === '3') {
+				tempObj['status'] = 'No Show';
+			} else {
+				tempObj['status'] = 'Pending';
+			}
 			tempObj['dates'] = this.processAdmissionData[i]['dates'];
 			tempObj['score'] = this.processAdmissionData[i]['score'];
 			tempObj['marks'] = this.processAdmissionData[i]['marks'];
