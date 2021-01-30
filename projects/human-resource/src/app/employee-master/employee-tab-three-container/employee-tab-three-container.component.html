@@ -664,11 +664,11 @@
                                                 </mat-form-field>
                                                 <mat-checkbox *ngIf="showSecurity == false" [disabled]="
                                                     viewOnly" (change)="showSecurityfun($event)">Edit Monthly Deduction </mat-checkbox>
-                                                <mat-form-field class="form-field" appearance="outline" *ngIf="showSecurity == true" >
+                                                <mat-form-field class="form-field" appearance="outline" >
                                                     <mat-label>Security deducted per month</mat-label>
                                                     <input type="text" formControlName="security_month_amount" matInput
-                                                        placeholder="Security deducted per month" [readonly]="viewOnly ||
-                                                        item.value.freezed">
+                                                        placeholder="Security deducted per month" [readonly]="(viewOnly ||
+                                                        item.value.freezed) || showSecurity == false">
                                                     <mat-error>
                                                         This field is required
                                                     </mat-error>
