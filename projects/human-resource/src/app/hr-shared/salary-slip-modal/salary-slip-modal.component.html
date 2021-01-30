@@ -210,6 +210,14 @@
                 <td class="cus-td" style="background: #D5E9FF !important;padding: 8px;
                  border-bottom: 0.5px solid;" align="right"><b>Amount</b></td>
               </tr>
+              <tr>
+                <td class="cus-td">
+                  Security Deposit
+                </td>
+                <td class="cus-td" align="right">
+                  {{ch.security_details? (ch.security_details[0].security_month_amount | number): '-'}}
+                </td>
+              </tr>
               <tr *ngFor="let bas of employeeDetails?.emp_salary_compute_data?.empShdcolumns">
                 <td class="cus-td">{{bas.header}}
                 </td>
@@ -217,6 +225,7 @@
                   {{bas.value ? (bas.value | number) : '-'}}
                 </td>
               </tr>
+              
               <tr>
                 <td class="cus-td">
                   T. D .S
@@ -227,6 +236,7 @@
                   employeeDetails.emp_salary_compute_data.emp_salary_structure.tds : '0'}}
                 </td>
               </tr>
+              
             </tbody>
           </table>
         </td>

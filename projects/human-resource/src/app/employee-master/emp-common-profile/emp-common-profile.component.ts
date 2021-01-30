@@ -26,6 +26,9 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   defaultsrc: any;
   navigation_record: any;
   navigation_record_sec: any;
+  remaining_security_deposit = 0;
+  security_session = '0';
+  present_session = '0';
   @Input() total: any = {};
   viewOnly: boolean;
   @ViewChild('myInput') myInput: ElementRef;
@@ -36,6 +39,7 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
     private router: Router) { }
   ngOnInit() {
     this.buildForm();
+    this.present_session = JSON.parse(localStorage.getItem('session')).ses_id;
   }
   buildForm() {
     this.employeeDetailsForm = this.fbuild.group({
@@ -81,6 +85,15 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
           this.navigation_record = this.employeeDetails.navigation;
           this.navigation_record_sec = this.employeeDetails.navigation_sec;
           //this.employeedetails['last_record'] = emp_id;
+          if(this.employeeDetails && this.employeeDetails.emp_salary_detail && this.employeeDetails.emp_salary_detail.emp_salary_structure ) {
+            if(this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
+              this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security - this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0);
+              this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+            } else {
+              this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security;
+              this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+            }
+          }
         }
 
         if (this.navigation_record) {

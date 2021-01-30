@@ -154,6 +154,13 @@
                 ): '-'}}</span>
           </div>
         </div>
+        <div class="row margin-top-8" *ngIf="present_session > security_session && remaining_security_deposit != 0">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Security Deposit(left):</span>
+            <span class="font-size-14 font-bold">
+              {{remaining_security_deposit != 0? remaining_security_deposit: '-'}}</span>
+          </div>
+        </div>
       </div>
       <div class="col-3 smart-col-111 ">
         <div class="row margin-top-8">
