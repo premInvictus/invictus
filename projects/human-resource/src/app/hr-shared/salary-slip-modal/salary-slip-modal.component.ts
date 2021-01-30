@@ -38,6 +38,9 @@ export class SalarySlipModalComponent implements OnInit {
       if (res) {
         this.employeeDetails = res[0];
         console.log('this.employeeDetails',this.employeeDetails);
+        this.employeeDetails.datax = this.ch.security_details ? this.ch.security_details[0].security_month_amount: '-';
+        console.log('__________________________', this.employeeDetails);
+        
       }
     });
   }
