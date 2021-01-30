@@ -130,7 +130,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       
       if(this.apiData[i]['fh_name']==item['name']) {
         
-        flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
+        //flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
+        flag= Number(this.apiData[i]['head_amt']);
         
         break;
       }

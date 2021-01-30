@@ -9,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { IndianCurrency } from '../../../_pipes';
 import * as moment from 'moment';
-
+import { ModeltableComponent } from '../../modeltable/modeltable.component';
 
 @Component({
   selector: 'app-adjustment',
@@ -184,6 +184,19 @@ export class AdjustmentComponent implements OnInit, OnChanges {
 
       }
     });
+  }
+  openModel(e) {
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: e.date,
+        reportType: 'feedue'
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
   }
   getColumnTotal(item) {
     let total = 0;
