@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-6">
           <div class="top-card-title">
-            <span class="font-size-24 font-medium">Advance Salary</span>
+            <span class="font-size-24 font-medium">Security Deposit</span>
           </div>
         </div>
         <div class="col-6 text-right">
@@ -24,7 +24,7 @@
             <thead class="table-skill__head text-center">
               <tr class="custom-tr">
                 <th class="custom-th" rowspan="2">Employee Name</th>
-                <th class="custom-th" rowspan="2">Advance</th>
+                <th class="custom-th" rowspan="2">Security</th>
                 <th class="custom-th" rowspan="2">Apr</th>
                 <th class="custom-th" rowspan="2">May</th>
                 <th class="custom-th" rowspan="2">Jun</th>
@@ -37,7 +37,9 @@
                 <th class="custom-th" rowspan="2">Jan</th>
                 <th class="custom-th" rowspan="2">Feb</th>
                 <th class="custom-th" rowspan="2">Mar</th>
-                <th class="custom-th" rowspan="2">Remaining Advance</th>
+                <th class="custom-th" rowspan="2">Total</th>
+                <th class="custom-th" rowspan="2">Accumulated Security</th>
+                <th class="custom-th" rowspan="2">Remaining Security</th>
               </tr>
 
             </thead>
@@ -47,46 +49,58 @@
                   {{det.emp_name}}
                 </td>
                 <td class="custom-td">
-                  {{det.advance  | number | zerodash }}
+                  {{det.advance | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,4,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,4,currentYear) | number | zerodash }}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,5,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,5,currentYear) | number | zerodash }}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,6,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,6,currentYear) | number | zerodash }}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,7,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,7,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,8,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,8,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,9,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,9,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,10,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,10,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,11,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,11,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,12,currentYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,12,currentYear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,1,nextYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,1,nextyear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,2,nextYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,2,nextyear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ getSalaryAdvance(det.emp_id,3,nextYear) | number | zerodash  }}
+                  {{ getSalaryAdvance(det.emp_id,3,nextyear) | number | zerodash}}
                 </td>
                 <td class="custom-td">
-                  {{ det.remaining_advance | number | zerodash  }}
+                  {{getSalaryAdvance(det.emp_id,4,currentYear) + getSalaryAdvance(det.emp_id,5,currentYear)
+                   + getSalaryAdvance(det.emp_id,6,currentYear) + getSalaryAdvance(det.emp_id,7,currentYear)
+                  +getSalaryAdvance(det.emp_id,8,currentYear) + getSalaryAdvance(det.emp_id,9,currentYear)
+                  +getSalaryAdvance(det.emp_id,10,currentYear) + getSalaryAdvance(det.emp_id,11,currentYear)
+                  +getSalaryAdvance(det.emp_id,12,currentYear) + getSalaryAdvance(det.emp_id,1,nextyear)
+                  +getSalaryAdvance(det.emp_id,2,nextyear) + getSalaryAdvance(det.emp_id,3,nextyear) | number | zerodash
+                }}
+                </td>
+                <td class="custom-td">
+                  {{ det.advance - det.remaining_advance | number | zerodash}}
+                </td>
+                <td class="custom-td">
+                  {{ det.remaining_advance | number | zerodash }}
                 </td>
               </tr>
             </tbody>

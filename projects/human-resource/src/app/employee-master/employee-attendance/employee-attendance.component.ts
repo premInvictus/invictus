@@ -323,6 +323,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 												console.log('absentDays',absentDays);
 												element.absentDays = absentDays;
 												lwpDays = absentDays > lg ? absentDays - lg : 0
+											} else if(item.shiftAttendanceDetails){
+												if(item.shiftAttendanceDetails.length > 0) {
+													let tempholyday = dateArray.filter(e => e.attendance == 'h');
+													let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
+													
+													console.log('absentDays',absentDays);
+													element.absentDays = absentDays;
+													lwpDays = absentDays > lg ? absentDays - lg : 0;
+												} else {
+													let absentDays = no_of_days;
+													element.absentDays = absentDays;
+													lwpDays = absentDays > lg ? absentDays - lg : 0;
+												}
+												
 											}
 										}
 										element.emp_lwp = lwpDays;
@@ -335,9 +349,13 @@ export class EmployeeAttendanceComponent implements OnInit {
 											console.log('calling else emp_total_attendance',emp_attendance_detail.attendance_detail.emp_total_attendance);
 
 											presentDays = Number(presentDays) - Number(lwpDays);
+											console.log('presentDays----',presentDays);
 
 											if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-												presentDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);	
+												let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);
+												if(pDays) {
+													presentDays = pDays;
+												}	
 											}
 
 											if (item.emp_status === 'left') {
@@ -364,10 +382,28 @@ export class EmployeeAttendanceComponent implements OnInit {
 											element.absentDays = absentDays;
 											lwpDays = absentDays > 0 ? absentDays : 0;
 											totP = totP- lwpDays;
+										} else if(item.shiftAttendanceDetails){
+											if(item.shiftAttendanceDetails.length > 0) {
+												let tempholyday = dateArray.filter(e => e.attendance == 'h');
+												let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
+												console.log('absentDays',absentDays);
+												element.absentDays = absentDays;
+												lwpDays = absentDays > 0 ? absentDays : 0;
+												totP = totP- lwpDays;
+											} else {
+												let absentDays = no_of_days;
+												element.absentDays = absentDays;
+												lwpDays = absentDays > 0 ? absentDays : 0;
+												totP = totP- lwpDays;
+											}
+											
 										}
 
 										if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-											totP = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);	
+											let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);
+											if(pDays) {
+												totP = pDays;
+											}	
 										}
 
 										if (item.emp_status === 'left') {
@@ -399,10 +435,28 @@ export class EmployeeAttendanceComponent implements OnInit {
 										element.absentDays = absentDays;
 										lwpDays = absentDays > 0 ? absentDays : 0;
 										totP = totP- lwpDays;
+									} else if(item.shiftAttendanceDetails){
+										if(item.shiftAttendanceDetails.length > 0) {
+											let tempholyday = dateArray.filter(e => e.attendance == 'h');
+											let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
+											console.log('absentDays',absentDays);
+											element.absentDays = absentDays;
+											lwpDays = absentDays > 0 ? absentDays : 0;
+											totP = totP- lwpDays;
+										} else {
+											let absentDays = no_of_days;
+											element.absentDays = absentDays;
+											lwpDays = absentDays > 0 ? absentDays : 0;
+											totP = totP- lwpDays;
+										}
+										
 									}
 
 									if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-										totP = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);	
+										let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);	
+										if(pDays){
+											totP = pDays;
+										}
 									}
 
 									if (item.emp_status === 'left') {
@@ -790,10 +844,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 				if(Number(yaer) == joinyear){
 					let absentDays = new Date(item.emp_salary_detail.emp_organisation_relation_detail.doj).getDate() - 1;
 					presentDays = Number(no_of_days) - Number(absentDays);
+					return presentDays;
 				}													
 			}	
 		}
-		return presentDays;
+		return null;
 	}
 	getPresentDayDOL(item:any,month_id,no_of_days){
 		let presentDays = no_of_days;
