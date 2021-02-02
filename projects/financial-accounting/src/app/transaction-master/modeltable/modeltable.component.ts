@@ -92,6 +92,7 @@ export class ModeltableComponent implements OnInit {
 		44: 'AR',
 
 	};
+	feeHeadJson: any[] = [];
 	sessionArray: any[] = [];
 	session: any = {};
 	gridHeight: any;
@@ -184,6 +185,9 @@ export class ModeltableComponent implements OnInit {
 	}
 	if (this.reportType == 'cumulativeheadwise_advance') {
 		this.getCollectionReport(this.reportFilterForm.value,true);
+	}
+	if (this.reportType == 'adjustmentss') {
+		this.getCumulativeFeeAdjConcessionReport(this.reportFilterForm.value);
 	}
     
 	}
@@ -4134,6 +4138,400 @@ export class ModeltableComponent implements OnInit {
 			}
 
 		}
+	}
+
+	getCumulativeFeeAdjConcessionReport(value: any) {
+		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
+		this.dataArr = [];
+		this.aggregatearray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		this.tableFlag = false;
+		this.gridOptions = {
+			enableDraggableGrouping: true,
+			createPreHeaderPanel: true,
+			showPreHeaderPanel: true,
+			enableHeaderMenu: true,
+			preHeaderPanelHeight: 40,
+			enableFiltering: true,
+			enableSorting: true,
+			enableColumnReorder: true,
+			createFooterRow: true,
+			showFooterRow: true,
+			footerRowHeight: 35,
+			enableExcelCopyBuffer: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
+			fullWidthRows: true,
+			rowHeight:65,
+			headerMenu: {
+				iconColumnHideCommand: 'fas fa-times',
+				iconSortAscCommand: 'fas fa-sort-up',
+				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
+			},
+			exportOptions: {
+				sanitizeDataExport: true,
+				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'toggle-preheader') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF(this.dataset);
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => {
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
+					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
+				},
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+			}
+		};
+		let repoArray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		const collectionJSON: any = {
+			'from_date': value.from_date,
+			'to_date': value.from_date,
+			'pageSize': value.pageSize,
+			'pageIndex': value.pageIndex,
+			'classId': value.fee_value,
+			'secId': value.hidden_value,
+			'downloadAll': true,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy
+		};
+		this.feeService.getFeeCumulativeConcessionAdjustmentReport(collectionJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+				repoArray = result.data.reportData;
+				this.totalRecords = Number(result.data.totalRecords);
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				let i = 0;
+				let j = 0;
+				const feeHead: any[] = [];
+				Object.keys(repoArray).forEach((keys: any) => {
+					const obj: any = {};
+					if (Number(keys) === 0) {
+						this.columnDefinitions = [
+							{
+								id: 'srno',
+								name: 'SNo.',
+								field: 'srno',
+								sortable: true,
+								maxWidth: 40
+							},
+							{
+								id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
+								sortable: true,
+								filterable: true,
+								grouping: {
+									getter: 'stu_admission_no',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInput },
+								width: 80,
+								groupTotalsFormatter: this.srnTotalsFormatter
+							},
+							{
+								id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name',
+								sortable: true,
+								filterable: true,
+								width: 140,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInput },
+								grouping: {
+									getter: 'stu_full_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+								filterable: true,
+								width: 100,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								grouping: {
+									getter: 'stu_class_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+							},
+							{
+								id: 'invoice_no',
+								name: 'Invoice No..',
+								field: 'invoice_no',
+								sortable: true,
+								filterable: true,
+								width: 40,
+								grouping: {
+									getter: 'invoice_no',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								cssClass: 'fee-ledger-no',
+								formatter: this.checkReceiptFormatter
+							}];
+					}
+					if (repoArray[Number(keys)]['student_adjustment_fee_heads_data']) {
+						let k = 0;
+						let tot = 0;
+						for (const titem of repoArray[Number(keys)]['student_adjustment_fee_heads_data']) {
+							Object.keys(titem).forEach((key2: any) => {
+								if (key2 === 'fh_name' && Number(keys) === 0) {
+									const feeObj: any = {};
+									this.columnDefinitions.push({
+										id: 'fh_name' + j,
+										name: new CapitalizePipe().transform(titem[key2]),
+										field: 'fh_name' + j,
+										cssClass: 'amount-report-fee',
+										sortable: true,
+										filterable: true,
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInput },
+										formatter: this.checkFeeFormatter,
+										groupTotalsFormatter: this.sumTotalsFormatter,
+										type:FieldType.number,
+									});
+									feeObj['fh_name' + j] = '';
+									feeHead.push(feeObj);
+									this.feeHeadJson.push(feeObj);
+									this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+									j++;
+								}
+								if (key2 === 'fh_name') {
+									obj['id'] = repoArray[Number(keys)]['au_admission_no'] + keys +
+										repoArray[Number(keys)]['inv_id'];
+									obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+										(Number(keys) + 1);
+									obj['stu_admission_no'] = repoArray[Number(keys)]['au_admission_no'] ?
+										repoArray[Number(keys)]['au_admission_no'] : '-';
+									obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['au_full_name']);
+									if (repoArray[Number(keys)]['au_sec_id'] !== '0') {
+										obj['stu_class_name'] = repoArray[Number(keys)]['class_name'] + '-' +
+											repoArray[Number(keys)]['sec_name'];
+									} else {
+										obj['stu_class_name'] = repoArray[Number(keys)]['class_name'];
+									}
+									obj['inv_id'] = repoArray[Number(keys)]['inv_id'];
+									obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+									obj[key2 + k] = titem['invg_adj_amount'] ? Number(titem['invg_adj_amount']) : 0;
+									tot = tot + (titem['invg_adj_amount'] ? Number(titem['invg_adj_amount']) : 0);
+									obj['adjusted_by'] =
+										repoArray[Number(keys)]['adjusted_by'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['adjusted_by']) : '-';
+									obj['adjustment_date'] = repoArray[Number(keys)]['adjustment_date'];
+									obj['invg_adj_amount'] = repoArray[Number(keys)]['invg_adj_amount'] ?
+										Number(repoArray[Number(keys)]['invg_adj_amount']) : 0;
+									obj['inv_remark'] =
+										repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
+									k++;
+								}
+							});
+						}
+					}
+					i++;
+					this.dataset.push(obj);
+				});
+				this.columnDefinitions.push(
+					{
+						id: 'adjustment_date', name: 'Adj. Date', field: 'adjustment_date', sortable: true,
+						filterable: true,
+						width: 100,
+						formatter: this.checkDateFormatter,
+						filter: { model: Filters.compoundDate },
+						filterSearchType: FieldType.dateIso,
+						grouping: {
+							getter: 'adjustment_date',
+							formatter: (g) => {
+								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'invg_adj_amount',
+						name: 'Adj. Amount',
+						field: 'invg_adj_amount',
+						sortable: true,
+						width: 70,
+						cssClass: 'amount-report-fee',
+						filterable: true,
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						groupTotalsFormatter: this.sumTotalsFormatter,
+						formatter: this.checkFeeFormatter
+					},
+					{
+						id: 'adjusted_by',
+						name: 'Adj. By',
+						field: 'adjusted_by',
+						sortable: true,
+						filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'adjusted_by',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+							},
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+
+					},
+					{
+						id: 'inv_remark',
+						name: 'Adj. Remark',
+						field: 'inv_remark',
+						sortable: true,
+						width: 60,
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+					}
+				);
+				if (this.columnDefinitions.length > 18) {
+					this.gridOptions.defaultColumnWidth =100;
+					this.gridOptions.forceFitColumns=false;
+					this.gridOptions.enableAutoResize=false;
+					this.gridOptions.autoFitColumnsOnFirstLoad=false;
+				}
+				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
+				this.totalRow = {};
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['inv_id'] = '';
+				obj3['invoice_no'] = '';
+				Object.keys(feeHead).forEach((key: any) => {
+					Object.keys(feeHead[key]).forEach(key2 => {
+						Object.keys(this.dataset).forEach(key3 => {
+							Object.keys(this.dataset[key3]).forEach(key4 => {
+								if (key4 === key2) {
+									obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+								}
+							});
+						});
+					});
+				});
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+				obj3['adjusted_by'] = '';
+				obj3['adjustment_date'] = '';
+				obj3['invg_adj_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0));
+				obj3['inv_remark'] = '';
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+				this.tableFlag = true;
+			} else {
+				this.tableFlag = true;
+			}
+		});
 	}
 }
 
