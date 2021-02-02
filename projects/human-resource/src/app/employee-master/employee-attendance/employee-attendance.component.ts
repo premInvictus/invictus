@@ -190,12 +190,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 							if (findex !== -1) {
 								dateArray.push({
 									date: date,
-									attendance: 'h'
+									attendance: 'h',
+									dateFormate:dateFormate
 								});
 							} else {
 								dateArray.push({
 									date: date,
-									attendance: ''
+									attendance: '',
+									dateFormate:dateFormate
 								});
 							}
 	
@@ -326,6 +328,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 											} else if(item.shiftAttendanceDetails){
 												if(item.shiftAttendanceDetails.length > 0) {
 													let tempholyday = dateArray.filter(e => e.attendance == 'h');
+													for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
+														const element = item.shiftAttendanceDetails[index];
+														const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
+														if(findex != -1){
+															item.shiftAttendanceDetails.splice(index,1);
+														}
+														
+													}
 													let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
 													
 													console.log('absentDays',absentDays);
@@ -385,6 +395,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 										} else if(item.shiftAttendanceDetails){
 											if(item.shiftAttendanceDetails.length > 0) {
 												let tempholyday = dateArray.filter(e => e.attendance == 'h');
+												for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
+													const element = item.shiftAttendanceDetails[index];
+													const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
+													if(findex != -1){
+														item.shiftAttendanceDetails.splice(index,1);
+													}
+													
+												}
 												let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
 												console.log('absentDays',absentDays);
 												element.absentDays = absentDays;
@@ -438,6 +456,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 									} else if(item.shiftAttendanceDetails){
 										if(item.shiftAttendanceDetails.length > 0) {
 											let tempholyday = dateArray.filter(e => e.attendance == 'h');
+											for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
+												const element = item.shiftAttendanceDetails[index];
+												const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
+												if(findex != -1){
+													item.shiftAttendanceDetails.splice(index,1);
+												}
+												
+											}
 											let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
 											console.log('absentDays',absentDays);
 											element.absentDays = absentDays;
