@@ -192,7 +192,7 @@ export class AdjustmentComponent implements OnInit, OnChanges {
 			data: {
         month_id: this.param.month,
         date: e.date,
-        reportType: 'feedue'
+        reportType: 'adjustmentss'
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
