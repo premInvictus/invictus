@@ -159,9 +159,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             if (!(this.apiData[i]['fh_name'])) {
               this.apiData[i]['fh_name'] = 'Transport Fee';
               this.apiData[i]['fh_id'] = 0;
-              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'];
             } else {
-              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'];
             }
           }
           console.log('this.previousBalanceObject--',this.previousBalanceObject)
