@@ -26,8 +26,8 @@
           <td *ngIf="getColumnTotal(item) > 0" style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{getColumnTotal(item) | indianCurrency}}</td>
           <td *ngIf="getColumnTotal(item) == 0" >{{getColumnTotal(item) | indianCurrency}}</td>
           <td class="action-btn">
-              <span *ngIf="(item?.vc_state =='draft' || item?.vc_state =='' || item?.vc_state =='delete') &&  isExistUserAccessMenu('746') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!(item?.voucherExists)) && getColumnTotal(item)"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
-              <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('748') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && getColumnTotal(item)" [ngClass]="item.be_back_status ? 'dotted_border':''"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,'update'); ">Update Voucher</button></span>
+              <span *ngIf="(item?.vc_state =='draft' || item?.vc_state =='' || item?.vc_state =='delete') &&  isExistUserAccessMenu('746') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(item.date)) && (!(item?.voucherExists)) && getColumnTotal(item)"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+              <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('748') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(item.date)) && getColumnTotal(item)" [ngClass]="item.be_back_status ? 'dotted_border':''"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,'update'); ">Update Voucher</button></span>
           </td>
         </tr>
         <tr>

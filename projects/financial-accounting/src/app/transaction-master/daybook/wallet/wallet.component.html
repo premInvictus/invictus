@@ -29,7 +29,7 @@
           <td>{{item['purchase_amt'] | indianCurrency}}</td>
           <td style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{item.total | indianCurrency}}</td>
           <td class="action-btn">
-              <span *ngIf="item.total && !(item.voucherExists) && isExistUserAccessMenu('788')"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+              <span *ngIf="item.total && !(item.voucherExists) && isExistUserAccessMenu('788') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(item.date))"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
           </td>
         </tr>
         <tr>

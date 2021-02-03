@@ -41,8 +41,9 @@ export class AdjustmentComponent implements OnInit, OnChanges {
   vcYearlyStatus   = 0;
   feeAdjustableAccountId = 0;
   feeAdjustableAccountName = 'Fee Adjustment';
-  globalsetup:any;
+  globalsetup:any={}
   showLoadingFlag = false;
+  currentses:any={};
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -89,7 +90,7 @@ export class AdjustmentComponent implements OnInit, OnChanges {
   getGlobalSetting() {
 		let param: any = {};
 		this.globalsetup = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status','fa_session_freez'];
+		param.gs_alias = ['fa_voucher_code_format_yearly_status','fa_session_freez,fa_monthwise_freez'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				result.data.forEach(element => {
@@ -219,18 +220,37 @@ export class AdjustmentComponent implements OnInit, OnChanges {
   }
 
   getSession() {
+    let tdate = new Date();
     this.faService.getSession().subscribe(
       (result: any) => {
         if (result && result.status === 'ok') {
           for (const citem of result.data) {
             this.sessionArray[citem.ses_id] = citem.ses_name;
+            const sessionarr = citem.ses_name.split('-');
+            var from = new Date(sessionarr[0]+'-04-01');
+            var to = new Date(sessionarr[1]+'-03-31');
+            if(tdate >= from && tdate <= to) {
+                this.currentses['ses_id'] = citem.ses_id;
+            }
           }
           if (this.session) {
             this.sessionName = this.sessionArray[this.session.ses_id];
           }
-
         }
-      });
+      });      
+  }
+  monthwiseFreez(date){
+    if(date) {
+      let datearr = date.split('-');
+      if(this.session.ses_id == this.currentses.ses_id) {
+        if(this.globalsetup['fa_monthwise_freez'] && this.globalsetup['fa_monthwise_freez'].includes(datearr[1])) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 
   getChartsOfAccount() {

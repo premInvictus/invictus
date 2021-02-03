@@ -50,11 +50,14 @@
                                 ">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                   style="margin-top: 20px;">
-                                  <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move' && control.gs_alias != 'fa_session_freez'">
+                                  <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move' && control.gs_alias != 'fa_session_freez' && control.gs_alias != 'fa_monthwise_freez'">
                                     {{control.gs_name | titlecase}}
                                   </mat-label>
                                   <mat-label *ngIf="control.gs_alias == 'fa_session_freez'">
-                                      Session Freez/Unfree
+                                      Session Freez/Unfreez
+                                  </mat-label>
+                                  <mat-label *ngIf="control.gs_alias == 'fa_monthwise_freez'">
+                                    Monthwise Freez/Unfreez
                                   </mat-label>
                                 </div>
                                 <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
@@ -143,6 +146,13 @@
                                       (change)="setSessionFreez('fa_session_freez','freez')">Session Freez </mat-checkbox>
                                       <mat-checkbox class="example-margin" *ngIf="freezUnfreez == 2"
                                       (change)="setSessionFreez('fa_session_freez','unfreez')">Session Unfreez </mat-checkbox>
+                                    </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'fa_monthwise_freez'">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-select [formControlName]="control.gs_alias" multiple>
+                                          <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
                                     </ng-container>
                                     <ng-container *ngIf="control.gs_alias == 'teacher_signature_position'">
                                       <mat-form-field class="form-field" appearance="outline">

@@ -178,9 +178,9 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_contact_no">
-                <div [ngClass]="studentdetailsform.value.epd_contact_no? 'remove-col-padding' : 'remove-col-padding '">
-                  <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no"
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="contact_no">
+                <div [ngClass]="contact_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" *ngIf="contact_no"
                     class="form-field">
                     <mat-label>Mobile No.</mat-label>
                     <input class="margin-left-10" formControlName="epd_contact_no" mask="00000 00000" matInput readonly>
@@ -188,9 +188,9 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_whatsapp_no">
-                <div [ngClass]="studentdetailsform.value.epd_whatsapp_no? 'remove-col-padding' : 'remove-col-padding '">
-                  <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="whatsapp_no">
+                <div [ngClass]="whatsapp_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" *ngIf="whatsapp_no"
                     class="form-field">
                     <mat-label>WhatsApp No.</mat-label>
                     <input class="margin-left-10" formControlName="epd_whatsapp_no" mask="00000 00000" matInput
