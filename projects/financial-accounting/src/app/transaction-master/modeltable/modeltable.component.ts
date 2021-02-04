@@ -463,7 +463,8 @@ export class ModeltableComponent implements OnInit {
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
 					'downloadAll': true,
-					'school_branch': this.reportFilterForm.value.school_branch
+					'school_branch': this.reportFilterForm.value.school_branch,
+					'forPrevious': this.data.previousData ? this.data.previousData : false
 				};
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -899,7 +900,8 @@ export class ModeltableComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'faduedate' : this.data.date,
-					'school_branch': this.reportFilterForm.value.school_branch
+					'school_branch': this.reportFilterForm.value.school_branch,
+					'forPrevious': this.data.previousData ? this.data.previousData : false
 				};
 
 				if (!(this.reportFilterForm.value.month_id)) {
@@ -1505,7 +1507,7 @@ export class ModeltableComponent implements OnInit {
 				'orderBy': value.orderBy,
 				'downloadAll': true,
 				'school_branch': value.school_branch,
-				'report_advance':advance
+				'report_advance':this.reportType === 'cumulativeheadwise_advance' ? this.data.session_id : ''
 			};
 			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -4410,8 +4412,8 @@ export class ModeltableComponent implements OnInit {
 									obj['adjusted_by'] =
 										repoArray[Number(keys)]['adjusted_by'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['adjusted_by']) : '-';
 									obj['adjustment_date'] = repoArray[Number(keys)]['adjustment_date'];
-									obj['invg_adj_amount'] = repoArray[Number(keys)]['invg_adj_amount'] ?
-										Number(repoArray[Number(keys)]['invg_adj_amount']) : 0;
+									obj['invg_adj_amount'] = 
+										Number(repoArray[Number(keys)]['invg_adj_amount']) + Number(repoArray[Number(keys)]['invg_fcc_amount'])
 									obj['inv_remark'] =
 										repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
 									k++;

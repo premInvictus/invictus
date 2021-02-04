@@ -789,6 +789,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/dashboard/restoreDatabase', value);
 	}
+	getFeeMonths(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
 }
 
 

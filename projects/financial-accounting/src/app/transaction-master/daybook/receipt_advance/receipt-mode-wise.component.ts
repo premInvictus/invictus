@@ -84,6 +84,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
         month_id: this.param.month,
         date: e.date,
         reportType: 'cumulativeheadwise_advance',
+        session_id: e.vc_ses_id
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
@@ -172,6 +173,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
             tempelement['vc_state'] = e.vc_state;
             tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
             tempelement['be_back_status'] = e.be_back_status;
+            tempelement['vc_ses_id'] = e.vc_ses_id;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -259,6 +261,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
             tempelement['invoice_head_arr'] = e.invoice_head_arr;
             tempelement['vc_records'] = e.vc_data;
             tempelement['be_back_status'] = e.be_back_status;
+            tempelement['vc_ses_id'] = e.vc_ses_id;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -303,7 +306,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
   getColumnTotal(item) {
     let total = 0;
     Object.keys(item).forEach(key => {
-      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'invoice_head_arr' && key != 'vc_records') {
+      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'invoice_head_arr' && key != 'vc_records' && key != 'be_back_status' && key != 'vc_ses_id') {
         let v = item[key] || 0;
         total += v;
       }
