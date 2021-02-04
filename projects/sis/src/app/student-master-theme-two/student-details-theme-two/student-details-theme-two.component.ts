@@ -108,6 +108,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	pdfUrl: any;
 	registrationNo: any;
 	cityName: any;
+	contact_no:any;
+	whatsapp_no:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -672,6 +674,9 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			mi_emergency_contact_no: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : '',
 			mi_blood_group: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_blood_group : '',
 		});
+		this.contact_no = this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '';
+		this.whatsapp_no= this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '';
+
 	}
 	uploadImage(fileName, au_profileimage) {
 		this.sisService.uploadDocuments([

@@ -285,5 +285,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.get(environment.apiHRUrl + '/salary-compute/updateSalaryStructureToEmployee', value);
 	}
+	getFeeMonths(value) {
+		this.loader.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
 
 }

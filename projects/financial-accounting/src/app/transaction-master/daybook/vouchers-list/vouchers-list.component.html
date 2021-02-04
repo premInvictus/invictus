@@ -130,15 +130,15 @@
                   <th mat-header-cell *matHeaderCellDef  width="10%"> Action </th>
                   <td mat-cell *matCellDef="let element; let i=index" [attr.rowspan]="getRowSpan('vc_id',i)" [style.display]="getRowSpan('vc_id', i) ? '':'none'">
                           <span *ngIf="element.action.vc_state !== 'publish'">
-                            <span *ngIf="isExistUserAccessMenu('733') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"><i  class="fas fa-edit blue" (click)="editVoucher(element.action)"></i>
+                            <span *ngIf="isExistUserAccessMenu('733') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(element.vc_date))"><i  class="fas fa-edit blue" (click)="editVoucher(element.action)"></i>
                             <span class="margin-left-15 ver-line-divider"></span>
                             </span>
-                            <i *ngIf="isExistUserAccessMenu('734') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))" class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
+                            <i *ngIf="isExistUserAccessMenu('734') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(element.vc_date))" class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
                           </span>
                           <span *ngIf="element.action.vc_state === 'publish'">
                             <i class="fas fa-eye" (click)="openVoucherModal(element.action)"></i>
                             <span class="margin-left-15 ver-line-divider"></span>
-                            <span *ngIf="isExistUserAccessMenu('735') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))">
+                            <span *ngIf="isExistUserAccessMenu('735') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(element.vc_date))">
                             <i class="fas fa-thumbs-down" (click)="toggleVoucherStatus(element.action)"></i>
                             <span class="margin-left-15 ver-line-divider"></span>
                             </span>
@@ -146,7 +146,7 @@
                            
                           </span>
                           <span class="margin-left-15 ver-line-divider"></span>
-                          <a href="javascript:void(0)" *ngIf="(!globalsetup['fa_session_freez']?.includes(session.ses_id))" title="Move To Session" (click)="moveToAnotherSession(element?.action)"><i class="fas fa-redo"></i>
+                          <a href="javascript:void(0)" *ngIf="(!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(element.vc_date))" title="Move To Session" (click)="moveToAnotherSession(element?.action)"><i class="fas fa-redo"></i>
                             </a>
                   </td>
                 </ng-container>
