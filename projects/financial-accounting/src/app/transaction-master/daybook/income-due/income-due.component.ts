@@ -97,6 +97,28 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 		dialogRefFilter.afterClosed().subscribe(result => {
 		});
   }
+
+  openPreviousModel(e) {
+    var eDate=new Date(this.ELEMENT_DATA[0]['date']);
+    console.log('eDate--',eDate)
+    var yesterday = new Date(eDate.getTime());
+yesterday.setDate(eDate.getDate() - 1);
+console.log('yesterday.toString().split("T")[0]--',yesterday.toLocaleDateString('en-CA'))
+var tempDate =yesterday.toString();
+console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: yesterday.toLocaleDateString('en-CA'),
+        reportType: 'feedue',
+        previousData: true
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
+  }
   getGlobalSetting() {
 		let param: any = {};
 		this.globalsetup = {};
@@ -249,6 +271,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           }
         })
         if (tempData.length > 0) {
+          let fine_amt = 0;
           dateArray.forEach(e => {
             const tempelement: any = {};
             tempelement['date'] = e.date;
@@ -258,14 +281,27 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             tempelement['vc_records'] = e.vc_data;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
+              
               this.displayedColumns.forEach(ee => {
+                
                 tempvalue.value.forEach(element => {
                   if (element.fh_id == ee.id) {
                     let tempvaluehead = 0;
                     if (this.adjustmentStatus) {
-                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
+                      if (element.fine_amt > 0)
+                        fine_amt=Number(element.fine_amt);
+                      console.log(fine_amt);
+                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt) ;
                     } else {
+                      if (element.fine_amt)
+                        fine_amt=Number(element.fine_amt);
+                      console.log(fine_amt);
                       tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+                    }
+
+                    if(ee.id == -1) {
+                      console.log('in', fine_amt);
+                      tempvaluehead=fine_amt;
                     }
                     
                     let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
@@ -278,12 +314,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                   }
                   
                     
-                    
+                  
                   
                 });
-                
+                //
 
               });
+              fine_amt=0;
               
             }
             // console.log('tempelement--',tempelement);
