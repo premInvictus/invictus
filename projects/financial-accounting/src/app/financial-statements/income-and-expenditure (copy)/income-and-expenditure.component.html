@@ -15,8 +15,7 @@
                 <mat-datepicker #picker></mat-datepicker> -->
                 <mat-label>Month</mat-label>
                 <mat-select placeholder="Month" formControlName="tb_month"
-                    required (selectionChange)="getIncomeAndExenditure()" >
-                    <mat-option value="">Please select</mat-option>
+                    required (selectionChange)="getIncomeAndExenditure()" multiple>
                     <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                             style="font-size: 14px;">
                             {{item.fm_name}}

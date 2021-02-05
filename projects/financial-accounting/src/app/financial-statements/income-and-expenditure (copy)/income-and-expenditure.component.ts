@@ -66,7 +66,7 @@ export class IncomeAndExpenditureComponent implements OnInit {
   getIncomeAndExenditure(){
     if(this.accountForm.valid){
       var inputJson = {
-        monthId : this.accountForm.value.tb_month && (this.accountForm.value.tb_month != 'consolidate') ? Number(this.accountForm.value.tb_month) : 'consolidate',
+        monthId : this.accountForm.value.tb_month,
         display_section: 'incomeExpenditure'
       };
       

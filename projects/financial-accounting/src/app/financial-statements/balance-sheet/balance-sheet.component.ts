@@ -73,7 +73,7 @@ export class BalanceSheetComponent implements OnInit {
       this.tableDivFlag = false;
       this.ledgerArray = [];
       var inputJson = {
-        monthId: this.accountForm.value.tb_month && (this.accountForm.value.tb_month != 'consolidate') ? Number(this.accountForm.value.tb_month) : 'consolidate',
+        monthId: this.accountForm.value.tb_month,
         display_section: 'incomeExpenditure'
       };
 
@@ -154,7 +154,7 @@ export class BalanceSheetComponent implements OnInit {
       // }
       console.log('prevMonth--', prevMonth)
       var inputJson = {
-        monthId: Number(this.accountForm.value.tb_month) ,
+        monthId: this.accountForm.value.tb_month,
         display_section: 'incomeExpenditure',
         foraccumulate: true
       };
@@ -221,7 +221,7 @@ export class BalanceSheetComponent implements OnInit {
   getBalanceSheet() {
     if (this.accountForm.valid) {
       var inputJson = {
-        monthId: this.accountForm.value.tb_month && (this.accountForm.value.tb_month != 'consolidate') ? Number(this.accountForm.value.tb_month) : 'consolidate',
+        monthId: this.accountForm.value.tb_month,
         display_section: 'balanceSheet',
         //coa_id:[1]
       };

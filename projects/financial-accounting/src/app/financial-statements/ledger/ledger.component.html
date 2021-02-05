@@ -21,8 +21,7 @@
                   <mat-form-field class="form-field-150 m-l-10" appearance="outline">
                     <mat-label>Month</mat-label>
                     <mat-select placeholder="Month" formControlName="monthId"
-                        required (selectionChange)="getLedger()" >
-                        <mat-option value="">Please select</mat-option>
+                        required (selectionChange)="getLedger()" multiple>
                         <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                                 style="font-size: 14px;">
                                 {{item.fm_name}}
