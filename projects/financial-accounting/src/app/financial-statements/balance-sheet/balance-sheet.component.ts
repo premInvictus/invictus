@@ -51,10 +51,10 @@ export class BalanceSheetComponent implements OnInit {
       if (result && result.status === 'ok') {
         //	console.log(result.data);
         this.feeMonthArray = result.data;
-        this.feeMonthArray.push({
-          fm_id: 'consolidate',
-          fm_name: 'Consolidated'
-        })
+        // this.feeMonthArray.push({
+        //   fm_id: 'consolidate',
+        //   fm_name: 'Consolidated'
+        // })
       }
     });
   }
