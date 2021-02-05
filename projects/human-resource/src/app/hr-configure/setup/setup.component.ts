@@ -699,7 +699,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 
 	addConfiguration(value) {
 		this.setupDetails = [];
-		if (!this.formGroupArray[value - 1].formGroup.valid) {
+		if(value == 2) {
+		// console.log("i am hee", this.formGroupArray[value - 1].formGroup);
+			if(this.formGroupArray[value - 1].formGroup.controls.calculation_type.value == '1') {
+				this.formGroupArray[value - 1].formGroup.patchValue({
+					upper_value: ''
+				})
+				this.formGroupArray[value - 1].formGroup.controls.upper_value.setErrors(null);
+				// this.formGroupArray[value - 1].formGroup.controls.upper_value.clearValidators();
+				// this.formGroupArray[value - 1].formGroup.controls.upper_value.markAsUntouched();
+			}
+		}
+		if (!this.formGroupArray[value - 1].formGroup.valid) {			
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
 			this.disabledApiButton = true;
