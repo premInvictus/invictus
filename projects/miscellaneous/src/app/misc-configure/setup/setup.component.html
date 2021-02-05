@@ -121,19 +121,7 @@
                                         </mat-select>
                                       </mat-form-field>
                                     </ng-container>
-                                    <ng-container *ngIf="control.gs_alias == 'fa_closing_balance_move'">
-                                      <mat-checkbox class="example-margin"
-                                        (change)="showClosingSession = !showClosingSession">Move Closing Balance For
-                                        Session </mat-checkbox>
-                                      <mat-form-field class="form-field" appearance="outline"
-                                        *ngIf="showClosingSession">
-                                        <mat-select [formControlName]="control.gs_alias">
-                                          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
-                                            {{item.ses_name}}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </ng-container>
+                                    
                                     <ng-container *ngIf="control.gs_alias == 'fa_session_freez'">
                                       <mat-form-field class="form-field" appearance="outline">
                                         <mat-select [formControlName]="control.gs_alias" (selectionChange)="checkFreez($event.value)">
@@ -153,6 +141,20 @@
                                           <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
                                         </mat-select>
                                       </mat-form-field>
+                                    </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'fa_closing_balance_move'">
+                                     
+                                      <mat-form-field class="form-field" appearance="outline"
+                                        *ngIf="showClosingSession">
+                                        <mat-select [formControlName]="control.gs_alias">
+                                          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
+                                            {{item.ses_name}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <mat-checkbox class="example-margin"
+                                      (change)="showClosingSession = !showClosingSession">Move Closing Balance For
+                                      Session </mat-checkbox>
                                     </ng-container>
                                     <ng-container *ngIf="control.gs_alias == 'teacher_signature_position'">
                                       <mat-form-field class="form-field" appearance="outline">
