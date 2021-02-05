@@ -50,6 +50,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 	searchViaSearch = false;
 	searchViaText = false;
 	currentUser: any = {};
+	accession_type;
 	constructor(private common: ErpCommonService,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -57,7 +58,6 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 		private notif: CommonAPIService) { }
 
 	ngOnInit() {
-		
 		this.builForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		var dashboardSearchData = this.notif.getDashboardSearchData();
@@ -93,7 +93,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 	}
 	searchBook() {
 		this.searchForm.patchValue({
-			page_size: 10,
+			page_size: this.bookpagesize,
 			page_index: 0,
 			role_id: this.currentUser.role_id
 		})
@@ -112,6 +112,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					for (const item of res.data.resultData) {
 						item.book_container_class = 'book-title-container-default';
+						
 						this.BOOK_ELEMENT_DATA.push(item);
 					}
 					this.searchFlag = true;

@@ -21,6 +21,14 @@ export class ReservoirEditModalComponent implements OnInit {
   bookImage: any = '';
   genreArray: any[] = [];
   bookDetailsArray: any[] = [];
+  accessionSequenceArray: any[] = [{
+		type_id: 'G',
+		type_name: 'General',
+	},
+	{
+		type_id: 'S',
+		type_name: 'Specimen',
+	}];
   typeArray: any[] = [{
     type_id: '1',
     type_name: 'Hardbound',
@@ -193,6 +201,7 @@ export class ReservoirEditModalComponent implements OnInit {
           lang_id: this.bookData.language_details ? this.bookData.language_details.lang_code : '',
           description: this.bookData.description ? this.bookData.description : '',
           category_id: this.bookData.category_id ? this.bookData.category_id : '',
+          accessionsequence: this.bookData.accessionsequence ? this.bookData.accessionsequence : '',
           source: this.bookData.source ? this.bookData.source : '',
           location_type : this.bookData.location_type ? this.bookData.location_type : 'library',
           location_class_id : this.bookData.location_class_id ? this.bookData.location_class_id : '',
@@ -321,6 +330,7 @@ export class ReservoirEditModalComponent implements OnInit {
       row: '',
       buy_link: '',
       category_id: '',
+      accessionsequence:'',
       project_type_id: '6',
       reserv_class_id: [],
       reserv_sub_id: '',

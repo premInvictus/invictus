@@ -4,7 +4,6 @@ export const ckconfig = {
 		disallowedContent : 'm:omathpara',
 		// tslint:disable-next-line:max-line-length
 		extraPlugins: 'mathjax,language,html5audio,html5video,videoembed,pramukhime,pastefromword,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload,simpleVideoUpload,simpleAudioUpload,keystrokes',
-		// extraPlugins : 'mathjax,language,html5audio,html5video,videoembed,pramukhime,pastefromword,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload,simpleVideoUpload,simpleAudioUpload,keystrokes,eqneditor',
 		scayt_multiLanguageMod : true,
 		mathJaxLib : '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
 		language_list : [ 'fr:French', 'es:Spanish', 'it:Italian',  'he:Hebrew:rtl', 'pt:Portuguese', 'de:German', 'hi:Hindi' ],
@@ -31,8 +30,7 @@ export const ckconfig = {
 					{ name: 'SimpleImageUpload', items: [ 'SimpleImageUpload' ] },
 					{ name: 'SimpleVideoUpload', items: [ 'SimpleVideoUpload' ] },
 					{ name: 'SimpleAudioUpload', items: [ 'SimpleAudioUpload' ] },
-					{ name: 'KeyStrokes', items: [ 'keystrokes' ] },
-					{ name: 'EqnEditor', items: [ 'EqnEditor' ] },
+					{ name: 'KeyStrokes', items: [ 'keystrokes' ] }
 			]
 			] ,
 		removeDialogTabs : 'image:advanced;image:Link;html5video:advanced;html5audio:advanced'

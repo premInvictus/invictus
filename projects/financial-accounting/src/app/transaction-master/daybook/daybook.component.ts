@@ -19,7 +19,7 @@ import { saveAs } from 'file-saver';
 })
 export class DaybookComponent implements OnInit {
 
-	currentTabIndex = 4;
+	currentTabIndex:any;
 	feeMonthArray = [];
 	paramform: FormGroup;
 	adjustmentStatus = 0;
@@ -125,6 +125,7 @@ export class DaybookComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				if (result.data && result.data[0]) {
 					this.adjustmentStatus = result.data[0]['gs_value'] == '1' ? 1 : 0;
+					this.currentTabIndex = this.adjustmentStatus ? 5 : 4;
 				}
 
 			}

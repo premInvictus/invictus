@@ -3,7 +3,7 @@ import { FormBuilder, FormGroupDirective, FormControl, NgForm, FormGroup } from 
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
-import { SisService } from '../../_services/index';
+import { SisService} from '../../_services/index';
 @Component({
     selector: 'app-setup',
     templateUrl: './setup.component.html',
@@ -125,9 +125,11 @@ export class SetupComponent implements OnInit {
     subexamArray: any[];
     freezUnfreez=1;
     session_freez:any[] = [];
+    monthArray:any[] = [];
     session:any;
     sig_positionArray = ['first','last'];
     hrattendanceArray = ['manual','biometric'];
+    accession_typeArray = ['single','multiple'];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
@@ -183,6 +185,16 @@ export class SetupComponent implements OnInit {
         this.getDepartment();
         this.getPayGways();
         this.getBanks();
+        this.getFeeMonths();
+    }
+    getFeeMonths() {
+        this.monthArray = [];
+        this.erpCommonService.getFeeMonths({}).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+            this.monthArray = result.data;
+          } else {
+          }
+        });
     }
     setSessionFreez(key1,key3){
         if(this.settingForm.value[key1]){
@@ -388,6 +400,17 @@ export class SetupComponent implements OnInit {
 
                 }
                 return this.fbuild.array(jsontemp);
+            } else if (element.gs_alias === 'admission_process_cutoff') {
+                const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+                const jsontemp = [];
+                for (let i = 0; i < this.classArray.length; i++) {
+                    jsontemp.push(this.fbuild.group({
+                        class_id: this.classArray[i]['class_id'],
+                        cutoff_marks: temp[i] ? temp[i]['cutoff_marks'] : ''
+                    }))
+
+                }
+                return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'school_push_notif') {
                 this.notifConfigArray = JSON.parse(element.gs_value);
             } else if (element.gs_alias === 'curl_call_url') {
@@ -436,7 +459,7 @@ export class SetupComponent implements OnInit {
                 return this.fbuild.array([this.fbuild.group(jsontemp)]);
             }
         }
-        if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez') {
+        if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez' || element.gs_alias === 'fa_monthwise_freez') {
             if(element.gs_alias === 'fa_session_freez') {
                 this.session_freez = element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : [];
                 console.log('this.session_freez',this.session_freez);
@@ -1333,6 +1356,9 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.employee_monthly_leave_credit) {
             this.settingForm.value.employee_monthly_leave_credit = JSON.stringify(this.settingForm.value.employee_monthly_leave_credit);
         }
+        if (this.settingForm.value && this.settingForm.value.admission_process_cutoff) {
+            this.settingForm.value.admission_process_cutoff = JSON.stringify(this.settingForm.value.admission_process_cutoff);
+        }
         if (this.settingForm.value && this.settingForm.value.school_push_notif) {
             this.settingForm.value.school_push_notif = JSON.stringify(this.notifConfigArray);
         }
@@ -1642,6 +1668,7 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
             this.settingForm.value.fa_session_freez = this.session_freez.join(',');
+            this.settingForm.value.fa_monthwise_freez = this.settingForm.value.fa_monthwise_freez.join(',');
         }
         if (this.currentGsetup === 'examination') {
             if (this.gradecardsignatureForm.length > 0) {

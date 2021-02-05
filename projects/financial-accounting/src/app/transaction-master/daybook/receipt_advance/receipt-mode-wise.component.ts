@@ -43,7 +43,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
   showLoadingFlag = false;
   feeReceivableAccountName = 'Fee Receivable';
   globalsetup:any;
-
+  currentses:any={};
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -83,7 +83,8 @@ export class ReceiptModeWiseComponent1 implements OnInit {
 			data: {
         month_id: this.param.month,
         date: e.date,
-        reportType: 'headwise'
+        reportType: 'cumulativeheadwise_advance',
+        session_id: e.vc_ses_id
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
@@ -105,7 +106,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
   getGlobalSetting() {
 		let param: any = {};
 		this.globalsetup = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status','fa_session_freez'];
+		param.gs_alias = ['fa_voucher_code_format_yearly_status','fa_session_freez','fa_monthwise_freez'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				result.data.forEach(element => {
@@ -133,7 +134,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
-    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), advance:true }).subscribe((data: any) => {
       if (data) {
 
         const tempData: any = data.receipt_data;
@@ -172,6 +173,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
             tempelement['vc_state'] = e.vc_state;
             tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
             tempelement['be_back_status'] = e.be_back_status;
+            tempelement['vc_ses_id'] = e.vc_ses_id;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -218,7 +220,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
-    this.faService.getNonPartialDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+    this.faService.getNonPartialDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) , advance: true}).subscribe((data: any) => {
       if (data) {
 
         const tempData: any = data.receipt_data;
@@ -259,6 +261,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
             tempelement['invoice_head_arr'] = e.invoice_head_arr;
             tempelement['vc_records'] = e.vc_data;
             tempelement['be_back_status'] = e.be_back_status;
+            tempelement['vc_ses_id'] = e.vc_ses_id;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -303,7 +306,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
   getColumnTotal(item) {
     let total = 0;
     Object.keys(item).forEach(key => {
-      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'invoice_head_arr' && key != 'vc_records') {
+      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'invoice_head_arr' && key != 'vc_records' && key != 'be_back_status' && key != 'vc_ses_id') {
         let v = item[key] || 0;
         total += v;
       }
@@ -324,6 +327,13 @@ export class ReceiptModeWiseComponent1 implements OnInit {
         if (result && result.status === 'ok') {
           for (const citem of result.data) {
             this.sessionArray[citem.ses_id] = citem.ses_name;
+            let tdate = new Date();
+            const sessionarr = citem.ses_name.split('-');
+            var from = new Date(sessionarr[0]+'-04-01');
+            var to = new Date(sessionarr[1]+'-03-31');
+            if(tdate >= from && tdate <= to) {
+                this.currentses['ses_id'] = citem.ses_id;
+            }
           }
           if (this.session) {
             this.sessionName = this.sessionArray[this.session.ses_id];
@@ -332,7 +342,19 @@ export class ReceiptModeWiseComponent1 implements OnInit {
         }
       });
   }
-
+  monthwiseFreez(date){
+    if(date) {
+      let datearr = date.split('-');
+      if(this.session.ses_id == this.currentses.ses_id) {
+        if(this.globalsetup['fa_monthwise_freez'] && this.globalsetup['fa_monthwise_freez'].includes(datearr[1])) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
   getChartsOfAccount() {
     this.chartsOfAccount = [];
     this.chartsOfAccountInvoice = [];

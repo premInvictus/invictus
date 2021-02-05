@@ -590,6 +590,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/getWallets',value);
 	}
+	getWalletsReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/getWalletsReport',value);
+	}
 
 	insertWallets(value) {
 		this.service.startLoading();
@@ -620,5 +624,19 @@ export class FeeService {
 	getGroupFeeHeads(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getGroupedFeeHeads', value);
+	}
+	getSummarizedFeeReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getSummarizedFeeReport', value);
+	}
+
+	getFeeCumulativeConcessionAdjustmentReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeCumulativeConcessionAdjustmentReport', value);
+	}
+
+	getConcessionDetailReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionDetailReport', value);
 	}
 }

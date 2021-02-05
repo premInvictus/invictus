@@ -77,6 +77,9 @@
                 <app-drop-out-report *ngIf="reportType === '16'"></app-drop-out-report>
                 <app-deleted-receipt-report [userName]="userName" *ngIf="reportType === '17'">
                 </app-deleted-receipt-report>
+                <app-summarized-fee-review-report *ngIf="reportType === '18'">
+                </app-summarized-fee-review-report>
+                <app-wallet-collection *ngIf="reportType === '19'"></app-wallet-collection>
               </div>
             </div>
           </mat-expansion-panel>

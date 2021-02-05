@@ -831,12 +831,22 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
+															}
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+															}
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
@@ -852,19 +862,37 @@ export class CollectionReportComponent implements OnInit {
 													
 
 												}
+												if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+													//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+													break;
+													
+												} 
 											}
 
 
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
+												console.log('in opening balance');
+												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 												? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+											}
+
+											
+											
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-											obj['additional_amt'] = Number(repoArray[Number(keys)]['invoice_amount']
+
+											obj['additional_amt'] = (Number(repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
-														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0);
+														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0)) > 0 ? Number(repoArray[Number(keys)]['invoice_amount']
+														? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
+																? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0) : 0;
+
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['total'] = obj['total'] + (repoArray[Number(keys)]['additional_amt']
@@ -913,8 +941,10 @@ export class CollectionReportComponent implements OnInit {
 
 								obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 									? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+								if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) > 0 ) {
 								obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 									? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+								}
 								obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 									? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 								obj['additional_amt'] = Number(repoArray[Number(keys)]['invoice_amount']
@@ -3000,6 +3030,14 @@ export class CollectionReportComponent implements OnInit {
 														break;
 													}
 
+													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														break;
+														
+													} 
+
 												}
 											}
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
@@ -3553,6 +3591,14 @@ export class CollectionReportComponent implements OnInit {
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														break;
 													}
+
+													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														break;
+														
+													} 
 
 												}
 											}

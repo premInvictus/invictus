@@ -150,15 +150,17 @@ export class FeeconReportComponent implements OnInit {
 		// {
 		// 	report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'
 		// });
-		if(this.common.isExistUserAccessMenu('662')) {
-			this.reportTypeArray.push({report_type: 'concession', report_name: 'Concession Report'});
+		if (this.common.isExistUserAccessMenu('662')) {
+			this.reportTypeArray.push({ report_type: 'concession', report_name: 'Concession Report' });
 		}
-		if(this.common.isExistUserAccessMenu('663')) {
-			this.reportTypeArray.push({report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'});
+		if (this.common.isExistUserAccessMenu('663')) {
+			this.reportTypeArray.push({ report_type: 'concessionAlloted', report_name: 'Concession Allotee Report' });
 		}
-		if(this.common.isExistUserAccessMenu('664')) {
-			this.reportTypeArray.push({report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'});
+		if (this.common.isExistUserAccessMenu('664')) {
+			this.reportTypeArray.push({ report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report' });
 		}
+
+		this.reportTypeArray.push({ report_type: 'concessionDetail', report_name: 'Concession Detail Summary Report' });
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -189,50 +191,50 @@ export class FeeconReportComponent implements OnInit {
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	parseRoman(s) {
-        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
-        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
-            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
-        }, 0);
+		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+		return s.toUpperCase().split('').reduce((r, a, i, aa) => {
+			return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+		}, 0);
 	}
 	isRoman(s) {
-        // http://stackoverflow.com/a/267405/1447675
-        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+		// http://stackoverflow.com/a/267405/1447675
+		return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
 	}
-	updateClassSort(grid:any,dataView:any) {
+	updateClassSort(grid: any, dataView: any) {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
-				grid.onSort.subscribe((e, args)=> {
+				grid.onSort.subscribe((e, args) => {
 					console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
-				  
+
 					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
-					var comparer = (a, b) =>{
+					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-							
-							
+
+
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-						
-						
+
+
 						} else {
-							
+
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-					
+
 					}
-				  
+
 					// Delegate the sorting to DataView.
 					// This will fire the change events and update the grid.
 					dataView.sort(comparer, args.sortAsc);
-				  });
+				});
 			}
 		}
 	}
@@ -540,7 +542,7 @@ export class FeeconReportComponent implements OnInit {
 											filter: { model: Filters.compoundInput },
 											formatter: this.checkFeeFormatter,
 											groupTotalsFormatter: this.sumTotalsFormatter,
-											type:FieldType.number,
+											type: FieldType.number,
 										});
 										feeObj['fh_name' + j] = '';
 										feeHead.push(feeObj);
@@ -589,7 +591,7 @@ export class FeeconReportComponent implements OnInit {
 							sortable: true,
 							formatter: this.checkTotalFormatter,
 							cssClass: 'amount-report-fee',
-							type:FieldType.number,
+							type: FieldType.number,
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 					);
@@ -789,28 +791,28 @@ export class FeeconReportComponent implements OnInit {
 							let tot = 0;
 							for (const titem of repoArray[Number(keys)]['stu_concession_arr']) {
 								Object.keys(titem).forEach((key2: any) => {
-										obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys 
-										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-											(Number(keys) + 1);
-										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
-										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
-										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-										if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-												repoArray[Number(keys)]['stu_sec_name'];
-										} else {
-											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-										}
-										obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
-										obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
-										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
-										tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
-										obj['total'] = tot;
-										obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
-										obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
-										obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
-										obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
-										k++;
+									obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys
+									obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+										(Number(keys) + 1);
+									obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
+									obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
+									obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+									if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+										obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+											repoArray[Number(keys)]['stu_sec_name'];
+									} else {
+										obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+									}
+									obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
+									obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
+									obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
+									tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
+									obj['total'] = tot;
+									obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
+									obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
+									obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
+									obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
+									k++;
 								});
 							}
 						}
@@ -826,7 +828,7 @@ export class FeeconReportComponent implements OnInit {
 							sortable: true,
 							formatter: this.checkTotalFormatter,
 							cssClass: 'amount-report-fee',
-							type:FieldType.number,
+							type: FieldType.number,
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 					);
@@ -989,7 +991,7 @@ export class FeeconReportComponent implements OnInit {
 			} else {
 				return '';
 			}
-			
+
 		}
 		return '';
 	}
@@ -997,9 +999,9 @@ export class FeeconReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
 		}
@@ -1008,9 +1010,9 @@ export class FeeconReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
 		}
@@ -1019,7 +1021,7 @@ export class FeeconReportComponent implements OnInit {
 		console.log(value);
 		if (value)
 			return value;
-		else 
+		else
 			return '';
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
@@ -1028,7 +1030,7 @@ export class FeeconReportComponent implements OnInit {
 		} else {
 			if (value)
 				return '<a>' + value + '</a>';
-			else 
+			else
 				return '-';
 		}
 	}
@@ -1243,7 +1245,7 @@ export class FeeconReportComponent implements OnInit {
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					enableAutoTooltip: true,
-					rowHeight:70,
+					rowHeight: 70,
 					enableCellNavigation: true,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
@@ -1352,7 +1354,7 @@ export class FeeconReportComponent implements OnInit {
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					enableAutoTooltip: true,
-					rowHeight:100,
+					rowHeight: 100,
 					enableCellNavigation: true,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
@@ -1445,7 +1447,401 @@ export class FeeconReportComponent implements OnInit {
 				this.valueLabel = 'Class';
 				this.filterFlag = true;
 				this.getClassData();
+			} else if ($event.value === 'concessionDetail') {
+
+				this.reportFilterForm.value.from_date = new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd');
+				this.reportFilterForm.value.to_date = new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd');
+				this.dataArr = [];
+				this.aggregatearray = [];
+				this.columnDefinitions = [];
+				this.dataset = [];
+				this.tableFlag = false;
+				this.gridOptions = {
+					enableDraggableGrouping: true,
+					createPreHeaderPanel: true,
+					showPreHeaderPanel: true,
+					enableHeaderMenu: true,
+					preHeaderPanelHeight: 40,
+					enableFiltering: true,
+					enableSorting: true,
+					enableColumnReorder: true,
+					createFooterRow: true,
+					showFooterRow: true,
+					footerRowHeight: 35,
+					enableExcelCopyBuffer: true,
+					enableAutoTooltip: true,
+					enableCellNavigation: true,
+					fullWidthRows: true,
+					rowHeight: 65,
+					headerMenu: {
+						iconColumnHideCommand: 'fas fa-times',
+						iconSortAscCommand: 'fas fa-sort-up',
+						iconSortDescCommand: 'fas fa-sort-down',
+						title: 'Sort'
+					},
+					exportOptions: {
+						sanitizeDataExport: true,
+						exportWithFormatter: true
+					},
+					gridMenu: {
+						customItems: [{
+							title: 'pdf',
+							titleKey: 'Export as PDF',
+							command: 'exportAsPDF',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'excel',
+							titleKey: 'Export Excel',
+							command: 'exportAsExcel',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'expand',
+							titleKey: 'Expand Groups',
+							command: 'expandGroup',
+							iconCssClass: 'fas fa-expand-arrows-alt'
+						},
+						{
+							title: 'collapse',
+							titleKey: 'Collapse Groups',
+							command: 'collapseGroup',
+							iconCssClass: 'fas fa-compress'
+						},
+						{
+							title: 'cleargroup',
+							titleKey: 'Clear Groups',
+							command: 'cleargroup',
+							iconCssClass: 'fas fa-eraser'
+						}
+						],
+						onCommand: (e, args) => {
+							if (args.command === 'toggle-preheader') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsPDF') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportAsPDF(this.dataset);
+							}
+							if (args.command === 'expandGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.expandAllGroups();
+							}
+							if (args.command === 'collapseGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.collapseAllGroups();
+							}
+							if (args.command === 'cleargroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsExcel') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportToExcel(this.dataset);
+							}
+							if (args.command === 'export-csv') {
+								//this.exportToFile('csv');
+							}
+						},
+						onColumnsChanged: (e, args) => {
+							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+							this.updateTotalRow(this.angularGrid.slickGrid);
+						},
+					},
+					draggableGrouping: {
+						dropPlaceHolderText: 'Drop a column header here to group by the column',
+						// groupIconCssClass: 'fa fa-outdent',
+						deleteIconCssClass: 'fa fa-times',
+						onGroupChanged: (e, args) => {
+							this.groupColumns = [];
+							this.groupColumns = args.groupColumns;
+							this.onGroupChanged(args && args.groupColumns);
+							setTimeout(() => {
+								this.updateTotalRow(this.angularGrid.slickGrid);
+							}, 100);
+						},
+						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+					}
+				};
+				let repoArray = [];
+				this.columnDefinitions = [];
+				this.dataset = [];
+				const collectionJSON: any = {
+					'from_date': this.reportFilterForm.value.from_date,
+					'to_date': this.reportFilterForm.value.to_date,
+					'pageSize': this.reportFilterForm.value.pageSize,
+					'pageIndex': this.reportFilterForm.value.pageIndex,
+					'classId': this.reportFilterForm.value.fee_value,
+					'secId': this.reportFilterForm.value.hidden_value,
+					'downloadAll': true,
+					'login_id': this.reportFilterForm.value.login_id,
+					'orderBy': this.reportFilterForm.value.orderBy
+				};
+				this.feeService.getConcessionDetailReport(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let i = 0;
+						let j = 0;
+						const feeHead: any[] = [];
+						Object.keys(repoArray).forEach((keys: any) => {
+							const obj: any = {};
+							if (Number(keys) === 0) {
+								this.columnDefinitions = [
+									{
+										id: 'srno',
+										name: 'SNo.',
+										field: 'srno',
+										sortable: true,
+										maxWidth: 40
+									},
+									{
+										id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
+										sortable: true,
+										filterable: true,
+										grouping: {
+											getter: 'stu_admission_no',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInput },
+										width: 80,
+										groupTotalsFormatter: this.srnTotalsFormatter
+									},
+									{
+										id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name',
+										sortable: true,
+										filterable: true,
+										width: 140,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInput },
+										grouping: {
+											getter: 'stu_full_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									},
+									{
+										id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+										filterable: true,
+										width: 100,
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										grouping: {
+											getter: 'stu_class_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
+										id: 'invoice_no',
+										name: 'Invoice No..',
+										field: 'invoice_no',
+										sortable: true,
+										filterable: true,
+										width: 40,
+										grouping: {
+											getter: 'invoice_no',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										cssClass: 'fee-ledger-no',
+										formatter: this.checkReceiptFormatter
+									}];
+							}
+							if (repoArray[Number(keys)]['student_adjustment_fee_heads_data']) {
+								let k = 0;
+								let tot = 0;
+								for (const titem of repoArray[Number(keys)]['student_adjustment_fee_heads_data']) {
+									Object.keys(titem).forEach((key2: any) => {
+										if (key2 === 'fh_name' && Number(keys) === 0) {
+											const feeObj: any = {};
+											this.columnDefinitions.push({
+												id: 'fh_name' + j,
+												name: new CapitalizePipe().transform(titem[key2]),
+												field: 'fh_name' + j,
+												cssClass: 'amount-report-fee',
+												sortable: true,
+												filterable: true,
+												filterSearchType: FieldType.number,
+												filter: { model: Filters.compoundInput },
+												formatter: this.checkFeeFormatter,
+												groupTotalsFormatter: this.sumTotalsFormatter,
+												type: FieldType.number,
+											});
+											feeObj['fh_name' + j] = '';
+											feeHead.push(feeObj);
+											this.feeHeadJson.push(feeObj);
+											this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+											j++;
+										}
+										if (key2 === 'fh_name') {
+											obj['id'] = repoArray[Number(keys)]['au_admission_no'] + keys +
+												repoArray[Number(keys)]['inv_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['au_admission_no'] ?
+												repoArray[Number(keys)]['au_admission_no'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['au_full_name']);
+											if (repoArray[Number(keys)]['au_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['class_name'] + '-' +
+													repoArray[Number(keys)]['sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['class_name'];
+											}
+											obj['inv_id'] = repoArray[Number(keys)]['inv_id'];
+											obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+											obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
+											tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
+											obj['adjusted_by'] =
+												repoArray[Number(keys)]['adjusted_by'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['adjusted_by']) : '-';
+											obj['adjustment_date'] = repoArray[Number(keys)]['adjustment_date'];
+											obj['invg_adj_amount'] = repoArray[Number(keys)]['invg_fcc_amount'] ?
+												Number(repoArray[Number(keys)]['invg_fcc_amount']) : 0;
+											obj['inv_remark'] =
+												repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
+											k++;
+										}
+									});
+								}
+							}
+							i++;
+							this.dataset.push(obj);
+						});
+						this.columnDefinitions.push(
+							{
+								id: 'adjustment_date', name: 'Con. Date', field: 'adjustment_date', sortable: true,
+								filterable: true,
+								width: 100,
+								formatter: this.checkDateFormatter,
+								filter: { model: Filters.compoundDate },
+								filterSearchType: FieldType.dateIso,
+								grouping: {
+									getter: 'adjustment_date',
+									formatter: (g) => {
+										return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+							},
+							{
+								id: 'invg_adj_amount',
+								name: 'Con. Amount',
+								field: 'invg_adj_amount',
+								sortable: true,
+								width: 70,
+								cssClass: 'amount-report-fee',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								type: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								groupTotalsFormatter: this.sumTotalsFormatter,
+								formatter: this.checkFeeFormatter
+							},
+							{
+								id: 'adjusted_by',
+								name: 'Con. By',
+								field: 'adjusted_by',
+								sortable: true,
+								filterable: true,
+								width: 60,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInput },
+								grouping: {
+									getter: 'adjusted_by',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+									},
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+
+							},
+							{
+								id: 'inv_remark',
+								name: 'Adj. Remark',
+								field: 'inv_remark',
+								sortable: true,
+								width: 60,
+								filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInput },
+							}
+						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth = 100;
+							this.gridOptions.forceFitColumns = false;
+							this.gridOptions.enableAutoResize = false;
+							this.gridOptions.autoFitColumnsOnFirstLoad = false;
+						}
+						this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['inv_id'] = '';
+						obj3['invoice_no'] = '';
+						Object.keys(feeHead).forEach((key: any) => {
+							Object.keys(feeHead[key]).forEach(key2 => {
+								Object.keys(this.dataset).forEach(key3 => {
+									Object.keys(this.dataset[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+						obj3['adjusted_by'] = '';
+						obj3['adjustment_date'] = '';
+						obj3['invg_adj_amount'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0));
+						obj3['inv_remark'] = '';
+						this.totalRow = obj3;
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+					} else {
+						this.tableFlag = true;
+					}
+				});
 			}
+
 		} else {
 			this.displyRep.emit({ report_index: 8, report_id: '', report_name: 'Concession Report' });
 			this.filterFlag = false;
@@ -1559,20 +1955,21 @@ export class FeeconReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('fee con allotee_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('fee concession allotee report: ') + this.sessionName;
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
 		for (const item of this.exportColumnDefinitions) {
-			if(!(item.id.includes('checkbox_select'))) {
-			columns.push({
-				key: item.id,
-				width: 8
-				//width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);}
+			if (!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: 8
+					//width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);
+			}
 		}
-		worksheet.properties.defaultRowHeight =80;
+		worksheet.properties.defaultRowHeight = 80;
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -1582,10 +1979,10 @@ export class FeeconReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
-		for(var i=1; i<=columns.length;i++) {
-			
-			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
-			
+		for (var i = 1; i <= columns.length; i++) {
+
+			worksheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
@@ -1664,7 +2061,7 @@ export class FeeconReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { wrapText:true, horizontal: 'center' };
+					cell.alignment = { wrapText: true, horizontal: 'center' };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);

@@ -23,6 +23,7 @@ import { BirthdayReportComponent } from './birthday-report/birthday-report.compo
 import { SkillAndAwardsReportComponent } from './skill-and-awards-report/skill-and-awards-report.component';
 import { ReportComponent } from './report/report.component';
 import { BarCodeReportComponent } from './bar-code-report/bar-code-report.component';
+import { AdmissionProcessReportComponent } from './admission-process-report/admission-process-report.component';
 
 @NgModule({
 	imports: [
@@ -50,7 +51,8 @@ import { BarCodeReportComponent } from './bar-code-report/bar-code-report.compon
 		DocumentReportComponent,
 		BirthdayReportComponent,
 		SkillAndAwardsReportComponent,
-		BarCodeReportComponent
+		BarCodeReportComponent,
+		AdmissionProcessReportComponent
 	],
 	providers: [TranslateService],
 })

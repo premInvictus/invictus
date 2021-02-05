@@ -5,6 +5,17 @@ button.nav-button.mat-mini-fab.mat-accent {
     width: 18px !important;
     margin-top: -10px !important;
 }
+.smart-col-13 {
+    max-width: 14% !important;
+    flex: 0 0 14% !important;
+}
+.vertical-divide {
+    border-right: 2px solid #dee2e6;
+    margin-right: 0.5%;
+    height: 70px;
+    margin-top: 22px;
+}
+
 .blue-circle-btn{
     cursor: pointer;
 }
@@ -46,5 +57,11 @@ button.nav-button.mat-mini-fab.mat-accent {
         .three-icon {
             position: absolute !important;
             right:20px !important;
+        }
+    }
+    @media screen and (max-width:1800px) and (min-width: 1336px){
+        .smart-col-13 {
+            max-width: 12% !important;
+            flex: 0 0 12% !important;
         }
     }

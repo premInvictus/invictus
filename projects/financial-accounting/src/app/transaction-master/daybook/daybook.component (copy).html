@@ -1,0 +1,94 @@
+
+
+<div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Day Book</span>
+          </div>
+          <div class="col-6 remove-col-padding-right text-right">
+           
+            <!-- <button
+              mat-button
+              class="btn-success-purple text-capitalize m-l-10"
+              (click)="createVoucher()"
+            >
+              Create Voucher
+            </button> -->
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12"></div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-12">
+            <mat-tab-group (selectedIndexChange)="setIndex($event)" [selectedIndex]="currentTabIndex">
+                <mat-tab label="Income Due">
+                    <ng-template matTabContent>
+                        <app-income-due [param]="this.paramform.value"></app-income-due>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Receipt (Current)">
+                    <ng-template matTabContent>
+                        <app-receipt-mode-wise [param]="this.paramform.value"></app-receipt-mode-wise>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Receipt (Advance)">
+                  <ng-template matTabContent>
+                      <app-receipt-mode-wise1 [param]="this.paramform.value"></app-receipt-mode-wise1>
+                  </ng-template>
+              </mat-tab>
+                <mat-tab label="Fee Adjustment" *ngIf="adjustmentStatus">
+                  <ng-template matTabContent>
+                      <app-adjustment [param]="this.paramform.value"></app-adjustment>
+                  </ng-template>
+              </mat-tab>
+              <mat-tab label="Wallet">
+                <ng-template matTabContent>
+                    <app-wallet [param]="this.paramform.value"></app-wallet>
+                </ng-template>
+              </mat-tab>
+                <!-- <mat-tab label="Total Fee Receivable">
+                  <ng-template matTabContent>
+                      <app-total-fee-receivable [param]="this.paramform.value"></app-total-fee-receivable>
+                  </ng-template>
+                </mat-tab> -->
+                <mat-tab label="Voucher List">
+                  <ng-template matTabContent>
+                      <app-vouchers-list></app-vouchers-list>
+                  </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+            <div class="text-right">
+              <form [formGroup]="paramform">
+                <div class="classwise-container">
+                  <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 5 " style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                     matTooltip="Download as Pdf" (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
+                    <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 5 " style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                      matTooltip="Download as Excel" (click)="downloadExcel()" [matTooltipPosition]="'left'" />
+                    <mat-form-field *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 5 " appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Month</mat-label>
+                        <mat-select placeholder="Month" formControlName="month"
+                            required >
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
+                                    style="font-size: 14px;">
+                                    {{item.fm_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>

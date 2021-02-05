@@ -71,7 +71,7 @@
                   <div class="book-second-content" style="padding: 30px !important;position: relative;top:-30px"
                     (click)="showFirstDetailDiv(i); $event.stopPropagation()">
                     <div class="font-size-12 margin-top-15 font-medium">
-                      <b>BOOK ID</b>: {{item.reserv_id}}
+                      <b>BOOK No</b>: {{item.book_no}}
                     </div>
                     <span
                       class="font-size-16 font-medium"><b>{{item.title ? (item.title | truncatetext : 25) : ''}}</b></span><br />
@@ -107,6 +107,17 @@
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of filterArray" [value]="item.filter_type">
                       {{item.filter_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '5'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Book Type</mat-label>
+                  <mat-select placeholder="Book Type" formControlName="accession_type"
+                    [required]="changeStatusForm?.value?.filters === '5'">
+                    <mat-option *ngFor="let item of accessionTypeArray" [value]="item.type_id" required>
+                      {{item.type_name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

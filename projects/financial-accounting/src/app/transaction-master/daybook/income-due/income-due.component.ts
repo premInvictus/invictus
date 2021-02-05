@@ -49,7 +49,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   previousYearVoucherData:any[] = [];
   globalsetup:any;
   showLoadingFlag = false;
-
+  currentses:any={};
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -97,10 +97,32 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 		dialogRefFilter.afterClosed().subscribe(result => {
 		});
   }
+
+  openPreviousModel(e) {
+    var eDate=new Date(this.ELEMENT_DATA[0]['date']);
+    console.log('eDate--',eDate)
+    var yesterday = new Date(eDate.getTime());
+yesterday.setDate(eDate.getDate() - 1);
+console.log('yesterday.toString().split("T")[0]--',yesterday.toLocaleDateString('en-CA'))
+var tempDate =yesterday.toString();
+console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
+    const dialogRefFilter = this.dialog.open(ModeltableComponent, {
+			width: '70%',
+			height: '70%',
+			data: {
+        month_id: this.param.month,
+        date: yesterday.toLocaleDateString('en-CA'),
+        reportType: 'feedue',
+        previousData: true
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
+  }
   getGlobalSetting() {
 		let param: any = {};
 		this.globalsetup = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status','fee_invoice_includes_adjustments','fa_session_freez'];
+		param.gs_alias = ['fa_voucher_code_format_yearly_status','fee_invoice_includes_adjustments','fa_session_freez','fa_monthwise_freez'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				result.data.forEach(element => {
@@ -130,7 +152,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       
       if(this.apiData[i]['fh_name']==item['name']) {
         
-        flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
+        //flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
+        flag= Number(this.apiData[i]['head_amt']);
         
         break;
       }
@@ -158,9 +181,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             if (!(this.apiData[i]['fh_name'])) {
               this.apiData[i]['fh_name'] = 'Transport Fee';
               this.apiData[i]['fh_id'] = 0;
-              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'];
             } else {
-              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'];
             }
           }
           console.log('this.previousBalanceObject--',this.previousBalanceObject)
@@ -248,6 +271,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           }
         })
         if (tempData.length > 0) {
+          let fine_amt = 0;
           dateArray.forEach(e => {
             const tempelement: any = {};
             tempelement['date'] = e.date;
@@ -257,14 +281,27 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             tempelement['vc_records'] = e.vc_data;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
+              
               this.displayedColumns.forEach(ee => {
+                
                 tempvalue.value.forEach(element => {
                   if (element.fh_id == ee.id) {
                     let tempvaluehead = 0;
                     if (this.adjustmentStatus) {
-                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
+                      if (element.fine_amt > 0)
+                        fine_amt=Number(element.fine_amt);
+                      console.log(fine_amt);
+                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt) ;
                     } else {
+                      if (element.fine_amt)
+                        fine_amt=Number(element.fine_amt);
+                      console.log(fine_amt);
                       tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+                    }
+
+                    if(ee.id == -1) {
+                      console.log('in', fine_amt);
+                      tempvaluehead=fine_amt;
                     }
                     
                     let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
@@ -277,12 +314,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                   }
                   
                     
-                    
+                  
                   
                 });
-                
+                //
 
               });
+              fine_amt=0;
               
             }
             // console.log('tempelement--',tempelement);
@@ -325,6 +363,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         if (result && result.status === 'ok') {
           for (const citem of result.data) {
             this.sessionArray[citem.ses_id] = citem.ses_name;
+            let tdate = new Date();
+            const sessionarr = citem.ses_name.split('-');
+            var from = new Date(sessionarr[0]+'-04-01');
+            var to = new Date(sessionarr[1]+'-03-31');
+            if(tdate >= from && tdate <= to) {
+                this.currentses['ses_id'] = citem.ses_id;
+            }
           }
           if (this.session) {
             this.sessionName = this.sessionArray[this.session.ses_id];
@@ -333,7 +378,19 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         }
       });
   }
-
+  monthwiseFreez(date){
+    if(date) {
+      let datearr = date.split('-');
+      if(this.session.ses_id == this.currentses.ses_id) {
+        if(this.globalsetup['fa_monthwise_freez'] && this.globalsetup['fa_monthwise_freez'].includes(datearr[1])) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
   getChartsOfAccount() {
     this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {

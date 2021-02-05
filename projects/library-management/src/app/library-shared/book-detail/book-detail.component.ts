@@ -50,7 +50,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.buildForm();
 		const book_no = this.route.snapshot.queryParams['book_id'];
 		if (book_no) {
-			this.getBookDetail(book_no);
+			//this.getBookDetail(book_no);
 		}
 
 		this.route.queryParams.subscribe(queryParams => {
@@ -80,7 +80,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.BOOK_LOGS = [];
 		this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 		this.bookData = {};
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookData = result.data.resultData[0];
@@ -126,12 +126,13 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								i++;
 							}
 						}
+						console.log('onfilter',this.BOOK_LOGS);
 						this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 						this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 						this.datasource.sort = this.sort;
 						this.datasource.paginator.length = this.paginator.length = this.totalRecords;
 						this.datasource.paginator = this.paginator;
-						console.log(this.BOOK_LOGS);
+						
 					}
 				});
 			} else {
@@ -144,7 +145,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 		this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 		this.bookData = {};
 		this.router.navigate([], { relativeTo: this.route, queryParams: { book_id: book_no }, queryParamsHandling: 'merge' });
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'number' }],
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'number' }],
 	    search_from: 'master' };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -247,6 +248,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 						i++;
 					}
 				}
+				console.log('perbook',this.BOOK_LOGS);
 				this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.datasource.sort = this.sort;

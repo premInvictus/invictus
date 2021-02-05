@@ -1,0 +1,66 @@
+<ngx-loading [show]="showLoadingFlag" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+
+
+<div *ngIf="tableDivFlag">
+
+  <div class="row remove-top-margin">
+    <div class="col-12">
+      <table *ngIf="ELEMENT_DATA.length > 0"
+        class="table table-borderd table-stripped custom-table text-center"
+        style="margin-top: 5px;"
+      >
+      <thead>
+        <tr class="mat-header-row">
+          <th class="mat-header-cell">Date</th>
+          <th class="mat-header-cell">Received</th>
+          <th class="mat-header-cell">Withdrawal</th>
+          <th class="mat-header-cell">Total</th>
+          <th class="mat-header-cell">Purchase</th>
+          <th class="mat-header-cell">Grand Total</th>
+          <th class="mat-header-cell">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of ELEMENT_DATA">
+          <td>{{item['date'] | date: 'd-MMM-yyyy'}}</td>
+          <td>{{item['deposit_amt'] | indianCurrency}}</td>
+          <td>{{item['withdrawal_amt'] | indianCurrency}}</td>
+          <td>{{item['total_cash'] | indianCurrency}}</td>
+          <td>{{item['purchase_amt'] | indianCurrency}}</td>
+          <td style="color: blue;text-decoration: underline;" (click)="openModel(item)" >{{item.total | indianCurrency}}</td>
+          <td class="action-btn">
+              <span *ngIf="item.total && !(item.voucherExists) && isExistUserAccessMenu('788') && (!globalsetup['fa_session_freez']?.includes(session.ses_id)) && (!monthwiseFreez(item.date))"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-bold">Total</td>
+          <td class="text-bold">{{eachheadtotal_details['deposit_amt'] | indianCurrency}}</td>
+          <td class="text-bold">{{eachheadtotal_details['withdrawal_amt'] | indianCurrency}}</td>
+          <td class="text-bold">{{eachheadtotal_details['total_cash'] | indianCurrency}}</td>
+          <td class="text-bold">{{eachheadtotal_details['purchase_amt'] | indianCurrency}}</td>
+          <td class="text-bold">{{eachheadtotal_details['total'] | indianCurrency}}</td>
+          <td class="text-bold"></td>
+        </tr>
+      </tbody>
+      </table>
+      <table *ngIf="ELEMENT_DATA.length == 0"
+        class="table table-borderd table-stripped custom-table text-center"
+        style="margin-top: 5px;"
+      >
+        <tr>
+          <td>No Record Found</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+      <img
+      src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+    <br><br><br>
+    <br><span class="font-size-20 font-light font-color-brown">
+      Please select Month
+    </span>
+  </div>
+</div>

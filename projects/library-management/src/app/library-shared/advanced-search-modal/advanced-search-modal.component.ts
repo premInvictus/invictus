@@ -131,10 +131,10 @@ export class AdvancedSearchModalComponent implements OnInit {
     if (Number(this.currentUser.role_id) === 2) {
       this.filterArray = [
         {
-          id: 'reserv_id',
-          name: 'Book Id',
+          id: 'reserv_no',
+          name: 'Book No',
           type: 'text',
-          placeholder: 'Search book by Book Id'
+          placeholder: 'Search book by Book No'
         },
         {
           id: 'title',

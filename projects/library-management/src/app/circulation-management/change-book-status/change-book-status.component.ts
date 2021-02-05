@@ -41,6 +41,14 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		type_id: '4',
 		type_name: 'Sample',
 	}];
+	accessionTypeArray: any[] = [{
+		type_id: 'G',
+		type_name: 'General',
+	},
+	{
+		type_id: 'S',
+		type_name: 'Specimen',
+	}];
 	filterArray: any[] = [
 		{
 			filter_type: '1',
@@ -57,6 +65,10 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		{
 			filter_type: '4',
 			filter_name: 'Location'
+		},
+		{
+			filter_type: '5',
+			filter_name: 'Accession Type'
 		}
 	];
 	sourceArray: any[] = [
@@ -77,6 +89,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			type_name: 'Specimen',
 		}
 	];
+
 	constructor(private sis: SisService, private common: ErpCommonService,
 		private smart: SmartService,
 		private notif: CommonAPIService,
@@ -145,6 +158,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			'row': '',
 			'source': '',
 			'category_id': '',
+			'accession_type':'',
 			'filters': ''
 
 		});
@@ -203,7 +217,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			this.bookData = [];
 			this.enteredVal = true;
 			let inputJson = {
-				'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
+				'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
 				'generalFilters': {
 					"reserv_status": this.issuedFlag ? [
 						"issued"
@@ -302,7 +316,15 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 	}
 	changeReservoirStatus() {
 		let valid = false;
-		if (this.changeStatusForm.value.filters === '1') {
+		if (this.changeStatusForm.value.filters === '5') {
+			if (this.changeStatusForm.value.accession_type
+				&& this.changeStatusForm.value.reason_id
+				&& this.changeStatusForm.value.reason_desc) {
+				valid = true;
+			} else {
+				valid = false
+			}
+		} else if (this.changeStatusForm.value.filters === '1') {
 			if (this.changeStatusForm.value.category_id
 				&& this.changeStatusForm.value.reason_id
 				&& this.changeStatusForm.value.reason_desc) {
@@ -401,6 +423,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			'row': '',
 			'source': '',
 			'category_id': '',
+			'accession_type':''
 		});
 	}
 

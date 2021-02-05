@@ -25,7 +25,7 @@ export class BookDetailsModalComponent implements OnInit, AfterViewInit {
 	}
 	getBookDetail(book_no) {
 		this.bookData = {};
-		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': book_no, 'type': 'text' }], search_from: 'master'  };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookData = result.data.resultData[0];

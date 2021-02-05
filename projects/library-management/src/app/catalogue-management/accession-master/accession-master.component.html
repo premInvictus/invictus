@@ -81,10 +81,10 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Action </th>
                   <td mat-cell *matCellDef="let item">
                     <span><i class="fas fa-edit font-color-grey margin-right-15"
-                        *ngIf="item.action.reserv_status !== 'archived'" (click)="editReserv(item.book_no)"></i></span>
+                        *ngIf="item.action.reserv_status !== 'archived'" (click)="editReserv(item.action.reserv_id)"></i></span>
                     <span *ngIf="item.action.reserv_status === 'available' || item.action.reserv_status === 'flagged'"
                       class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
-                        (click)="openDeleteModal(item.book_no)"></i></span>
+                        (click)="openDeleteModal(item.action.reserv_id)"></i></span>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -114,7 +114,7 @@
       <mat-card>
         <div class="row">
           <div class="col-6">
-            <span class="font-size-24">Add Books</span>
+            <span class="font-size-24">Add Books</span> 
           </div>
           <div class="col-6 text-right">
             <div class="margin-top-10">
@@ -283,6 +283,16 @@
           <div class="row">
             <div class="col-12">
               <div class="row">
+                <div class="col-1">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Accession Type</mat-label>
+                    <mat-select placeholder="Accession Type" formControlName="accessionsequence" required tabindex="15">
+                      <mat-option *ngFor="let item of accessionSequenceArray" [value]="item.type_id">
+                        {{item.type_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
                 <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Book Type</mat-label>

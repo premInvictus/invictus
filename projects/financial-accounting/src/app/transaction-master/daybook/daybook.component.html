@@ -45,10 +45,15 @@
                       <app-receipt-mode-wise1 [param]="this.paramform.value"></app-receipt-mode-wise1>
                   </ng-template>
               </mat-tab>
-                <mat-tab label="Fee Adjustment" *ngIf="adjustmentStatus">
+                <mat-tab label="Adjustment & concession" *ngIf="adjustmentStatus">
                   <ng-template matTabContent>
                       <app-adjustment [param]="this.paramform.value"></app-adjustment>
                   </ng-template>
+              </mat-tab>
+              <mat-tab label="Wallet">
+                <ng-template matTabContent>
+                    <app-wallet [param]="this.paramform.value"></app-wallet>
+                </ng-template>
               </mat-tab>
                 <!-- <mat-tab label="Total Fee Receivable">
                   <ng-template matTabContent>
@@ -63,12 +68,13 @@
             </mat-tab-group>
             <div class="text-right">
               <form [formGroup]="paramform">
+               
                 <div class="classwise-container">
-                  <img *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                  <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
                      matTooltip="Download as Pdf" (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
-                    <img *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                    <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
                       matTooltip="Download as Excel" (click)="downloadExcel()" [matTooltipPosition]="'left'" />
-                    <mat-form-field *ngIf="adjustmentStatus ? currentTabIndex != 4:currentTabIndex != 4 " appearance="outline" class="margin-left-15 form-field-150">
+                    <mat-form-field *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " appearance="outline" class="margin-left-15 form-field-150">
                         <mat-label>Month</mat-label>
                         <mat-select placeholder="Month" formControlName="month"
                             required >

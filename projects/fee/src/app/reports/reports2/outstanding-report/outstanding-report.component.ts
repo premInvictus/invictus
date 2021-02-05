@@ -662,17 +662,18 @@ export class OutstandingReportComponent implements OnInit {
 											collapsed: false,
 										},
 									},
-									{
-										id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										sortable: true,
-										type:FieldType.number,
-										formatter: this.checkFeeFormatter,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+									// {
+									// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+									// 	filterable: true,
+									// 	cssClass: 'amount-report-fee',
+									// 	filterSearchType: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber },
+									// 	sortable: true,
+									// 	type:FieldType.number,
+									// 	formatter: this.checkFeeFormatter,
+									// 	groupTotalsFormatter: this.sumTotalsFormatter
+									// }
+								];
 									if(this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
 											id: 'school_prefix',
@@ -762,12 +763,23 @@ export class OutstandingReportComponent implements OnInit {
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
 												console.log('student record',repoArray[Number(keys)], key2,stuFeeHeadArray);
-											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
+											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {	
+
 												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
-													break;
+													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+														obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
+														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+														tot = tot + repoArray[Number(keys)]['inv_opening_balance']
+														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+														
+														break;
+													} else {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														break;
+													}
+													
 													
 												} 
 											}
@@ -1128,17 +1140,18 @@ export class OutstandingReportComponent implements OnInit {
 										formatter: this.checkReceiptFormatter,
 										cssClass: 'receipt_collection_report'
 									},
-									{
-										id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										sortable: true,
-										type:FieldType.number,
-										formatter: this.checkFeeFormatter,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+									// {
+									// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+									// 	filterable: true,
+									// 	cssClass: 'amount-report-fee',
+									// 	filterSearchType: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber },
+									// 	sortable: true,
+									// 	type:FieldType.number,
+									// 	formatter: this.checkFeeFormatter,
+									// 	groupTotalsFormatter: this.sumTotalsFormatter
+									// }
+								];
 									if(this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
 											id: 'school_prefix',
@@ -1227,10 +1240,19 @@ export class OutstandingReportComponent implements OnInit {
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
 												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+														obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
+														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+														tot = tot + repoArray[Number(keys)]['inv_opening_balance']
+														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+														
+														break;
+													} else {
 													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 													break;
+													}
 													
 												} 
 											}
@@ -2697,16 +2719,16 @@ export class OutstandingReportComponent implements OnInit {
 											},
 											groupTotalsFormatter: this.srnTotalsFormatter,
 										},
-										{
-											id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-											filterable: true,
-											cssClass: 'amount-report-fee',
-											filterSearchType: FieldType.number,
-											filter: { model: Filters.compoundInputNumber },
-											sortable: true,
-											formatter: this.checkFeeFormatter,
-											groupTotalsFormatter: this.sumTotalsFormatter
-										}
+										// {
+										// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+										// 	filterable: true,
+										// 	cssClass: 'amount-report-fee',
+										// 	filterSearchType: FieldType.number,
+										// 	filter: { model: Filters.compoundInputNumber },
+										// 	sortable: true,
+										// 	formatter: this.checkFeeFormatter,
+										// 	groupTotalsFormatter: this.sumTotalsFormatter
+										// }
 									];
 									if(this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
@@ -2774,6 +2796,10 @@ export class OutstandingReportComponent implements OnInit {
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
 													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
 													repoArray[Number(keys)]['school_prefix'] : '-';
+												if (repoArray[Number(keys)]['login_id'] == 3932) {
+													console.log('repoArray[Number(keys)]=>',repoArray[Number(keys)]);
+													console.log('stuFeeHeadArray-->',stuFeeHeadArray)
+												}
 												obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 													repoArray[Number(keys)]['login_id'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -2786,7 +2812,7 @@ export class OutstandingReportComponent implements OnInit {
 												}
 												obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
 													repoArray[Number(keys)]['invoice_id'] : '-';
-												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
 												obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
 													repoArray[Number(keys)]['fp_name'] : '-';
 												obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
@@ -2798,19 +2824,37 @@ export class OutstandingReportComponent implements OnInit {
 												// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 												for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
 													if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+															obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															tot = tot + repoArray[Number(keys)]['inv_opening_balance']
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															break;
+														} else {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+															break;
+														}
+														
+													} 
+
+													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-														console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
 														
 													} 
 												}
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-												obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-													? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+												obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 												obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
-													? Number(repoArray[Number(keys)]['inv_due_total_amt']) : 0;
+													? Number(repoArray[Number(keys)]['inv_due_total_amt']) + (repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : (repoArray[Number(keys)]['inv_fine_amount']
+													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0);
 												obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
 												obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
 														repoArray[Number(keys)]['epd_contact_no'] : '-';
@@ -2821,19 +2865,22 @@ export class OutstandingReportComponent implements OnInit {
 								}
 								i++;
 								if(Object.keys(obj).length > 0) {
+									if(obj['login_id'] == 3932) {
+										console.log('obj 3932-->',obj)
+									}
 									this.dataset.push(obj);
 								}
 							});
 							this.columnDefinitions.push(
-								// {
-								// 	id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-								// 	filterable: true,
-								// 	filterSearchType: FieldType.number,
-								// 	filter: { model: Filters.compoundInputNumber },
-								// 	sortable: true,
-								// 	formatter: this.checkFeeFormatter,
-								// 	groupTotalsFormatter: this.sumTotalsFormatter
-								// },
+								{
+									id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+									filterable: true,
+									filterSearchType: FieldType.number,
+									filter: { model: Filters.compoundInputNumber },
+									sortable: true,
+									formatter: this.checkFeeFormatter,
+									groupTotalsFormatter: this.sumTotalsFormatter
+								},
 								{
 									id: 'total', name: 'Total', field: 'total',
 									filterable: true,
