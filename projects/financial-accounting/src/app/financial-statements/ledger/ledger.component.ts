@@ -122,10 +122,10 @@ export class LedgerComponent implements OnInit {
 			if (result && result.status === 'ok') {
 			//	console.log(result.data);
         this.feeMonthArray = result.data;
-        this.feeMonthArray.push({
-          fm_id:'consolidate',
-          fm_name:'Consolidated'
-        })
+        // this.feeMonthArray.push({
+        //   fm_id:'consolidate',
+        //   fm_name:'Consolidated'
+        // })
 			}
 		});
 	}
@@ -133,7 +133,7 @@ export class LedgerComponent implements OnInit {
   getLedger(){
     if(this.accountForm.valid){
       var inputJson = {
-        monthId : this.accountForm.value.monthId && (this.accountForm.value.monthId != 'consolidate') ? Number(this.accountForm.value.monthId) : 'consolidate'
+        monthId : this.accountForm.value.monthId
       };
       if (this.accountForm.value.coa_id) {
         inputJson['coa_id'] = this.accountForm.value.coa_id ? this.accountForm.value.coa_id : null
