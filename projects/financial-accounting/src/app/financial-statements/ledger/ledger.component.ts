@@ -132,6 +132,8 @@ export class LedgerComponent implements OnInit {
 
   getLedger(){
     if(this.accountForm.valid){
+      this.tableDivFlag = false;
+      this.ledgerArray = [];
       var inputJson = {
         monthId : this.accountForm.value.monthId
       };

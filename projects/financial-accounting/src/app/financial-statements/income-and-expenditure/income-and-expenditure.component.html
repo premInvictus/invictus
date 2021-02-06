@@ -2,7 +2,7 @@
     <div class="col-12">
       <mat-card>
         <div class="row">
-          <div class="col-8 remove-col-padding-left">
+          <div class="col-7 remove-col-padding-left">
             <span class="font-size-24">Income and Expenditure</span>
           </div>
           <div class="col-4 remove-col-padding-right text-right">
@@ -15,7 +15,7 @@
                 <mat-datepicker #picker></mat-datepicker> -->
                 <mat-label>Month</mat-label>
                 <mat-select placeholder="Month" formControlName="tb_month"
-                    required (selectionChange)="getIncomeAndExenditure()" multiple>
+                    required multiple>
                     <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                             style="font-size: 14px;">
                             {{item.fm_name}}
@@ -24,6 +24,9 @@
                 </mat-form-field>
               </form>
           </div>
+          <div class="col-1 text-right" style="padding-top: 10px;">
+              <button  mat-raised-button class="btn-success-green btn-spacer" (click)="getIncomeAndExenditure();">Submit</button>
+            </div>
         </div>
       </mat-card>
     </div>

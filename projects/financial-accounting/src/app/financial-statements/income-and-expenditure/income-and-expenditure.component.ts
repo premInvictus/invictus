@@ -65,6 +65,8 @@ export class IncomeAndExpenditureComponent implements OnInit {
 
   getIncomeAndExenditure(){
     if(this.accountForm.valid){
+      this.tableDivFlag = false;
+      this.ledgerArray = [];
       var inputJson = {
         monthId : this.accountForm.value.tb_month,
         display_section: 'incomeExpenditure',

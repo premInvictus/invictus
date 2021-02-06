@@ -141,7 +141,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   getLedger() {
     if (this.data.coa_id) {
       console.log(this.data.date);
-      this.faService.getTrialBalance({ coa_id: [this.data.coa_id], monthId: this.data.date != 'consolidate' ? Number(this.data.date) : 'consolidate' }).subscribe((data: any) => {
+      this.faService.getTrialBalance({ coa_id: [this.data.coa_id], monthId: this.data.date}).subscribe((data: any) => {
         if (data) {
           console.log(data);
           // this.param = data;
