@@ -98,6 +98,13 @@ export class VoucherEntryComponent implements OnInit {
 		  });
 	  }
 	  monthwiseFreez(date){
+		  
+		if (!moment.isMoment(date)) {
+			date = moment(date);
+		} else {
+			date = (date);
+		}
+		console.log('date---------',date);
 		date = date.format("YYYY-MM-DD");
 		if(date) {
 		  let datearr = date.split('-');
