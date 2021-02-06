@@ -1668,7 +1668,7 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
             this.settingForm.value.fa_session_freez = this.session_freez.join(',');
-            this.settingForm.value.fa_monthwise_freez = this.settingForm.value.fa_monthwise_freez.join(',');
+            this.settingForm.value.fa_monthwise_freez = this.settingForm.value.fa_monthwise_freez ? this.settingForm.value.fa_monthwise_freez.join(','):'';
         }
         if (this.currentGsetup === 'examination') {
             if (this.gradecardsignatureForm.length > 0) {
