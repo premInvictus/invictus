@@ -141,7 +141,8 @@ export class BalanceSheetComponent implements OnInit {
     if (this.accountForm.valid && this.accountForm.value.tb_month) {
       var smId = this.accountForm.value.tb_month[0];
       var emId = this.accountForm.value.tb_month[this.accountForm.value.tb_month.length-1];
-      if (!((Number(smId) == 4) && (Number(emId) == 3))) {
+      // if (!((Number(smId) == 4) && (Number(emId) == 3))) {
+      if (!(Number(smId) == 4)) {
       this.tableDivFlag = false;
       this.ledgerArray = [];
 
