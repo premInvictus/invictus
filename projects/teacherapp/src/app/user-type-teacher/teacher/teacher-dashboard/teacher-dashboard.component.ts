@@ -247,12 +247,30 @@ export class TeacherDashboardComponent implements OnInit {
 							
 							// if (result != undefined && result.length != 0) {
 							if (result != undefined && result.length != 0) {
+								result = result.sort((a,b) =>{
+									// Turn your strings into dates, and then subtract them
+									// to get a value that is either negative, positive, or zero.
+									console.log("i am here", new Date(a.entrydate).getDate(), new Date(b.entrydate).getDate());
+									
+									// return new Date(b.entrydate).getDate() < new Date(a.entrydate).getDate();
+									if (new Date(b.entrydate).getDate() > new Date(a.entrydate).getDate()) {
+										return -1;
+									}
+								
+									if (new Date(b.entrydate).getDate() < new Date(a.entrydate).getDate()) {
+										return 1;
+									}
+								
+									return 0;
+								  });
+								  console.log("i am result", result);
+								  
 								let arr = [];
 								var t = new Date();
 								let count = 0;
 								let present = 0;
 								for (let i = 0; i < t.getDate(); i++) {
-									// console.log("sssssssss");
+									console.log("sssssssss", result[i - count].entrydate);
 
 									// console.log("i am here", new Date(resp[i - count].entrydate).getDate(),resp[i - count] );
 
@@ -263,7 +281,7 @@ export class TeacherDashboardComponent implements OnInit {
 										// let stat = stat1.find(e => e.emp_id == 1);
 										// console.log("i am stat", stat);
 
-										let stat = (stat1 as any).filter((item: any) => item.emp_id == 1)[0];
+										let stat = (stat1 as any).filter((item: any) => item.emp_id == this.userDetails.emp_id)[0];
 										// console.log("i am stat", stat);
 
 										if (stat != undefined && stat.leave_half_day == true) {
@@ -468,10 +486,12 @@ export class TeacherDashboardComponent implements OnInit {
 			(res: any) => {
 
 				let data = res.data[0];
-				this.sessionValue = data.session_start_month
+				this.sessionValue = data.session_start_month;
+				console.log("i am here", data);
+				
 
 				let workingDayParam: any = {};
-				workingDayParam.datefrom = formatDate(` ${this.sessionValue} 1 ${new Date().getFullYear()}`);
+				workingDayParam.datefrom = formatDate(` ${this.sessionValue} 1 ${new Date().getMonth() < 4 ? new Date().getFullYear() - 1: new Date().getFullYear()}`);
 				workingDayParam.dateto = formatDate(new Date());
 				workingDayParam.class_id = 1;
 
@@ -487,6 +507,9 @@ export class TeacherDashboardComponent implements OnInit {
 
 							this.sessionLeave = res;
 							this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
+							if(this.dataSession > 100) {
+								this.dataSession = 100
+							}
 							this.HighChartOption(this.dataMonth, this.dataSession);
 						})
 					}
