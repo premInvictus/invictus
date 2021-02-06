@@ -67,6 +67,8 @@ export class TrialBalanceComponent implements OnInit {
 
   getTrialBalance(){
     if(this.accountForm.valid){
+      this.tableDivFlag = false;
+      this.ledgerArray = [];
       var inputJson = {
         monthId : this.accountForm.value.tb_month,
         display_section: 'trialBalance'
@@ -134,7 +136,10 @@ export class TrialBalanceComponent implements OnInit {
 
   getPreviousIncomeAndExenditure() {
     this.prevIncomeExpenditureArray=[];
-    if (this.accountForm.valid && this.accountForm.value.tb_month !='consolidate') {
+    if (this.accountForm.valid && this.accountForm.value.tb_month) { 
+      var smId = this.accountForm.value.tb_month[0];
+      var emId = this.accountForm.value.tb_month[this.accountForm.value.tb_month.length-1];
+      if (!((Number(smId) == 4) && (Number(emId) == 3))) {
       this.tableDivFlag = false;
       this.ledgerArray = [];
 
@@ -212,6 +217,7 @@ export class TrialBalanceComponent implements OnInit {
         }
       })
     }
+  }
   }
 
   
