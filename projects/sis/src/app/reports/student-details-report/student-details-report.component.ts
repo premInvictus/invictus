@@ -1063,12 +1063,15 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
 		}
 		inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
+		// if(this.studentDetailReportForm.value.enrolment_type) {
+
+		// }
 		const validateFlag = this.checkValidation();
 		if (validateFlag) {
 			this.sisService.getStudentReportDetails(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.reportProcessWiseData = result.data;
-					this.prepareDataSource();
+					this.prepareDataSource(inputJson['au_process_type']);
 					this.tableFlag = true;
 				} else {
 					this.notif.showSuccessErrorMessage(result.data, 'error');
@@ -1132,9 +1135,17 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		return honorific;
 	}
 
-	prepareDataSource() {
+	prepareDataSource(process_type) {
 		let counter = 1;
 		const total = 0;
+		if(process_type == '1'|| process_type == '2' || process_type == '4')
+		{
+			this.columnDefinitions.push(
+				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true }
+			)
+		} else {
+			this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
+		}
 		for (let i = 0; i < Object.keys(this.reportProcessWiseData).length; i++) {
 			const tempObj = {};
 			const key = Object.keys(this.reportProcessWiseData)[i];
@@ -1203,6 +1214,9 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
 			tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
+			if(process_type == '1'|| process_type == '2' || process_type == '4') {
+				tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
+			}
 			if (this.reportProcessWiseData[key]['au_admission_no'] === 'A - 4324') {
 				console.log('tempObj', tempObj);
 				console.log('father_honorific',father_honorific,this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific']);

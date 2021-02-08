@@ -188,7 +188,7 @@ export class TeacherDashboardComponent implements OnInit {
 	getUserDetailsHr() {
 		this.userAccessMenuService.getAllUser({ emp_login_id: this.currentUser.login_id }).subscribe(
 			(result: any) => {
-				console.log("i am result", result, this.currentUser.login_id);
+				// console.log("i am result", result, this.currentUser.login_id);
 				if (result && result.length > 0) {
 					this.userDetails = result[0];
 					if(this.userDetails.emp_profile_pic){
@@ -229,7 +229,7 @@ export class TeacherDashboardComponent implements OnInit {
 	}
 
 	getAttendanceReport() {
-		console.log("in here");
+		// console.log("in here");
 
 		const inputJson = {
 			month_id: new Date().getMonth() + 1,
@@ -239,18 +239,18 @@ export class TeacherDashboardComponent implements OnInit {
 
 		this.commonAPIService.getGlobalSetting({ gs_alias: 'attendance_calculation' }).subscribe(
 			(res: any) => {
-				console.log("i am res", res, res.data[0].gs_value)
+				// console.log("i am res", res, res.data[0].gs_value)
 				if (res.data[0].gs_value == "manual") {
 					this.commonAPIService.getAllEmployeeLeaveData(inputJson).subscribe(
 						(result: any) => {
-							console.log("i am cennn", result);
+							// console.log("i am cennn", result);
 							
 							// if (result != undefined && result.length != 0) {
 							if (result != undefined && result.length != 0) {
 								result = result.sort((a,b) =>{
 									// Turn your strings into dates, and then subtract them
 									// to get a value that is either negative, positive, or zero.
-									console.log("i am here", new Date(a.entrydate).getDate(), new Date(b.entrydate).getDate());
+									// console.log("i am here", new Date(a.entrydate).getDate(), new Date(b.entrydate).getDate());
 									
 									// return new Date(b.entrydate).getDate() < new Date(a.entrydate).getDate();
 									if (new Date(b.entrydate).getDate() > new Date(a.entrydate).getDate()) {
@@ -263,18 +263,18 @@ export class TeacherDashboardComponent implements OnInit {
 								
 									return 0;
 								  });
-								  console.log("i am result", result);
+								//   console.log("i am result", result);
 								  
 								let arr = [];
 								var t = new Date();
 								let count = 0;
 								let present = 0;
 								for (let i = 0; i < t.getDate(); i++) {
-									console.log("sssssssss", result[i - count].entrydate);
+									// console.log("sssssssss", result[i - count].entrydate);
 
 									// console.log("i am here", new Date(resp[i - count].entrydate).getDate(),resp[i - count] );
 
-									if (i + 1 == new Date(result[i - count].entrydate).getDate()) {
+									if (result[i - count] && i + 1 == new Date(result[i - count].entrydate).getDate()) {
 
 										let stat1 = result[i - count].employeeList;
 										// console.log("i am stat1", stat1);
