@@ -27,10 +27,8 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Group</mat-label>
-              <mat-select formControlName="coa_acc_group">
-                <!-- <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option> -->
+              <!-- <mat-select formControlName="coa_acc_group">
                 <mat-option value="">Please Select Group</mat-option>
-                <!-- <mat-option *ngFor="let item of accountGroupArr" [value]="item.acc_id">{{item.acc_name}}</mat-option> -->
                 <mat-optgroup *ngFor="let item of tempAccountGroup" >
                   <mat-option class="parent-optiongroup" [value]="item.acc_id">{{item.acc_name}}</mat-option>
                   
@@ -39,7 +37,16 @@
                   </mat-option>
                 
                 </mat-optgroup>
-              </mat-select>
+              </mat-select> -->
+              <input matInput type="text" formControlName="coa_acc_group_name" placeholder="Please Select Group"
+                      aria-label="State" [matAutocomplete]="auto" (click)="getAccountGroup()" (keyup)="getAccountGroup($event)"
+                      required>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of tempAccountGroup" [value]="item.acc_name"
+                  (onSelectionChange)="setAccountGroup(item)">
+                  {{item.acc_name | titlecase}}
+                </mat-option>
+              </mat-autocomplete> 
             </mat-form-field>
           </div>
           <div class="col-12">
