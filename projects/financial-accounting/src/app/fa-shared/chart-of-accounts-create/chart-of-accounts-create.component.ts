@@ -63,6 +63,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			coa_code: '',
 			coa_acc_name: '',
 			coa_acc_group: '',
+			coa_acc_group_name:'',
 			coa_acc_type: '',
 			coa_particulars: '',
 			dependencies_type: '',
@@ -252,6 +253,47 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		}
 	}
   }
+	setAccountGroup(item) {
+		console.log('item---',item);
+		this.accountform.patchValue({
+			coa_acc_group: item.acc_id
+		})
+	}
+  	getAccountGroup(event = null) {
+		this.accountGroupArr = [];
+		this.tempAccountGroup = [];
+		if (event) {
+			console.log('key', event.keyCode);
+			if (event.keyCode != 38 && event.keyCode != 40) {
+				let param: any = {};
+				if (event) {
+					param.acc_name = event.target.value
+				}
+				this.faService.getAccountMaster(param).subscribe((data: any) => {
+					if (data) {
+						for(let i=0; i<data.length;i++) {
+							if(data[i]['acc_state']==='acc_group') {
+								this.accountGroupArr.push(data[i]);
+								this.tempAccountGroup.push(data[i]);
+							}
+						}
+					}
+				})
+			}
+		} else {
+			let param: any = {};
+			this.faService.getAccountMaster({}).subscribe((data: any) => {
+				if (data) {
+					for(let i=0; i<data.length;i++) {
+						if(data[i]['acc_state']==='acc_group') {
+							this.accountGroupArr.push(data[i]);
+							this.tempAccountGroup.push(data[i]);
+						}
+					}
+				}
+			})
+		}
+	}
   getAccountMaster() {
 	this.tempAccountGroup = [];
 	this.faService.getAccountMaster({}).subscribe((data:any)=>{
@@ -267,22 +309,22 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			}
 			
 			if(this.accountGroupArr.length > 0) {
-				 
-				console.log(this.accountGroupArr);
-				this.accountGroupArr.forEach(element => {
+				this.tempAccountGroup = this.accountGroupArr;
+				// console.log(this.accountGroupArr);
+				// this.accountGroupArr.forEach(element => {
 					
-					if(element.acc_parent == '0') {
-						//console.log(element);
-						var childSub: any[] = [];
-						for (const item of this.accountGroupArr) {
-						  if (element.acc_id == item.acc_parent) {
-							childSub.push(item);
-						  }
-						}
-						element.childSub = childSub;
-						this.tempAccountGroup.push(element);
-					  }
-				});
+				// 	if(element.acc_parent == '0') {
+				// 		//console.log(element);
+				// 		var childSub: any[] = [];
+				// 		for (const item of this.accountGroupArr) {
+				// 		  if (element.acc_id == item.acc_parent) {
+				// 			childSub.push(item);
+				// 		  }
+				// 		}
+				// 		element.childSub = childSub;
+				// 		this.tempAccountGroup.push(element);
+				// 	  }
+				// });
 			}
 			console.log(this.tempAccountGroup);
 		}
