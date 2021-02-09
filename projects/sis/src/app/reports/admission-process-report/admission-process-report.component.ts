@@ -1208,6 +1208,16 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 						}
 					}
 				)
+				this.columnDefinitions.push(
+					{
+						id: 'source',
+						name: 'Source',
+						field: 'source',
+						sortable: true,
+						filterable: true,
+						formatter: this.statusFormater
+					}
+				)
 			} else {
 				this.columnDefinitions.push(
 					{
@@ -1246,6 +1256,16 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 						formatter: this.statusFormater
 					}
 				)
+				this.columnDefinitions.push(
+					{
+						id: 'source',
+						name: 'Source',
+						field: 'source',
+						sortable: true,
+						filterable: true,
+						formatter: this.statusFormater
+					}
+				)
 			}
 
 		}
@@ -1274,6 +1294,7 @@ export class AdmissionProcessReportComponent implements OnInit, AfterViewInit {
 			tempObj['student_remark'] = student['student_remark'];
 			tempObj['parent_remark'] = student['parent_remark'];
 			tempObj['admission_remark'] = student['admission_remark'];
+			tempObj['source'] = student['source'];
 			if(student['status'] == 'Y'){
 				tempObj['status'] = 'Approved';
 			} else if(student['status'] == 'N'){
