@@ -128,7 +128,7 @@ export class SetupComponent implements OnInit {
     monthArray:any[] = [];
     session:any;
     sig_positionArray = ['first','last'];
-    hrattendanceArray = ['manual','biometric'];
+    hrattendanceArray = ['biometric','daily manual','manual'];
     accession_typeArray = ['single','multiple'];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,

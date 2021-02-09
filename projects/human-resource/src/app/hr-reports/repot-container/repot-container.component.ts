@@ -21,16 +21,7 @@ export class RepotContainerComponent implements OnInit {
       report_main_image_class: '',
       report_middle_class: 'inline-flex',
       report_check_icon_class: ''
-    },
-    {
-      report_id: '2',
-      report_name: 'Attendance Report',
-      report_image: '/assets/images/Fee Reports/collection_report.png',
-      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-      report_main_image_class: '',
-      report_middle_class: 'inline-flex',
-      report_check_icon_class: ''
-    },
+    },    
     {
       report_id: '3',
       report_name: 'Accumulated Deduction',
@@ -43,15 +34,6 @@ export class RepotContainerComponent implements OnInit {
     {
       report_id: '4',
       report_name: 'Career Enquiries',
-      report_image: '/assets/images/Fee Reports/collection_report.png',
-      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-      report_main_image_class: '',
-      report_middle_class: 'inline-flex',
-      report_check_icon_class: ''
-    },
-    {
-      report_id: '5',
-      report_name: 'Shift Attendance',
       report_image: '/assets/images/Fee Reports/collection_report.png',
       main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
       report_main_image_class: '',
@@ -75,16 +57,34 @@ export class RepotContainerComponent implements OnInit {
 			if (res && res.status === 'ok') {
 				if (res.data[0] && res.data[0].gs_value) {
           let attendance_calculation = res.data[0].gs_value;
-          if(attendance_calculation == 'manual') {
-            let findex = this.feeReportArray.findIndex(e => e.report_id == 5);
-            if(findex != -1){
-              this.feeReportArray.splice(findex,1);
-            }
-          } else {
-            let findex = this.feeReportArray.findIndex(e => e.report_id == 2);
-            if(findex != -1){
-              this.feeReportArray.splice(findex,1);
-            }
+          if(attendance_calculation == 'daily manual') {
+            this.feeReportArray.push({
+              report_id: '2',
+              report_name: 'Attendance Report',
+              report_image: '/assets/images/Fee Reports/collection_report.png',
+              main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+              report_main_image_class: '',
+              report_middle_class: 'inline-flex',
+              report_check_icon_class: ''
+            },)
+            // let findex = this.feeReportArray.findIndex(e => e.report_id == 5);
+            // if(findex != -1){
+            //   this.feeReportArray.splice(findex,1);
+            // }
+          } else  if(attendance_calculation == 'biometric'){
+            this.feeReportArray.push({
+              report_id: '5',
+              report_name: 'Shift Attendance',
+              report_image: '/assets/images/Fee Reports/collection_report.png',
+              main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+              report_main_image_class: '',
+              report_middle_class: 'inline-flex',
+              report_check_icon_class: ''
+            });
+            // let findex = this.feeReportArray.findIndex(e => e.report_id == 2);
+            // if(findex != -1){
+            //   this.feeReportArray.splice(findex,1);
+            // }
           } 
 				}
 			}

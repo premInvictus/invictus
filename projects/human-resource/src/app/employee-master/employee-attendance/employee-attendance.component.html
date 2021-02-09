@@ -187,14 +187,26 @@
             <ng-container matColumnDef="emp_total_attendance">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Total Attendance </th>
               <td mat-cell *matCellDef="let element">
-                <!-- <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                  <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
-                      formControlName="emp_total_attendance" autocomplete="off" />
-                  </mat-form-field>
-                </form> -->
-                {{element?.emp_total_attendance}}
+                <ng-container *ngIf="globalSetting.attendance_calculation == 'manual'">
+                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                        <mat-form-field class="form-field lib-form">
+                          <input matInput
+                            [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
+                            formControlName="emp_total_attendance" autocomplete="off" (change)="getLWP1(element,element.srno - 1,i)" [readonly]="!(element.viewFlag)"/>
+                        </mat-form-field>
+                      </form>
+                </ng-container>
+                <ng-container *ngIf="globalSetting.attendance_calculation != 'manual'">
+                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                        <mat-form-field class="form-field lib-form">
+                          <input matInput
+                            [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
+                            formControlName="emp_total_attendance" autocomplete="off" (change)="getLWP1(element,element.srno - 1,i)" [readonly]="true"/>
+                        </mat-form-field>
+                      </form>
+                </ng-container>
+                
+                <!-- {{element?.emp_total_attendance}} -->
               </td>
             </ng-container>
 
@@ -206,7 +218,7 @@
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_remarks) ? 'Type Here.' : ''"
                       formControlName="emp_remarks" autocomplete="off"
-                      [readonly]="!(element.viewFlag) ? true : false" />
+                      [readonly]="!(element.viewFlag)" />
                   </mat-form-field>
                 </form>
               </td>
