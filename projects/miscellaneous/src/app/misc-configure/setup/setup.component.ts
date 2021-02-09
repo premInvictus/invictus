@@ -244,7 +244,7 @@ export class SetupComponent implements OnInit {
             nextSessionId = this.sessionArray[matchedIndex + 1]['ses_id'];
         }
         console.log('next_ses_id--', matchedIndex)
-        var inputJson = { monthId: 3, coa_id: [], ses_id: ses_id, moveClosingBalance: true };
+        var inputJson = { monthId: ["04","03"], coa_id: [], ses_id: ses_id, moveClosingBalance: true };
         this.erpCommonService.getTrialBalance(inputJson).subscribe((data: any) => {
             if (data && data.ledger_data) {
                 var tempAccountData: any = [];
@@ -256,24 +256,25 @@ export class SetupComponent implements OnInit {
                     fJson = {
                         coa_id: data.ledger_data[i]['coa_id'],
                         "coa_opening_balance_data": {
-                            "opening_balance": closing_balance,
+                            "opening_balance": Number(closing_balance) > 0 ? Number(closing_balance) : -Number(closing_balance),
                             "opening_balance_date": nextSession + "-04-01",
                             "opening_balance_month": 4,
-                            "opening_balance_year": nextSession,
-                            "opening_balance_type": closing_balance > 0 ? "debit" : "credit"
+                            "opening_balance_year": Number(nextSession),
+                            "opening_balance_type": Number(closing_balance) > 0 ? "debit" : "credit",
+                            'opening_ses_id': Number(nextSessionId)
                         },
-                        //nextSesId:nextSessionId
+                        nextSesId: Number(nextSessionId)
                     };
                     tempAccountData.push(fJson);
                 }
-                console.log('tempAccountData--', tempAccountData)
+                console.log('tempAccountData--', tempAccountData,ses_id);
                 if (tempAccountData.length > 0) {
                     this.erpCommonService.updateClosingBalance({ bulkData: tempAccountData }).subscribe((data: any) => {
-                        if (data) {
+                        // if (data) {
                             this.commonService.showSuccessErrorMessage('Session Data Moved Successfully', 'success');
-                        } else {
-                            this.commonService.showSuccessErrorMessage('Error While Move Session Data', 'error');
-                        }
+                        // } else {
+                        //     this.commonService.showSuccessErrorMessage('Error While Move Session Data', 'error');
+                        // }
                     })
                 }
             }
@@ -284,17 +285,45 @@ export class SetupComponent implements OnInit {
 
 
     getDeviation(param) {
+        var ses_id = this.settingForm.value.fa_closing_balance_move;
         if (param) {
             var debit_total_f = 0;
             var credit_total_f = 0;
             var deviation_f = 0;
             for (var i = 0; i < param['debit_data'].length; i++) {
                 debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+                
             }
             for (var i = 0; i < param['credit_data'].length; i++) {
                 credit_total_f = credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+                
+                // if(param['coa_id'] ==1) {
+                    
+                //     console.log('credit_total_f', credit_total_f);
+                // }
             }
+
+            if(param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
+                
+                    if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type']=='debit') {
+                        
+                        debit_total_f = debit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
+                
+                    }
+                
+            }
+            if(param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
+                
+                    if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type']=='credit') {
+                        credit_total_f = credit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
+                    }
+                
+                // console.log('credit_total_f', credit_total_f);
+            }
+
+
             deviation_f = debit_total_f - credit_total_f;
+            
             return deviation_f;
         }
     }

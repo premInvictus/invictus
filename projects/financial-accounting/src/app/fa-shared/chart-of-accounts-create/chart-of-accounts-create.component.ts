@@ -29,6 +29,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
   tempAccountGroup: any[] = [];
   feeHeadArr:any[] = [];
   locationArray:any[] = [];
+  sessionId = '';
   constructor(
     public dialogRef: MatDialogRef<ChartOfAccountsCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -37,7 +38,13 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		private commonAPIService: CommonAPIService,
 		private faService:FaService,
 		private feeService: FeeService
-  ) { }
+  ) {
+	if (localStorage.getItem('session')) {
+		this.sessionId = JSON.parse(localStorage.getItem('session'))['ses_id'];
+		console.log('this.sessionId-->',this.sessionId);
+	}
+	
+   }
 
   ngOnInit() {
 	console.log('data--',this.data);
@@ -73,17 +80,43 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			opening_balance: '',
 			opening_balance_type: ''
 		});
-		console.log('this.data.formData', this.data.formData);
+		// console.log('this.data.formData', this.data.formData);
 		if(this.data.formData && this.data.formData.coa_id) {
 			this.setFormValue();
 
 		}
+  }
+
+
+  getOpeningBalanceData() {
+	//   let result = {};
+	//   console.log('this.data.formData.coa_opening_balance_data--',this.data.formData.coa_opening_balance_data)
+	//   if (this.data.formData.coa_opening_balance_data) {
+	// 	 this.data.formData.coa_opening_balance_data.map((acc,val)=>{	
+	// 			console.log('acc[val]-->',acc,val)
+	// 			if(Number(acc['opening_ses_id'])==Number(this.sessionId)) {
+	// 				result= this.data.formData.coa_opening_balance_data[val] ;
+	// 			}
+	// 	},{})
+	//   }
+	//   return result;
+	return this.data.formData.coa_opening_balance_data;
   }
   async setFormValue() {
 	  console.log('first')
 	await this.getDependancy();
 	console.log('last')
 	this.currentCoaId =this.data.formData.coa_id;
+	
+	let openingBalanceDataObject:any = this.getOpeningBalanceData();
+
+	console.log('openingBalanceDataObject--',openingBalanceDataObject)
+
+
+
+	
+
+
 	this.accountform.patchValue({
 		coa_code: this.data.formData.coa_code,
 		coa_acc_name: this.data.formData.coa_acc_name,
@@ -93,11 +126,11 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		coa_particulars: this.data.formData.coa_particulars,
 		coa_dependency_local: this.data.formData.coa_dependency_local,
 		dependencies_type: this.data.formData.dependencies_type,
-		opening_balance_date: (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today),
-		opening_balance: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance : 0),
-		opening_balance_type: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance_type : ''),
+		opening_balance_date: (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today),
+		opening_balance: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance : 0),
+		opening_balance_type: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance_type : ''),
 	});
-	this.today = (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today);
+	this.today = (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today);
 	console.log('this.accountform', this.accountform.value)
 	this.setDependancyValue();
 
@@ -377,6 +410,10 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			console.log('date ',this.accountform.value.opening_balance_date);
 			var oDate = this.accountform.value.opening_balance_date.format("YYYY-MM-DD");
 			console.log('oDate--', oDate);
+
+			let result = {};
+			// console.log('this.data.formData.coa_opening_balance_data--',this.data.formData.coa_opening_balance_data)
+
 			var inputJson = {
 				coa_id: this.currentCoaId ? this.currentCoaId : null,
 				coa_code: this.accountform.value.coa_code,
@@ -389,14 +426,53 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 				dependencies_type: this.accountform.value.dependencies_type,
 				coa_dependency_local: this.accountform.value.coa_dependency_local,
 				coa_dependencies: this.setDependancyValue(),
-				coa_opening_balance_data: {
+				// coa_opening_balance_data: {
+				// 	'opening_balance': (this.accountform.value.opening_balance ? Number(this.accountform.value.opening_balance) : 0),
+				// 	'opening_balance_date': oDate,
+				// 	'opening_balance_month' : Number(this.accountform.value.opening_balance_date.format("MM")),
+				// 	'opening_balance_year': Number(this.accountform.value.opening_balance_date.format("YYYY")),
+				// 	'opening_balance_type' : this.accountform.value.opening_balance_type
+				// }
+			};
+			if (this.data.formData && this.data.formData.coa_opening_balance_data && this.currentCoaId) {
+				let flag =0;
+				this.data.formData.coa_opening_balance_data.map((acc,val)=>{
+					   if(acc['opening_ses_id']==Number(this.sessionId)) {
+						   result= this.data.formData.coa_opening_balance_data[val] ;						   
+						   this.data.formData.coa_opening_balance_data[val]['opening_balance']= (this.accountform.value.opening_balance ? Number(this.accountform.value.opening_balance) : 0);
+						   this.data.formData.coa_opening_balance_data[val]['opening_balance_date']= oDate;
+						   this.data.formData.coa_opening_balance_data[val]['opening_balance_month'] = Number(this.accountform.value.opening_balance_date.format("MM"));
+						   this.data.formData.coa_opening_balance_data[val]['opening_balance_year']= Number(this.accountform.value.opening_balance_date.format("YYYY"));
+						   this.data.formData.coa_opening_balance_data[val]['opening_balance_type']= this.accountform.value.opening_balance_type;	
+						   flag =1;		
+						   return false;			
+					   }
+			   },{})
+			   if (!flag) {
+				this.data.formData.coa_opening_balance_data.push({
 					'opening_balance': (this.accountform.value.opening_balance ? Number(this.accountform.value.opening_balance) : 0),
 					'opening_balance_date': oDate,
 					'opening_balance_month' : Number(this.accountform.value.opening_balance_date.format("MM")),
 					'opening_balance_year': Number(this.accountform.value.opening_balance_date.format("YYYY")),
-					'opening_balance_type' : this.accountform.value.opening_balance_type
-				}
-			};
+					'opening_balance_type' : this.accountform.value.opening_balance_type,
+					'opening_ses_id' : Number(this.sessionId)
+
+				});
+			   }
+			   inputJson['coa_opening_balance_data'] = this.data.formData.coa_opening_balance_data;
+			 } else {
+				 inputJson['coa_opening_balance_data'] = {};
+				 inputJson['coa_opening_balance_data'] = [{
+					'opening_balance': (this.accountform.value.opening_balance ? Number(this.accountform.value.opening_balance) : 0),
+					'opening_balance_date': oDate,
+					'opening_balance_month' : Number(this.accountform.value.opening_balance_date.format("MM")),
+					'opening_balance_year': Number(this.accountform.value.opening_balance_date.format("YYYY")),
+					'opening_balance_type' : this.accountform.value.opening_balance_type,
+					'opening_ses_id' : Number(this.sessionId)
+				}];
+			 }
+			 
+ 
 			console.log(inputJson)
 			if (this.currentCoaId) {
 				this.faService.updateChartOfAccount(inputJson).subscribe((data:any)=>{
@@ -414,48 +490,6 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 					console.log('data--', data);
 					currentAccId = data.coa_id;
 					console.log('this.accountform.value--', this.accountform.value);
-							// if(this.accountform.value.opening_balance) {
-							// 	let vcType = '';
-							// 	const vcTypeArr = this.currentVcType.split(" ");
-							// 	if(vcTypeArr.length >0){
-							// 		vcTypeArr.forEach(element => {
-							// 			vcType += element.substring(0,1).toUpperCase();
-							// 		});
-							// 	}
-							// 	//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
-							// 	const tempDate = this.accountform.value.opening_balance_date;
-							// 	console.log('tempDate',tempDate);
-							// 	let vcDay = tempDate.format('DD')
-							// 	let vcMonth = tempDate.format('MMM');
-							// 	let vcYear = tempDate.format('YYYY');
-							// 	let vcNumber = this.maxVCNumber;
-							// 	let vcName = vcType+'/'+vcDay+'/'+vcMonth+'/'+vcYear+'/'+((vcNumber.toString()).padStart(4,'0'));
-
-							// 	var cJson = {
-							// 		vc_id : null,
-							// 		vc_type:this.currentVcType,
-							// 		vc_number: { vc_code : this.maxVCNumber, vc_name: vcName},
-							// 		vc_date:this.accountform.value.opening_balance_date.format("YYYY-MM-DD"),
-							// 		vc_narrations:'Opening Balance',
-							// 		vc_attachments: [],
-							// 		vc_particulars_data: [{
-							// 			vc_account_type: this.accountform.value.coa_acc_name,
-							// 			vc_account_type_id: currentAccId,
-							// 			vc_particulars: 'opening balance',
-							// 			vc_grno : '',
-							// 			vc_invoiceno : '',
-							// 			vc_debit: 0,
-							// 			vc_credit: Number(this.accountform.value.opening_balance)
-							// 		}],
-							// 		vc_state : 'publish'
-							// 	}
-							// 	this.faService.insertVoucherEntry(cJson).subscribe((data:any)=>{
-							// 		this.dialogRef.close();
-							// 	});
-
-							// } else {
-							// 	this.dialogRef.close();
-							// }
 						this.dialogRef.close();
 						this.commonAPIService.showSuccessErrorMessage("Account Created Successfully", "success");
 					} else {
