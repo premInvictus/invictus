@@ -88,6 +88,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		coa_code: this.data.formData.coa_code,
 		coa_acc_name: this.data.formData.coa_acc_name,
 		coa_acc_group: this.data.formData.coa_acc_group.group_id,
+		coa_acc_group_name: this.data.formData.coa_acc_group.group_name,
 		coa_acc_type: this.data.formData.coa_acc_type.acc_type_id,
 		coa_particulars: this.data.formData.coa_particulars,
 		coa_dependency_local: this.data.formData.coa_dependency_local,
