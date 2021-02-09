@@ -528,10 +528,17 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
       });
       columValue.push(item.name);
     }
+    let filterdate = ''
+    if(this.date.length == 1) {
+      filterdate = this.month_array.filter(e => e.id == this.date[0])[0].name + "'" + (parseInt(this.date[0]) < 4 ? arr[1].slice(-2): arr[0].slice(-2))
+    } else {
+      filterdate = this.month_array.filter(e => e.id == this.date[0])[0].name + "'" + (parseInt(this.date[0]) < 4 ? arr[1].slice(-2): arr[0].slice(-2));
+      filterdate += "-" + this.month_array.filter(e => e.id == this.date[this.date.length - 1])[0].name + "'" + (parseInt(this.date[this.date.length - 1]) < 4 ? arr[1].slice(-2): arr[0].slice(-2))
+    }
 
-    let table1data = this.param.ledger_data.filter((e) => e.account_display.acc_name.toLowerCase() ==  'income' && e.credit_data.length > 0);
-    let table1data2 = this.param.ledger_data.filter((e) => e.account_display.acc_name.toLowerCase() ==  'expense' && e.debit_data.length > 0);
-    console.log("i am here", table1data, table1data2);
+    let table1data = this.param.ledger_data.filter((e) => e.account_display.acc_name.toLowerCase() ==  'income' && e.credit_data.length > 0 && e.credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0) > e.debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0));
+    let table1data2 = this.param.ledger_data.filter((e) => e.account_display.acc_name.toLowerCase() ==  'expense' && e.debit_data.length > 0 && e.credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0) < e.debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0));
+    // console.log("i am here", table1data, table1data2);
     
     worksheet.properties.defaultRowHeight = 25;
     worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
@@ -539,7 +546,7 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
       new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
     worksheet.getCell('A1').alignment = { horizontal: 'left' };
     worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-    worksheet.getCell('A2').value = "Income and Expenditure Report";
+    worksheet.getCell('A2').value = `Income and Expenditure Report - ${filterdate}`;
     worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
     worksheet.getRow(4).values = columValue;
     worksheet.columns = columns;
