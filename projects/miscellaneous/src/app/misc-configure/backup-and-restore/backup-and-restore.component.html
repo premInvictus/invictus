@@ -1,0 +1,112 @@
+<div class="row">
+  <div class="col-12">
+     <mat-card>
+        <mat-card-title>
+           <h1 class="remove-bottom-margin font-size-24">Backup andd Restore Database</h1>
+        </mat-card-title>
+     </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+     <mat-card>
+        <mat-card-content>
+           <div class="row left-right-minus-margin">
+             
+              <div class="col-lg-6">
+                 <div class="left-parameter-content" style="margin: 0">
+                    <div class="left-side-box">
+                       <div class="bulk-right-side-box-content">
+                          <!-- <span class="bulk-right-side-box-content-title">Generate Excel</span>
+                          <hr class="left-side-box-content-title-divider"> -->
+                          <div class="row row-remove-top-margin">
+                             <div class="col-lg-12">
+                                <form [formGroup]="backupForm" novalidate>
+                                   <div class="row row-remove-top-margin">
+                                      <div class="col-lg-6 col-md-6 col-sm-12 col-xl-6">
+                                         <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Select Module</mat-label>
+                                            <mat-select formControlName="mod_id" required multiple 
+                                               placeholder="Select Module" (selectionChange)="getSubModule()">
+                                               <mat-option *ngFor="let item of projectArray" [value]="item?.pro_id">
+                                                  {{item?.pro_name}}
+                                               </mat-option>
+                                            </mat-select>
+                                         </mat-form-field>
+                                         <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Choose Sub Module</mat-label>
+                                            <mat-select formControlName="sub_mod_id"
+                                                required
+                                               placeholder="Select Sub Module" multiple>
+                                               <mat-option *ngFor="let item of subModuleArray" [value]="item?.sub_module_id">
+                                                  {{item?.sub_module_name}}
+                                               </mat-option>
+                                            </mat-select>
+                                         </mat-form-field>
+                                         <!-- <mat-checkbox formControlName="sub_mod_id" *ngFor="let item of subModuleArray;" [value]="item?.sub_module_id">{{item?.sub_module_name}}</mat-checkbox><br/> -->
+                                      </div>
+                                   </div>
+                                   <div class="row">
+                                      <div class="col-lg-12 col-mobile-view-add-ques">
+                                         <div class="row row-remove-top-margin">
+                                            <div class="col-12 text-center col-mobile-view-add-ques">
+
+                                               <div class="tab-add-ques-collection">
+                                                  <div class="button-row">
+                                                     <button mat-raised-button class="submit-button"
+                                                        (click)="generateBackup()">Generate Database Backup</button>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </form>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="left-parameter-content" style="margin:0">
+                   <div class="left-side-box">
+                      <form method="post" action="#" id="#">
+                         <div class="bulk-left-side-box-content height-411">
+                            <!-- <span class="bulk-left-side-box-content-title">Upload File</span>
+                            <hr class="left-side-box-content-title-divider"> -->
+                            <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
+                            <br>
+                            <span class="drag-drop-title">Restore Database</span>
+                            <br>
+                           
+                            <button mat-raised-button class="drag-drop-button">Click here to browse </button>
+                            <div class="form-group files">
+                               <input type="file" id="uploadFile" name="uploadFile" (change)="restoreBackup($event)"
+                                  class="mv_top">
+                            </div>
+                         </div>
+                      </form>
+                   </div>
+                </div>
+             </div>
+           </div>
+        </mat-card-content>
+     </mat-card>
+  </div>
+</div>
+<!-- 
+
+<div class="add-question-content">
+  <div class="row">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div class="white-box-content tab-white-box-content-bulk-upload">
+              <div class="row">
+
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div> -->

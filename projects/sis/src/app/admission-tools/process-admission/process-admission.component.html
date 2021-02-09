@@ -133,8 +133,8 @@
                             </li> 
 
                           </ul> -->
-                          <li *ngFor="let item of element?.marks">
-                              {{item.sub_name}} : {{item.erms_value != '' ? item.erms_value: '-'}} 
+                          <li *ngFor="let item of element?.marks" >
+                              <span *ngIf="item.sub_name">{{item.sub_name}} : {{item.erms_value != '' ? item.erms_value: '-'}} </span>
                           </li>
                           </ul>
                         </td>

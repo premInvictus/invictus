@@ -442,7 +442,8 @@
               <mat-radio-group formControlName="au_is_eligible_adimission">
                 <mat-radio-button style="margin-right: 4%;margin-left: 2%;" value="Y">Approve</mat-radio-button>
                 <mat-radio-button style="margin-right: 4%;" value="N">Reject</mat-radio-button>
-                <mat-radio-button value="">Pending</mat-radio-button>
+                <mat-radio-button style="margin-right: 4%;" value="">Pending</mat-radio-button>
+                <mat-radio-button style="margin-right: 4%;" value="D">No Show</mat-radio-button>
               </mat-radio-group>
             </span>
             <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == 'Y'" class="form-field" appearance="outline">

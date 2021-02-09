@@ -46,10 +46,10 @@ export class IncomeAndExpenditureComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				console.log(result.data);
         this.feeMonthArray = result.data;
-        this.feeMonthArray.push({
-          fm_id:'consolidate',
-          fm_name:'Consolidated'
-        })
+        // this.feeMonthArray.push({
+        //   fm_id:'consolidate',
+        //   fm_name:'Consolidated'
+        // })
 			}
 		});
 	}
@@ -65,8 +65,10 @@ export class IncomeAndExpenditureComponent implements OnInit {
 
   getIncomeAndExenditure(){
     if(this.accountForm.valid){
+      this.tableDivFlag = false;
+      this.ledgerArray = [];
       var inputJson = {
-        monthId : this.accountForm.value.tb_month && (this.accountForm.value.tb_month != 'consolidate') ? Number(this.accountForm.value.tb_month) : 'consolidate',
+        monthId : this.accountForm.value.tb_month,
         display_section: 'incomeExpenditure',
         
       };

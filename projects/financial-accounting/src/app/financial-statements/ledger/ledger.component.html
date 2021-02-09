@@ -2,7 +2,7 @@
     <div class="col-12">
         <mat-card>
             <div class="row">
-              <div class="col-7 remove-col-padding-left">
+              <div class="col-6 remove-col-padding-left">
                 <span class="font-size-24">Ledger</span>
               </div>
               <div class="col-5 remove-col-padding-right text-right">
@@ -21,8 +21,7 @@
                   <mat-form-field class="form-field-150 m-l-10" appearance="outline">
                     <mat-label>Month</mat-label>
                     <mat-select placeholder="Month" formControlName="monthId"
-                        required (selectionChange)="getLedger()" >
-                        <mat-option value="">Please select</mat-option>
+                        required multiple>
                         <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                                 style="font-size: 14px;">
                                 {{item.fm_name}}
@@ -32,6 +31,9 @@
                     
                 </form>
               </div>
+              <div class="col-1 text-right" style="padding-top: 10px;">
+                  <button  mat-raised-button class="btn-success-green btn-spacer" (click)="getLedger()">Submit</button>
+                </div>
             </div>
           </mat-card>
     </div>

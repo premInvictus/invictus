@@ -88,17 +88,18 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 
 
   getOpeningBalanceData() {
-	  let result = {};
-	  console.log('this.data.formData.coa_opening_balance_data--',this.data.formData.coa_opening_balance_data)
-	  if (this.data.formData.coa_opening_balance_data) {
-		 this.data.formData.coa_opening_balance_data.map((acc,val)=>{	
-				console.log('acc[val]-->',acc,val)
-				if(Number(acc['opening_ses_id'])==Number(this.sessionId)) {
-					result= this.data.formData.coa_opening_balance_data[val] ;
-				}
-		},{})
-	  }
-	  return result;
+	//   let result = {};
+	//   console.log('this.data.formData.coa_opening_balance_data--',this.data.formData.coa_opening_balance_data)
+	//   if (this.data.formData.coa_opening_balance_data) {
+	// 	 this.data.formData.coa_opening_balance_data.map((acc,val)=>{	
+	// 			console.log('acc[val]-->',acc,val)
+	// 			if(Number(acc['opening_ses_id'])==Number(this.sessionId)) {
+	// 				result= this.data.formData.coa_opening_balance_data[val] ;
+	// 			}
+	// 	},{})
+	//   }
+	//   return result;
+	return this.data.formData.coa_opening_balance_data;
   }
   async setFormValue() {
 	  console.log('first')
