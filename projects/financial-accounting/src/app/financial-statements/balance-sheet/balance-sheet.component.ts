@@ -228,7 +228,7 @@ export class BalanceSheetComponent implements OnInit {
       var inputJson = {
         monthId: this.accountForm.value.tb_month,
         display_section: 'balanceSheet',
-        //coa_id:[1]
+        //coa_id:[185,116,117]
       };
 
       this.faService.getTrialBalance(inputJson).subscribe((data: any) => {

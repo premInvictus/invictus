@@ -153,6 +153,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 					this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
 				} else {
 					this.absent = true;
+					this.default = false;
 					// this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
 				}
 			});
@@ -184,7 +185,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 					this.commonAPIService.getShiftAttendance(inputJson1).subscribe((result: any) => {
 						this.EMPLOYEE_ELEMENT = [];
 						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-						if (result) {
+						if (result && result.employeeList.length > 0) {
 							let pos = 1;
 							//console.log('result', result);
 							for (const item of result.employeeList) {
