@@ -528,7 +528,8 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
       });
       columValue.push(item.name);
     }
-    let filterdate = ''
+    let filterdate = '';
+    let arr = this.session[0].ses_name.split('-');
     if(this.date.length == 1) {
       filterdate = this.month_array.filter(e => e.id == this.date[0])[0].name + "'" + (parseInt(this.date[0]) < 4 ? arr[1].slice(-2): arr[0].slice(-2))
     } else {
