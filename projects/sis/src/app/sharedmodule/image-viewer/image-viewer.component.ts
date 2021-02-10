@@ -25,7 +25,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 	@Input() idContainer;
 	@Input() images: any[];
 	@Input() rotate = true;
-	@Input() download = false;
+	@Input() download = true;
 	@Input() fullscreen = true;
 	@Input() resetZoom = true;
 	@Input() loadOnInit = false;

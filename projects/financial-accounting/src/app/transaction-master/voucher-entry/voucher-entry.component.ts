@@ -447,31 +447,31 @@ export class VoucherEntryComponent implements OnInit {
 						vc_sattle_status: 1
 					}
 					console.log('inputJson',inputJson);
-					// if (this.currentVoucherId ) {
-					// 	if (this.voucherForm.value.vc_narrations.trim() === "") {
-					// 		this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
-					// 	} else {
-					// 	this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
-					// 		if (data) {
-					// 			this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					// 			this.cancel();
-					// 		} else {
-					// 			this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					// 		}
-					// 	});}
-					// } else {
-					// 	if (this.voucherForm.value.vc_narrations.trim() === "") {
-					// 		this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
-					// 	} else {
-					// 	this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
-					// 		if (data) {
-					// 			this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					// 			this.cancel();
-					// 		} else {
-					// 			this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					// 		}
-					// 	});}
-					// }
+					if (this.currentVoucherId ) {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
+						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});}
+					} else {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
+						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});}
+					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 				}
