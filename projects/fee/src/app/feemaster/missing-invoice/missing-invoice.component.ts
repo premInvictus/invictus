@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FeeLedgerElement } from './fee-ledger.model';
+import { FeeLedgerElement } from '../fee-ledger/fee-ledger.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
@@ -14,14 +14,12 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
 import { IndianCurrency } from '../../_pipes';
-
-
 @Component({
-	selector: 'app-fee-ledger',
-	templateUrl: './fee-ledger.component.html',
-	styleUrls: ['./fee-ledger.component.scss']
+	selector: 'app-missing-invoice',
+	templateUrl: './missing-invoice.component.html',
+	styleUrls: ['./missing-invoice.component.css']
 })
-export class FeeLedgerComponent implements OnInit {
+export class MissingInvoiceComponent implements OnInit {
 	feeRenderId: any = '';
 	@ViewChild(CommonStudentProfileComponent) commonStudentProfileComponent: CommonStudentProfileComponent;
 	@ViewChild('deleteModal') deleteModal;
@@ -71,7 +69,7 @@ export class FeeLedgerComponent implements OnInit {
 	sessionName: any;
 	sessionArray: any[] = [];
 	currentUser: any;
-	showMissingInvoice = false;
+	showMissingInvoice = true;
 	session_id: any;
 	length: any;
 	alphabetJSON = {

@@ -18,47 +18,49 @@
     </div>
  </div>
  <div class="row margin-top-10" *ngIf="datasource.length > 0">
+  <div class="col-12 remove-col-padding">
+  <mat-card class="card-top-title__container ">
    <table  class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
-     <thead class='header'>
-      <th>
+     <thead class='mat-header header' >
+      <th  class=' mat-header-cell' style="background-color: #c8d6e5; ">
         <mat-checkbox (change)="getallItem()" [ngModel]= 'checkallstatus'>
         </mat-checkbox>
       </th>
-       <th>
+       <th class=' mat-header-cell' style="background-color: #c8d6e5;">
          Invoice No.
        </th>
-       <th>
+       <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Period
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Particulars
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Date
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Due Date
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Amount
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Status
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Session
       </th>
-      <th>
-        Invoice Category
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+        Invoice Type
       </th>
-      <th>
+      <th class=' mat-header-cell' style="background-color: #c8d6e5;">
         Invoice Remark
       </th>
       
      </thead>
      <tbody>
-       <tr *ngFor="let item of datasource">
-          <td>
+       <tr class=' mat-row' *ngFor="let item of datasource" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+          <td >
             <mat-checkbox  (change) ='getItem(item)' [checked] = 'checkResult(item)'>
             </mat-checkbox>
           </td>
@@ -72,16 +74,16 @@
             {{item.inv_title }}
           </td>
           <td>
-            {{item.inv_invoice_date}}
+            {{item.inv_invoice_date | date: 'd-MMM-y'}}
           </td>
           <td>
-            {{item.inv_due_date}}
+            {{item.inv_due_date | date: 'd-MMM-y'}}
           </td>
           <td>
-            {{getInteger(item.inv_fee_amount , item.inv_fine_amount , item.inv_opening_balance)}}
+            {{getInteger(item.inv_fee_amount , item.inv_fine_amount , item.inv_opening_balance)  }}
           </td>
           <td>
-            {{item.inv_paid_status }}
+            {{item.inv_paid_status | capitalize}}
           </td>
           <td>
             {{(item.ses_name)}}
@@ -97,9 +99,17 @@
    </table>
    <div class="row margin-top-10" style="margin-left: 48%;">
     <div class="button-row">
-      <button mat-raised-button class="submit-button" (click)="addInvoiceToledger()">Submit</button>
+      <button mat-raised-button class="submit-button" (click)="addInvoiceToledger()">Move to Ledger</button>
    </div>
+   </div>
+   </mat-card>
    </div>
  </div>
-  <div *ngIf="datasource.length < 1" class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
+ <div *ngIf="datasource.length < 1" class="row margin-top-10">
+ <div class="col-12 remove-col-padding">
+  <mat-card class="card-top-title__container ">
+  <div  class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
+  </mat-card>
+  </div>
+  </div>
 </div>
