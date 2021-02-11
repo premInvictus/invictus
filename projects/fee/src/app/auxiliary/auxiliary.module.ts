@@ -18,11 +18,14 @@ import { DropoutComponent } from './dropout/dropout.component';
 import { BouncedChequeMultipleComponent } from './cheque-control-tool/bounced-cheque-multiple/bounced-cheque-multiple.component';
 import { PreviewDocumentComponent } from './concession-rectification/preview-document/preview-document.component';
 import { BulkWalletTransactionComponent } from './bulk-wallet-transaction/bulk-wallet-transaction.component';
+import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.component';
+import { CommonStudentProfileComponent1 } from './common-student-profile-2/common-student-profile.component'
+import { StudentRouteMoveStoreService } from './student-route-move-store.service';
 @NgModule({
 	imports: [
 		CommonModule,
 		AuxiliaryRoutingModule,
-		SharedmoduleModule
+		SharedmoduleModule,
 	],
 	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent,BouncedChequeMultipleComponent,PreviewDocumentComponent],
 	declarations: [
@@ -40,7 +43,10 @@ import { BulkWalletTransactionComponent } from './bulk-wallet-transaction/bulk-w
 		BulkUpdatesComponent,
 		BouncedChequeMultipleComponent,
 		PreviewDocumentComponent,
-		BulkWalletTransactionComponent
-	]
+		BulkWalletTransactionComponent,
+		MissingInvoiceComponent,
+		CommonStudentProfileComponent1
+	],
+	providers: [StudentRouteMoveStoreService]
 })
 export class AuxiliaryModule { }

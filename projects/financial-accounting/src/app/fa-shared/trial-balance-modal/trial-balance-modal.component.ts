@@ -660,10 +660,10 @@ export class TrialBalanceModalComponent implements OnInit {
       let obj={
         account_code_1: table1data2[i] ? table1data2[i].coa_code: '-',
         expenditure: table1data2[i]? table1data2[i].coa_acc_name: '-',
-        amount_1: table1data2[i] ? new IndianCurrency().transform(table1data2[i].debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0) - table1data2[i].credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0)): '-',
+        amount_1: table1data2[i] ? (table1data2[i].debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0) - table1data2[i].credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0)): '-',
         account_code_2: table1data[i] ? table1data[i].coa_code: '-',
-        income: table1data[i]?table1data[i].coa_acc_name:'-',
-        amount_2: table1data[i]? new IndianCurrency().transform(table1data[i].credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0) - table1data[i].debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0)): '-',
+        income: table1data[i]? table1data[i].coa_acc_name:'-',
+        amount_2: table1data[i]? (table1data[i].credit_data.map(t => t.vc_debit).reduce((acc, val) => acc + val, 0) - table1data[i].debit_data.map(t => t.vc_credit).reduce((acc, val) => acc + val, 0)): '-',
       
       };
 
@@ -696,8 +696,8 @@ export class TrialBalanceModalComponent implements OnInit {
     //   worksheet.addRow(ovj);
     //   obj2.amount_2 = obj2.amount_1;
     // }
-    obj2.amount_1 = new IndianCurrency().transform(obj2.amount_1);
-    obj2.amount_2 = new IndianCurrency().transform(obj2.amount_2);
+    obj2.amount_1 = (obj2.amount_1);
+    obj2.amount_2 = (obj2.amount_2);
     worksheet.addRow(obj2);
 
       worksheet.getRow(worksheet._rows.length).eachCell(cell => {

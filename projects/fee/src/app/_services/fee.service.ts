@@ -639,4 +639,13 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionDetailReport', value);
 	}
+
+	getMissingInvoiceDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getMissingInvoiceDetails', value);
+	}
+	addledgertomissinginvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/addledgertomissinginvoice', value);
+	}
 }

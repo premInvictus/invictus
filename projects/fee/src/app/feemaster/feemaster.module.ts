@@ -10,6 +10,7 @@ import { InvoiceCreationBulkComponent } from './invoice-creation-bulk/invoice-cr
 import { InvoiceCreationIndividualComponent } from './invoice-creation-individual/invoice-creation-individual.component';
 import { InvoiceCreationPopupComponent } from './invoice-creation-popup/invoice-creation-popup.component';
 import { CommonStudentProfileComponent } from './common-student-profile/common-student-profile.component';
+// import { CommonStudentProfileComponent1 } from './common-student-profile-2/common-student-profile.component';
 import { StudentAccountComponent } from './student-account/student-account.component';
 import { FeeTransactionEntryComponent } from './fee-transaction-entry/fee-transaction-entry.component';
 import { FeeLedgerComponent } from './fee-ledger/fee-ledger.component';
@@ -21,6 +22,7 @@ import { StudentRouteMoveStoreService } from './student-route-move-store.service
 import { LoadingModule } from 'ngx-loading';
 import { InvoiceSearchModalComponent } from './invoice-search-modal/invoice-search-modal.component';
 import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.component';
+import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -36,6 +38,7 @@ import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.componen
 		InvoiceCreationBulkComponent,
 		InvoiceCreationIndividualComponent,
 		CommonStudentProfileComponent,
+		// CommonStudentProfileComponent1,
 		InvoiceCreationPopupComponent,
 		StudentAccountComponent,
 		FeeTransactionEntryComponent,
@@ -44,7 +47,8 @@ import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.componen
 		FeeFilterModalComponent,
 		FeeTransactionEntryBulkComponent,
 		InvoiceSearchModalComponent,
-		WalletsLedgerComponent
+		WalletsLedgerComponent,
+		MissingInvoiceComponent
 	],
 	providers: [StudentRouteMoveStoreService]
 })
