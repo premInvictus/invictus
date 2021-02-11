@@ -488,7 +488,7 @@ export class BalanceSheetModalComponent implements OnInit, AfterViewInit {
       
       tableArray2.push(tds);
     })
-    console.log('tds content:', tableArray1, tableArray2);
+    // console.log('tds content:', tableArray1, tableArray2);
 
     let columndefinition = [
       {
@@ -549,13 +549,14 @@ export class BalanceSheetModalComponent implements OnInit, AfterViewInit {
     worksheet.columns = columns;
 
     for(let i = 0; i < (tableArray1.length -1 ); i++) {
+      // console.log("i am here", tableArray1[i][2], tableArray2[i][2], parseInt(tableArray1[i][2].replace('( - )', '')), parseInt(tableArray2[i][2].replace('( - )', '')));     
       let obj={
         account_code_1: tableArray1[i][0],
         expenditure: tableArray1[i][1],
-        amount_1: tableArray1[i][2] ,
+        amount_1: tableArray1[i][2] != '' ? tableArray1[i][2].includes('( - )') ? parseInt(tableArray1[i][2].replace('( - )', '').replace(',', '')): parseInt(tableArray1[i][2].replace(',', '')) : '-' ,
         account_code_2: tableArray2[i][0],
         income: tableArray2[i][1],
-        amount_2: tableArray2[i][2],
+        amount_2: tableArray2[i][2] != '' ? tableArray2[i][2].includes('( - )') ? parseInt(tableArray2[i][2].replace('( - )', '').replace(',', '')): parseInt(tableArray2[i][2].replace(',', '')) : '-',
       
       };
 
@@ -569,10 +570,10 @@ export class BalanceSheetModalComponent implements OnInit, AfterViewInit {
     let obj={
       account_code_1: '',
       expenditure: 'Total',
-      amount_1:  this.getTwoDecimalValue(this.debitTotal) < 0 ? `( - )  ${new IndianCurrency().transform(this.getTwoDecimalValue(0 - this.debitTotal))}`: ` ${new IndianCurrency().transform(this.getTwoDecimalValue(this.debitTotal))}`,
+      amount_1:  this.getTwoDecimalValue(this.debitTotal),
       account_code_2: '',
       income: 'Total',
-      amount_2: this.getTwoDecimalValue(this.creditTotal) < 0 ? `( - ) ${new IndianCurrency().transform(this.getTwoDecimalValue(0 - this.creditTotal))}`: ` ${new IndianCurrency().transform(this.getTwoDecimalValue(this.creditTotal))}`,
+      amount_2: this.getTwoDecimalValue(this.creditTotal),
     
     };
     worksheet.addRow(obj);

@@ -1,0 +1,105 @@
+<div class="fee-container-box__grey">
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6 remove-col-padding-left">
+            <h1 class="remove-bottom-margin font-size-24">Missing Invoice</h1>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row margin-top-10">
+    <div class="col-12 remove-col-padding" >
+       <app-common-student-profile [loginId]="lastRecordId" [feeRenderId]="feeRenderId" (next)="next($event)"
+          (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"
+          (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
+    </div>
+ </div>
+ <div class="row margin-top-10" *ngIf="datasource.length > 0">
+   <table  class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+     <thead class='header'>
+      <th>
+        <mat-checkbox (change)="getallItem()" [ngModel]= 'checkallstatus'>
+        </mat-checkbox>
+      </th>
+       <th>
+         Invoice No.
+       </th>
+       <th>
+        Invoice Period
+      </th>
+      <th>
+        Invoice Particulars
+      </th>
+      <th>
+        Invoice Date
+      </th>
+      <th>
+        Invoice Due Date
+      </th>
+      <th>
+        Invoice Amount
+      </th>
+      <th>
+        Invoice Status
+      </th>
+      <th>
+        Invoice Session
+      </th>
+      <th>
+        Invoice Category
+      </th>
+      <th>
+        Invoice Remark
+      </th>
+      
+     </thead>
+     <tbody>
+       <tr *ngFor="let item of datasource">
+          <td>
+            <mat-checkbox  (change) ='getItem(item)' [checked] = 'checkResult(item)'>
+            </mat-checkbox>
+          </td>
+          <td>
+            {{item.inv_invoice_no}}
+          </td>
+          <td>
+            {{getValue(item.inv_fp_name)}}
+          </td>
+          <td>
+            {{item.inv_title }}
+          </td>
+          <td>
+            {{item.inv_invoice_date}}
+          </td>
+          <td>
+            {{item.inv_due_date}}
+          </td>
+          <td>
+            {{getInteger(item.inv_fee_amount , item.inv_fine_amount , item.inv_opening_balance)}}
+          </td>
+          <td>
+            {{item.inv_paid_status }}
+          </td>
+          <td>
+            {{(item.ses_name)}}
+          </td>
+          <td>
+            {{item.calm_name}}
+          </td>
+          <td>
+            {{item.inv_remark}}
+          </td>
+       </tr>
+     </tbody>
+   </table>
+   <div class="row margin-top-10" style="margin-left: 48%;">
+    <div class="button-row">
+      <button mat-raised-button class="submit-button" (click)="addInvoiceToledger()">Submit</button>
+   </div>
+   </div>
+ </div>
+  <div *ngIf="datasource.length < 1" class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
+</div>
