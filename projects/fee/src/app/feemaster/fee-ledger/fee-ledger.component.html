@@ -25,11 +25,11 @@
         <span class="btn-spacer">Create Invoice</span></span>
     </button>
   </div>
-  <div style="margin-top: 55%;" class="floating-button" *ngIf="isExistUserAccessMenu('793')">
-    <button mat-button  class="float-edit-button"><i class="material-icons font-white">playlist_add</i>
+  <div style="margin-top: 8%;" class="floating-button" *ngIf="isExistUserAccessMenu('793')">
+    <button mat-button  class="float-edit-button"><i class="material-icons font-white">create_new_folder</i>
       <span class="margin-top-2 right-text" (click)="changeToggle()">
-        <i class="material-icons font-white">playlist_add</i>
-        <span class="btn-spacer">{{showMissingInvoice? 'Missing Invoice' :'Fee Ledger'}}</span></span>
+        <i class="material-icons font-white">create_new_folder</i>
+        <span class="btn-spacer">{{!showMissingInvoice? 'Missing Invoice' :'Fee Ledger'}}</span></span>
     </button>
   </div>
   <div *ngIf="!showMissingInvoice" class="row">
@@ -386,24 +386,26 @@
       </mat-card>
     </div>
   </div>
-  <div *ngIf="showMissingInvoice" class="fee-container-box__grey">
-   <div class="row margin-top-10" *ngIf="datasource.length > 0">
-    <div class="col-12 remove-col-padding">
-    <mat-card class="card-top-title__container ">
-      <div style="margin-top:15px !important" class="col-12 text-right" *ngIf="isExistUserAccessMenu('794') && resultdataArray.length > 0">
-        <button mat-button class="submit-button" (click)="addInvoiceToledger()">Move to Ledger</button>
+  <div *ngIf="showMissingInvoice" >
+   <div class="row" *ngIf="datasource.length > 0">
+    <div class="col-12">
+    <mat-card class="card-top-title__container card-height-677 card-height-795 ">
+      <div style="margin-top:15px !important" class="col-12 text-right" >
+        <button style = "margin-bottom: 5px;" mat-button class="submit-button" (click)="addInvoiceToledger()" *ngIf="isExistUserAccessMenu('794') && resultdataArray.length > 0">Move to Ledger</button>
       </div>
-     <table  class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
-       <thead class='mat-header header' >
-        <th  class=' mat-header-cell' style="background-color: #c8d6e5; ">
+      <div class="table-overflow" >
+     <table  class="mat-table table table-100 table-borderd table-stripped custom-table text-center empty-same-height">
+       <thead class='header' >
+        <th style="background-color: #c8d6e5; ">
           <mat-checkbox (change)="getallItem()" [ngModel]= 'checkallstatus'>
           </mat-checkbox>
         </th>
-         <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-           Invoice No.
-         </th>
+         
          <th class=' mat-header-cell' style="background-color: #c8d6e5;">
           Invoice Period
+        </th>
+        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+          Invoice No.
         </th>
         <th class=' mat-header-cell' style="background-color: #c8d6e5;">
           Invoice Particulars
@@ -432,18 +434,21 @@
         
        </thead>
        <tbody>
-         <tr class=' mat-row' *ngFor="let item of datasource" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+         <tr class=' mat-row' *ngFor="let item of datasource" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}" style="padding-left: 0.5%;font-size: 16px !important;">
             <td >
               <mat-checkbox  (change) ='getItem(item)' [checked] = 'checkResult(item)'>
               </mat-checkbox>
             </td>
-            <td>
-              {{item.inv_invoice_no}}
-            </td>
-            <td>
+            
+            <td style="text-align: left !important">
               {{getValue(item.inv_fp_name)}}
             </td>
-            <td>
+            <td >
+              <span class="pointer font-bold font-skyblue font-underline">
+                <a (click)="openDialog(item, false)">{{item.inv_invoice_no}}</a>
+              </span> 
+            </td>
+            <td style="text-align: left !important">
               {{item.inv_title }}
             </td>
             <td>
@@ -470,6 +475,7 @@
          </tr>
        </tbody>
      </table>
+    </div>
      </mat-card>
      </div>
    </div>
