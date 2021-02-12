@@ -105,7 +105,7 @@ export class MissingInvoiceComponent implements OnInit {
 					this.datasource = res
 				}
 				else {
-					this.commmon.showSuccessErrorMessage('No Data Fetchecd', 'error');
+					// this.commmon.showSuccessErrorMessage('No Data Fetchecd', 'error');
 				}
 			}
 		)
