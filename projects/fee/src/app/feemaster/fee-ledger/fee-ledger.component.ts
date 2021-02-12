@@ -1134,7 +1134,7 @@ export class FeeLedgerComponent implements OnInit {
 					this.datasource = res
 				}
 				else {
-					this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
+					// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
 				}
 			}
 		)
