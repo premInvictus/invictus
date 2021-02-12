@@ -676,8 +676,10 @@ export class FeeLedgerComponent implements OnInit {
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		} else {
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		}
 	}
 	prev(admno) {
@@ -689,11 +691,13 @@ export class FeeLedgerComponent implements OnInit {
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		} else {
 			this.recordArray = [];
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		}
 	}
 	first(admno) {
@@ -705,11 +709,13 @@ export class FeeLedgerComponent implements OnInit {
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		} else {
 			this.recordArray = [];
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		}
 	}
 	last(admno) {
@@ -721,11 +727,13 @@ export class FeeLedgerComponent implements OnInit {
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		} else {
 			this.recordArray = [];
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		}
 	}
 	key(admno) {
@@ -737,11 +745,13 @@ export class FeeLedgerComponent implements OnInit {
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		} else {
 			this.recordArray = [];
 			this.FEE_LEDGER_ELEMENT = [];
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
+			this.getDataofMissingInvoice();
 		}
 	}
 	// to veiw invoice details
@@ -749,7 +759,7 @@ export class FeeLedgerComponent implements OnInit {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: item.flgr_inv_id,
+				invoiceNo: item.flgr_inv_id ? item.flgr_inv_id : item.inv_id,
 				edit: edit,
 				paidStatus: item.inv_paid_status,
 				fromModel: true
@@ -777,6 +787,7 @@ export class FeeLedgerComponent implements OnInit {
 			dialogRef.afterClosed().subscribe(result => {
 				if (result.status === '1') {
 					this.getFeeLedger(this.loginId);
+					this.getDataofMissingInvoice();
 				}
 			});
 		}
@@ -1192,7 +1203,8 @@ export class FeeLedgerComponent implements OnInit {
 				this.feeService.getMissingInvoiceDetails({ au_login_id: this.loginId, process_type: this.process_type }).subscribe(
 					(res: any) => {
 						if (res) {
-							this.datasource = res
+							this.datasource = res;
+							this.getFeeLedger(this.loginId);
 						}
 						else {
 							// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
