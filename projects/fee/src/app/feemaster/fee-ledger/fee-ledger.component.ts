@@ -136,9 +136,15 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.checkEmit(1);
+		// this.checkEmit(1);
 		this.getSchool();
 		this.getSession();
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			this.process_type = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			this.process_type = '4';
+		}
+		this.processtypeService.setProcesstype(this.process_type);
 		this.recordArray = [];
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -1130,10 +1136,16 @@ export class FeeLedgerComponent implements OnInit {
 		this.datasource = [];
 		this.feeService.getMissingInvoiceDetails({ au_login_id: this.loginId, process_type: this.process_type }).subscribe(
 			(res: any) => {
-				if (res) {
+				// console.log("i am res", res);
+				
+				if(res.status == 'error') {
+					this.datasource = [];
+				}
+				else if (res) {
 					this.datasource = res
 				}
 				else {
+					this.datasource = [];
 					// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
 				}
 			}

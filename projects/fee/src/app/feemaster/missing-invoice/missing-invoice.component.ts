@@ -134,7 +134,12 @@ export class MissingInvoiceComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.checkEmit(1);
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			this.process_type = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			this.process_type = '4';
+		}
+		this.processtypeService.setProcesstype(this.process_type);
 		this.getSchool();
 		this.getSession();
 		this.recordArray = [];
