@@ -1130,10 +1130,16 @@ export class FeeLedgerComponent implements OnInit {
 		this.datasource = [];
 		this.feeService.getMissingInvoiceDetails({ au_login_id: this.loginId, process_type: this.process_type }).subscribe(
 			(res: any) => {
-				if (res) {
+				// console.log("i am res", res);
+				
+				if(res.status == 'error') {
+					this.datasource = [];
+				}
+				else if (res) {
 					this.datasource = res
 				}
 				else {
+					this.datasource = [];
 					// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
 				}
 			}
