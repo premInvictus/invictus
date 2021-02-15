@@ -6,6 +6,8 @@ import { BarcodePrintingComponent } from './barcode-printing/barcode-printing.co
 import { RfidPrintingComponent } from './rfid-printing/rfid-printing.component';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 import { BookDetailComponent } from '../library-shared/book-detail/book-detail.component';
+import { PeriodicalAttendanceComponent } from './periodical-attendance/periodical-attendance.component';
+
 
 
 const routes: Routes = [
@@ -15,6 +17,7 @@ const routes: Routes = [
   { path: 'rfid-mapping', component: RfidPrintingComponent },
   { path: 'bulk-upload', component: BulkUploadComponent },
   { path: 'book-detail', component: BookDetailComponent },
+  { path: 'periodical-attendance', component: PeriodicalAttendanceComponent },
 ];
 
 @NgModule({

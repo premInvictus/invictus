@@ -6,14 +6,15 @@ import { DatePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
-import { AddSubscriptionDialog } from './add-subscription-dialog/add-subscription-dialog.component';
-@Component({
-  selector: 'app-periodical-master',
-  templateUrl: './periodical-master.component.html',
-  styleUrls: ['./periodical-master.component.css']
-})
-export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
+import {SelectionModel} from '@angular/cdk/collections';
 
+
+@Component({
+  selector: 'app-periodical-attendance',
+  templateUrl: './periodical-attendance.component.html',
+  styleUrls: ['./periodical-attendance.component.css']
+})
+export class PeriodicalAttendanceComponent implements OnInit, AfterViewInit {
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -21,13 +22,15 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
   subscriptionListData: any = [];
   currentSubscriptionId = '';
   SUBSCRIPTION_LIST_ELEMENT: SubscriptionListElement[] = [];
-  subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
-  displayedSubscriptionListColumns: string[] = ['srno', 'subscription_id', 'subscription_name', 'subscription_type', 'subscription_frequency','subscription_cost', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
+  dataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
+  displayedSubscriptionListColumns: string[] = ['select','srno', 'subscription_id', 'subscription_name', 'subscription_type', 'subscription_frequency','subscription_cost', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
   // subscriptionListPageIndex = 0;
   // subscriptionListPageSize = 10;
   // subscriptionListPageSizeOptions = [10, 25, 50, 100];
   showButtonStatus = true;
   pageEvent: any;
+  selection = new SelectionModel<SubscriptionListElement>(true, []);
+
 
   constructor(public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -37,39 +40,32 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getSubscriptionList();
   }
+  buildForm(){
+    
+  }
 
   ngAfterViewInit() {
-		this.subscriptionlistdataSource.sort = this.sort;
-		this.subscriptionlistdataSource.paginator = this.paginator;
-	}
+		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.paginator;
+  }
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
 
   openModal = (data) => this.deleteModalRef.openModal(data);
 
   deleteComCancel() {
     this.deleteModalRef.close();
-  }
-
-  openAddSubscriptionDialog(): void {
-    const dialogRef = this.dialog.open(AddSubscriptionDialog, {
-      width: '750px',
-      data: {
-        subscription_id: '',
-        subscription_name: '',
-        subscription_cost: '',
-        subscription_type: '',
-        subscription_frequency: '',
-        subscription_start_date: '',
-        subscription_end_date: '',
-        subscription_vendor_id: '',
-        subscription_status: '',
-        showButtonStatus: true
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.getSubscriptionList();
-
-    });
   }
 
   getSubscriptionList() {
@@ -79,7 +75,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
       let element: any = {};
       let recordArray = [];
       this.SUBSCRIPTION_LIST_ELEMENT = [];
-      this.subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
+      this.dataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
       if (result && result.status === 'ok') {
         let pos = 1;
         this.subscriptionListData = recordArray = result.data;
@@ -102,37 +98,14 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
           pos++;
 
         }
-        this.subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
-        this.subscriptionlistdataSource.paginator = this.paginator;
+        this.dataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
+        this.dataSource.paginator = this.paginator;
         if (this.sort) {
           this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-          this.subscriptionlistdataSource.sort = this.sort;
+          this.dataSource.sort = this.sort;
         }
         
       }
-    });
-  }
-
-  editSubscription(element, showButton) {
-    const dialogRef = this.dialog.open(AddSubscriptionDialog, {
-      width: '750px',
-      data: {
-        subscription_id: element.subscription_id,
-        subscription_name: element.subscription_name,
-        subscription_cost: element.subscription_cost,
-        subscription_type: element.subscription_type,
-        subscription_frequency: element.subscription_frequency,
-        subscription_start_date: element.subscription_start_date,
-        subscription_end_date: element.subscription_end_date,
-        subscription_vendor_id: element.subscription_vendor_id,
-        subscription_status: element.subscription_status,
-        showButtonStatus: showButton ? showButton : false
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.getSubscriptionList();
-
     });
   }
 
@@ -163,7 +136,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
   }
 
   applyFilterSubscription(filterValue: string) {
-    this.subscriptionlistdataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }

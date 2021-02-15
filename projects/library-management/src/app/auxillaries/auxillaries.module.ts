@@ -8,6 +8,7 @@ import { BarcodePrintingComponent } from './barcode-printing/barcode-printing.co
 import { RfidPrintingComponent } from './rfid-printing/rfid-printing.component';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 import { LibrarySharedModule } from '../library-shared/library-shared.module';
+import { PeriodicalAttendanceComponent } from './periodical-attendance/periodical-attendance.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { LibrarySharedModule } from '../library-shared/library-shared.module';
     AuxillariesRoutingModule,
     LibrarySharedModule
   ],
-  declarations: [BookSearchComponent, PhysicalVerificationComponent, BarcodePrintingComponent, RfidPrintingComponent, BulkUploadComponent]
+  declarations: [BookSearchComponent, PhysicalVerificationComponent, BarcodePrintingComponent, RfidPrintingComponent, BulkUploadComponent, PeriodicalAttendanceComponent]
 })
 export class AuxillariesModule { }
