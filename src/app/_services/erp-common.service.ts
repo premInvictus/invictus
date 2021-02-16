@@ -389,6 +389,14 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/subscription/getSubscription', value);
 	}
+	insertPeriodicalLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/insertPeriodicalLog', value);
+	}
+	getPeriodicalLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/getPeriodicalLog', value);
+	}
 
 	getVendorList(value) {
 		this.service.startLoading();
