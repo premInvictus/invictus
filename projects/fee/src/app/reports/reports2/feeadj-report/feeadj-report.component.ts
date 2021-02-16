@@ -255,11 +255,11 @@ export class FeeadjReportComponent implements OnInit {
 
 
 	changeReportType($event) {		
-		this.reportType = $event.value;
+		this.reportType = this.reportFilterForm.value.report_type;
 		console.log('')
 		if (this.reportType === 'adjdetail') {
 			this.getFeeAdjReport(this.reportFilterForm.value)
-		} else {
+		} else if (this.reportType === 'cumulativedetail'){
 			this.getCumulativeFeeAdjConcessionReport(this.reportFilterForm.value)
 		}
 	}
@@ -928,8 +928,7 @@ export class FeeadjReportComponent implements OnInit {
 									obj['adjusted_by'] =
 										repoArray[Number(keys)]['adjusted_by'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['adjusted_by']) : '-';
 									obj['adjustment_date'] = repoArray[Number(keys)]['adjustment_date'];
-									obj['invg_adj_amount'] = repoArray[Number(keys)]['invg_adj_amount'] ?
-										Number(repoArray[Number(keys)]['invg_adj_amount']) : 0;
+									obj['invg_adj_amount'] = Number(tot) ? Number(tot) : 0;
 									obj['inv_remark'] =
 										repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
 									k++;
@@ -938,8 +937,12 @@ export class FeeadjReportComponent implements OnInit {
 						}
 					}
 					i++;
-					this.dataset.push(obj);
+					if(obj && obj['id']) {
+						this.dataset.push(obj);
+					}
+					
 				});
+				console.log('this.dataset-->', this.dataset);
 				this.columnDefinitions.push(
 					{
 						id: 'adjustment_date', name: 'Adj. Date', field: 'adjustment_date', sortable: true,
