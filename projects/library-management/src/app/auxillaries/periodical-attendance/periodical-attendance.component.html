@@ -1,30 +1,29 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <div class="row">
-        <div class="col-6">
-          <span class="font-size-24">Periodical Master</span>
-        </div>
-        <div class="col-6 text-right">
-          <button mat-raised-button class="btn-success-blue" (click)="openAddSubscriptionDialog()">
-            Add Subscription
-          </button>
-        </div>
-      </div>
+        <div class="row">
+            <div class="col-6 margin-top-15">
+              <span class="font-size-24 font-bold">Periodical Log</span>
+            </div>
+            <div class="col-6 text-right">
+              <form [formGroup]="searchForm">
+                <mat-form-field class="form-field-150" appearance="outline">
+                  <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="date"
+                    (dateChange)="getSubscriptionList()" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </form>
+            </div>
+          </div>
     </mat-card>
   </div>
 </div>
 
-<div class="row" [hidden]="!(SUBSCRIPTION_LIST_ELEMENT.length > 0)">
+<div class="row" [hidden]="!(ELEMENT_DATA.length > 0)">
   <div class="col-12">
     <mat-card class="card-height-730">
       <div class="row">
-        <div class="col-6">
-          <span class="font-bold font-size-20">Subscription List</span>
-        </div>
-      </div>
-      <div class="row">
-
         <div class="col-12">
           <div class="row ">
             <div class="col-4 remove-col-padding">
@@ -34,49 +33,31 @@
               </mat-form-field>
 
             </div>
-            <!-- <div class="col-8 text-right">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker"
-                  placeholder="Date"
-                  formControlName="subscription_date"
-                  required
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div> -->
           </div>
           <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center"
             id="report_table">
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle() : null"
-                              [checked]="selection.hasValue() && isAllSelected()"
-                              [indeterminate]="selection.hasValue() && !isAllSelected()">
-                </mat-checkbox>
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null"
-                              [checked]="selection.isSelected(row)">
-                </mat-checkbox>
+            <ng-container matColumnDef="subscription_copies">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription Copies</th>
+              <td mat-cell *matCellDef="let element">
+                <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                  <mat-form-field class="form-field lib-form">
+                    <input matInput type="number" [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.subscription_copies) ? 'No. of copy' : ''"
+                      formControlName="subscription_copies"  autocomplete="off" />
+                  </mat-form-field>
+                </form>
               </td>
             </ng-container>
-            <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
-              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-            </ng-container>
-            <ng-container matColumnDef="subscription_id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription ID</th>
+            <ng-container matColumnDef="subscription_attendance">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription Copies</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer"
-                  (click)="editSubscription(element, false)">{{element?.subscription_id}} </a>
+                <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                  <mat-form-field class="form-field lib-form">
+                      <mat-label>Select Attendance</mat-label>
+                      <mat-select formControlName="subscription_attendance" [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.subscription_attendance) ? 'Select Attendance' : ''">
+                        <mat-option *ngFor="let item of attendance_mark_arr" [value]="item.id">{{item.name | titlecase}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </form>
               </td>
             </ng-container>
             <ng-container matColumnDef="subscription_name">
@@ -122,23 +103,14 @@
                   *ngIf="element.subscription_vendor_name">{{(element.subscription_vendor_name)}} </span>
                 <span *ngIf="!(element.subscription_vendor_name)"> - </span> </td>
             </ng-container>
-            <ng-container matColumnDef="subscription_status">
+            <!-- <ng-container matColumnDef="subscription_status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status</th>
               <td mat-cell *matCellDef="let element">
                 <span *ngIf="element.subscription_status == '2'">Inactive </span>
                 <span *ngIf="element.subscription_status == '1'"> Active </span>
                 <span *ngIf="element.subscription_status == '3'"> Suspended</span>
               </td>
-            </ng-container>
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Action</th>
-              <td mat-cell *matCellDef="let element">
-                <span><i class="fas fa-edit font-color-grey margin-right-15"
-                    (click)="editSubscription(element, true)"></i></span>
-                <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
-                    (click)="openModal({});deleteSubscriptionModel(element)"></i></span>
-              </td>
-            </ng-container>
+            </ng-container> -->
 
             <tr mat-header-row *matHeaderRowDef="displayedSubscriptionListColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedSubscriptionListColumns;">
@@ -146,7 +118,7 @@
           </table>
 
           <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-            <tr *ngIf="SUBSCRIPTION_LIST_ELEMENT.length == 0">
+            <tr *ngIf="ELEMENT_DATA.length == 0">
               <td colspan="9">No Record Found</td>
             </tr>
           </table>
@@ -154,10 +126,20 @@
           </mat-paginator>
         </div>
       </div>
+      <div class="row text-center" *ngIf="ELEMENT_DATA.length > 0">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" 
+          
+          (click)="save($event)">Submit</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="reset($event)">
+            Reset
+          </button>
+        </div>
+      </div>
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="SUBSCRIPTION_LIST_ELEMENT.length == 0">
+<div class="row" *ngIf="ELEMENT_DATA.length == 0">
   <div class="col-12">
     <mat-card>
       <div class="text-center">
