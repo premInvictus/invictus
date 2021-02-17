@@ -546,16 +546,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		console.log('this.scaleData',this.scaleData);
 		for (let item of this.scaleData) {
 			const salaryData: any = {};
-			salaryData['sc_calculation_type' + i] = item.sc_calculation_type;
-			salaryData['sc_name' + i] = item.sc_name;
-			salaryData['sc_order' + i] = item.sc_order;
-			salaryData['sc_id' + i] = item.sc_id;
-			salaryData['sc_type' + i] = item.sc_type;
-			salaryData['type' + i] = item.sc_type.type_id;
-			salaryData['sc_value' + i] = item.sc_value;
-			salaryData['calculation_option' + i] = item.calculation_option;
+			salaryData['sc_calculation_type'] = item.sc_calculation_type;
+			salaryData['sc_name'] = item.sc_name;
+			salaryData['sc_order'] = item.sc_order;
+			salaryData['sc_id'] = item.sc_id;
+			salaryData['sc_type'] = item.sc_type;
+			salaryData['type'] = item.sc_type.type_id;
+			salaryData['sc_value'] = item.sc_value;
+			salaryData['calculation_option'] = item.calculation_option;
 			if (Number(item.sc_type.type_id) === 2) {
-				salaryData['sc_opt' + i] =this.checkscoptValue(item.sc_id) ? this.checkscoptValue(item.sc_id) : false
+				salaryData['sc_opt'] =this.checkscoptValue(item.sc_id) ? this.checkscoptValue(item.sc_id) : false
 			}
 
 			this.formGroupArray2.push({
@@ -587,12 +587,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	checkValS(i, $event) {
 		if ($event.checked) {
 
-			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = true;
+			this.formGroupArray2[i].formGroup['value']['sc_opt'] = true;
 
 		} else {
-			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = false;
+			this.formGroupArray2[i].formGroup['value']['sc_opt'] = false;
 		}
-		this.salaryFinalArray[i]['sc_opt'] = this.formGroupArray2[i].formGroup['value']['sc_opt' + i];
+		this.salaryFinalArray[i]['sc_opt'] = this.formGroupArray2[i].formGroup['value']['sc_opt'];
 	}
 	getDynamicValue(weigtage, value) {
 		if (Number(value) > 0) {
@@ -1237,80 +1237,80 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			let i = 0;
 			this.netSalary = this.salaryDetails.value.basic_pay;
 			for (const item of this.formGroupArray2) {
-				if (item.formGroup.value['sc_calculation_type' + i] === 'text' || item.formGroup.value['sc_calculation_type' + i] === 'Text') {
-					if (Number(item.formGroup.value['type' + i]) === 1) {
-						if (item.formGroup.value['sc_value' + i] === '') {
-							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
-							this.earning = Number(this.earning) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
+				if (item.formGroup.value['sc_calculation_type'] === 'text' || item.formGroup.value['sc_calculation_type'] === 'Text') {
+					if (Number(item.formGroup.value['type']) === 1) {
+						if (item.formGroup.value['sc_value'] === '') {
+							item.formGroup.value['sc_value'] = this.getValue(item.formGroup.value['sc_id']);
+							this.earning = Number(this.earning) + Number(this.getValue(item.formGroup.value['sc_id']));
+							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id']));
 						} else {
-							this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value' + i]);
-							this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
+							this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value']);
+							this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value']);
 						}
 
 					} else {
-						if (item.formGroup.value['sc_value' + i] === '') {
-							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
-							this.deduction = Number(this.deduction) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id' + i]));
+						if (item.formGroup.value['sc_value'] === '') {
+							item.formGroup.value['sc_value'] = this.getValue(item.formGroup.value['sc_id']);
+							this.deduction = Number(this.deduction) + Number(this.getValue(item.formGroup.value['sc_id']));
+							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id']));
 						} else {
-							this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value' + i]);
-							this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value' + i]);
+							this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value']);
+							this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value']);
 						}
 					}
 
-				} else if (item.formGroup.value['sc_calculation_type' + i] === '%') {
-					if (Number(item.formGroup.value['type' + i]) === 1) {
-						this.earning = (Number(this.earning) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
-						this.netSalary = (Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
+				} else if (item.formGroup.value['sc_calculation_type'] === '%') {
+					if (Number(item.formGroup.value['type']) === 1) {
+						this.earning = (Number(this.earning) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value']) / 100)).toFixed(2);
+						this.netSalary = (Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value']) / 100)).toFixed(2);
 					} else {
-						this.deduction = (Number(this.deduction) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
-						this.netSalary = (Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
+						this.deduction = (Number(this.deduction) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value']) / 100)).toFixed(2);
+						this.netSalary = (Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value']) / 100)).toFixed(2);
 					}
-				}  else if (item.formGroup.value['sc_calculation_type' + i].toLowerCase() === 'slab') {
+				}  else if (item.formGroup.value['sc_calculation_type'].toLowerCase() === 'slab') {
 					//console.log('getvalue for slab',this.getValue(item.formGroup.value['sc_id'+ i]));
-					if (Number(item.formGroup.value['type' + i]) === 1) {
+					if (Number(item.formGroup.value['type']) === 1) {
 						console.log('getvalue for slab',this.getValue(item.formGroup.value['sc_id'+ i]));
-						if (item.formGroup.value['sc_value' + i] === '') {
-							item.formGroup.get('sc_value' + i).setValue(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.earning = Number(this.earning) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
+						if (item.formGroup.value['sc_value'] === '') {
+							item.formGroup.get('sc_value').setValue(this.getValue(item.formGroup.value['sc_id']));
+							this.earning = Number(this.earning) + Number(this.getValue(item.formGroup.value['sc_id']));
+							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id']));
 						} else {
-							this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value' + i]);
-							this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
+							this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value']);
+							this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value']);
 						}
-						// this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value' + i]);
-						// this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
+						// this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value']);
+						// this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value']);
 					} else {
-						if (item.formGroup.value['sc_value' + i] === '') {
-							item.formGroup.get('sc_value' + i).setValue(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.deduction = Number(this.deduction) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
-							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id' + i]));
+						if (item.formGroup.value['sc_value'] === '') {
+							item.formGroup.get('sc_value').setValue(this.getValue(item.formGroup.value['sc_id']));
+							this.deduction = Number(this.deduction) + Number(this.getValue(item.formGroup.value['sc_id']));
+							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id']));
 						} else {
-							this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value' + i]);
-							this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value' + i]);
+							this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value']);
+							this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value']);
 						}
-						// this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value' + i]);
-						// this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value' + i])
+						// this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value']);
+						// this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value'])
 					}
-					console.log('change value',item.formGroup.value['sc_value' + i])
+					console.log('change value',item.formGroup.value['sc_value'])
 				}
 				this.salaryFinalArray.push(
 					{
-						sc_calculation_type: item.formGroup.value['sc_calculation_type' + i],
-						sc_id: item.formGroup.value['sc_id' + i],
-						sc_name: item.formGroup.value['sc_name' + i],
-						sc_order: item.formGroup.value['sc_order' + i],
-						sc_type: item.formGroup.value['sc_type' + i],
-						sc_value: item.formGroup.value['sc_value' + i],
-						sc_opt: item.formGroup.value['sc_opt' + i],
-						calculation_option:item.formGroup.value['calculation_option' + i],
+						sc_calculation_type: item.formGroup.value['sc_calculation_type'],
+						sc_id: item.formGroup.value['sc_id'],
+						sc_name: item.formGroup.value['sc_name'],
+						sc_order: item.formGroup.value['sc_order'],
+						sc_type: item.formGroup.value['sc_type'],
+						sc_value: item.formGroup.value['sc_value'],
+						sc_opt: item.formGroup.value['sc_opt'],
+						calculation_option:item.formGroup.value['calculation_option'],
 					}
 				);
 				i++;
 			}
 			console.log('this.formGroupArray2',this.formGroupArray2);
-			console.log('this.salaryFinalArray',this.salaryFinalArray)
+			console.log('this.salaryFinalArray',this.salaryFinalArray);
 			if (this.salaryDetails.value.td) {
 				this.netSalary = Number(this.netSalary) + Number(this.salaryDetails.value.td);
 				this.earning = Number(this.earning) + Number(this.salaryDetails.value.td);
