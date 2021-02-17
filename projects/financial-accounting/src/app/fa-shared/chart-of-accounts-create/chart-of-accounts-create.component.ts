@@ -391,9 +391,14 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 }
 	getParentName(id) {
 		var accName = '';
-		const temp1 = this.accountGroupArr.find(e => e.acc_id == id);
-		if(temp1.acc_parent !=  0 && temp1.acc_parent != ''){
-			accName = this.accountGroupArr.find(e => e.acc_id == temp1.acc_parent).acc_name
+		if(id){
+			const temp1 = this.accountGroupArr.find(e => e.acc_id == id);
+			if(temp1.acc_parent !=  0 && temp1.acc_parent != ''){
+				let tempname = this.accountGroupArr.find(e => e.acc_id == temp1.acc_parent);
+				if(tempname){
+					accName = tempname.acc_name
+				}			
+			}
 		}
 		return accName;
 	}
