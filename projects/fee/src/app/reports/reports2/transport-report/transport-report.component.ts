@@ -237,8 +237,10 @@ export class TransportReportComponent implements OnInit {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
+			if (columnId) {
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
 			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			}
 		}
 	}
 	buildForm() {
