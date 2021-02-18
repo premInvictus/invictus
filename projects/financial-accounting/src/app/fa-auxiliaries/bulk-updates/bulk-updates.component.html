@@ -16,6 +16,7 @@
                 <mat-option value="">Please Select</mat-option>
                 <mat-option value="1">Charts of Account</mat-option>
                 <mat-option value="2">Account Group</mat-option>
+                <mat-option value="3">Update Charts of Account</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field *ngIf="uploadComponent && uploadComponent === '4'" class="form-field" appearance="outline">
@@ -50,7 +51,7 @@
           </div>
         </div>
         <br />
-        <div class="container-box__uploadbox" *ngIf="uploadComponent !== '3'">
+        <div class="container-box__uploadbox" *ngIf="uploadComponent !== '4'">
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
               <div class="bulk-upload-content">
@@ -68,7 +69,7 @@
             </label>
           </div>
         </div>
-        <div class="container-box__uploadbox" *ngIf="uploadComponent === '3'">
+        <div class="container-box__uploadbox" *ngIf="uploadComponent === '4'">
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
               <div class="bulk-upload-content">
