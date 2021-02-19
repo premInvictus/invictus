@@ -87,11 +87,19 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
           //this.employeedetails['last_record'] = emp_id;
           if(this.employeeDetails && this.employeeDetails.emp_salary_detail && this.employeeDetails.emp_salary_detail.emp_salary_structure ) {
             if(this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
-              this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security - this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0);
-              this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+              let tempsecurity_details = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details : null;
+              if(tempsecurity_details){
+                this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security - this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0);
+                this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+              }
+             
             } else {
-              this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security;
-              this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+              let tempsecurity_details = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details : null;
+              if(tempsecurity_details){
+                this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security;
+                this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
+              }
+              
             }
           }
         }
