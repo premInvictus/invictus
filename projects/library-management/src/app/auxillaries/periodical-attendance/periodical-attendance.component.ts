@@ -95,42 +95,36 @@ export class PeriodicalAttendanceComponent implements OnInit, AfterViewInit {
         let pos = 1;
         this.subscriptionListData = result.data;
         for (const item of this.subscriptionListData) {
-          var d1 = new Date(item.subscription_start_date).getTime();
-          var d2 = new Date(item.subscription_end_date).getTime();
-          var d = new Date(param.subscription_date).getTime();
-          if(d >= d1 && d <= d2) {
-            this.formGroupArray.push({
-              formGroup: this.fbuild.group({
-                subscription_id:item.subscription_id,
-                subscription_copies: 1,
-                subscription_attendance: ''
-              })
-            });
-            const tempdata = this.logData.find(e => e.log_subscription_id == item.subscription_id && e.log_date == param.subscription_date)
-            if(tempdata){
-              this.formGroupArray[pos-1].formGroup.patchValue({
-                subscription_copies: tempdata.log_subscription_copies,
-                subscription_attendance: tempdata.log_subscription_attendance
-              })
-            }
-            element = {
-              srno: pos,
+          this.formGroupArray.push({
+            formGroup: this.fbuild.group({
               subscription_id:item.subscription_id,
-              subscription_name: item.subscription_name,
-              subscription_cost: item.subscription_cost,
-              subscription_type: item.subscription_type,
-              subscription_frequency: item.subscription_frequency,
-              subscription_start_date: item.subscription_start_date,
-              subscription_end_date: item.subscription_end_date,
-              subscription_vendor_id: item.subscription_vendor_id,
-              subscription_vendor_name: item.subscription_vendor_name ? item.subscription_vendor_name : '',
-              subscription_status: item.subscription_status,
-  
-            };
-            this.ELEMENT_DATA.push(element);
-            pos++;
-          } 
+              subscription_copies: 1,
+              subscription_attendance: ''
+            })
+          });
+          const tempdata = this.logData.find(e => e.log_subscription_id == item.subscription_id && e.log_date == param.subscription_date)
+          if(tempdata){
+            this.formGroupArray[pos-1].formGroup.patchValue({
+              subscription_copies: tempdata.log_subscription_copies,
+              subscription_attendance: tempdata.log_subscription_attendance
+            })
+          }
+          element = {
+            srno: pos,
+            subscription_id:item.subscription_id,
+            subscription_name: item.subscription_name,
+            subscription_cost: item.subscription_cost,
+            subscription_type: item.subscription_type,
+            subscription_frequency: item.subscription_frequency,
+            subscription_start_date: item.subscription_start_date,
+            subscription_end_date: item.subscription_end_date,
+            subscription_vendor_id: item.subscription_vendor_id,
+            subscription_vendor_name: item.subscription_vendor_name ? item.subscription_vendor_name : '',
+            subscription_status: item.subscription_status,
 
+          };
+          this.ELEMENT_DATA.push(element);
+          pos++;
         }
         this.dataSource = new MatTableDataSource<SubscriptionListElement>(this.ELEMENT_DATA);
         this.dataSource.paginator = this.paginator;
@@ -138,7 +132,7 @@ export class PeriodicalAttendanceComponent implements OnInit, AfterViewInit {
           this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
           this.dataSource.sort = this.sort;
         }
-        
+        console.log('this.formGroupArra',this.formGroupArray);
       }
     });
   }
@@ -153,6 +147,7 @@ export class PeriodicalAttendanceComponent implements OnInit, AfterViewInit {
   save() {   
     let batchArr = [];
     for (var i = 0; i < this.ELEMENT_DATA.length; i++) {
+      console.log('this.formGroupArray[i].formGroup.value.subscription_id',this.formGroupArray[i].formGroup.value.subscription_id)
       batchArr.push({
         log_date : new DatePipe('en-in').transform(this.searchForm.value.date, 'yyyy-MM-dd'),
         log_subscription_id : this.formGroupArray[i].formGroup.value.subscription_id,

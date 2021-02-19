@@ -92,10 +92,10 @@ export class AddSubscriptionDialog implements OnInit {
           subscription_cost: this.subscriptionForm.value.subscription_cost,
           subscription_type: this.subscriptionForm.value.subscription_type,
           subscription_frequency: this.subscriptionForm.value.subscription_frequency,
-          subscription_start_date: this.subscriptionForm.value.subscription_start_date,
+          subscription_start_date: this.common.dateConvertion(this.subscriptionForm.value.subscription_start_date, 'yyyy-MM-dd'),
           subscription_vendor_id: this.subscriptionForm.value.subscription_vendor_id,
           subscription_vendor_name: this.subscriptionForm.value.subscription_vendor_name,
-          subscription_end_date: this.subscriptionForm.value.subscription_end_date,
+          subscription_end_date: this.common.dateConvertion(this.subscriptionForm.value.subscription_end_date, 'yyyy-MM-dd'),
           subscription_status: this.subscriptionForm.value.subscription_status
         };
 
@@ -131,10 +131,10 @@ export class AddSubscriptionDialog implements OnInit {
           subscription_cost: this.subscriptionForm.value.subscription_cost,
           subscription_type: this.subscriptionForm.value.subscription_type,
           subscription_frequency: this.subscriptionForm.value.subscription_frequency,
-          subscription_start_date: this.subscriptionForm.value.subscription_start_date,
+          subscription_start_date: this.common.dateConvertion(this.subscriptionForm.value.subscription_start_date, 'yyyy-MM-dd'),
           subscription_vendor_id: this.subscriptionForm.value.subscription_vendor_id,
           subscription_vendor_name: this.subscriptionForm.value.subscription_vendor_name,
-          subscription_end_date: this.subscriptionForm.value.subscription_end_date,
+          subscription_end_date: this.common.dateConvertion(this.subscriptionForm.value.subscription_end_date, 'yyyy-MM-dd'),
           subscription_status: this.subscriptionForm.value.subscription_status
         };
 
