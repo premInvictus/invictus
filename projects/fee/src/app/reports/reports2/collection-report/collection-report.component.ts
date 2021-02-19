@@ -757,7 +757,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 							}
 
-							if (repoArray[Number(keys)]['fee_head_data'].length > 0) {
+							if (repoArray[Number(keys)]['fee_head_data'] && repoArray[Number(keys)]['fee_head_data'].length > 0) {
 								let k = 0;
 								let tot = 0;
 								let flag = 0;
