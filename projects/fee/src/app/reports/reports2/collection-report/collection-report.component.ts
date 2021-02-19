@@ -963,7 +963,7 @@ export class CollectionReportComponent implements OnInit {
 							}
 							i++;
 
-							if (Object.keys(obj).length > 0) {
+							if (Object.keys(obj).length > 0 && obj.stu_admission_no) {
 								this.dataset.push(obj);
 							}
 

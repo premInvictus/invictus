@@ -977,6 +977,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'ftr_pay_id': event.value
 			});
 		}
+
+		if (this.selectedMode == '5') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount' : this.studentInfo.student_opening_balance,
+				'ftr_pay_id': event.value
+			});
+		}
 	}
 	checkStatus() {
 		if (this.commonStu.studentdetails.editable_status === '1') {
