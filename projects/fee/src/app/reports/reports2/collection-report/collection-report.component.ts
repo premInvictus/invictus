@@ -910,6 +910,7 @@ export class CollectionReportComponent implements OnInit {
 
 							} else {
 								console.log('in add');
+								if (repoArray[Number(keys)]['stu_admission_no']) {
 								let tot = 0;
 								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 									repoArray[Number(keys)]['rpt_id'];
@@ -960,6 +961,7 @@ export class CollectionReportComponent implements OnInit {
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
+							}
 							}
 							i++;
 
@@ -4398,9 +4400,21 @@ export class CollectionReportComponent implements OnInit {
 		Object.keys(this.filteredAs).forEach(key => {
 			filterArr.push(this.filteredAs[key]);
 		});
-		filterArr.push(
-			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
-			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+		if (this.reportFilterForm.value.from_date && this.reportFilterForm.value.to_date) {
+			filterArr.push(
+				this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
+				this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+		} else if (this.reportFilterForm.value.from_date && !this.reportFilterForm.value.to_date) {
+			filterArr.push(
+				this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y'));
+		} else if (!this.reportFilterForm.value.from_date && this.reportFilterForm.value.to_date) {
+			filterArr.push(
+				this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+		} else {
+			filterArr.push("-");
+
+		}
+		
 		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {

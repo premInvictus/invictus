@@ -369,7 +369,7 @@ export class OutstandingReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			
-			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
+			enableCheckboxSelector: this.reportType === 'aging' || this.reportType=== 'defaulter_month_wise' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
 			},
@@ -3974,6 +3974,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulters list: ') + this.sessionName;
+		} else if (this.reportType === 'defaulter_month_wise') {
+			reportType = new TitleCasePipe().transform('defaulters list Month Wise: ') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'aging') {
@@ -4033,6 +4035,16 @@ export class OutstandingReportComponent implements OnInit {
 				columValue.push(item.name);}
 			}
 			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
+		} else if (this.reportType === 'defaulter_month_wise') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			reportType2 = new TitleCasePipe().transform('defaulter month wise list_') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			for (const item of this.exportColumnDefinitions) {
 				if(!(item.id.includes('checkbox_select'))) {
@@ -4698,7 +4710,10 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
-		} else if (this.reportType === 'feedue') {
+		} else if (this.reportType === 'defaulter_month_wise') {
+			reportType = new TitleCasePipe().transform('defaulter month wise list: ') + this.sessionName;
+		} 
+		else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues Detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'aging') {
 			reportType = new TitleCasePipe().transform('Aging outstanding report: ') + this.sessionName;
