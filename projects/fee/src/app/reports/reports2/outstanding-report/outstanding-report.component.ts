@@ -2079,7 +2079,7 @@ export class OutstandingReportComponent implements OnInit {
 							comparer: (a, b) => {
 								// (optional) comparer is helpful to sort the grouped data
 								// code below will sort the grouped value in ascending order
-								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+								return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -2328,7 +2328,7 @@ export class OutstandingReportComponent implements OnInit {
 							comparer: (a, b) => {
 								// (optional) comparer is helpful to sort the grouped data
 								// code below will sort the grouped value in ascending order
-								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+								return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -3917,7 +3917,11 @@ export class OutstandingReportComponent implements OnInit {
 			comparer: (a, b) => {
 				// (optional) comparer is helpful to sort the grouped data
 				// code below will sort the grouped value in ascending order
-				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+				if(this.reportType == 'defaulter_month_wise') {
+					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+				} else {
+					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+				}
 			},
 			aggregators: this.aggregatearray,
 			aggregateCollapsed: true,
