@@ -12,6 +12,8 @@ import { AccessionReportComponent } from './reports/accession-report/accession-r
 import { IssueReturnReportComponent } from './reports/issue-return-report/issue-return-report.component';
 import { OverDueBookReportComponent } from './reports/over-due-book-report/over-due-book-report.component';
 import { PeriodicalLogReportComponent } from './reports/periodical-log-report/periodical-log-report.component';
+import { BooksArchivedDueOverdueComponent } from './reports/books-archived-due-overdue/books-archived-due-overdue.component';
+import { FlaggedBooksComponent } from './reports/flagged-books/flagged-books.component';
 // import { AddVendorDialog } from './../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 @NgModule({
   imports: [
@@ -20,7 +22,7 @@ import { PeriodicalLogReportComponent } from './reports/periodical-log-report/pe
     LibrarySharedModule,
     AngularSlickgridModule.forRoot()
   ],
-  declarations: [ReportsComponent, AccessionReportComponent, IssueReturnReportComponent, OverDueBookReportComponent, ReportFilterComponent, ReportSortComponent, PeriodicalLogReportComponent],
+  declarations: [ReportsComponent, AccessionReportComponent, IssueReturnReportComponent, OverDueBookReportComponent, ReportFilterComponent, ReportSortComponent, PeriodicalLogReportComponent, BooksArchivedDueOverdueComponent, FlaggedBooksComponent],
   entryComponents: [ReportFilterComponent, ReportSortComponent],
 	providers: [TranslateService],
 })
