@@ -219,12 +219,14 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
                 book_name: item.title ? item.title : '-',
                 book_author: aval ? aval.slice(0,-1) : '-',
                 book_publisher: item.publisher ? item.publisher : '-',
-                book_location : item.location ? item.location : '-'
+                book_location : item.location ? item.location : '-',
+                action:item
               };
               this.VERIFICATION_BATCH_ELEMENT.push(element);
               pos++;
               
             }
+            console.log('this.VERIFICATION_BATCH_ELEMENT',this.VERIFICATION_BATCH_ELEMENT);
             this.batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
             if (this.sort) {
               //this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -253,7 +255,11 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
         book_name : this.VERIFICATION_BATCH_ELEMENT[i].book_name,
         book_author : this.VERIFICATION_BATCH_ELEMENT[i].book_author,
         book_publisher : this.VERIFICATION_BATCH_ELEMENT[i].book_publisher,
+        reserv_id: this.VERIFICATION_BATCH_ELEMENT[i].action.reserv_id,
         book_location : this.VERIFICATION_BATCH_ELEMENT[i].book_location,
+        reserv_no: this.VERIFICATION_BATCH_ELEMENT[i].action.reserv_no,
+        accessionsequence: this.VERIFICATION_BATCH_ELEMENT[i].action.accessionsequence,
+        status:'verified'
       });
     }
     let inputJson = {
