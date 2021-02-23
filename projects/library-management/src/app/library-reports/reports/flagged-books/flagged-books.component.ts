@@ -674,6 +674,21 @@ export class FlaggedBooksComponent implements OnInit {
 					aggregateCollapsed: true,
 					collapsed: false,
 				},
+			},
+			{
+				id: 'substatus', name: 'Substatus', field: 'substatus', sortable: true,
+				filterable: true,
+				width: 150,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'substatus',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
 			}];
 		this.erpCommonService.getReservoirDataFlaged(accessionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -757,6 +772,8 @@ export class FlaggedBooksComponent implements OnInit {
 					obj['vendor_id'] = repoArray[Number(index)]['vendor_details']['vendor_id'] ? repoArray[Number(index)]['vendor_details']['vendor_id'] : '-';
 					obj['vendor_name'] = currentVendorName ? new CapitalizePipe().transform(currentVendorName ) :  '-'; 
 					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']) : '-';
+					obj['substatus'] = repoArray[Number(index)]['reserv_flagged_status'] ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_flagged_status']['status']) : '-';
+
 
 
 					this.dataset.push(obj);
@@ -802,7 +819,7 @@ export class FlaggedBooksComponent implements OnInit {
 
 	bookNoFormatter(row, cell, value, columnDef, dataContext) {
 		if (value !== '-') {
-			return '<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+			return '<div>'
 					+ '<span class="book-no"><a href="javascript:void(0)">' + value + '</a></span>' + '</div>';
 		} else {
 			return '-';

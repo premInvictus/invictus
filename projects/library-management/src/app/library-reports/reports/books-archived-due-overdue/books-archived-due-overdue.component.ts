@@ -366,21 +366,21 @@ export class BooksArchivedDueOverdueComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'section', name: 'Section', field: 'section', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'section',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
+			// {
+			// 	id: 'section', name: 'Section', field: 'section', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'section',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
 			
 			{
 				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
@@ -652,7 +652,7 @@ export class BooksArchivedDueOverdueComponent implements OnInit {
 					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) : '-';
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) : '-';
 					obj['fine'] = repoArray[Number(index)]['reserv_user_logs']['fine'] > 0 ? repoArray[Number(index)]['reserv_user_logs']['fine'] :  '-';
-					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
+					obj['class'] = currentSectionName ? new CapitalizePipe().transform(currentClassName.slice(0, -1) + '-' + currentSectionName) : new CapitalizePipe().transform(currentClassName.slice(0, -1));
 					obj['section'] = new CapitalizePipe().transform(currentSectionName) ? new CapitalizePipe().transform(currentSectionName) : '-';
 					obj['subject'] = new CapitalizePipe().transform(currentSubjectName) ? new CapitalizePipe().transform(currentSubjectName) : '-';
 					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] ? repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] : '-';
@@ -721,7 +721,7 @@ export class BooksArchivedDueOverdueComponent implements OnInit {
 
 	bookNoFormatter(row, cell, value, columnDef, dataContext) {
 		if (value !== '-') {
-			return '<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+			return '<div>'
 					+ '<span class="book-no"><a href="javascript:void(0)">' + value + '</a></span>' + '</div>';
 		} else {
 			return '-';
