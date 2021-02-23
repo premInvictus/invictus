@@ -4,6 +4,13 @@
       <div class="row">
         <div class="col-3">
           <mat-form-field class="form-field" appearance="outline">
+            <mat-select placeholder="Procces Type" formControlName="enrollment_type" required>
+              <mat-option *ngFor="let item of processType" [value]="item.enrollment_type">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field class="form-field" appearance="outline">
             <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionsByClass()">
               <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
             </mat-select>
@@ -31,12 +38,16 @@
     <div class="accumulate-div-bar-code-2">
       <div class="row">
         <div class="col-3" *ngFor="let item of barcodeArray; let i = index">
+          <span class="font-bold bar-tiltle-span"
+            style="font-size: 5px !important;font-weight: bold;">{{(item.au_full_name | titlecase) | truncatetext : 18}}</span>
           <div [class]="getClass2(i)">
             <div class="barcode-print-lib3">
-              <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.em_admission_no" bc-format="CODE128" bc-width="2">
+              <ngx-barcode bc-element-type="img" [bc-value]="classForm.value.enrollment_type === '4' ? '00'+item.em_admission_no
+              : '00'+item.em_provisional_admission_no" bc-format="CODE128" bc-width="2">
               </ngx-barcode>
               <div class="barcode-id-div">
-                <span class="font-bold bar-isbn-span3">{{item.em_admission_no}}</span>
+                <span class="font-bold bar-isbn-span3">{{classForm.value.enrollment_type === '4' 
+                  ? item.em_admission_no : item.em_provisional_admission_no}}</span>
               </div>
             </div>
           </div>
@@ -56,21 +67,24 @@
                 style="font-size: 13px !important;">{{(item.au_full_name | titlecase) | truncatetext : 18}}</span>
             </div>
             <div class="barcode-print-lib">
-              <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.em_admission_no" bc-format="CODE128" bc-width="2">
+              <ngx-barcode bc-element-type="img" [bc-value]="classForm.value.enrollment_type === '4' ? '00'+item.em_admission_no
+              : '00'+item.em_provisional_admission_no" bc-format="CODE128" bc-width="2">
               </ngx-barcode>
             </div>
             <br />
-            <span class="font-size-14 font-bold bar-isbn-span">{{item.em_admission_no}}</span></div> <br>
-          </div>
+            <span class="font-size-14 font-bold bar-isbn-span">{{classForm.value.enrollment_type === '4' 
+              ? item.em_admission_no : item.em_provisional_admission_no}}</span>
+          </div> <br>
         </div>
-        <hr class="margin-left-15 margin-right-15">
-        <div class="row text-center">
-          <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
-          </div>
-          <br>
-          <br>
+      </div>
+      <hr class="margin-left-15 margin-right-15">
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
         </div>
+        <br>
+        <br>
       </div>
     </div>
   </div>
+</div>
