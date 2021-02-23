@@ -1071,7 +1071,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 		const sec: any[] = [];
 		for (const it of this.securityDetails) {
-			console.log("i am it",this.security_details_data[0]['sc_type'].upper_value);
+			// console.log("i am it",this.security_details_data[0]['sc_type'].upper_value);
 			let sam = Number(it.value.security_month_amount);
 			if(!sam && this.security_details_data.length > 0 && this.security_details_data[0]['sc_calculation_type'] == '%') {	
 			sam = Number(it.value.security) ? 
@@ -1079,7 +1079,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						 (Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100 < Number(this.security_details_data[0]['sc_type'].upper_value)? 
 						 Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100: Number(this.security_details_data[0]['sc_type'].upper_value)): Number(it.value.security)*Number(this.security_details_data[0]['sc_value'])/100 ): 0;
 			}
-			console.log("i am sam", sam);
+			// console.log("i am sam", sam);
 						
 			sec.push({
 				session_id: this.session_id.ses_id,
