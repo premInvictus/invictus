@@ -18,6 +18,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
+	cityCountryArray:any = [];
+	cityCountryArray2:any = [];
+	arrayState: any[] = [];
+	arrayDist: any[] = [];
 	configValue: any;
 	disableApiCall = false;
 	customs: any[] = [
@@ -65,6 +69,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.getClassAll();
 		this.getSubjectAll();
 		this.getTypeAll();
+		this.getState();
+		this.getDist();
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -300,6 +306,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				parameter_order: 0
 			})
 		},
+		{
+			formGroup: this.fbuild.group({
+				city_id: '',
+				city_name: '',
+				dist_id: '',
+				dist_name: '',
+				state_id: '',
+				state_name: '',
+				item_main: {}
+			})
+		},
 		];
 	}
 	loadConfiguration($event) {
@@ -384,6 +401,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 24) {
 			this.getParameterTable(this);
 			this.displayedColumns = [ 'parameter', 'type', 'class', 'action', 'modify']
+			this.configFlag = true;
+		} else if(Number(this.configValue) === 25){
+			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'modify'];
+			this.getCityStateDist(this);
 			this.configFlag = true;
 		}
 	}
@@ -879,6 +900,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				data.equs_status = '5';
 				this.deleteEntry(data, 'deleteSubjectStatusId', this.getParameterTable);
 				break;
+			case '25':
+				data.equs_status = '5';
+				console.log("i am data", data);
+				
+				this.deleteEntry(data, 'deleteCityFromCityTable', this.getCityStateDist);
+				break;
 		}
 	}
 	getVaccinations() {
@@ -974,6 +1001,31 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			that.configDataSource.sort = that.sort;
 
 
+		})
+	}
+
+	getCityStateDist(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.sisService.getStateCountryByCity().subscribe((result: any) => {
+			// console.log("i am result", result);
+			that.cityCountryArray = result.data;
+			that.cityCountryArray2 = result.data;
+			let pos = 1;
+			result.data.forEach(element => {
+				that.CONFIG_ELEMENT_DATA.push({
+					position: pos,
+					name: element.cit_name,
+					alias: element.dist_name,
+					placeholder: element.sta_name,
+					action: element
+				})
+				pos++;
+			});
+			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+			that.configDataSource.paginator = that.paginator;
+			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+			
 		})
 	}
 
@@ -1553,6 +1605,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					})
 					break;
 
+					case '25':
+						console.log(this.formGroupArray[value - 1].formGroup.value);
+						if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
+							this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
+							
+						} else {
+							console.log("i am empty");
+							this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
+						}
+						break;
+
 			}
 		}
 	}
@@ -1769,6 +1832,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			});
 			// console.log("i am value", value);
 
+		} else if(Number(this.configValue) === 25) {
+			this.updateFlag = true;
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				city_id: value.cit_id,
+				city_name: value.cit_name,
+				dist_id: value.dist_id,
+				dist_name: value.dist_name,
+				state_id: value.sta_id,
+				state_name: value.sta_name,
+				item_main: value
+			})
 		}
 	}
 	getOrderValue(value) {
@@ -2105,6 +2179,54 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				return item.class_name;
 			}
 		}
+	}
+
+	getCityPerId(item, value) {
+		console.log("i am item", item, value);
+		this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+			city_id: item.cit_id,
+			city_name: item.cit_name,
+			dist_id: item.dist_id,
+			dist_name: item.dist_name,
+			state_id: item.sta_id,
+			state_name: item.sta_name,
+			item_main: item
+		})
+		// this.
+		
+	}
+
+	filterCityStateCountry($event) {
+		// keyCode
+		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+			if ($event.target.value !== '' && $event.target.value.length >= 1 ) {
+				this.cityCountryArray = [];
+				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.cityCountryArray2 = result.data;
+					}
+				});
+			}
+		}
+	}
+
+	getState() {
+		this.sisService.getState().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.arrayState = result.data;
+				}
+			}
+		);
+	}
+	getDist() {
+		this.sisService.getDistrict().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.arrayDist = result.data;
+				}
+			}
+		);
 	}
 }
 // export class ConfirmValidParentMatcher implements ErrorStateMatcher {

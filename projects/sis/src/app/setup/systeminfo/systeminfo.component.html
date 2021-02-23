@@ -42,6 +42,7 @@
                                     <mat-option value="22">Student Tags</mat-option>
                                     <mat-option value="23">Custom Questions</mat-option>
                                     <mat-option value="24">Admission Test Parameters</mat-option>
+                                    <mat-option value="25">City</mat-option>
                                  </mat-select>
                               </mat-form-field>
                               <div *ngIf="configValue == 1">
@@ -562,7 +563,48 @@
                                      </mat-form-field>
                                  </form>
                               </div>
-                              <div *ngIf="configValue < 25">
+                              <div *ngIf="configValue == 25">
+                                 <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>City</mat-label>
+                                       <input type="text" matInput placeholder="City" formControlName="city_name" required
+                                          [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
+                                          [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="autoGroup.showPanel ? filterCityStateCountry($event): null" (keyup.enter) = 'autoGroup.showPanel = !autoGroup.showPanel;'>
+                                       <mat-autocomplete #autoGroup="matAutocomplete" autocomplete="off">
+                                          <mat-option (onSelectionChange)="getCityPerId(item)" (click)="getCityPerId(item, configValue)"
+                                             *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
+                                             {{item.sta_name}} - {{item.dist_name}} - {{item.cou_name}}</mat-option>
+                                       </mat-autocomplete>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>District</mat-label>
+                                       <mat-select formControlName="dist_id" placeholder="District" required 
+                                         [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
+                                         <mat-option>Please Select</mat-option>
+                                         <mat-option *ngFor="let item of arrayDist" [value]="item.dist_id">
+                                           {{item.dist_name}}
+                                         </mat-option>
+                                       </mat-select>
+                                       <mat-error>
+                                         This field is required
+                                       </mat-error>
+                                     </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>State</mat-label>
+                                       <mat-select formControlName="state_id" placeholder="State" required 
+                                         [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
+                                         <mat-option>Please Select</mat-option>
+                                         <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                                           {{item.sta_name}}
+                                         </mat-option>
+                                       </mat-select>
+                                       <mat-error>
+                                         This field is required
+                                       </mat-error>
+                                     </mat-form-field>
+                                 </form>
+                              </div>
+                              <div *ngIf="configValue < 26">
                                  <div class="text-center margin-top-15">
                                     <button *ngIf="!updateFlag" mat-raised-button class="btn-success"
                                        [disabled]="disableApiCall" (click)="addConfiguration(configValue)">Add</button>
@@ -605,7 +647,7 @@
                                                          <!-- Position Column -->
                                                          <ng-container matColumnDef="position">
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                               S.No
+                                                               S.No 
                                                             </th>
                                                             <td mat-cell *matCellDef="let item">
                                                                {{ item.position }}
@@ -614,7 +656,7 @@
                                                          <!-- Name Column -->
                                                          <ng-container matColumnDef="name">
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                               {{firstHeaderArray[configValue-1]}}
+                                                               {{configValue != '25' ? firstHeaderArray[configValue-1] : 'City'}}
                                                             </th>
                                                             <td mat-cell *matCellDef="let item">
                                                                {{ item.name }}
@@ -647,7 +689,7 @@
                                                          <!-- Class Column -->
                                                          <ng-container matColumnDef="alias">
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                               {{secondHeaderArray[configValue-1]}}
+                                                               {{ configValue != '25' ? secondHeaderArray[configValue-1]: 'District'}}
                                                             </th>
                                                             <td mat-cell *matCellDef="let item">
                                                                {{ item.alias }}
@@ -664,7 +706,7 @@
                                                          </ng-container>
                                                          <ng-container matColumnDef="placeholder">
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                               Placeholder
+                                                               {{ configValue != '25' ? 'Placeholder' : 'State'}}
                                                             </th>
                                                             <td mat-cell *matCellDef="let item">
                                                                {{ item.placeholder }}
