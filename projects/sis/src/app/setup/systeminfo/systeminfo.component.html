@@ -43,6 +43,7 @@
                                     <mat-option value="23">Custom Questions</mat-option>
                                     <mat-option value="24">Admission Test Parameters</mat-option>
                                     <mat-option value="25">City</mat-option>
+                                    <mat-option value="26">Banks</mat-option>
                                  </mat-select>
                               </mat-form-field>
                               <div *ngIf="configValue == 1">
@@ -604,7 +605,20 @@
                                      </mat-form-field>
                                  </form>
                               </div>
-                              <div *ngIf="configValue < 26">
+                              <div *ngIf="configValue == 26">
+                                 <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Name</mat-label>
+                                       <input type="text" matInput placeholder="Name" formControlName="tb_name" required>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Alias</mat-label>
+                                       <input type="text" matInput placeholder="Alias" formControlName="tb_alias" required>
+                                    </mat-form-field>
+                                    
+                                 </form>
+                              </div>
+                              <div *ngIf="configValue < 27">
                                  <div class="text-center margin-top-15">
                                     <button *ngIf="!updateFlag" mat-raised-button class="btn-success"
                                        [disabled]="disableApiCall" (click)="addConfiguration(configValue)">Add</button>

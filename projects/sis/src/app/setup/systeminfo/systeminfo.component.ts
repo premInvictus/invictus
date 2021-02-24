@@ -317,6 +317,14 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				item_main: {}
 			})
 		},
+		{
+			formGroup: this.fbuild.group({
+				tb_id: '',
+				tb_name: '',
+				tb_alias: '',
+				
+			})
+		},
 		];
 	}
 	loadConfiguration($event) {
@@ -405,6 +413,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if(Number(this.configValue) === 25){
 			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'modify'];
 			this.getCityStateDist(this);
+			this.configFlag = true;
+		} else if(Number(this.configValue) === 26){
+			this.displayedColumns = ['position', 'name', 'alias', 'modify'];
+			this.getBanksDetail(this);
 			this.configFlag = true;
 		}
 	}
@@ -902,10 +914,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				break;
 			case '25':
 				data.equs_status = '5';
-				console.log("i am data", data);
-				
 				this.deleteEntry(data, 'deleteCityFromCityTable', this.getCityStateDist);
 				break;
+			case '26':
+				this.deleteEntry(data, 'deleteBanksSoft', this.getBanksDetail)
 		}
 	}
 	getVaccinations() {
@@ -1018,6 +1030,28 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					name: element.cit_name,
 					alias: element.dist_name,
 					placeholder: element.sta_name,
+					action: element
+				})
+				pos++;
+			});
+			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+			that.configDataSource.paginator = that.paginator;
+			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+			
+		})
+	}
+
+	getBanksDetail(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.sisService.getBanks().subscribe((result: any) => {
+			console.log("i am result", result);
+			let pos = 1;
+			result.data.forEach(element => {
+				that.CONFIG_ELEMENT_DATA.push({
+					position: pos,
+					name: element.tb_name,
+					alias: element.tb_alias,
 					action: element
 				})
 				pos++;
@@ -1605,16 +1639,19 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					})
 					break;
 
-					case '25':
-						console.log(this.formGroupArray[value - 1].formGroup.value);
-						if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
-							this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
-							
-						} else {
-							console.log("i am empty");
-							this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
-						}
-						break;
+				case '25':
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
+						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
+						
+					} else {
+						console.log("i am empty");
+						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
+					}
+					break;
+				case '26':
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
+					break;
 
 			}
 		}
@@ -1843,6 +1880,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				state_name: value.sta_name,
 				item_main: value
 			})
+		} else if(Number(this.configValue) == 26) {
+			this.updateFlag = true;
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				tb_id: value.tb_id,
+				tb_name: value.tb_name,
+				tb_alias: value.tb_alias,
+			})
 		}
 	}
 	getOrderValue(value) {
@@ -2031,6 +2075,19 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
 					// this.updateEntry('', 'getParameterForRemarks', this.getParameterTable);
 					
+					break;
+				case '25':
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
+						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
+						
+					} else {
+						console.log("i am empty");
+						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
+					}
+					break;
+				case '26':
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
 					break;
 			}
 		}

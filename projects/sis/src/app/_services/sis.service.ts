@@ -1205,4 +1205,18 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setup/updateclassintable', value);
 	}
+
+	getBanks() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/setup/getBanks');
+	}
+
+	deleteBanksSoft(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/deleteBanksSoft', value);
+	}
+	insertOrUpdateBankDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/insertOrUpdateBankDetails', value);
+	}
 }
