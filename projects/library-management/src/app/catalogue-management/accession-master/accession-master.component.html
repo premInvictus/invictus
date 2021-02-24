@@ -77,6 +77,10 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Status </th>
                   <td mat-cell *matCellDef="let item"> {{item.status | titlecase}} </td>
                 </ng-container>
+                <ng-container matColumnDef="verification">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Verification </th>
+                  <td mat-cell *matCellDef="let item"> {{item.verification | titlecase}} </td>
+                </ng-container>
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Action </th>
                   <td mat-cell *matCellDef="let item">

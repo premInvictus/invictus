@@ -1721,6 +1721,14 @@ export class SetupComponent implements OnInit {
         }
 
         console.log(this.settingForm.value, this.currentGsetup);
+        if(this.settingForm.value && this.settingForm.value.reset_physical_verification != ''){
+            console.log('reset_physical_verification----------------',this.settingForm.value.reset_physical_verification);
+            this.erpCommonService.resetReservoirVerification({ses_id:this.settingForm.value.reset_physical_verification,status:'pending'}).subscribe((result:any) => {
+                if(result && result.status == 'ok'){
+                    this.commonService.showSuccessErrorMessage(result.message, 'success');
+                }
+            })
+        }
         this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
             if (result && result.status === 'ok') {
                 this.disabledApiButton = false;

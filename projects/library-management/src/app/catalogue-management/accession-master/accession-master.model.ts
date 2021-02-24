@@ -6,5 +6,6 @@ export interface AccessionMasterModel {
     publisher: any;
     location: any;
     status: any;
+    verification:any;
     action: any;
 }

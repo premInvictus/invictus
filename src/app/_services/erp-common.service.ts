@@ -165,6 +165,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);
 	}
+	getReservoirDataFlaged(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataFlaged', value);
+	}
 	getBookLogsPerBook(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getBookLogsPerBook', value);
@@ -516,6 +520,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/dashboard/getIssueReturnReport', value);
 	}
+	getDueOverDue(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getDueOverDue', value);
+	}
 	getSession() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/session');
@@ -800,6 +808,10 @@ export class ErpCommonService {
 	getFeeMonths(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
+	resetReservoirVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/resetReservoirVerification', value);
 	}
 }
 
