@@ -129,7 +129,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	url: any;
 	imageUrl: any = '';
 	enableMultiFlag = false;
-	displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location', 'status', 'action'];
+	displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location', 'status','verification', 'action'];
 	BOOK_ELEMENT_DATA: AccessionMasterModel[] = [];
 	bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 	totalRecords: number;
@@ -149,6 +149,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	addBookContainer = false;
 	bookForm: FormGroup;
 	searchForm: FormGroup;
+	session:any;
 	openDeleteModal(id) {
 		const itemL: any = {};
 		itemL.id = id;
@@ -176,6 +177,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		localStorage.removeItem('invoiceBulkRecords');
+		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getLanguages();
 		this.getGenres();
 		this.builForm();
@@ -586,7 +588,13 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			if(authName && authName.length > 0) {
 				authName = authName.substring(0, authName.length - 1);
 			} }
-			
+			let tempverification = '';
+			if(item.verfication_log && item.verfication_log.length > 0){
+				let findex = item.verfication_log.findIndex(e => e.ses_id == this.session.ses_id);
+				if(findex != -1){
+					tempverification = item.verfication_log[findex].status;
+				}
+			}
 			this.BOOK_ELEMENT_DATA.push({
 				sr_no: i + 1,
 				book_name: item.title ? item.title : '',
@@ -595,6 +603,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				publisher: item.publisher ? item.publisher :'',
 				location: item.location ? item.location : '',
 				status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+				verification: tempverification,
 				action: item
 			});
 			i++;
