@@ -248,7 +248,7 @@ export class SchoolDashboardComponent implements OnInit {
 							this.totalcashatbank = amt;
 						} else if (value.pay_name === 'Cheque') {
 							this.totalcheque = amt;
-						} else if (value.pay_name === 'Debit/Credit Card') {
+						} else if (value.pay_name === 'Debit/Credit Card' || value.pay_name === 'Debit/ Credit Card') {
 							this.totaldccard = amt;
 						} else if (value.pay_name === 'NEFT/ RTGS/ IMPS') {
 							this.totalimps = amt;
