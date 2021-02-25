@@ -4307,6 +4307,9 @@ export class SalaryComputationComponent implements OnInit {
 			worksheet.addRow(obj);
 		}
 
+		worksheet.columns.forEach(column => {
+			column.width = 15
+		  })
 
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
