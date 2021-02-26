@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Generate Bill</span>
+          </div>
+        </div>
+        <div class="col-6 ">
+          <mat-tab-group [selectedIndex]="tabSelectedIndex" class="mat-tab-customize-class-2"
+            (selectedIndexChange)="setTabValue($event)">
+            <mat-tab label="Individual">
+            </mat-tab>
+            <mat-tab label="Bulk">
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card style="padding-top: 1px;">
+      <div class="col-12 ">
+        <ng-container *ngIf="tabSelectedIndex === 0">
+          <app-generate-bill></app-generate-bill>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 1">
+          <app-generate-bill-bulk></app-generate-bill-bulk>
+        </ng-container>
+      </div>
+    </mat-card>
+  </div>
+</div>

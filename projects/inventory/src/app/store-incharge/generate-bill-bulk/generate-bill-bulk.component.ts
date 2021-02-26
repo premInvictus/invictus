@@ -7,15 +7,18 @@ import { saveAs } from 'file-saver';
 import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+
 @Component({
-  selector: 'app-generate-bill',
-  templateUrl: './generate-bill.component.html',
-  styleUrls: ['./generate-bill.component.css']
+  selector: 'app-generate-bill-bulk',
+  templateUrl: './generate-bill-bulk.component.html',
+  styleUrls: ['./generate-bill-bulk.component.css']
 })
-export class GenerateBillComponent implements OnInit {
+export class GenerateBillBulkComponent implements OnInit {
+
   searchForm: FormGroup;
   payForm: FormGroup;
   itemSearchForm: FormGroup;
+  studentSearchForm: FormGroup;
   userData: any = '';
   itemData: any = [];
   itemLogData: any = [];
@@ -24,6 +27,7 @@ export class GenerateBillComponent implements OnInit {
   previewTableFlag = false;
   itemArray: any = [];
   tableArray: any = [];
+  tableArrayStudent: any = [];
   schoolInfo: any;
   formGroupArray: any[] = [];
   tableReciptArray: any[] = [];
@@ -55,6 +59,7 @@ export class GenerateBillComponent implements OnInit {
     this.getSchool();
     this.formGroupArray = [];
     this.getGlobalSettingReplace();
+    this.getGlobalSetting();
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -68,6 +73,9 @@ export class GenerateBillComponent implements OnInit {
       due_date: '',
       issue_date: '',
       return_date: ''
+    });
+    this.studentSearchForm = this.fbuild.group({
+      searchId: ''
     });
     this.formGroupArray = [];
     this.payForm = this.fbuild.group({
@@ -106,42 +114,30 @@ export class GenerateBillComponent implements OnInit {
           }
         });
   }
+  addStudent(data){
+    const findex = this.tableArrayStudent.findIndex(e => e.au_login_id == data.au_login_id);
+    if(findex == -1){
+      this.tableArrayStudent.push(data);
+    } else {
+      this.common.showSuccessErrorMessage('Student already exist','error');
+    }   
+  }
+  removeStudent(i) {
+    this.tableArrayStudent.splice(i, 1);
+  }
   searchUser() {
-    if (this.searchForm && this.searchForm.value.searchId) {
-      const au_role_id = this.searchForm.value.user_role_id;
-      const au_admission_no = this.searchForm.value.searchId;
+    if (this.studentSearchForm && this.studentSearchForm.value.searchId) {
+      const au_role_id = '4'
+      const au_admission_no = this.studentSearchForm.value.searchId;
       if (au_role_id === '4') {
-        this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id }).subscribe((result: any) => {
+        this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id,withwallet:true }).subscribe((result: any) => {
           if (result && result.status === 'ok') {
-            this.userData = result.data ? result.data[0] : '';
-            this.itemData = [];
-            this.itemLogData = [];
-          } else {
-            this.userData = [];
-            this.itemData = [];
-            this.itemLogData = [];
-            this.common.showSuccessErrorMessage('Student not found', 'error');
-          }
-        });
-      } else if (au_role_id === '3') {
-        this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId), emp_login_id: { $ne: '' } }).subscribe((result: any) => {
-          if (result) {
-            var resultJson = {
-              emp_id: result.emp_id,
-              au_login_id: result.emp_login_id,
-              au_role_id: 3,
-              au_full_name: result.emp_name,
-              au_mobile: result.emp_personal_detail && result.emp_personal_detail.contact_detail ? result.emp_personal_detail.contact_detail.primary_mobile_no : ''
+            this.userData = result.data ? result.data : '';
+            if(result.data.length > 0){
+              result.data.forEach(element => {
+                this.addStudent(element);
+              });
             }
-            //console.log('resultJson--', resultJson);
-            this.userData = resultJson;
-            this.itemData = [];
-            this.itemLogData = [];
-          } else {
-            this.userData = [];
-            this.itemData = [];
-            this.itemLogData = [];
-            this.common.showSuccessErrorMessage('Employee not found', 'error');
           }
         });
       }
@@ -311,65 +307,21 @@ export class GenerateBillComponent implements OnInit {
       this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
-  async getWallets() {
-    this.wallet_details = {
-      balancetotal: 0,
-      balancetype:'',
-      submitflag:false,
-      min_wallet_balance:0
+  async getGlobalSetting(){
+    let finalJson = {
+      "gs_alias": [
+        "min_wallet_balance"
+      ]
     };
-    if(this.payForm.value.pay_id == 'wallet') {
-      let finalJson = {
-        "gs_alias": [
-          "min_wallet_balance"
-        ]
-      };
-      await this.inventory.getGlobalSettingReplace(finalJson).toPromise().then((result: any) => {
-        if (result && result.status === 'ok') {
-          if(result.data[0].gs_value) {
-            this.wallet_details.min_wallet_balance = parseInt(result.data[0].gs_value);
-  
-          }
+    await this.inventory.getGlobalSettingReplace(finalJson).toPromise().then((result: any) => {
+      if (result && result.status === 'ok') {
+        if(result.data[0].gs_value) {
+          this.wallet_details.min_wallet_balance = parseInt(result.data[0].gs_value);
+
         }
-      });
-      this.inventory.getWallets({ login_id: this.userData.au_login_id }).toPromise().then((result: any) => {
-        if (result && result.status === 'ok') {
-          let total_credit = 0;
-          let total_debit = 0;
-          for (const item of result.data) {
-            if(item.w_amount_type == 'credit'){
-              total_credit += parseInt(item.w_amount);
-            }
-            if(item.w_amount_type == 'debit'){
-              total_debit += parseInt(item.w_amount);
-            }
-          }
-          this.wallet_details.balancetotal = total_credit - total_debit;
-          if(this.wallet_details.balancetotal > 0) {
-            this.wallet_details.balancetype = '+';
-          } else if(this.wallet_details.balancetotal < 0) {
-            this.wallet_details.balancetype = '';
-          }
-          let grandTotal= 0; 
-          for (let item of this.formGroupArray) {
-            if (item.formGroup.valid) {
-              if (item.formGroup.value.item_location !== '') {
-                grandTotal = Number(grandTotal) + Number(item.formGroup.value.total_price);
-              }
-            }
-          }
-          if((this.wallet_details.balancetotal-(this.wallet_details.min_wallet_balance)) >= grandTotal){
-            this.wallet_details.submitflag = true;
-          }
-          console.log('this.wallet_details',this.wallet_details);
-        } else {
-          this.common.showSuccessErrorMessage(result.data, 'error');
-        }
-      });
-    } else if(this.payForm.value.pay_id == 'cash') {
-      this.wallet_details.submitflag = true;
-    }
-	}
+      }
+    });
+  }
   saveItem() {
     let grandTotal = 0;
     var filterJson: any = {};
@@ -392,87 +344,110 @@ export class GenerateBillComponent implements OnInit {
       }
       index++;
     }
-    if (updateFlag && itemAssign.length > 0) {
+    if (updateFlag && itemAssign.length > 0 && this.tableArrayStudent.length > 0) {
       for (let item of itemAssign) {
         grandTotal = Number(grandTotal) + Number(item.total_price);
       }
-      finalJson = {
-        buyer_details: this.userData,
-        bill_details: itemAssign,
-        bill_total: grandTotal
+      let param:any[] = [];
+      let walletvalidation = true;
+      for (let index = 0; index < this.tableArrayStudent.length; index++) {
+        const element = this.tableArrayStudent[index];
+        let tempamt = Number(element.w_balance) + grandTotal;
+        if(this.wallet_details.min_wallet_balance < tempamt){
+          param.push(
+            {
+              buyer_details: element,
+              bill_details: itemAssign,
+              bill_total: grandTotal
+            }
+          )
+        } else {
+          walletvalidation = false;
+          break;
+        }
       }
       filterJson = {
         emp_id: Number(this.currentUser.login_id),
         item_details: itemAssign,
       }
-      this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
-        if (result) {
-          let i = 0;
-          for (let item of result.bill_details) {
-            result.bill_details[i].item_name = new TitleCasePipe().transform(item.item_name);
-            result.bill_details[i].total_price = new IndianCurrency().transform(item.total_price);
-            i++;
-          }
-          let billArray: any = {};
-          billArray['bill_id'] = result.bill_id;
-          billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
-          billArray['bill_total'] = new IndianCurrency().transform(result.bill_total);
-          billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
-          billArray['bill_created_by'] = this.currentUser.full_name;
-          billArray['bill_details'] = result.bill_details;
-          billArray['school_name'] = this.schoolInfo.school_name;
-          billArray['school_logo'] = this.schoolInfo.school_logo;
-          billArray['school_address'] = this.schoolInfo.school_address;
-          billArray['school_phone'] = this.schoolInfo.school_phone;
-          billArray['school_city'] = this.schoolInfo.school_city;
-          billArray['school_state'] = this.schoolInfo.school_state;
-          billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
-          billArray['school_website'] = this.schoolInfo.school_website;
-          billArray['name'] = result.buyer_details.au_full_name;
-          billArray['mobile'] = result.buyer_details.au_mobile;
-          if (result.buyer_details.au_role_id === 3) {
-            billArray['adm_no'] = result.buyer_details.emp_id;
-            billArray['class_name'] = '';
-            billArray['role_id'] = 'Employee Id';
-          } else {
-            billArray['adm_no'] = result.buyer_details.em_admission_no;
-            billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
-            billArray['role_id'] = 'Admission No.';
-          }
-          if(this.payForm.value.pay_id == 'wallet') {
-            const inputJson:any={};
-            inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
-            inputJson.ftr_ref_no_of_items=result.bill_details.length;
-            inputJson.ftr_ref_id=result.bill_no;
-            inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
-            inputJson.ftr_amount=result.bill_total;
-            inputJson.ftr_amount_type='debit';
-            inputJson.login_id=this.userData.au_login_id;
-            this.inventory.insertWallets(inputJson).subscribe((result:any)=>{
-              if(result && result.status == 'ok'){
-                this.common.showSuccessErrorMessage('Ordered placed successfully','success');
-              } else {
-                this.common.showSuccessErrorMessage(result.message,'error');
-              }
-            })
-          } else {
-
-          }
-          this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
-            if (result && result.status == 'ok') {
-              const length = result.data.fileUrl.split('/').length;
-              saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
-              this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
-                if (result) {
-                  this.common.showSuccessErrorMessage(result.message, 'success');
-                }
+      if(param.length > 0 && walletvalidation) {
+        this.inventory.insertStoreBillBulk(param).subscribe((results: any) => {
+          if (results) {
+            if(results.length > 0) {
+              let walletparam:any[] = [];
+              results.forEach(result => {
+                const inputJson:any={};
+                inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+                inputJson.ftr_ref_no_of_items=result.bill_details.length;
+                inputJson.ftr_ref_id=result.bill_no;
+                inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
+                inputJson.ftr_amount=result.bill_total;
+                inputJson.ftr_amount_type='debit';
+                inputJson.login_id=this.userData.au_login_id;
+                walletparam.push(inputJson);
               });
-            }
-          })
-          this.resetItem();
-          this.previewTableFlag = false;
-        }
-      });
+              if(walletparam.length > 0){
+                this.inventory.insertWalletsBulk(walletparam).subscribe((result:any)=>{
+                  if(result && result.status == 'ok'){
+                    this.common.showSuccessErrorMessage('Ordered placed successfully','success');
+                  } else {
+                    this.common.showSuccessErrorMessage(result.message,'error');
+                  }
+                })
+              }
+              let billparam:any[]=[];
+              results.forEach(result => {
+                let i = 0;
+                for (let item of result.bill_details) {
+                  result.bill_details[i].item_name = new TitleCasePipe().transform(item.item_name);
+                  result.bill_details[i].total_price = new IndianCurrency().transform(item.total_price);
+                  i++;
+                }
+                let billArray: any = {};
+                billArray['bill_id'] = result.bill_id;
+                billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
+                billArray['bill_total'] = new IndianCurrency().transform(result.bill_total);
+                billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
+                billArray['bill_created_by'] = this.currentUser.full_name;
+                billArray['bill_details'] = result.bill_details;
+                billArray['school_name'] = this.schoolInfo.school_name;
+                billArray['school_logo'] = this.schoolInfo.school_logo;
+                billArray['school_address'] = this.schoolInfo.school_address;
+                billArray['school_phone'] = this.schoolInfo.school_phone;
+                billArray['school_city'] = this.schoolInfo.school_city;
+                billArray['school_state'] = this.schoolInfo.school_state;
+                billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
+                billArray['school_website'] = this.schoolInfo.school_website;
+                billArray['name'] = result.buyer_details.au_full_name;
+                billArray['mobile'] = result.buyer_details.au_mobile;
+                billArray['adm_no'] = result.buyer_details.em_admission_no;
+                billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
+                billArray['role_id'] = 'Admission No.';
+                billparam.push(billArray);
+              })
+              if(billparam.length > 0){
+                billparam.forEach(billArray => {
+                  this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
+                    if (result && result.status == 'ok') {
+                      const length = result.data.fileUrl.split('/').length;
+                      saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+                      this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
+                        if (result) {
+                          this.common.showSuccessErrorMessage(result.message, 'success');
+                        }
+                      });
+                    }
+                  })
+                });
+                this.resetItem();
+                this.previewTableFlag = false;
+              }
+            }  
+          }
+        });
+      } else {
+        this.common.showSuccessErrorMessage('wallet amount exceeds minimum balance','error');
+      }
     } else {
       this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }

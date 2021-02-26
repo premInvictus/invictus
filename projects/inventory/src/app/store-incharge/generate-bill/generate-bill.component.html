@@ -3,8 +3,24 @@
     <mat-card>
       <form [formGroup]="searchForm">
         <div class="row">
-          <div class="col-7 margin-top-15">
-            <span class="font-size-24">Generate Bill</span>
+          <div class="col-5 margin-top-15">
+            <!-- <span class="font-size-24">Generate Bill</span> -->
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input type="text" matInput placeholder="Enter Location" formControlName="location_id" required
+                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup2"
+                (keyup)="searchLocationByName($event)">
+              <mat-autocomplete #autoGroup2="matAutocomplete">
+                <mat-option (onSelectionChange)="getLocationId(item)" (keyup.enter)="getLocationId(item)"
+                  (click)="getLocationId(item)" *ngFor="let item of locationArray" [value]="item?.location_id">
+                  {{item?.location_name}}</mat-option>
+              </mat-autocomplete>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
           </div>
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
