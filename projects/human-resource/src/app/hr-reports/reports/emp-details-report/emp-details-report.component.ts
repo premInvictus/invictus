@@ -312,6 +312,12 @@ export class EmpDetailsReportComponent implements OnInit {
         maxWidth: 40
       },
       {
+        id: 'emp_code_no', name: 'Employee Number', field: 'emp_code_no', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80
+      },
+      {
         id: 'full_name', name: 'Full Name', field: 'full_name', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
@@ -516,16 +522,17 @@ export class EmpDetailsReportComponent implements OnInit {
           const obj: any = {};
           obj['id'] = (index + 1);
           obj['srno'] = (index + 1);
+          obj['emp_code_no'] = item.emp_code_no;
           obj['full_name'] = item.emp_name ? new CapitalizePipe().transform(item.emp_name) : '-';
           obj['designation'] = item.emp_designation_detail ? new CapitalizePipe().transform(item.emp_designation_detail.name) : '-';
           obj['employee_type'] = item.emp_category_detail ? new CapitalizePipe().transform(item.emp_category_detail.cat_name) : '-';
           obj['department'] = item.emp_department_detail ? new CapitalizePipe().transform(item.emp_department_detail.dpt_name) : '-';
           obj['wing'] = item.emp_wing_detail ? new CapitalizePipe().transform(item.emp_wing_detail.name) : '-';
-          obj['pri_mobile'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.primary_mobile_no : '-';
-          obj['sec_mobile'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.secondary_mobile_no : '-';
-          obj['whatsup_no'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.whatsup_no : '-';
-          obj['email_id'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.email_id : '-';
-          obj['address'] = item.emp_personal_detail.address_detail ? item.emp_personal_detail.address_detail.address : '-';
+          obj['pri_mobile'] = item.emp_personal_detail.contact_detail && item.emp_personal_detail.contact_detail.primary_mobile_no ? item.emp_personal_detail.contact_detail.primary_mobile_no : '-';
+          obj['sec_mobile'] = item.emp_personal_detail.contact_detail && item.emp_personal_detail.contact_detail.secondary_mobile_no ? item.emp_personal_detail.contact_detail.secondary_mobile_no : '-';
+          obj['whatsup_no'] = item.emp_personal_detail.contact_detail && item.emp_personal_detail.contact_detail.whatsup_no ? item.emp_personal_detail.contact_detail.whatsup_no : '-';
+          obj['email_id'] = item.emp_personal_detail.contact_detail && item.emp_personal_detail.contact_detail.email_id ? item.emp_personal_detail.contact_detail.email_id : '-';
+          obj['address'] = item.emp_personal_detail.address_detail && item.emp_personal_detail.address_detail.address ? item.emp_personal_detail.address_detail.address : '-';
           obj['city'] = item.emp_personal_detail.address_detail && item.emp_personal_detail.address_detail.city.cit_name &&
             item.emp_personal_detail.address_detail.state.sta_name ? item.emp_personal_detail.address_detail.city.cit_name + ',' +
             item.emp_personal_detail.address_detail.state.sta_name + ' - ' + item.emp_personal_detail.address_detail.pin : '-';
@@ -562,7 +569,9 @@ export class EmpDetailsReportComponent implements OnInit {
               item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-'
           for (const item of this.documentArray) {
             for (const detz of item.files_data) {
-              obj[item.document_name] = detz.file_url;
+              console.log("i am here", detz);
+              
+              obj[item.document_name] = detz && detz.file_url ? detz.file_url: '';
             }
           }
           this.dataset.push(obj);
