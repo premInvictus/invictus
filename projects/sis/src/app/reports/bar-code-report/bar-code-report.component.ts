@@ -88,6 +88,13 @@ export class BarCodeReportComponent implements OnInit {
         if (res && res.status === 'ok') {
           this.barcodeArray = [];
           this.barcodeArray = res.data;
+          this.barcodeArray.forEach(e => {
+            if(e.au_process_type == '3') {
+              e.em_provisional_admission_no = 'P'+e.em_provisional_admission_no;
+            }
+          });
+          console.log(this.barcodeArray);
+
         }
       });
     } else {

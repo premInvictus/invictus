@@ -1,0 +1,184 @@
+<!-- <div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-10 margin-top-15">
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input type="text" matInput placeholder="Enter Location" formControlName="location_id" required
+                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup2"
+                (keyup)="searchLocationByName($event)">
+              <mat-autocomplete #autoGroup2="matAutocomplete">
+                <mat-option (onSelectionChange)="getLocationId(item)" (keyup.enter)="getLocationId(item)"
+                  (click)="getLocationId(item)" *ngFor="let item of locationArray" [value]="item?.location_id">
+                  {{item?.location_name}}</mat-option>
+              </mat-autocomplete>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div> -->
+<div class="row">
+  <div class="col-6 ">
+    <form [formGroup]="studentSearchForm">
+      <mat-card class="mat-card-108">
+        <div class="row">
+          <div class="col-12">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>
+                    {{'Search Student By Admission No'}}
+                  </mat-label>
+                  <input matInput
+                    [placeholder]="'Search Student By Admission No'"
+                    formControlName="searchId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  (click)="searchUser()" style="width: auto !important;">
+                  Add To List
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row margin-top-15" [hidden]="!(tableArrayStudent.length > 0)">
+          <div class="col-12 remove-col-padding">
+            <table class="table-100 custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Adm.</th>
+                  <th class="custom-th">Name</th>
+                  <th class="custom-th ">Class</th>
+                  <th class="custom-th">Wallet Balance(<i class="fas fa-rupee-sign"></i>)</th>
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of tableArrayStudent; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="10%" class="custom-td"><span>{{item?.em_admission_no}}</span></td>
+                    <td width="25%" class="custom-td text-left"><span>{{item?.au_full_name | titlecase}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.class_name}} - {{item?.sec_name}}</span></td>
+                    <td width="15%" class="custom-td">{{item?.w_balance}}</td>
+                    <td width="10%" class="custom-td">
+                      <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeStudent(i)"></i>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- <br />
+        <div class="row text-center" *ngIf="tableArray.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="previewSaveItem()"
+              [disabled]="disabledApiButton">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetItem()">
+              Reset
+            </button>
+          </div>
+        </div> -->
+        <div class="text-center" *ngIf="tableArrayStudent.length == 0">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'Please Search Student'"></app-no-data>
+        </div>
+      </mat-card>
+    </form>
+  </div>
+  <div class="col-6 ">
+    <form [formGroup]="itemSearchForm">
+      <mat-card class="mat-card-108">
+        <div class="row">
+          <div class="col-12">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Scan Item Code</mat-label>
+                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  (click)="searchItemData()" style="width: auto !important;">
+                  Add To List
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row margin-top-15" [hidden]="!(tableArray.length > 0)">
+          <div class="col-12 remove-col-padding">
+            <table class="table-100 custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Item Code</th>
+                  <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Item Price</th>
+                  <th class="custom-th">Item Quantity</th>
+                  <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of tableArray; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
+                    <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                    <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
+                    <td width="20%" class="custom-td">
+                      <form [formGroup]="formGroupArray[i].formGroup">
+                        <!-- <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Item Quantity</mat-label> -->
+                        <input matInput type="number" formControlName="item_quantity" required
+                          placeholder="Please Enter Item Quantity" (change)="setTotal(item, i)" />
+                        <!-- </mat-form-field> -->
+                      </form>
+                    </td>
+                    <td width="10%" class="custom-td">{{getTotalPrice(i)}}</td>
+                    <td width="10%" class="custom-td">
+                      <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- <br />
+        <div class="row text-center" *ngIf="tableArray.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="previewSaveItem()"
+              [disabled]="disabledApiButton">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetItem()">
+              Reset
+            </button>
+          </div>
+        </div> -->
+        <div class="text-center" *ngIf="tableArray.length == 0">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'Please Search Items To Add In Cart'"></app-no-data>
+        </div>
+      </mat-card>
+    </form>
+  </div>
+  <div class="col-12">
+    <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton" *ngIf="tableArray.length > 0 && tableArrayStudent.length > 0">Submit
+      & Print</button>
+  </div>
+</div>
