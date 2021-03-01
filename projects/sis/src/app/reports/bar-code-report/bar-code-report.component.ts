@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService } from 'src/app/_services';
-import { SisService, CommonAPIService,SmartService } from 'projects/sis/src/app/_services';
+import { SisService, CommonAPIService, SmartService } from 'projects/sis/src/app/_services';
 
 @Component({
   selector: 'app-bar-code-report',
@@ -18,6 +18,10 @@ export class BarCodeReportComponent implements OnInit {
   promoteSessionId: any;
   demoteSessionId: any;
   session; any = {};
+  processType: any[] = [
+    { enrollment_type: '3', name: 'Provisional Admission' },
+    { enrollment_type: '4', name: 'Admission' }
+  ];
   prev: any;
   next: any;
   barcodeArray: any[] = [];
@@ -35,6 +39,7 @@ export class BarCodeReportComponent implements OnInit {
   }
   buildForm() {
     this.classForm = this.fbuild.group({
+      'enrollment_type': '',
       'class_id': '',
       'sec_id': ''
     });
@@ -77,12 +82,19 @@ export class BarCodeReportComponent implements OnInit {
         class_id: this.classForm.value.class_id,
         ses_id: this.promoteSessionId,
         sec_id: this.classForm.value.sec_id,
-        enrollment_type: '4',
+        enrollment_type: this.classForm.value.enrollment_type,
         order_by: '',
       }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.barcodeArray = [];
           this.barcodeArray = res.data;
+          this.barcodeArray.forEach(e => {
+            if(e.au_process_type == '3') {
+              e.em_provisional_admission_no = 'P'+e.em_provisional_admission_no;
+            }
+          });
+          console.log(this.barcodeArray);
+
         }
       });
     } else {

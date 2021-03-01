@@ -1,4 +1,4 @@
-<div class="row" style="padding: 0% 20%;">
+<div class="row custom-row" style="padding: 0% 20%;">
     <div class="col-12">
         <div class="notfication">
             <div class="row">
@@ -10,11 +10,11 @@
                 <div class="col-12">
                     <mat-card style="cursor:pointer">
                         <div class="row">
-                            <div class="col-2 calender-class" (click)="$event.preventDefault();redirectModule(item)">
+                            <div class="col-12 col-lg-2 calender-class" (click)="$event.preventDefault();redirectModule(item)">
                                 <i class="fas fa-calendar-alt"></i>
                                 <span style="margin-left:15px">{{item.msg_date | date:'MMM-d' }}</span>
                             </div>
-                            <div class="col-9" (click)="$event.preventDefault();redirectModule(item)">
+                            <div class="col-lg-9 col-12" (click)="$event.preventDefault();redirectModule(item)">
                                 <div class="row" style="margin-top: 0px;">
                                     <div class="col-12">{{item.msg_subject}}</div>
                                 </div>
@@ -28,7 +28,7 @@
                     </div>
                   </div> -->
                             </div>
-                            <div class="col-1 trash-class" (click)="$event.preventDefault();deleteNofiy(item);">
+                            <div class="col-12 col-lg-1 trash-class" (click)="$event.preventDefault();deleteNofiy(item);">
                                 <i class="fas fa-trash"></i>
                             </div>
                         </div>

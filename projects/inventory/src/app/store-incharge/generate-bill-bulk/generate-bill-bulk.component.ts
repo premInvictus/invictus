@@ -383,7 +383,7 @@ export class GenerateBillBulkComponent implements OnInit {
                 inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
                 inputJson.ftr_amount=result.bill_total;
                 inputJson.ftr_amount_type='debit';
-                inputJson.login_id=this.userData.au_login_id;
+                inputJson.login_id=result.buyer_details.au_login_id;
                 walletparam.push(inputJson);
               });
               if(walletparam.length > 0){
@@ -426,19 +426,30 @@ export class GenerateBillBulkComponent implements OnInit {
                 billparam.push(billArray);
               })
               if(billparam.length > 0){
-                billparam.forEach(billArray => {
-                  this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
-                    if (result && result.status == 'ok') {
-                      const length = result.data.fileUrl.split('/').length;
-                      saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
-                      this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
-                        if (result) {
-                          this.common.showSuccessErrorMessage(result.message, 'success');
-                        }
-                      });
-                    }
-                  })
-                });
+                // billparam.forEach(billArray => {
+                //   this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
+                //     if (result && result.status == 'ok') {
+                //       const length = result.data.fileUrl.split('/').length;
+                //       saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+                //       this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
+                //         if (result) {
+                //           this.common.showSuccessErrorMessage(result.message, 'success');
+                //         }
+                //       });
+                //     }
+                //   })
+                // });
+                this.inventory.generateStoreBill(billparam).subscribe((result: any) => {
+                  if (result && result.status == 'ok') {
+                    const length = result.data.fileUrl.split('/').length;
+                    saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+                    this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
+                      if (result) {
+                        this.common.showSuccessErrorMessage(result.message, 'success');
+                      }
+                    });
+                  }
+                })
                 this.resetItem();
                 this.previewTableFlag = false;
               }
@@ -455,9 +466,11 @@ export class GenerateBillBulkComponent implements OnInit {
   resetItem() {
     this.itemArray = [];
     this.tableArray = [];
+    this.tableArrayStudent = [];
     this.formGroupArray = [];
     this.itemSearchForm.reset();
     this.itemSearchForm.controls['scanItemId'].setValue('');
+    this.studentSearchForm.controls['searchId'].setValue('');
 
   }
   resetPrint() {

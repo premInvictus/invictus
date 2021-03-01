@@ -17,8 +17,8 @@ div.barcode-print-lib > ngx-barcode > div > img {
 }
 .bar-tiltle-span {
     position: relative;
-    left: 10px !important;
-    top: 15px;
+    left: 12px !important;
+    top: 2px;
 }
 .bar-isbn-span {
     position: relative;
@@ -130,7 +130,7 @@ div.barcode-print-lib3 > ngx-barcode > div > img {
     font-weight: bold;
 }
 .barcode-id-div {
-    width: 10px;
+   
     height: 24px;
     position: relative;
     top: -25px;

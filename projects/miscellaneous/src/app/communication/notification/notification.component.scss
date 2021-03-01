@@ -12,3 +12,13 @@
     line-height: 3;
     text-align: center;
 }
+@media screen and (max-width:720px) {
+    .custom-row {
+        padding: 0px !important;
+    }
+    i.fas.fa-trash {
+        position: absolute;
+        top: -104px !important;
+        right: 0 !important;
+    }
+}

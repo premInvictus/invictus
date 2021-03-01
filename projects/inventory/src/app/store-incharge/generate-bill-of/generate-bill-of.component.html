@@ -22,15 +22,11 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <mat-card style="padding-top: 1px;">
-      <div class="col-12 ">
-        <ng-container *ngIf="tabSelectedIndex === 0">
-          <app-generate-bill></app-generate-bill>
-        </ng-container>
-        <ng-container *ngIf="tabSelectedIndex === 1">
-          <app-generate-bill-bulk></app-generate-bill-bulk>
-        </ng-container>
-      </div>
-    </mat-card>
+    <ng-container *ngIf="tabSelectedIndex === 0">
+      <app-generate-bill></app-generate-bill>
+    </ng-container>
+    <ng-container *ngIf="tabSelectedIndex === 1">
+      <app-generate-bill-bulk></app-generate-bill-bulk>
+    </ng-container>
   </div>
 </div>

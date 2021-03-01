@@ -1189,4 +1189,34 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/admissionTool/changeEnquiryAdmissionStatus', value);
 	}
+	deleteCityFromCityTable(value) {
+		console.log("i am value", value);
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/deleteCityFromCityTable', value);
+	}
+
+	insertclassintable(value) {
+		console.log("i am value", value);
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/insertclassintable', value);
+	}
+	updateclassintable(value) {
+		console.log("i am value", value);
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/updateclassintable', value);
+	}
+
+	getBanks() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/setup/getBanks');
+	}
+
+	deleteBanksSoft(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/deleteBanksSoft', value);
+	}
+	insertOrUpdateBankDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/insertOrUpdateBankDetails', value);
+	}
 }
