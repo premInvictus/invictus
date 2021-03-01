@@ -42,8 +42,8 @@
             style="font-size: 5px !important;font-weight: bold;">{{(item.au_full_name | titlecase) | truncatetext : 18}}</span>
           <div [class]="getClass2(i)">
             <div class="barcode-print-lib3">
-              <ngx-barcode bc-element-type="img" [bc-value]="classForm.value.enrollment_type === '4' ? '00'+item.em_admission_no
-              : '00'+item.em_provisional_admission_no" bc-format="CODE128" bc-width="2">
+              <ngx-barcode bc-element-type="img" [bc-value]="classForm.value.enrollment_type === '4' ? item.em_admission_no
+              : item.em_provisional_admission_no" bc-format="CODE128" bc-width="2">
               </ngx-barcode>
               <div class="barcode-id-div">
                 <span class="font-bold bar-isbn-span3">{{classForm.value.enrollment_type === '4' 
