@@ -214,8 +214,28 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 			{ id: 'enrollment_status', name: 'Enrollment Status', field: 'enrollment_status', sortable: true, filterable: true },
 			{ id: 'email', name: 'Email', field: 'email', sortable: true, filterable: true },
 			{ id: 'mobile', name: 'Mobile', field: 'mobile', sortable: true, filterable: true },
-			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
-			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
+			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true ,
+			grouping: {
+				getter: 'father_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			}
+			},
+			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true,
+			grouping: {
+				getter: 'mother_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			}
+			},
 			{ id: 'guardian_name', name: 'Guardian Name', field: 'guardian_name', sortable: true, filterable: true }
 		];
 	}
