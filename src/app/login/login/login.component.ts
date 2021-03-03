@@ -155,7 +155,7 @@ export class LoginComponent implements OnInit {
 		this.model.loginsource = 'support';
 
 		this.loaderService.setUserPrefix(prefix)
-
+		this._cookieService.put('Prefix', prefix)
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
@@ -169,6 +169,7 @@ export class LoginComponent implements OnInit {
 					console.log('result--', result);
 					if (result.status === 'ok' && result.data) {
 						childWindow.localStorage.setItem('loginSource', 'support');
+						childWindow.localStorage.setItem('Prefix', prefix)
 						this.loaderService.stopLoading();
 						const user = result.data;
 						if (result.data.userSaveStateData) {

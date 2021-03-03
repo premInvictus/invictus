@@ -95,7 +95,14 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
+                        
                       </div>
+                    </div>
+                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_reference')">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Reference</mat-label>
+                        <input formControlName="upd_reference" matInput [readonly]="viewOnly" placeholder="Reference">
+                      </mat-form-field>
                     </div>
                   </div>
                 </div>
