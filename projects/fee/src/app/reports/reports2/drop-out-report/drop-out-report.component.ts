@@ -26,6 +26,7 @@ import 'jspdf-autotable';
 export class DropoutReportComponent implements OnInit {
 	totalRow: any;
 	gridHeight: any;
+	showLoadingFlag= false;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -68,10 +69,13 @@ export class DropoutReportComponent implements OnInit {
 
 	ngOnInit() {
 		this.getSchool();
-		this.buildForm();
 		this.getClassData();
+		this.buildForm();
+		
+		
 		this.filterFlag = true;
-		this.getDropoutReport(this.reportFilterForm.value);
+		// this.generate();
+		// ;
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -159,9 +163,12 @@ export class DropoutReportComponent implements OnInit {
 			'login_id': '',
 			'order_by': ''
 		});
+		(this.getDropoutReport(this.reportFilterForm.value));
 	}
 
 	getDropoutReport(value: any) {
+		console.log("i am value", value);
+		this.showLoadingFlag = true;
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
@@ -438,9 +445,10 @@ export class DropoutReportComponent implements OnInit {
 					this.gridHeight = 750;
 				}
 				//this.dataset.push(obj3);
-
+				this.showLoadingFlag = false;
 				this.tableFlag = true;
 			} else {
+				this.showLoadingFlag = false;
 				this.tableFlag = true;
 			}
 		});
