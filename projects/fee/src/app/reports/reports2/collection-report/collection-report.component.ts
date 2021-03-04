@@ -139,7 +139,7 @@ export class CollectionReportComponent implements OnInit {
 	multiBranchRoutes: any[] = [];
 	multiValueArray: any[] = [];
 	filterGroupArray: any[] = [];
-	groupReport=false;
+	groupReport = false;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -155,20 +155,20 @@ export class CollectionReportComponent implements OnInit {
 		this.getSession();
 		this.buildForm();
 		let param: any = {};
-				param.gs_name = ['show_grouped_head_on_report'];
-				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
-					if (result && result.status === 'ok' && result.data) {
-						if (result.data[0]['gs_value'] == '1') {
-							this.groupReport = true;
-							
-						} else {
-							this.groupReport = false;
-							
-						}
-					} else {
-						this.groupReport = false;
-					}
-				});
+		param.gs_name = ['show_grouped_head_on_report'];
+		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok' && result.data) {
+				if (result.data[0]['gs_value'] == '1') {
+					this.groupReport = true;
+
+				} else {
+					this.groupReport = false;
+
+				}
+			} else {
+				this.groupReport = false;
+			}
+		});
 		this.getClassData();
 		if (this.common.isExistUserAccessMenu('649')) {
 			this.reportTypeArray.push({ report_type: 'headwise', report_name: 'Head Wise' });
@@ -770,7 +770,7 @@ export class CollectionReportComponent implements OnInit {
 								// console.log(repoArray[Number(keys)]['stu_admission_no']);
 								//console.log(repoArray[Number(keys)], repoArray[Number(keys)]);
 								console.log('commonHeadsArray--', commonHeadsArray);
-								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - b.fh_order; } );
+								commonHeadsArray.sort(function (a, b) { return a.fh_order - b.fh_order; });
 								for (const titem of commonHeadsArray) {
 
 									Object.keys(titem).forEach((key2: any) => {
@@ -825,50 +825,50 @@ export class CollectionReportComponent implements OnInit {
 
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
 														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
-															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
-															break;
+																obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																break;
 															}
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
-															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
-															break;
+																obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																break;
 															}
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														} 
+														}
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														break;
 													}
-													
-													
+
+
 
 												}
-												if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+												if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 													//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 													break;
-													
-												} 
+
+												}
 											}
 
 
@@ -877,11 +877,11 @@ export class CollectionReportComponent implements OnInit {
 											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
 												console.log('in opening balance');
 												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-												? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											}
 
-											
-											
+
+
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 
@@ -889,9 +889,9 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
 														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0)) > 0 ? Number(repoArray[Number(keys)]['invoice_amount']
-														? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
-															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
-																? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0) : 0;
+															? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
+																? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
+																	? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0) : 0;
 
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
@@ -899,6 +899,7 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['additional_amt']) : 0);
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
 											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
@@ -941,9 +942,9 @@ export class CollectionReportComponent implements OnInit {
 
 								obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 									? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-								if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) > 0 ) {
-								obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-									? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+								if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) > 0) {
+									obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+										? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 								}
 								obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 									? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
@@ -957,6 +958,7 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['additional_amt']) : 0);
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 									repoArray[Number(keys)]['pay_name'] : '-';
+								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
@@ -1015,6 +1017,21 @@ export class CollectionReportComponent implements OnInit {
 									aggregateCollapsed: true,
 									collapsed: false
 								},
+							},
+							{
+								id: 'ftr_cheque_no', name: 'Cheque No', field: 'ftr_cheque_no', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								// grouping: {
+								// 	getter: 'receipt_mode_name',
+								// 	formatter: (g) => {
+								// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+								// 	},
+								// 	aggregators: this.aggregatearray,
+								// 	aggregateCollapsed: true,
+								// 	collapsed: false
+								// },
 							},
 							{
 								id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
@@ -2513,10 +2530,10 @@ export class CollectionReportComponent implements OnInit {
 					'from_date': value.from_date,
 					'to_date': value.to_date,
 					'school_branch': value.school_branch,
-					
+
 				};
 				collectionJSON['group_report'] = this.groupReport;
-				
+
 				this.feeService.getFeeCollectionSummaryReport(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -2951,7 +2968,7 @@ export class CollectionReportComponent implements OnInit {
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 
 								}
-								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - b.fh_order; } );
+								commonHeadsArray.sort(function (a, b) { return a.fh_order - b.fh_order; });
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
@@ -3006,37 +3023,37 @@ export class CollectionReportComponent implements OnInit {
 													// tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 													// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 													// break;
-													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
 														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														} 
+														}
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														break;
 													}
 
-													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
-														
-													} 
+
+													}
 
 												}
 											}
@@ -3050,6 +3067,7 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
 											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
@@ -3094,6 +3112,7 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 									repoArray[Number(keys)]['pay_name'] : '-';
+								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
@@ -3139,6 +3158,21 @@ export class CollectionReportComponent implements OnInit {
 									aggregateCollapsed: true,
 									collapsed: false
 								},
+							},
+							{
+								id: 'ftr_cheque_no', name: 'Cheque No', field: 'ftr_cheque_no', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								// grouping: {
+								// 	getter: 'receipt_mode_name',
+								// 	formatter: (g) => {
+								// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+								// 	},
+								// 	aggregators: this.aggregatearray,
+								// 	aggregateCollapsed: true,
+								// 	collapsed: false
+								// },
 							},
 							{
 								id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
@@ -3462,17 +3496,17 @@ export class CollectionReportComponent implements OnInit {
 										formatter: this.checkReceiptFormatter,
 										cssClass: 'receipt_collection_report'
 									},
-								// 	{
-								// 		id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
-								// 		filterable: true,
-								// 		cssClass: 'amount-report-fee',
-								// 		filterSearchType: FieldType.number,
-								// 		filter: { model: Filters.compoundInputNumber },
-								// 		sortable: true,
-								// 		type: FieldType.number,
-								// 		formatter: this.checkFeeFormatter,
-								// 		groupTotalsFormatter: this.sumTotalsFormatter
-								// 	}
+									// 	{
+									// 		id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
+									// 		filterable: true,
+									// 		cssClass: 'amount-report-fee',
+									// 		filterSearchType: FieldType.number,
+									// 		filter: { model: Filters.compoundInputNumber },
+									// 		sortable: true,
+									// 		type: FieldType.number,
+									// 		formatter: this.checkFeeFormatter,
+									// 		groupTotalsFormatter: this.sumTotalsFormatter
+									// 	}
 								];
 								if (this.reportFilterForm.value.school_branch.length > 1) {
 									let aColumn = {
@@ -3507,7 +3541,7 @@ export class CollectionReportComponent implements OnInit {
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 
 								}
-								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - a.fh_order; } );
+								commonHeadsArray.sort(function (a, b) { return a.fh_order - a.fh_order; });
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
@@ -3564,8 +3598,8 @@ export class CollectionReportComponent implements OnInit {
 													// tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 													// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 													// break;
-													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
-														console.log("1",repoArray[Number(keys)]['accd_opening_balance_paid_status']);
+													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
+														console.log("1", repoArray[Number(keys)]['accd_opening_balance_paid_status']);
 														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															console.log("2");
 															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -3574,17 +3608,17 @@ export class CollectionReportComponent implements OnInit {
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															console.log("3");
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														} 
+														}
 													} else {
 														console.log("4");
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -3592,13 +3626,13 @@ export class CollectionReportComponent implements OnInit {
 														break;
 													}
 
-													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
-														
-													} 
+
+													}
 
 												}
 											}
@@ -3610,6 +3644,7 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
 											obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
@@ -3653,6 +3688,7 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 									repoArray[Number(keys)]['pay_name'] : '-';
+								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? repoArray[Number(keys)]['ftr_cheque_no'] : '-';
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
@@ -3700,6 +3736,21 @@ export class CollectionReportComponent implements OnInit {
 									aggregateCollapsed: true,
 									collapsed: false
 								},
+							},
+							{
+								id: 'ftr_cheque_no', name: 'Cheque No', field: 'ftr_cheque_no', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								// grouping: {
+								// 	getter: 'receipt_mode_name',
+								// 	formatter: (g) => {
+								// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+								// 	},
+								// 	aggregators: this.aggregatearray,
+								// 	aggregateCollapsed: true,
+								// 	collapsed: false
+								// },
 							},
 							{
 								id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
