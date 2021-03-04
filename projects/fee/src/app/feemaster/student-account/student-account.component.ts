@@ -370,14 +370,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	optedFacilitesEvent(event){
 		console.log(event);
-		console.log(event.value);
+		console.log(event.value == '1');
 		if(event.value == '1'){
 			this.accountsForm.patchValue({
 				accd_transport_mode: '1',
 			});
 			this.modeFlag = true;
 			this.transportFlag = true;
-
+			console.log(this.accountDetails);
+			
 			this.accountsForm.patchValue({
 				accd_hostel_fs_id: '',
 				accd_hostel_fcc_id: '',
@@ -402,6 +403,11 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			});
 			this.slabArray = [];
 			this.stoppageArray = [];
+			this.transportFlag = false;
+			this.terminationFlag = false;
+		} else if(event.value == '3'){
+			this.hostelTerminateFlag = false;
+			this.hostelFlag = false;
 			this.transportFlag = false;
 			this.terminationFlag = false;
 		}

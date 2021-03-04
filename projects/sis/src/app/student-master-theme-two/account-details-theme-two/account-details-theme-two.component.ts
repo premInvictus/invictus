@@ -388,6 +388,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 			this.transportFlag = false;
 			this.terminationFlag = false;
+		} else if(event.value == '3') {
+			
+			this.hostelTerminateFlag = false;
+			this.hostelFlag = false;
+			this.transportFlag = false;
+			this.terminationFlag = false;
 		}
 	}
 	enableTransport($event) {
