@@ -1,3 +1,4 @@
+
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
@@ -23,12 +24,12 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-	selector: 'app-student-details-report',
-	templateUrl: './student-details-report.component.html',
-	styleUrls: ['./student-details-report.component.scss'],
+	selector: 'app-prev-school-report',
+  templateUrl: './prev-school-report.component.html',
+  styleUrls: ['./prev-school-report.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
+export class PrevSchoolReportComponent implements OnInit, AfterViewInit {
 	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
@@ -205,69 +206,71 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			}},
-			{ id: 'dob', name: 'DOB', field: 'dob', sortable: true, filterable: true,
-				 formatter: this.checkDateFormatter },
-			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
-			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
-			grouping: {
-				getter: 'gender',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
-			grouping: {
-				getter: 'tag_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
-			{ id: 'email', name: 'Email', field: 'email', sortable: true, filterable: true },
-			{ id: 'contact', name: 'Contact', field: 'contact', sortable: true, filterable: true },
-			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
-			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
-			{ id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
-			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
-			{ id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
-			{ id: 'guardian_name', name: 'Guardian Name', field: 'guardian_name', sortable: true, filterable: true },
-			{ id: 'guardian_contact', name: 'Guardian Contact No', field: 'guardian_contact', sortable: true, filterable: true },
-			{ id: 'emergency_name', name: 'Emergency Name', field: 'emergency_name', sortable: true, filterable: true },
-			{ id: 'emergency_contact', name: 'Emergency Contact No', field: 'emergency_contact', sortable: true, filterable: true },
-			{ id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true,
-			grouping: {
-				getter: 'category',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
-			grouping: {
-				getter: 'rel_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
-			{ id: 'cit_name', name: 'City', field: 'cit_name', sortable: true, filterable: true },
-			{ id: 'sta_name', name: 'State', field: 'sta_name', sortable: true, filterable: true },
-			{ id: 'dist_name', name: 'District', field: 'dist_name', sortable: true, filterable: true },
-			{ id: 'ea_pincode', name: 'Pin', field: 'ea_pincode', sortable: true, filterable: true },
-			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true }
+			// { id: 'dob', name: 'DOB', field: 'dob', sortable: true, filterable: true,
+			// 	 formatter: this.checkDateFormatter },
+			// { id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
+			// { id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
+			// { id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
+			// grouping: {
+			// 	getter: 'gender',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
+			// grouping: {
+			// 	getter: 'tag_name',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
+			//  	formatter: this.checkDateFormatter },
+			// { id: 'email', name: 'Email', field: 'email', sortable: true, filterable: true },
+			// { id: 'contact', name: 'Contact', field: 'contact', sortable: true, filterable: true },
+			// { id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
+			// { id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
+			// { id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
+			// { id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
+			// { id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
+			// { id: 'guardian_name', name: 'Guardian Name', field: 'guardian_name', sortable: true, filterable: true },
+			// { id: 'guardian_contact', name: 'Guardian Contact No', field: 'guardian_contact', sortable: true, filterable: true },
+			// { id: 'emergency_name', name: 'Emergency Name', field: 'emergency_name', sortable: true, filterable: true },
+			// { id: 'emergency_contact', name: 'Emergency Contact No', field: 'emergency_contact', sortable: true, filterable: true },
+			// { id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true,
+			// grouping: {
+			// 	getter: 'category',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
+			// grouping: {
+			// 	getter: 'rel_name',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
+			// { id: 'cit_name', name: 'City', field: 'cit_name', sortable: true, filterable: true },
+			// { id: 'sta_name', name: 'State', field: 'sta_name', sortable: true, filterable: true },
+			// { id: 'dist_name', name: 'District', field: 'dist_name', sortable: true, filterable: true },
+			// { id: 'ea_pincode', name: 'Pin', field: 'ea_pincode', sortable: true, filterable: true },
+			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true },
+			{ id: 'reason_title', name: 'Reason', field: 'reason_title', sortable: true, filterable: true },
+			{ id: 'specify_reason', name: 'Specific Reason', field: 'specify_reason', sortable: true, filterable: true }
 		];
 	}
 
@@ -1140,14 +1143,14 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	prepareDataSource(process_type) {
 		let counter = 1;
 		const total = 0;
-		if(process_type == '1'|| process_type == '2' || process_type == '4')
-		{
-			this.columnDefinitions.push(
-				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true }
-			)
-		} else {
-			this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
-		}
+		// if(process_type == '1'|| process_type == '2' || process_type == '4')
+		// {
+		// 	this.columnDefinitions.push(
+		// 		{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true }
+		// 	)
+		// } else {
+		// 	this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
+		// }
 		for (let i = 0; i < Object.keys(this.reportProcessWiseData).length; i++) {
 			const tempObj = {};
 			const key = Object.keys(this.reportProcessWiseData)[i];
@@ -1217,6 +1220,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
 			tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
 			tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
+			tempObj['reason_title'] = this.valueAndDash(this.reportProcessWiseData[key]['reason_title']);
+			tempObj['specify_reason'] = this.valueAndDash(this.reportProcessWiseData[key]['specify_reason']);
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
 			if(process_type == '1'|| process_type == '2' || process_type == '4') {
 				tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));

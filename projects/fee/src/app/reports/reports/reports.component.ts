@@ -201,7 +201,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
-		}
+		},
 	];
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
