@@ -13,6 +13,7 @@ export class InventoryService {
   private processType;
   private assignEmp;
   private tabIndex;
+  private currentChildTab;
   receipt = new Subject();
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
@@ -124,6 +125,17 @@ export class InventoryService {
   resetTabIndex() {
     this.tabIndex = null;
   }
+  setcurrentChildTab(value) {
+    this.currentChildTab = value;
+  }
+  getcurrentChildTab() {
+    if (this.currentChildTab) {
+      return this.currentChildTab;
+    }
+  }
+  resetcurrentChildTab() {
+    this.currentChildTab = null;
+  }
   updateItemQuantity(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/updateItemQuantity', value);
@@ -233,5 +245,9 @@ export class InventoryService {
   insertWalletsBulk(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/insertWalletsBulk',value);
+  }
+  insertBundle(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/bundle/insert', value);
   }
 }

@@ -13,7 +13,10 @@
           <input type="text" matInput placeholder="Employee" formControlName="exist_emp_id" readonly>
         </mat-form-field>
       </div>
-      <div class="col-8">
+      <div class="col-1" style="padding:12px" *ngIf="inventory.getcurrentChildTab() == 'bundlelist'">
+        <button mat-raised-button class="btn-success-green" (click)="addBundle()">Add Bundle</button>
+      </div>
+      <div class="col-7">
       </div>
     </div>
   </form>

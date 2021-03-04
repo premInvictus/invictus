@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
+import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component'
 @Component({
   selector: 'app-assign-store',
   templateUrl: './assign-store.component.html',
@@ -25,6 +26,7 @@ export class AssignStoreComponent implements OnInit {
   assignEmpArray: any = {};
   tableDataArray: any[] = [];
   showDefaultData = false;
+  currentChildTab='';
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -51,6 +53,12 @@ export class AssignStoreComponent implements OnInit {
         this.inventory.resetAssignEmp();
       }
     }
+    this.inventory.receipt.subscribe((result: any) => {
+      if (result) {
+        this.inventory.setcurrentChildTab(result.currentChildTab);
+        this.currentChildTab = result.currentChildTab;
+      }
+    })
   }
   buildForm() {
     this.assignStoreForm = this.fbuild.group({
@@ -275,5 +283,28 @@ export class AssignStoreComponent implements OnInit {
     } else {
       return '';
     }
+  }
+  addBundle(value=null){
+    console.log('this.assignEmpArray',this.assignEmpArray);
+    const item : any = {};
+    if(value){
+      item.title = 'Update Bundle';
+      item.edit = true;
+      
+    } else {
+      item.title = 'Add Bundle';
+      item.edit = false;
+    }
+    item.value = value;
+    item.emp_id = this.assignEmpArray.emp_id;
+    item.item_location = this.assignEmpArray.item_location;
+    const dialogRef = this.dialog.open(BundleModalComponent, {
+      width: '50%',
+      height: '500',
+      data: item
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }
