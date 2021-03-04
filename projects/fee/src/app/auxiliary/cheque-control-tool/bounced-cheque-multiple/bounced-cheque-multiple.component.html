@@ -20,7 +20,7 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Deposited Bank</mat-label>
-            <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
+            <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required (selectionChange)="selectedValue($event)">
               <mat-option value="">Please Select</mat-option>
               <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid"><span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
                 <span *ngIf="!(bank?.bnk_alias)">{{bank.bank_name}}</span>
@@ -181,6 +181,14 @@
           <td mat-cell *matCellDef="let item">
             <span style="font-size: 14px">
               <b>{{item.bankdeposite}}</b>
+            </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="chequedate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque Date</th>
+          <td mat-cell *matCellDef="let item">
+            <span style="font-size: 14px">
+              <b>{{item.chequedate | date : 'd-MMM-y'}}</b>
             </span>
           </td>
         </ng-container>
