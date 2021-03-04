@@ -5,7 +5,7 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { SharedmoduleModule } from '../sharedmodule/sharedmodule.module';
 import { ReportFilterComponent } from './reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from './reports-filter-sort/report-sort/report-sort.component';
-
+import { LoadingModule } from 'ngx-loading';
 import { AngularSlickgridModule } from 'angular-slickgrid';
 import { TranslateService } from '@ngx-translate/core';
 import { Reports2Component } from './reports2/reports2.component';
@@ -30,6 +30,7 @@ import { WalletCollectionComponent } from './reports2/wallet-collection/wallet-c
 		CommonModule,
 		ReportsRoutingModule,
 		SharedmoduleModule,
+		LoadingModule,
 		AngularSlickgridModule.forRoot()
 	],
 	declarations: [ReportsComponent,

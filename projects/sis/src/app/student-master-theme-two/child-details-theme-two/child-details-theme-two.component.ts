@@ -232,7 +232,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			upd_gender: '',
 			upd_category: '',
 			upd_mt_id: '',
-			upd_tag_id: ''
+			upd_tag_id: '',
+			upd_reference: ''
 		});
 		this.paddressform = this.fbuild.group({
 			ea_id: '',
@@ -557,6 +558,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.baseform.patchValue({
 				upd_id: personalDetails[0].upd_id,
 				upd_aadhaar_no: personalDetails[0].upd_aadhaar_no,
+				upd_reference: personalDetails[0].upd_reference,
 				au_process_class: personalDetails[0].au_process_class,
 				upd_dob: personalDetails[0].upd_dob,
 				upd_doj: personalDetails[0].upd_doj,
