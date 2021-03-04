@@ -28,7 +28,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild(MatSort) sort: MatSort;
-	displayedColumns: string[] =['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
+	displayedColumns: string[] =['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname','chequedate', 'bankdeposite',
 	'processingdate', 'status',
 	'entered_by', 'approved_by',
 	'admno', 'studentnam','drawnbankname','studenttags' ,'class_name',
@@ -184,7 +184,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
 						status:item.fcc_status,
-						drawnbankname:item.drawnbankname
+						drawnbankname:item.drawnbankname,
+						chequedate:item.cheque_date
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -267,7 +268,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
 						status:item.fcc_status,
-						drawnbankname:item.drawnbankname
+						drawnbankname:item.drawnbankname,
+						chequedate:item.chequedate
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -463,7 +465,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
 						status:item.fcc_status,
-						drawnbankname:item.drawnbankname
+						drawnbankname:item.drawnbankname,
+						chequedate: item.chequedate
 					});
 					total=total+Number(item.receipt_amount);
 
@@ -500,6 +503,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					selectionDisable: true,
 					status:'',
 					drawnbankname:'',
+					chequedate:'',
 					fee:'Total'});
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 				if(this.dataSource && this.dataSource.paginator) {
