@@ -47,6 +47,8 @@ export class EducationDetailsComponent extends DynamicComponent implements OnIni
 		this.buildForm();
 		this.getClass();
 		this.getReason();
+		console.log("-------------------------");
+		
 		/*
     if (this.context.config.login_id) {
       this.login_id = this.context.config.login_id;
@@ -59,7 +61,7 @@ export class EducationDetailsComponent extends DynamicComponent implements OnIni
 			if (data && data.au_login_id) {
 				this.login_id = data.au_login_id;
 				const processType = this.processtypeService.getProcesstype();
-				if (processType === '2' || processType === '3' || processType === '4' || processType === '5') {
+				if (processType === '1' ||processType === '2' || processType === '3' || processType === '4' || processType === '5') {
 					this.resetPreviousEducations();
 					this.getEducationDetails(this.login_id);
 				}
@@ -273,6 +275,8 @@ export class EducationDetailsComponent extends DynamicComponent implements OnIni
 				if (result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.eed_array = result.data;
+						console.log("----------------------------------------");
+						
 						for (const eed of this.eed_array) {
 							this.previousEducations.push(this.fbuild.group(eed));
 						}
