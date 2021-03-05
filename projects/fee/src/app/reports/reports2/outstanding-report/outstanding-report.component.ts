@@ -4738,7 +4738,10 @@ export class OutstandingReportComponent implements OnInit {
 		});
 		const rowData: any[] = [];
 		for (const item of this.exportColumnDefinitions) {
-			headerData.push(item.name);
+			if(!(item.id.includes('checkbox_select'))) {
+				headerData.push(item.name);
+			}
+			
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach((key: any) => {
@@ -4758,7 +4761,9 @@ export class OutstandingReportComponent implements OnInit {
 					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
+					
 				}
+				arr.shift();
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);
 			});
