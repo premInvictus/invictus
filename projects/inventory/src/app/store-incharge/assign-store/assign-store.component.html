@@ -79,7 +79,7 @@
     </table>
   </div>
 </ng-container>
-<div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0">
+<div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0 && inventory.getcurrentChildTab() != 'bundlelist'">
   <br><br>
   <table class="custom-table">
     <thead>
@@ -118,4 +118,26 @@
       <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
     </div>
   </div>
+</div>
+<div class="text-center center-mr itemlog" *ngIf="bundleArray.length > 0 && inventory.getcurrentChildTab() == 'bundlelist'">
+  <br><br>
+  <table class="custom-table">
+    <thead>
+      <tr class="custom-tr">
+        <th rowspan="2" class="custom-th text-center" width="10%">Bundle Code</th>
+        <th rowspan="2" class="custom-th text-center" width="60%">Bundle Name</th>
+        <th rowspan="2" class="custom-th text-center" width="15%">Bundle Location</th>
+        <th rowspan="2" class="custom-th text-center" width="15%">Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of bundleArray; let i = index">
+        <td class="custom-td text-center font-size-14">{{item?.bundle_id}}</td>
+        <td class="custom-td text-left font-size-14"><span
+            class="margin-left-15 text-left">{{item?.bundle_name | titlecase}}</span> </td>
+        <td class="custom-td text-center font-size-14">{{item?.location_id?.location_hierarchy}}</td>
+        <td class="custom-td text-center font-size-14">{{item?.total_price}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

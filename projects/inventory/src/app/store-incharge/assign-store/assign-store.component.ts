@@ -27,6 +27,7 @@ export class AssignStoreComponent implements OnInit {
   tableDataArray: any[] = [];
   showDefaultData = false;
   currentChildTab='';
+  bundleArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -39,6 +40,7 @@ export class AssignStoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getBundle();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
       this.assignEmpArray = this.inventory.getAssignEmp();
@@ -57,6 +59,9 @@ export class AssignStoreComponent implements OnInit {
       if (result) {
         this.inventory.setcurrentChildTab(result.currentChildTab);
         this.currentChildTab = result.currentChildTab;
+        if(result.currentChildTab == 'bundlelist') {
+          // this.getBundle();
+        }
       }
     })
   }
@@ -128,6 +133,15 @@ export class AssignStoreComponent implements OnInit {
     this.currentLocationId = locationData.location_id;
     this.locationDataArray.push(locationData);
     //console.log(this.currentLocationId);
+  }
+  getBundle(){
+    this.bundleArray = [];
+    this.inventory.getAllBundle({}).subscribe((result:any) => {
+      if(result && result.length > 0) {
+        this.bundleArray = result;
+        console.log('this.bundleArray',this.bundleArray);
+      }
+    })
   }
   getItemList() {
     if (this.assignStoreForm.valid && this.employeeId) {

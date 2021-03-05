@@ -388,6 +388,29 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 			this.transportFlag = false;
 			this.terminationFlag = false;
+		} else if(event.value == '3') {
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
+			this.accountsForm.patchValue({
+				accd_transport_mode: '',
+				accd_tr_id: '',
+				accd_tsp_id: '',
+				accd_ts_id: '',
+				accd_is_terminate: false,
+				accd_transport_from: '',
+				accd_transport_to: '',
+				accd_remark: ''
+			});
+			
+			this.hostelTerminateFlag = false;
+			this.hostelFlag = false;
+			this.transportFlag = false;
+			this.terminationFlag = false;
 		}
 	}
 	enableTransport($event) {

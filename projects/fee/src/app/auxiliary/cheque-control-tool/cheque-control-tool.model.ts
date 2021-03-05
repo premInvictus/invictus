@@ -11,6 +11,7 @@ export interface ChequeToolElement {
 	drawnbankname:any;
 	recieptdate: any;
 	bankdeposite: any;
+	chequedate:any;
 	approved_by: any;
 	entered_by: any;
 	processingdate: any;
