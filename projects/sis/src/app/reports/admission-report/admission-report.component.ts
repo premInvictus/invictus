@@ -666,7 +666,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			enqTotal = enqTotal + parseInt(this.reportEnrolmentWiseData[i]['Enquiry'], 10);
 			regTotal = regTotal + parseInt(this.reportEnrolmentWiseData[i]['Registration'], 10);
 			proTotal = proTotal + parseInt(this.reportEnrolmentWiseData[i]['Proadmission'], 10);
-			admTotal = admTotal + parseInt(this.reportEnrolmentWiseData[i]['Alumini'], 10);
+			admTotal = admTotal + parseInt(this.reportEnrolmentWiseData[i]['Admission'], 10);
 			almTotal = almTotal + parseInt(this.reportEnrolmentWiseData[i]['Alumini'], 10);
 			this.dataset.push(tempObj);
 			counter++;
