@@ -7,12 +7,15 @@ import { saveAs } from 'file-saver';
 import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import {SelectionModel} from '@angular/cdk/collections';
+
 @Component({
   selector: 'app-generate-bill',
   templateUrl: './generate-bill.component.html',
   styleUrls: ['./generate-bill.component.css']
 })
 export class GenerateBillComponent implements OnInit {
+  selection = new SelectionModel<any>(true, []);
   searchForm: FormGroup;
   payForm: FormGroup;
   itemSearchForm: FormGroup;
@@ -38,6 +41,8 @@ export class GenerateBillComponent implements OnInit {
   storeinchargeDetails:any;
   locationArray: any[] = [];
   locationId: any;
+  bundleArray: any[] = [];
+  requiredArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -55,6 +60,7 @@ export class GenerateBillComponent implements OnInit {
     this.getSchool();
     this.formGroupArray = [];
     this.getGlobalSettingReplace();
+    this.getBundle();
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -67,7 +73,8 @@ export class GenerateBillComponent implements OnInit {
       scanItemId: '',
       due_date: '',
       issue_date: '',
-      return_date: ''
+      return_date: '',
+      bundle_id:''
     });
     this.formGroupArray = [];
     this.payForm = this.fbuild.group({
@@ -89,7 +96,15 @@ export class GenerateBillComponent implements OnInit {
       }
     }
   }
-
+  getBundle(){
+    this.bundleArray = [];
+    this.inventory.getAllBundle({}).subscribe((result:any) => {
+      if(result && result.length > 0) {
+        this.bundleArray = result;
+        console.log('this.bundleArray',this.bundleArray);
+      }
+    })
+  }
   getLocationId(item: any) {
     this.locationId = item.location_id;
     this.searchForm.patchValue({
@@ -168,10 +183,53 @@ export class GenerateBillComponent implements OnInit {
       })
     } else {
       this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
-      this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
+      this.formGroupArray[i].formGroup.patchValue({
+        total_price: this.tableArray[i]['total_price']
+      })
+      // this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
     }
   }
-
+  addBundleItems(){
+    const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
+    if(bundleDetails){
+      bundleDetails.item_assign.forEach(element => {
+        const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
+        if (findex == -1) {
+          this.itemArray.push(element.selling_item);
+          if(element.item_optional != '1') {
+            this.requiredArray.push(element.item_code);
+            this.selection.toggle(element.item_code);
+          }
+        }
+      });
+      this.pushItem();
+    }
+  }
+  pushItem() {
+    this.tableArray = [];
+    for (let item of this.itemArray) {
+      this.tableArray.push({
+        item_code: item.item_code,
+        item_name: item.item_name,
+        item_selling_price: item.item_selling_price,
+        available_item: item.item_quantity,
+        item_quantity: '',
+        total_price: '',
+      });
+      const findex = this.formGroupArray.findIndex(f => Number(f.formGroup.value.item_code) === Number(item.item_code));
+      if (findex === -1) {
+        this.formGroupArray.push({
+          formGroup: this.fbuild.group({
+            item_code: item.item_code,
+            item_name: item.item_name,
+            item_selling_price: item.item_selling_price,
+            item_quantity: '',
+            total_price: '',
+          })
+        });
+      }
+    }
+  }
   searchItemData() {
     const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.itemSearchForm.value.scanItemId));
     if (findex !== -1) {
@@ -185,30 +243,8 @@ export class GenerateBillComponent implements OnInit {
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
-          this.tableArray = [];
           this.itemArray.push(result[0].item_assign[0]);
-          for (let item of this.itemArray) {
-            this.tableArray.push({
-              item_code: item.item_code,
-              item_name: item.item_name,
-              item_selling_price: item.item_selling_price,
-              available_item: item.item_quantity,
-              item_quantity: '',
-              total_price: '',
-            });
-            const findex = this.formGroupArray.findIndex(f => Number(f.formGroup.value.item_code) === Number(item.item_code));
-            if (findex === -1) {
-              this.formGroupArray.push({
-                formGroup: this.fbuild.group({
-                  item_code: item.item_code,
-                  item_name: item.item_name,
-                  item_selling_price: item.item_selling_price,
-                  item_quantity: '',
-                  total_price: '',
-                })
-              });
-            }
-          }
+          this.pushItem();
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }
@@ -233,18 +269,23 @@ export class GenerateBillComponent implements OnInit {
     const itemAssign: any[] = [];
     let updateFlag = false;
     let index = 0;
+    console.log('this.selection.selected',this.selection.selected);
     for (let item of this.formGroupArray) {
-      if (this.formGroupArray[index].formGroup.valid) {
-        if (item.formGroup.value.item_location !== '') {
-          itemAssign.push(item.formGroup.value);
-          updateFlag = true;
+      const findex = this.selection.selected.findIndex(e => e == item.formGroup.value.item_code);
+      if(findex != -1) {
+        console.log('item.formGroup.value',item.formGroup.value);
+        if (this.formGroupArray[index].formGroup.valid) {
+          if (item.formGroup.value.item_location !== '') {
+            itemAssign.push(item.formGroup.value);
+            updateFlag = true;
+          } else {
+            updateFlag = false;
+            break;
+          }
         } else {
           updateFlag = false;
           break;
         }
-      } else {
-        updateFlag = false;
-        break;
       }
       index++;
     }
@@ -378,17 +419,20 @@ export class GenerateBillComponent implements OnInit {
     let updateFlag = false;
     let index = 0;
     for (let item of this.formGroupArray) {
-      if (this.formGroupArray[index].formGroup.valid) {
-        if (item.formGroup.value.item_location !== '') {
-          itemAssign.push(item.formGroup.value);
-          updateFlag = true;
+      const findex = this.selection.selected.findIndex(e => e == item.formGroup.value.item_code);
+      if(findex != -1) {
+        if (this.formGroupArray[index].formGroup.valid) {
+          if (item.formGroup.value.item_location !== '') {
+            itemAssign.push(item.formGroup.value);
+            updateFlag = true;
+          } else {
+            updateFlag = false;
+            break;
+          }
         } else {
           updateFlag = false;
           break;
         }
-      } else {
-        updateFlag = false;
-        break;
       }
       index++;
     }
@@ -405,6 +449,7 @@ export class GenerateBillComponent implements OnInit {
         emp_id: Number(this.currentUser.login_id),
         item_details: itemAssign,
       }
+      console.log('finalJson',finalJson);
       this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
         if (result) {
           let i = 0;
@@ -477,11 +522,17 @@ export class GenerateBillComponent implements OnInit {
       this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
+  checkRequired(item_code){
+    const findex = this.requiredArray.findIndex(e => e == item_code);
+    return findex == -1 ? false : true;
+  }
   resetItem() {
     this.itemArray = [];
     this.tableArray = [];
     this.formGroupArray = [];
     this.itemSearchForm.reset();
+    this.selection.clear();
+    this.requiredArray = [];
     this.itemSearchForm.controls['scanItemId'].setValue('');
 
   }
@@ -505,5 +556,26 @@ export class GenerateBillComponent implements OnInit {
         //console.log(this.tableHeader);
       }
     });
+  }
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.tableArray.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.tableArray.forEach(row => this.selection.select(row.item_code));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 }

@@ -13,7 +13,10 @@
           <input type="text" matInput placeholder="Employee" formControlName="exist_emp_id" readonly>
         </mat-form-field>
       </div>
-      <div class="col-8">
+      <div class="col-1" style="padding:12px" *ngIf="inventory.getcurrentChildTab() == 'bundlelist'">
+        <button mat-raised-button class="btn-success-green" (click)="addBundle()">Add Bundle</button>
+      </div>
+      <div class="col-7">
       </div>
     </div>
   </form>
@@ -76,7 +79,7 @@
     </table>
   </div>
 </ng-container>
-<div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0">
+<div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0 && inventory.getcurrentChildTab() != 'bundlelist'">
   <br><br>
   <table class="custom-table">
     <thead>
@@ -115,4 +118,28 @@
       <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
     </div>
   </div>
+</div>
+<div class="text-center" *ngIf="bundleArray.length > 0 && inventory.getcurrentChildTab() == 'bundlelist'">
+  <br><br>
+  <table class="custom-table">
+    <thead>
+      <tr class="custom-tr">
+        <!-- <th class="custom-th text-center" width="10%">Bundle Code</th> -->
+        <th class="custom-th text-center" width="10%">Bundle Name</th>
+        <th class="custom-th text-center" width="70%">Items</th>
+        <th class="custom-th text-center" width="10%">Bundle Location</th>
+        <th class="custom-th text-center" width="10%">Total Price (<i class="fas fa-rupee-sign"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of bundleArray; let i = index">
+        <!-- <td class="custom-td text-center font-size-14">{{item?.bundle_id}}</td> -->
+        <td class="custom-td text-left font-size-14"><span
+            class="margin-left-15 text-left">{{item?.bundle_name | titlecase}}</span> </td>
+        <td class="custom-td text-left font-size-14">{{item?.itemNameArr}}</td>
+        <td class="custom-td text-center font-size-14">{{item?.location_id?.location_hierarchy}}</td>
+        <td class="custom-td text-center font-size-14">{{item?.total_price}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
