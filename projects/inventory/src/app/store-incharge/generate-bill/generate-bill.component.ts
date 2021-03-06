@@ -98,7 +98,9 @@ export class GenerateBillComponent implements OnInit {
   }
   getBundle(){
     this.bundleArray = [];
-    this.inventory.getAllBundle({}).subscribe((result:any) => {
+    const param:any = {};
+    param.emp_id =  Number(this.currentUser.login_id),
+    this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
         console.log('this.bundleArray',this.bundleArray);
