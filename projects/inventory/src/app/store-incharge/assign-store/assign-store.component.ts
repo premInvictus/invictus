@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
-import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component'
+import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+
 @Component({
   selector: 'app-assign-store',
   templateUrl: './assign-store.component.html',
@@ -139,6 +141,13 @@ export class AssignStoreComponent implements OnInit {
     this.inventory.getAllBundle({}).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
+        this.bundleArray.forEach(element => {
+          let itemNameArr:any[]=[];
+          element.item_assign.forEach(e => {
+            itemNameArr.push(new TitleCasePipe().transform(e.selling_item.item_name));
+          });
+          element['itemNameArr'] = itemNameArr.join(', ');
+        });
         console.log('this.bundleArray',this.bundleArray);
       }
     })
