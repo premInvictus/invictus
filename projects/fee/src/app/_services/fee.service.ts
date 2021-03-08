@@ -284,6 +284,13 @@ export class FeeService {
 		}
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger', value);
 	}
+	getHeadWiseStudentDetail(value: any) {
+		this.service.startLoading();
+		if (this.processType.getProcesstype()) {
+			value.inv_process_type = this.processType.getProcesstype();
+		}
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getHeadWiseStudentDetail', value);
+	}
 	getHeadWiseCollection(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getHeadWiseCollection', value);
