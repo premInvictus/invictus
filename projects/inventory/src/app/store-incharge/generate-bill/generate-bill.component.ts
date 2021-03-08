@@ -198,9 +198,9 @@ export class GenerateBillComponent implements OnInit {
         const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
         if (findex == -1) {
           this.itemArray.push(element.selling_item);
+          this.selection.toggle(element.item_code);
           if(element.item_optional != '1') {
             this.requiredArray.push(element.item_code);
-            this.selection.toggle(element.item_code);
           }
         }
       });
@@ -246,6 +246,7 @@ export class GenerateBillComponent implements OnInit {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
           this.itemArray.push(result[0].item_assign[0]);
+          this.selection.toggle(result[0].item_assign[0].item_code);
           this.pushItem();
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
