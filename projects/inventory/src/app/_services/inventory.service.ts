@@ -250,6 +250,10 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/bundle/insert', value);
   }
+  updateBundle(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/bundle/update', value);
+  }
   getBundle(value) {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/bundle/get', value);
