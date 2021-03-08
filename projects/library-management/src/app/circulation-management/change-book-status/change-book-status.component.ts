@@ -114,6 +114,14 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		{
 			type_id: 'marked-return',
 			type_name: 'Marked for return'
+		},
+		{
+			type_id: 'donated',
+			type_name: 'Donated'
+		},
+		{
+			type_id: 'lost',
+			type_name: 'Lost'
 		}
 	];
 	ngOnInit() {
@@ -301,6 +309,14 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 				{
 					type_id: 'marked-return',
 					type_name: 'Marked for return'
+				},
+				{
+					type_id: 'donated',
+					type_name: 'Donated'
+				},
+				{
+					type_id: 'lost',
+					type_name: 'Lost'
 				}
 			];
 		}
