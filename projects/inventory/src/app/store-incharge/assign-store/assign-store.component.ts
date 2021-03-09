@@ -328,6 +328,23 @@ export class AssignStoreComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if(result && result.status == 'ok'){
+        this.getBundle();
+      }
     });
+  }
+  deleteBundle(item){
+    console.log(item);
+    let param:any = {};
+    param.bundle_id = item.bundle_id;
+    param.status = '5';
+    this.inventory.updateBundle(param).subscribe((result:any) => {
+      if(result){
+        this.commonService.showSuccessErrorMessage('Updated Successfully','success');
+        this.getBundle();
+      } else {
+        this.commonService.showSuccessErrorMessage('Updated Failed','error');
+      }
+    })
   }
 }

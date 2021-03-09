@@ -126,9 +126,10 @@
       <tr class="custom-tr">
         <!-- <th class="custom-th text-center" width="10%">Bundle Code</th> -->
         <th class="custom-th text-center" width="10%">Bundle Name</th>
-        <th class="custom-th text-center" width="70%">Items</th>
+        <th class="custom-th text-center" width="60%">Items</th>
         <th class="custom-th text-center" width="10%">Bundle Location</th>
-        <th class="custom-th text-center" width="10%">Total Price (<i class="fas fa-rupee-sign"></i></th>
+        <th class="custom-th text-center" width="10%">Total Price (<i class="fas fa-rupee-sign"></i>)</th>
+        <th class="custom-th" width="10%">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -139,6 +140,11 @@
         <td class="custom-td text-left font-size-14">{{item?.itemNameArr}}</td>
         <td class="custom-td text-center font-size-14">{{item?.location_id?.location_hierarchy}}</td>
         <td class="custom-td text-center font-size-14">{{item?.total_price}}</td>
+        <td width="10%" class="custom-td">
+          <span><i class="fas fa-edit font-color-grey margin-right-15" (click)="addBundle(item)"></i></span>
+          <span class="ver-line-divider"><i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="deleteBundle(item)"></i></span>
+          
+        </td>
       </tr>
     </tbody>
   </table>

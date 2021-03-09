@@ -45,9 +45,31 @@ export class BundleModalComponent implements OnInit {
   ngOnInit() {
     console.log(this.data);
     this.buildForm();
+    if(this.data.value) {
+      this.tableArray = [];
+      this.selection.clear();
+      this.itemSearchForm.patchValue({
+        bundle_id:this.data.value.bundle_id,
+        bundle_name:this.data.value.bundle_id
+      })
+      if(this.data.value.item_assign && this.data.value.item_assign.length > 0){
+        this.data.value.item_assign.forEach(item => {
+          this.tableArray.push({
+            item_code: item.item_code,
+            item_name: item.selling_item.item_name,
+            item_selling_price: item.selling_item.item_selling_price,
+            item_optional: item.item_optional,
+          });
+          if(item.item_optional == '1'){
+            this.selection.toggle(item.item_code);
+          }
+        });
+      }
+    }
   }
   buildForm() {
     this.itemSearchForm = this.fbuild.group({
+      bundle_id:'',
       bundle_name:'',
       scanItemId: ''
     });
@@ -104,8 +126,8 @@ export class BundleModalComponent implements OnInit {
   getTotalPrice(index) {
     return this.tableArray.map(e => e.item_selling_price).reduce((a,b) => a += Number(b),0);
   }
-  closeDialog(){
-    this.dialogRef.close();
+  closeDialog(value=null){
+    this.dialogRef.close(value);
   }
   finalSubmit() {
     var finalJson: any = {};
@@ -123,15 +145,29 @@ export class BundleModalComponent implements OnInit {
       bundle_name: this.itemSearchForm.value.bundle_name,
       item_assign: itemAssign
     }
-    console.log(this.selection.selected);
-    this.inventory.insertBundle(finalJson).subscribe((result: any) => {
-      if (result) {
-        this.common.showSuccessErrorMessage('Bundle added Successfully', 'success');
-        this.closeDialog();
-      } else {
-        this.common.showSuccessErrorMessage(result, 'error');
-      }
-    });
+    if(this.itemSearchForm.value.bundle_id){
+      finalJson['bundle_id'] = this.itemSearchForm.value.bundle_id;
+      this.inventory.updateBundle(finalJson).subscribe((result: any) => {
+        if (result) {
+          this.common.showSuccessErrorMessage('Bundle added Successfully', 'success');
+          this.closeDialog({status:'ok'});
+        } else {
+          this.common.showSuccessErrorMessage(result, 'error');
+        }
+      });
+    } else {
+      this.inventory.insertBundle(finalJson).subscribe((result: any) => {
+        if (result) {
+          this.common.showSuccessErrorMessage('Bundle added Successfully', 'success');
+          this.closeDialog({status:'ok'});
+        } else {
+          this.common.showSuccessErrorMessage(result, 'error');
+        }
+      });
+    }   
+  }
+  removeItem(i){
+    this.tableArray.splice(i,1);
   }
 
 }
