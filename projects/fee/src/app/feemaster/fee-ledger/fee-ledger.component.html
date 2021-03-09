@@ -44,10 +44,10 @@
         <div style="margin-top:15px !important" class="text-right">
           <div class="classwise-container">
             <img 
-              style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg" matTooltip="Download as Pdf"
+              style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg" matTooltip="Download Receipt Ledger PDF"
               (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
             <!-- <img 
-              style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg" matTooltip="Download as Excel"
+              style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg" matTooltip="Download Receipt Ledger Excel"
               (click)="downloadExcel()" [matTooltipPosition]="'left'" /> -->
           </div>
       </div>
@@ -284,7 +284,7 @@
                   <ng-container matColumnDef="remarks">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks<span
                         style="float:right; padding-right: 10px;"><img style="cursor: pointer"
-                          src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
+                          src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export Fee Ledger"></span>
                     </th>
                     <td width="41%" mat-cell *matCellDef="let item; let i= index"
                       style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap"

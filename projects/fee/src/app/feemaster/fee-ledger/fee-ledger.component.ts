@@ -231,10 +231,10 @@ export class FeeLedgerComponent implements OnInit {
 				}
 				
 			}
+			let arr = [];
 			result.data[0].map((element) => {
 				let bank_name_1 = '';
 				let bank_name = this.bankArray.filter((e) => {
-					console.log(e.bnk_gid, ' - ', element.ftr_deposit_bnk_id);
 					
 					if(e.bnk_gid == element.ftr_deposit_bnk_id) 
 					return true
@@ -243,7 +243,16 @@ export class FeeLedgerComponent implements OnInit {
 					bank_name_1 = bank_name[0].bank_name;
 				}
 				let a = [];
-				a.push(element.rpt_receipt_no);
+				let amt = [];
+				let at_val = false;
+				let main  = false;
+				arr.filter((e) => {
+					if(e.rpt_receipt_no == element.rpt_receipt_no) {
+						main = true;
+					}
+				})
+				if(!main) {
+					a.push(element.rpt_receipt_no);
 				a.push(new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
 				a.push(element.fp_months[0]);
 				a.push(element.pay_name);
@@ -258,20 +267,39 @@ export class FeeLedgerComponent implements OnInit {
 					
 					
 					if(da && da.length > 0) {
-						a.push(new IndianCurrency().transform(da[0].invg_fh_amount))
-						alast[i+7] += parseInt(da[0].invg_fh_amount);
+						amt = arr.filter((e) => {
+							if(e.inv_id == element.inv_id) {
+								return true
+							} 
+						});
+						amt.filter((e) => {
+							e.invoice_bifurcation.filter((ch) => {
+								if(ch.invg_fh_id == da[0].invg_fh_id) {
+									at_val = true
+								}
+							})
+						})
+						a.push(!at_val ? new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0): '-')
+						if(element.rpt_receipt_no)
+						alast[i+7] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0): 0;
 					} else {
 						a.push('-');
 						alast[i+7] += 0;
 					}
 				}
-				a.push(new IndianCurrency().transform(element.late_fine_amt));
-				alast[alast.length - 2] += parseInt(element.late_fine_amt)
-				a.push(new IndianCurrency().transform(element.rpt_net_amount));
-				alast[alast.length - 1] += parseInt(element.rpt_net_amount);
-				pdfrowdata.push(a);
+				a.push(new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt: 0));	
+				a.push(new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0));
+				
+				
+				if(element.rpt_receipt_no) {
+					alast[alast.length - 2] += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
+					alast[alast.length - 1] += parseInt(element.rpt_net_amount ? (element.rpt_net_amount): 0);
+					pdfrowdata.push(a);
+				}
+				
 
-
+				arr.push(element);
+				}
 
 			})
 			// console.log(alast);
@@ -476,6 +504,10 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			doc.save('Receipt_Ledger_' + this.loginId + ".pdf");
 		})
+	}
+
+	downloadExcel() {
+
 	}
 	// get session year of the selected session
 	getSession() {
