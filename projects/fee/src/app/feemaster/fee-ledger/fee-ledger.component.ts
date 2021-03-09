@@ -363,7 +363,7 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			doc.autoTable({
 				// tslint:disable-next-line:max-line-length
-				head: [[`Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`,'                         ', `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
+				head: [[`Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`,'                                  ', `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
 				didDrawPage: function (data) {
 
 				},
