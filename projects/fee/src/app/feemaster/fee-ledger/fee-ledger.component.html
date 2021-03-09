@@ -26,38 +26,54 @@
     </button>
   </div>
   <div style="margin-top: 8%;" class="floating-button" *ngIf="isExistUserAccessMenu('793')">
-    <button mat-button  class="float-edit-button"><i class="material-icons font-white">create_new_folder</i>
+    <button mat-button class="float-edit-button"><i class="material-icons font-white">create_new_folder</i>
       <span class="margin-top-2 right-text" (click)="changeToggle()">
         <i class="material-icons font-white">create_new_folder</i>
         <span class="btn-spacer">{{!showMissingInvoice? 'Missing Invoice' :'Fee Ledger'}}</span></span>
     </button>
   </div>
+  
   <div *ngIf="!showMissingInvoice" class="row">
+    
     <div class="col-12 ">
       <mat-card class="card-top-title__container card-height-677 card-height-795">
         <!-- <div class="row margin-bottom-10">
           <div class="col-6 remove-col-padding-left">
           </div>
         </div> -->
+        <div style="margin-top:15px !important" class="text-right">
+          <div class="classwise-container">
+            <img 
+              style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg" matTooltip="Download as Pdf"
+              (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
+            <!-- <img 
+              style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg" matTooltip="Download as Excel"
+              (click)="downloadExcel()" [matTooltipPosition]="'left'" /> -->
+          </div>
+      </div>
         <div style="margin-top:15px !important" class="col-12 text-right">
           <!-- <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-receiptMod"
             (click)="openReciptModificationDialog()">Receipt Modification</button> -->
-          <button *ngIf="actionFlag.attach && isExistUserAccessMenu('768')" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openAttachDialog(fetchInvId())">Attach</button>
-          <button *ngIf="actionFlag.detach && isExistUserAccessMenu('769')" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openDetachReceiptDialog(fetchInvId())" >Detach</button>
-          <button *ngIf="actionFlag.edit && isExistUserAccessMenu('770')" mat-raised-button class="btn-primary btn-edit-inv btn-spacer"
-            (click)="openDialog1(true)" >Edit Invoice</button>
-          <button *ngIf="actionFlag.consolidate && isExistUserAccessMenu('771')" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openConsolidateDialog({})" >Consolidate</button>
-          <button *ngIf="actionFlag.unconsolidate && isExistUserAccessMenu('772')" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
-            (click)="openUnConsolidateDialog(fetchInvId())" >Un-Consolidate</button>
-          <button *ngIf="actionFlag.recalculate && isExistUserAccessMenu('773')" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
-            (click)="openRecalculateDialog()">Re-calutate</button>
-          <button *ngIf="actionFlag.deleteinvoice && isExistUserAccessMenu('774')" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
-            (click)="openDeleteDialog(fetchInvId())">Delete Invoice</button>
-          <button *ngIf="actionFlag.deletereceipt && isExistUserAccessMenu('775')" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
-            (click)="openDeleteReciptDialog(fetchRecId())">Delete Receipt</button>
+          <button *ngIf="actionFlag.attach && isExistUserAccessMenu('768')" mat-raised-button
+            class="btn-primary btn-consolidate btn-spacer" (click)="openAttachDialog(fetchInvId())">Attach</button>
+          <button *ngIf="actionFlag.detach && isExistUserAccessMenu('769')" mat-raised-button
+            class="btn-primary btn-consolidate btn-spacer"
+            (click)="openDetachReceiptDialog(fetchInvId())">Detach</button>
+          <button *ngIf="actionFlag.edit && isExistUserAccessMenu('770')" mat-raised-button
+            class="btn-primary btn-edit-inv btn-spacer" (click)="openDialog1(true)">Edit Invoice</button>
+          <button *ngIf="actionFlag.consolidate && isExistUserAccessMenu('771')" mat-raised-button
+            class="btn-primary btn-consolidate btn-spacer" (click)="openConsolidateDialog({})">Consolidate</button>
+          <button *ngIf="actionFlag.unconsolidate && isExistUserAccessMenu('772')" mat-raised-button
+            class="btn-primary btn-unconsolidate btn-spacer"
+            (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
+          <button *ngIf="actionFlag.recalculate && isExistUserAccessMenu('773')" mat-raised-button
+            class="btn-primary recalulate-invoice-btn btn-spacer" (click)="openRecalculateDialog()">Re-calutate</button>
+          <button *ngIf="actionFlag.deleteinvoice && isExistUserAccessMenu('774')" mat-raised-button
+            class="btn-primary btn-delete-rec btn-spacer" (click)="openDeleteDialog(fetchInvId())">Delete
+            Invoice</button>
+          <button *ngIf="actionFlag.deletereceipt && isExistUserAccessMenu('775')" mat-raised-button
+            class="btn-primary btn-delete-rec btn-spacer" (click)="openDeleteReciptDialog(fetchRecId())">Delete
+            Receipt</button>
         </div>
         <div class="row">
           <div class="col-12">
@@ -76,8 +92,7 @@
                     <td width="3%" mat-cell *matCellDef="let row; let i=index"
                       [ngStyle]="{'background-color': getColor(row),'border': getBorder(row)}"
                       [attr.rowspan]="row?.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
-                      [style.display]="row?.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''"
-                      >
+                      [style.display]="row?.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                       </mat-checkbox>
@@ -244,7 +259,8 @@
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       <span *ngIf="item.action.rpt_id" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
-                      </span></td>
+                      </span>
+                    </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="mop">
@@ -273,10 +289,13 @@
                     <td width="41%" mat-cell *matCellDef="let item; let i= index"
                       style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
-                      <span *ngIf="item?.remarks?.length > 60 && !item.showMore">{{item.remarks | capitalize | slice:0:60 }} <a herf="javascript:void(0)" (click)="getShowMore(i)" title="View More" class="view-less"> ... </a></span>
-                      <span *ngIf="item?.remarks?.length > 60 && item.showMore">{{item.remarks | capitalize }} <a href="javascript:void(0)" (click)="getShowLess(i)" class="view-less"> View Less </a></span>
+                      <span *ngIf="item?.remarks?.length > 60 && !item.showMore">{{item.remarks | capitalize |
+                        slice:0:60 }} <a herf="javascript:void(0)" (click)="getShowMore(i)" title="View More"
+                          class="view-less"> ... </a></span>
+                      <span *ngIf="item?.remarks?.length > 60 && item.showMore">{{item.remarks | capitalize }} <a
+                          href="javascript:void(0)" (click)="getShowLess(i)" class="view-less"> View Less </a></span>
                       <span *ngIf="item?.remarks?.length <= 60">{{item.remarks | capitalize}}</span>
-                       </td>
+                    </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -386,105 +405,109 @@
       </mat-card>
     </div>
   </div>
-  <div *ngIf="showMissingInvoice" >
-   <div class="row" *ngIf="datasource.length > 0">
-    <div class="col-12">
-    <mat-card class="card-top-title__container card-height-677 card-height-795 ">
-      <div style="margin-top:15px !important" class="col-12 text-right" >
-        <button style = "margin-bottom: 5px;" mat-button class="submit-button" (click)="addInvoiceToledger()" *ngIf="isExistUserAccessMenu('794') && resultdataArray.length > 0">Move to Ledger</button>
+  <div *ngIf="showMissingInvoice">
+    <div class="row" *ngIf="datasource.length > 0">
+      <div class="col-12">
+        <mat-card class="card-top-title__container card-height-677 card-height-795 ">
+          <div style="margin-top:15px !important" class="col-12 text-right">
+            <button style="margin-bottom: 5px;" mat-button class="submit-button" (click)="addInvoiceToledger()"
+              *ngIf="isExistUserAccessMenu('794') && resultdataArray.length > 0">Move to Ledger</button>
+          </div>
+          <div class="table-overflow">
+            <table
+              class="mat-table table table-100 table-borderd table-stripped custom-table text-center empty-same-height">
+              <thead class='header'>
+                <th style="background-color: #c8d6e5; ">
+                  <mat-checkbox (change)="getallItem()" [ngModel]='checkallstatus'>
+                  </mat-checkbox>
+                </th>
+
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Period
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice No.
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Particulars
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Date
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Due Date
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Amount
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Status
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Session
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Type
+                </th>
+                <th class=' mat-header-cell' style="background-color: #c8d6e5;">
+                  Invoice Remark
+                </th>
+
+              </thead>
+              <tbody>
+                <tr class=' mat-row' *ngFor="let item of datasource"
+                  [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                  style="padding-left: 0.5%;font-size: 16px !important;">
+                  <td>
+                    <mat-checkbox (change)='getItem(item)' [checked]='checkResult(item)'>
+                    </mat-checkbox>
+                  </td>
+
+                  <td style="text-align: left !important">
+                    {{getValue(item.inv_fp_name)}}
+                  </td>
+                  <td>
+                    <span class="pointer font-bold font-skyblue font-underline">
+                      <a (click)="openDialog(item, false)">{{item.inv_invoice_no}}</a>
+                    </span>
+                  </td>
+                  <td style="text-align: left !important">
+                    {{item.inv_title }}
+                  </td>
+                  <td>
+                    {{item.inv_invoice_date | date: 'd-MMM-y'}}
+                  </td>
+                  <td>
+                    {{item.inv_due_date | date: 'd-MMM-y'}}
+                  </td>
+                  <td>
+                    {{getInteger(item.inv_fee_amount , item.inv_fine_amount , item.inv_opening_balance) }}
+                  </td>
+                  <td>
+                    {{item.inv_paid_status | capitalize}}
+                  </td>
+                  <td>
+                    {{(item.ses_name)}}
+                  </td>
+                  <td>
+                    {{item.calm_name}}
+                  </td>
+                  <td>
+                    {{item.inv_remark}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
       </div>
-      <div class="table-overflow" >
-     <table  class="mat-table table table-100 table-borderd table-stripped custom-table text-center empty-same-height">
-       <thead class='header' >
-        <th style="background-color: #c8d6e5; ">
-          <mat-checkbox (change)="getallItem()" [ngModel]= 'checkallstatus'>
-          </mat-checkbox>
-        </th>
-         
-         <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Period
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice No.
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Particulars
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Date
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Due Date
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Amount
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Status
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Session
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Type
-        </th>
-        <th class=' mat-header-cell' style="background-color: #c8d6e5;">
-          Invoice Remark
-        </th>
-        
-       </thead>
-       <tbody>
-         <tr class=' mat-row' *ngFor="let item of datasource" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}" style="padding-left: 0.5%;font-size: 16px !important;">
-            <td >
-              <mat-checkbox  (change) ='getItem(item)' [checked] = 'checkResult(item)'>
-              </mat-checkbox>
-            </td>
-            
-            <td style="text-align: left !important">
-              {{getValue(item.inv_fp_name)}}
-            </td>
-            <td >
-              <span class="pointer font-bold font-skyblue font-underline">
-                <a (click)="openDialog(item, false)">{{item.inv_invoice_no}}</a>
-              </span> 
-            </td>
-            <td style="text-align: left !important">
-              {{item.inv_title }}
-            </td>
-            <td>
-              {{item.inv_invoice_date | date: 'd-MMM-y'}}
-            </td>
-            <td>
-              {{item.inv_due_date | date: 'd-MMM-y'}}
-            </td>
-            <td>
-              {{getInteger(item.inv_fee_amount , item.inv_fine_amount , item.inv_opening_balance)  }}
-            </td>
-            <td>
-              {{item.inv_paid_status | capitalize}}
-            </td>
-            <td>
-              {{(item.ses_name)}}
-            </td>
-            <td>
-              {{item.calm_name}}
-            </td>
-            <td>
-              {{item.inv_remark}}
-            </td>
-         </tr>
-       </tbody>
-     </table>
     </div>
-     </mat-card>
-     </div>
-   </div>
-   <div *ngIf="datasource.length < 1" class="row margin-top-10">
-   <div class="col-12 remove-col-padding">
-    <mat-card class="card-top-title__container ">
-    <div  class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
-    </mat-card>
-    </div>
+    <div *ngIf="datasource.length < 1" class="row margin-top-10">
+      <div class="col-12 remove-col-padding">
+        <mat-card class="card-top-title__container ">
+          <div class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
+        </mat-card>
+      </div>
     </div>
   </div>
 </div>
