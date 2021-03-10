@@ -13,7 +13,7 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
-import { IndianCurrency } from '../../_pipes';
+import { CapitalizePipe, IndianCurrency } from '../../_pipes';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import { element } from 'protractor';
@@ -44,7 +44,7 @@ export class FeeLedgerComponent implements OnInit {
 	recordArray: any[] = [];
 	lastRecordId: any;
 	loginId: any;
-
+	notFormatedCellArray: any[] = [];
 	process_type = '';
 	checkallstatus = false;
 	datasource: any = [];
@@ -182,10 +182,10 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getbanks() {
-		this.feeService.getBanks({}).subscribe((res:any) =>{
+		this.feeService.getBanks({}).subscribe((res: any) => {
 			console.log(res);
 			this.bankArray = res.data;
-			
+
 		})
 	}
 
@@ -204,12 +204,12 @@ export class FeeLedgerComponent implements OnInit {
 			});
 		}
 	}
-	downloadPdf() {
+	async downloadPdf() {
 
-		let headName = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Cheque No', 'Drawn on Bank'];
+		let headName = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Ch. No/Txn. No', 'Drawn on Bank'];
 
 
-		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
+		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
@@ -220,118 +220,161 @@ export class FeeLedgerComponent implements OnInit {
 			headName.push('Fine');
 			headName.push('Total');
 			let pdfrowdata = [];
-			
+
 			let alast = []
-			for(let i = 0; i < headName.length; i++) {
-				if(i < 7) {
+			for (let i = 0; i < headName.length; i++) {
+				if (i < 7) {
 					alast.push('');
 				}
-				else{
+				else {
 					alast.push(0);
 				}
-				
+
 			}
 			let arr = [];
 			result.data[0].map((element) => {
 				let bank_name_1 = '';
 				let bank_name = this.bankArray.filter((e) => {
-					
-					if(e.bnk_gid == element.ftr_deposit_bnk_id) 
-					return true
+
+					if (e.bnk_gid == element.ftr_deposit_bnk_id)
+						return true
 				})
-				if(bank_name && bank_name.length > 0) {
+				if (bank_name && bank_name.length > 0) {
 					bank_name_1 = bank_name[0].bank_name;
 				}
 				let a = [];
 				let amt = [];
 				let at_val = false;
-				let main  = false;
+				let main = false;
 				arr.filter((e) => {
-					if(e.rpt_receipt_no == element.rpt_receipt_no) {
+					if (e.rpt_receipt_no == element.rpt_receipt_no) {
 						main = true;
 					}
 				})
-				if(!main) {
+				if (!main) {
 					a.push(element.rpt_receipt_no);
-				a.push(new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
-				a.push(element.fp_months[0]);
-				a.push(element.pay_name);
-				a.push(element.bank_name_1);
-				a.push(element.ftr_cheque_no);
-				a.push(element.ftr_bnk_name);
-				for(let i = 0; i < headName.length - 9; i++ ) {
-					let da = element.invoice_bifurcation.filter((e) => { 
-						if (parseInt(result.data[1][i].fh_id) == parseInt(e.invg_fh_id))
-						return true;
-					});
-					
-					
-					if(da && da.length > 0) {
-						amt = arr.filter((e) => {
-							if(e.inv_id == element.inv_id) {
-								return true
-							} 
+					a.push(new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
+					a.push(element.fp_months[0]);
+					a.push(element.pay_name);
+					a.push(element.bank_name_1);
+					a.push(element.ftr_cheque_no);
+					a.push(element.ftr_bnk_name);
+					for (let i = 0; i < headName.length - 9; i++) {
+						let da = element.invoice_bifurcation.filter((e) => {
+							if (parseInt(result.data[1][i].fh_id) == parseInt(e.invg_fh_id))
+								return true;
 						});
-						amt.filter((e) => {
-							e.invoice_bifurcation.filter((ch) => {
-								if(ch.invg_fh_id == da[0].invg_fh_id) {
-									at_val = true
-								}
-							})
-						})
-						a.push(!at_val ? new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0): '-')
-						if(element.rpt_receipt_no)
-						alast[i+7] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0): 0;
-					} else {
-						a.push('-');
-						alast[i+7] += 0;
-					}
-				}
-				a.push(new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt: 0));	
-				a.push(new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0));
-				
-				
-				if(element.rpt_receipt_no) {
-					alast[alast.length - 2] += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
-					alast[alast.length - 1] += parseInt(element.rpt_net_amount ? (element.rpt_net_amount): 0);
-					pdfrowdata.push(a);
-				}
-				
 
-				arr.push(element);
+
+						if (da && da.length > 0) {
+							amt = arr.filter((e) => {
+								if (e.inv_id == element.inv_id) {
+									return true
+								}
+							});
+							amt.filter((e) => {
+								e.invoice_bifurcation.filter((ch) => {
+									if (ch.invg_fh_id == da[0].invg_fh_id) {
+										at_val = true
+									}
+								})
+							})
+							a.push(!at_val ? new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-')
+							if (element.rpt_receipt_no)
+								alast[i + 7] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : 0;
+						} else {
+							a.push('-');
+							alast[i + 7] += 0;
+						}
+					}
+					a.push(new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt : 0));
+					a.push(new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0));
+
+
+					if (element.rpt_receipt_no) {
+						alast[alast.length - 2] += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
+						alast[alast.length - 1] += parseInt(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+						pdfrowdata.push(a);
+					}
+
+
+					arr.push(element);
 				}
 
 			})
 			// console.log(alast);
 			alast[5] = 'Total';
-			for(let i = 7; i < headName.length; i++) {
+			for (let i = 7; i < headName.length; i++) {
 				alast[i] = new IndianCurrency().transform(alast[i]);
 			}
 			pdfrowdata.push(alast);
-			
-			const doc = new jsPDF('l', 'mm', 'a0');
+			let objct: any = {};
+			for (let i = 0; i < headName.length; i++) {
+				objct.i = { 'cellWidth': 300 / headName.length }
+			}
+
+			const doc = new jsPDF('l', 'mm', 'a4');
 			doc.levelHeading = [];
 			doc.levelTotalFooter = [];
 			doc.levelSubtotalFooter = [];
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
+			
+			async function getBase64ImageFromUrl(imageUrl) {
+				var res = await fetch(imageUrl);
+				var blob = await res.blob();
+			  
+				return new Promise((resolve, reject) => {
+				  var reader  = new FileReader();
+				  reader.addEventListener("load", function () {
+					  resolve(reader.result);
+				  }, false);
+			  
+				  reader.onerror = () => {
+					return reject(this);
+				  };
+				  reader.readAsDataURL(blob);
+				})
+			  }
 
+			var imageurl = await getBase64ImageFromUrl(this.schoolInfo.school_logo);
+			
+			doc.addImage(imageurl, 'jpg', 125, 0, 40, 30);
+			
+			doc.autoTable({
+				// startY: doc.previousAutoTable.finalY + 0.2,
+				margin: {top:30},
+				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
 				},
-				headStyles: {
+				headerStyles: {
 					fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 46,
+					fontSize: 12,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				startY: doc.previousAutoTable.finalY + 0.2,
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 12,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				head: [[new TitleCasePipe().transform('Receipt Ledger ' + this.sessionName)]],
-				margin: { top: 0 },
+				startY: doc.previousAutoTable.finalY + 0.2,
 				didDrawPage: function (data) {
 
 				},
@@ -340,62 +383,74 @@ export class FeeLedgerComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 42,
+					fontSize: 11,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
+				startY: doc.previousAutoTable.finalY + 0.2,
 				// tslint:disable-next-line:max-line-length
-				head: [[`Admission Number:  ${result.data[0][0].au_admission_no}`,'                  ', `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`]],
+				head: [[`Admission Number:  ${result.data[0][0].au_admission_no}`, '                              ', `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`]],
 				didDrawPage: function (data) {
 
 				},
 				headStyles: {
-					fontStyle: 'bold',
+					// fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 38,
+					fontSize: 10,
 				},
 				useCss: true,
-				theme: 'striped'
+				theme: 'striped',
+				columnStyles: {
+					0: { 'cellWidth': 200 },
+					1: { 'cellWidth': 100 }
+				}
 			});
 			doc.autoTable({
+				startY: doc.previousAutoTable.finalY + 0.2,
 				// tslint:disable-next-line:max-line-length
-				head: [[`Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`,'                                  ', `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
+				head: [[`Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`, '                                            ', `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
 				didDrawPage: function (data) {
 
 				},
 				headStyles: {
-					fontStyle: 'bold',
+					// fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 38,
+					fontSize: 10,
 				},
 				useCss: true,
-				theme: 'striped'
+				theme: 'striped',
+				columnStyles: {
+					0: { 'cellWidth': 300 },
+					1: { 'cellWidth': 100 }
+				}
 			});
 			doc.autoTable({
+				startY: doc.previousAutoTable.finalY + 0.2,
 				// tslint:disable-next-line:max-line-length
 				head: [[`Student Name: ${result.data[0][0].au_full_name}`]],
 				didDrawPage: function (data) {
 
 				},
 				headStyles: {
-					fontStyle: 'bold',
+					// fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 38,
+					fontSize: 10,
 				},
-				columnStyles: {
-					0: {cellWidth: 100},
-    				1: {cellWidth: 80},
-				},
+
 				useCss: true,
-				theme: 'striped'
+				theme: 'striped',
+				columnStyles: {
+					0: { cellWidth: 200 },
+					1: { cellWidth: 100 }
+				}
 			});
 			doc.autoTable({
 				head: [headName],
@@ -414,7 +469,7 @@ export class FeeLedgerComponent implements OnInit {
 					const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
 					if (lfIndex !== -1) {
 						doc.setFontStyle('bold');
-						doc.setFontSize('34');
+						doc.setFontSize('8');
 						doc.setTextColor('#ffffff');
 						doc.setFillColor(0, 62, 120);
 					}
@@ -423,7 +478,7 @@ export class FeeLedgerComponent implements OnInit {
 					const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
 					if (lsfIndex !== -1) {
 						doc.setFontStyle('bold');
-						doc.setFontSize('34');
+						doc.setFontSize('8');
 						doc.setTextColor('#ffffff');
 						doc.setFillColor(229, 136, 67);
 					}
@@ -432,7 +487,7 @@ export class FeeLedgerComponent implements OnInit {
 					const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
 					if (lhIndex !== -1) {
 						doc.setFontStyle('bold');
-						doc.setFontSize('34');
+						doc.setFontSize('8');
 						doc.setTextColor('#5e666d');
 						doc.setFillColor('#c8d6e5');
 					}
@@ -440,7 +495,7 @@ export class FeeLedgerComponent implements OnInit {
 					// grand total
 					if (data.row.index === rows.length - 1) {
 						doc.setFontStyle('bold');
-						doc.setFontSize('34');
+						doc.setFontSize('8');
 						doc.setTextColor('#ffffff');
 						doc.setFillColor(67, 160, 71);
 					}
@@ -449,17 +504,17 @@ export class FeeLedgerComponent implements OnInit {
 					fontStyle: 'bold',
 					fillColor: '#c8d6e5',
 					textColor: '#5e666d',
-					fontSize: 30,
+					fontSize: 8,
 					halign: 'center',
 				},
 				alternateRowStyles: {
 					fillColor: '#f1f4f7'
 				},
 				useCss: true,
-				
+
 				styles: {
-					rowHeight: 30,
-					fontSize: 30,
+					rowHeight: 7,
+					fontSize: 7,
 					cellWidth: 'auto',
 					textColor: 'black',
 					lineColor: '#89a8c8',
@@ -467,6 +522,9 @@ export class FeeLedgerComponent implements OnInit {
 					halign: 'center',
 					columnWidth: 'wrap'
 				},
+				columnStyles: objct,
+
+				// etc
 				theme: 'grid'
 			});
 			doc.autoTable({
@@ -481,13 +539,14 @@ export class FeeLedgerComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 38,
+					fontSize: 8,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				// tslint:disable-next-line:max-line-length
+				startY: doc.previousAutoTable.finalY + 0.5,
 				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
 				didDrawPage: function (data) {
 
@@ -497,7 +556,7 @@ export class FeeLedgerComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 38,
+					fontSize: 8,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -507,6 +566,362 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	downloadExcel() {
+
+		let reportType: any = '';
+		const columns: any = [];
+		const columValue: any = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Ch. No/ Txn. No.', 'Drawn on Bank']
+		columns.push({
+			key: 'rpt_receipt_no',
+			width: this.checkWidth('rpt_receipt_no', 'Rpt. No')
+		});
+		columns.push({
+			key: 'rpt_receipt_date',
+			width: this.checkWidth('rpt_receipt_date', 'Rpt. Date')
+		});
+		columns.push({
+			key: 'fp_months',
+			width: this.checkWidth('fp_months', 'Period')
+		});
+		columns.push({
+			key: 'pay_name',
+			width: this.checkWidth('pay_name', 'Mode')
+		});
+		columns.push({
+			key: 'bank_name_1',
+			width: this.checkWidth('bank_name_1', 'Bank Name')
+		});
+		columns.push({
+			key: 'ftr_cheque_no',
+			width: this.checkWidth('ftr_cheque_no', 'Ch. No/ Txn. No.')
+		});
+		columns.push({
+			key: 'ftr_bnk_name',
+			width: this.checkWidth('ftr_bnk_name', 'Drawn on Bank')
+		});
+		let columndefinition = [
+			{
+				id: 'rpt_receipt_no',
+				name: 'Rpt. No'
+			},
+			{
+				id: 'rpt_receipt_date',
+				name: 'Rpt. Date'
+			},
+			{
+				id: 'fp_months',
+				name: 'Period'
+			},
+			{
+				id: 'pay_name',
+				name: 'Mode'
+			},
+			{
+				id: 'bank_name_1',
+				name: 'Bank Name'
+			},
+			{
+				id: 'ftr_cheque_no',
+				name: 'Ch. No/ Txn. No.'
+			},
+			{
+				id: 'ftr_bnk_name',
+				name: 'Drawn on Bank'
+			}
+		];
+
+
+		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
+			result.data[1].map((element) => {
+				// console.log("i am element", element);
+				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
+					// columns.push(element.fh_name)
+					columns.push({
+						key: element.fh_id,
+						width: this.checkWidth(element.fh_id, element.fh_name)
+					});
+					columndefinition.push({
+						id: element.fh_id,
+						name: element.fh_name
+					});
+					columValue.push(element.fh_name)
+				}
+
+			});
+
+			columns.push({
+				key: 'late_fine_amt',
+				width: this.checkWidth('late_fine_amt', 'Fine')
+			});
+			columns.push({
+				key: 'rpt_net_amount',
+				width: this.checkWidth('rpt_net_amount', 'Total')
+			});
+			columndefinition.push(
+				{
+					id: 'late_fine_amt',
+					name: 'Fine'
+				}
+			);
+			columndefinition.push({
+				id: 'rpt_net_amount',
+				name: 'Total'
+			});
+			columValue.push('Fine');
+			columValue.push('Total');
+
+			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' + this.commonStudentProfileComponent.studentdetails.au_full_name + ' ' + this.commonStudentProfileComponent.studentdetails.em_admission_no);
+			const fileName = new TitleCasePipe().transform('Receipt ledger_: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no) + '.xlsx';
+			const workbook = new Excel.Workbook();
+			console.log("i am column ", columns.length, Math.floor(columns.length / 2), this.alphabetJSON[Math.floor(columns.length / 2) + 1]);
+
+			const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+				{ pageSetup: { fitToWidth: 7 } });
+			worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
+			worksheet.getCell('A1').value =
+				new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+
+			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+			worksheet.getCell('A2').value = reportType;
+			worksheet.mergeCells('A3:' + this.alphabetJSON[Math.floor(columns.length / 2)] + '3');
+			worksheet.getCell('A3').value = `Admission Number:  ${result.data[0][0].au_admission_no}`;
+			worksheet.mergeCells(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}3:` + this.alphabetJSON[columns.length] + '3');
+			worksheet.getCell(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}3`).value = `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`;
+			worksheet.mergeCells('A4:' + this.alphabetJSON[Math.floor(columns.length / 2)] + '4');
+			worksheet.getCell('A4').value = `Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`;
+			worksheet.mergeCells(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}4:` + this.alphabetJSON[columns.length] + '4');
+			worksheet.getCell(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}4`).value = `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`;
+			worksheet.mergeCells('A5:' + this.alphabetJSON[Math.floor(columns.length)] + '5');
+			worksheet.getCell('A5').value = `Student Name: ${result.data[0][0].au_full_name}`;
+
+			worksheet.getRow(6).values = columValue;
+			worksheet.columns = columns;
+			// for(let i = 0; i < columValue.length; i++) {
+			// 	if(i < 7) {
+			// 		alast.push('');
+			// 	}
+			// 	else{
+			// 		alast.push(0);
+			// 	}
+
+			// }
+			
+			console.log("i am col def", columndefinition);
+
+			let arr = [];
+			let obj2: any = {};
+			for(let i = 0; i < columndefinition.length; i++) {
+				obj2[`${columndefinition[i].id}`] = ''
+			}
+
+			obj2.ftr_bnk_name = 'Grand Total';
+			result.data[0].map((element) => {
+				let obj: any = {}
+				let bank_name_1 = '';
+				let bank_name = this.bankArray.filter((e) => {
+
+					if (e.bnk_gid == element.ftr_deposit_bnk_id)
+						return true
+				})
+				if (bank_name && bank_name.length > 0) {
+					bank_name_1 = bank_name[0].bank_name;
+				}
+				let a = [];
+				let amt = [];
+				let at_val = false;
+				let main = false;
+				arr.filter((e) => {
+					if (e.rpt_receipt_no == element.rpt_receipt_no) {
+						main = true;
+					}
+				})
+				if (!main) {
+					obj.rpt_receipt_no = element.rpt_receipt_no;
+					obj.rpt_receipt_date = (new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
+					obj.fp_months = (element.fp_months[0]) ? element.fp_months[0]: '-';
+					obj.pay_name = (element.pay_name);
+					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1: '-';
+					obj.ftr_cheque_no = (element.ftr_cheque_no) ? element.ftr_cheque_no : '-';
+					obj.late_fine_amt = new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt: 0);	
+					obj.rpt_net_amount = new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+
+					obj.ftr_bnk_name = (element.ftr_bnk_name);
+					for (let i = 0; i < columValue.length - 9; i++) {
+						let da = element.invoice_bifurcation.filter((e) => {
+							if (parseInt(result.data[1][i].fh_id) == parseInt(e.invg_fh_id))
+								return true;
+						});
+
+
+						if (da && da.length > 0) {
+							amt = arr.filter((e) => {
+								if (e.inv_id == element.inv_id) {
+									return true
+								}
+							});
+							amt.filter((e) => {
+								e.invoice_bifurcation.filter((ch) => {
+									if (ch.invg_fh_id == da[0].invg_fh_id) {
+										at_val = true
+									}
+								})
+							})
+							obj[`${da[0].invg_fh_id}`] = (!at_val ?  new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
+
+							if (element.rpt_receipt_no)
+							{
+								if(!obj2[`${da[0].invg_fh_id}`] || obj2[`${da[0].invg_fh_id}`] == '') {
+									obj2[`${da[0].invg_fh_id}`] = 0
+								}
+								obj2[`${da[0].invg_fh_id}`] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : 0;
+							}
+								
+						}
+
+
+					}
+					
+
+
+					if (element.rpt_receipt_no) {
+						if(!obj2.late_fine_amt || obj2.late_fine_amt == '') {
+							obj2.late_fine_amt = 0
+						}
+						if(!obj2.rpt_net_amount || obj2.rpt_net_amount == '') {
+							obj2.rpt_net_amount = 0
+						}
+						obj2.late_fine_amt += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
+						obj2.rpt_net_amount += parseInt(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+						console.log(obj, ' -----------------------------------------------', element.late_fine_amt, element.rpt_net_amount);
+
+						worksheet.addRow(obj);
+					}
+
+
+					arr.push(element);
+				}
+
+			})
+
+
+			worksheet.addRow(obj2);
+
+			worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+				columndefinition.forEach(element => {
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.alignment = { wrapText: true, horizontal: 'center' };
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '439f47' },
+						bgColor: { argb: '439f47' }
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+				});
+			});
+			// style all row of excel
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+					row.eachCell((cell) => {
+						cell.alignment = { horizontal: 'center', wrapText: true };
+					})
+				} else if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+					row.eachCell((cell) => {
+						cell.alignment = { horizontal: 'center', wrapText: true };
+					})
+				} else if (rowNum === 4 || rowNum === 3 || rowNum === 5) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center', wrapText: true };
+					});
+				} else if (rowNum > 5 && rowNum < worksheet._rows.length) {
+					// const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+					if (1 == 1) {
+						row.eachCell((cell) => {
+							cell.font = {
+								name: 'Arial',
+								size: 10,
+							};
+							cell.alignment = { wrapText: true, horizontal: 'center' };
+						});
+						if (rowNum % 2 === 0) {
+							row.eachCell((cell) => {
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						} else {
+							row.eachCell((cell) => {
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						}
+
+					}
+				}
+				row.defaultRowHeight = 24;
+			});
+
+
+			workbook.xlsx.writeBuffer().then(data => {
+				const blob = new Blob([data], { type: 'application/octet-stream' });
+				saveAs(blob, fileName);
+			});
+		});
 
 	}
 	// get session year of the selected session
