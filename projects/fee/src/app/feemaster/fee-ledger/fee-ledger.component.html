@@ -18,6 +18,10 @@
       </app-common-student-profile>
     </div>
   </div>
+  <div style="display: none;">
+    <div id="header_checl" [innerHTML]="header" style="height: 80px; display:contents;"></div>
+
+  </div>
   <div class="floating-button" *ngIf="checkStatus()">
     <button mat-button class="float-edit-button"><i class="material-icons font-white">playlist_add</i>
       <span class="margin-top-2 right-text" (click)="openCreateInvoiceModal()">
@@ -46,9 +50,9 @@
             <img 
               style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg" matTooltip="Download Receipt Ledger PDF"
               (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
-            <!-- <img 
+            <img 
               style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg" matTooltip="Download Receipt Ledger Excel"
-              (click)="downloadExcel()" [matTooltipPosition]="'left'" /> -->
+              (click)="downloadExcel()" [matTooltipPosition]="'left'" />
           </div>
       </div>
         <div style="margin-top:15px !important" class="col-12 text-right">
