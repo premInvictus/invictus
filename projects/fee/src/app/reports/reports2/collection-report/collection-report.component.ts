@@ -984,7 +984,7 @@ export class CollectionReportComponent implements OnInit {
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 							{
-								id: 'additional_amt', name: 'Short / Access (₹)', field: 'additional_amt',
+								id: 'additional_amt', name: 'Short / Excess (₹)', field: 'additional_amt',
 								filterable: true,
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
