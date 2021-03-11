@@ -700,7 +700,7 @@ export class FeeLedgerComponent implements OnInit {
 			columValue.push('Fine');
 			columValue.push('Total');
 
-			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' + this.commonStudentProfileComponent.studentdetails.au_full_name + ' ' + this.commonStudentProfileComponent.studentdetails.em_admission_no);
+			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );
 			const fileName = new TitleCasePipe().transform('Receipt ledger_: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no) + '.xlsx';
 			const workbook = new Excel.Workbook();
 			console.log("i am column ", columns.length, Math.floor(columns.length / 2), this.alphabetJSON[Math.floor(columns.length / 2) + 1]);
@@ -772,8 +772,8 @@ export class FeeLedgerComponent implements OnInit {
 					obj.pay_name = (element.pay_name);
 					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1: '-';
 					obj.ftr_cheque_no = (element.ftr_cheque_no) ? element.ftr_cheque_no : '-';
-					obj.late_fine_amt = new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt: 0);	
-					obj.rpt_net_amount = new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+					obj.late_fine_amt = (element.late_fine_amt ? element.late_fine_amt: 0);	
+					obj.rpt_net_amount = (element.rpt_net_amount ? (element.rpt_net_amount) : 0);
 
 					obj.ftr_bnk_name = (element.ftr_bnk_name);
 					for (let i = 0; i < columValue.length - 9; i++) {
@@ -796,7 +796,7 @@ export class FeeLedgerComponent implements OnInit {
 									}
 								})
 							})
-							obj[`${da[0].invg_fh_id}`] = (!at_val ?  new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
+							obj[`${da[0].invg_fh_id}`] = (!at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
 
 							if (element.rpt_receipt_no)
 							{
@@ -946,6 +946,9 @@ export class FeeLedgerComponent implements OnInit {
 				}
 				row.defaultRowHeight = 24;
 			});
+			worksheet.columns.forEach(column => {
+				column.width = 15
+			  })
 
 
 			workbook.xlsx.writeBuffer().then(data => {
