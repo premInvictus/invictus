@@ -46,8 +46,10 @@ export class FeeLedgerComponent implements OnInit {
 	loginId: any;
 	notFormatedCellArray: any[] = [];
 	process_type = '';
+	header: any;
 	checkallstatus = false;
 	datasource: any = [];
+	settings: any[] = [];
 	resultdataArray = [];
 	footerRecord: any = {
 		feeduetotal: 0,
@@ -188,6 +190,26 @@ export class FeeLedgerComponent implements OnInit {
 
 		})
 	}
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['gradecard_scholastic_abbreviation','gradecard_show_scholastic_gradescale','gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+		  'gradecard_health_status', 'gradecard_date', 'school_achievement'];
+		this.feeService.getGlobalSettingReplace(param).subscribe((result: any) => {
+		  if (result && result.status === 'ok') {
+			this.settings = result.data;
+			this.settings.forEach(element => {
+			  
+			  if (element.gs_alias === 'gradecard_header') {
+				this.header = element.gs_value;
+				this.header = this.header.replace('@','data:image/png;base64,');
+				// var regex = /<img.*?src="(.*?)"/;
+				// var src = regex.exec(this.header)[1];
+				// console.log(src);
+			  } 
+			});
+		  }
+		})
+	  }
 
 	checkEmit(process_type) {
 		this.process_type = process_type;
@@ -318,6 +340,7 @@ export class FeeLedgerComponent implements OnInit {
 			doc.levelTotalFooter = [];
 			doc.levelSubtotalFooter = [];
 			
+			
 			async function getBase64ImageFromUrl(imageUrl) {
 				var res = await fetch(imageUrl);
 				var blob = await res.blob();
@@ -337,11 +360,11 @@ export class FeeLedgerComponent implements OnInit {
 
 			var imageurl = await getBase64ImageFromUrl(this.schoolInfo.school_logo);
 			
-			doc.addImage(imageurl, 'jpg', 125, 0, 40, 30);
+			
 			
 			doc.autoTable({
 				// startY: doc.previousAutoTable.finalY + 0.2,
-				margin: {top:30},
+				
 				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
 				didDrawPage: function (data) {
 					// doc.setFont('Roboto');
@@ -356,6 +379,7 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
+			
 			doc.autoTable({
 				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
 				startY: doc.previousAutoTable.finalY + 0.2,
@@ -367,11 +391,12 @@ export class FeeLedgerComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 12,
+					fontSize: 11,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
+			
 			doc.autoTable({
 				head: [[new TitleCasePipe().transform('Receipt Ledger ' + this.sessionName)]],
 				startY: doc.previousAutoTable.finalY + 0.2,
@@ -388,10 +413,12 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
+			doc.addImage(imageurl, 'jpg', 20, 10, 40, 30);
 			doc.autoTable({
+				wrap: true,
 				startY: doc.previousAutoTable.finalY + 0.2,
 				// tslint:disable-next-line:max-line-length
-				head: [[`Admission Number:  ${result.data[0][0].au_admission_no}`, '                              ', `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`]],
+				head: [[`Admission Number:  ${result.data[0][0].au_admission_no}`,'      ', `Active Parent     : ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`]],
 				didDrawPage: function (data) {
 
 				},
@@ -405,35 +432,36 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped',
 				columnStyles: {
-					0: { 'cellWidth': 200 },
-					1: { 'cellWidth': 100 }
+					0: { 'cellWidth': 'wrap' },
+					1: {  margin: { left: -10} }
 				}
 			});
 			doc.autoTable({
-				startY: doc.previousAutoTable.finalY + 0.2,
+				startY: doc.previousAutoTable.finalY + 0.1,
 				// tslint:disable-next-line:max-line-length
-				head: [[`Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`, '                                            ', `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
+				head: [[`Class                        : ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`, `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
 				didDrawPage: function (data) {
 
 				},
 				headStyles: {
-					// fontStyle: 'bold',
+					fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
 					fontSize: 10,
+
 				},
 				useCss: true,
 				theme: 'striped',
 				columnStyles: {
-					0: { 'cellWidth': 300 },
-					1: { 'cellWidth': 100 }
+					0: { cellWidth: 'wrap' },
+					1: { margin: { left: -10}}
 				}
 			});
 			doc.autoTable({
-				startY: doc.previousAutoTable.finalY + 0.2,
+				startY: doc.previousAutoTable.finalY + 0.1,
 				// tslint:disable-next-line:max-line-length
-				head: [[`Student Name: ${result.data[0][0].au_full_name}`]],
+				head: [[`Student Name         : ${result.data[0][0].au_full_name}`]],
 				didDrawPage: function (data) {
 
 				},
@@ -448,7 +476,7 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped',
 				columnStyles: {
-					0: { cellWidth: 200 },
+					0: { cellWidth: 200,  },
 					1: { cellWidth: 100 }
 				}
 			});
@@ -506,6 +534,8 @@ export class FeeLedgerComponent implements OnInit {
 					textColor: '#5e666d',
 					fontSize: 8,
 					halign: 'center',
+					lineWidth: 0.1,
+        			lineColor: [0, 0, 0]
 				},
 				alternateRowStyles: {
 					fillColor: '#f1f4f7'
@@ -540,6 +570,7 @@ export class FeeLedgerComponent implements OnInit {
 					textColor: 'black',
 					halign: 'left',
 					fontSize: 8,
+					
 				},
 				useCss: true,
 				theme: 'striped'
@@ -669,7 +700,7 @@ export class FeeLedgerComponent implements OnInit {
 			columValue.push('Fine');
 			columValue.push('Total');
 
-			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' + this.commonStudentProfileComponent.studentdetails.au_full_name + ' ' + this.commonStudentProfileComponent.studentdetails.em_admission_no);
+			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );
 			const fileName = new TitleCasePipe().transform('Receipt ledger_: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no) + '.xlsx';
 			const workbook = new Excel.Workbook();
 			console.log("i am column ", columns.length, Math.floor(columns.length / 2), this.alphabetJSON[Math.floor(columns.length / 2) + 1]);
@@ -741,8 +772,8 @@ export class FeeLedgerComponent implements OnInit {
 					obj.pay_name = (element.pay_name);
 					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1: '-';
 					obj.ftr_cheque_no = (element.ftr_cheque_no) ? element.ftr_cheque_no : '-';
-					obj.late_fine_amt = new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt: 0);	
-					obj.rpt_net_amount = new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+					obj.late_fine_amt = (element.late_fine_amt ? element.late_fine_amt: 0);	
+					obj.rpt_net_amount = (element.rpt_net_amount ? (element.rpt_net_amount) : 0);
 
 					obj.ftr_bnk_name = (element.ftr_bnk_name);
 					for (let i = 0; i < columValue.length - 9; i++) {
@@ -765,7 +796,7 @@ export class FeeLedgerComponent implements OnInit {
 									}
 								})
 							})
-							obj[`${da[0].invg_fh_id}`] = (!at_val ?  new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
+							obj[`${da[0].invg_fh_id}`] = (!at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
 
 							if (element.rpt_receipt_no)
 							{
@@ -915,6 +946,9 @@ export class FeeLedgerComponent implements OnInit {
 				}
 				row.defaultRowHeight = 24;
 			});
+			worksheet.columns.forEach(column => {
+				column.width = 15
+			  })
 
 
 			workbook.xlsx.writeBuffer().then(data => {

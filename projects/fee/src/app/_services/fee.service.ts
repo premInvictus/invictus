@@ -655,4 +655,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/addledgertomissinginvoice', value);
 	}
+	getGlobalSettingReplace(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
+	}
 }

@@ -18,6 +18,10 @@
       </app-common-student-profile>
     </div>
   </div>
+  <div style="display: none;">
+    <div id="header_checl" [innerHTML]="header" style="height: 80px; display:contents;"></div>
+
+  </div>
   <div class="floating-button" *ngIf="checkStatus()">
     <button mat-button class="float-edit-button"><i class="material-icons font-white">playlist_add</i>
       <span class="margin-top-2 right-text" (click)="openCreateInvoiceModal()">
