@@ -109,7 +109,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		console.log('load plugin');
 		let array2 = [];
 		array2 = this.configArray;
-		console.log(this.configArray);
+		console.log(this.configArray, ' --------------------------------------------------------------');
 		// tslint:disable-next-line:forin
 		console.log(CKEDITOR.plugins);
 		delete CKEDITOR.plugins.registered['strinsertExt'];

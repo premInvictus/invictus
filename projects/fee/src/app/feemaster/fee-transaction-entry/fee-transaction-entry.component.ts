@@ -188,8 +188,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 
 				if (this.invoice.balance_amt) {
+					console.log("i am here ", this.invoice.balance_amt);
+					
 					this.invoice.balance_amt = Number(this.invoice.balance_amt);
-					this.invoice.netPay += Number(this.invoice.balance_amt);
+					// this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
 				// if (this.invoice.prev_balance) {
 				// 	this.invoice.netPay += Number(this.invoice.prev_balance);
@@ -212,37 +214,37 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				});
 				let pos = 1;
 				this.invoiceTotal = 0;
-				if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
-					const element = {
-						srno: pos,
-						feehead: 'Previous Balance',
-						feedue: Number(this.invoice.inv_prev_balance),
-						concession: 0,
-						adjustment: 0,
-						netpay: Number(this.invoice.inv_prev_balance)
-					};
-					this.invoiceTotal += element.netpay;
-					this.INVOICE_ELEMENT_DATA.push(element);
-					var fb = this.fbuild.group({	
-						rm_inv_id:'',
-						rm_head_type:'',
-						rm_fm_id:'',
-						rm_fh_id:'',
-						rm_fh_name:'',
-						rm_fh_amount:'',
-						rm_fcc_id:'',
-						rm_fcc_name:'',
-						rm_fcc_amount:'',
-						rm_adj_amount:'',
-						rm_total_amount:'',
+				// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
+				// 	// const element = {
+				// 	// 	srno: pos,
+				// 	// 	feehead: 'Previous Balance',
+				// 	// 	feedue: Number(this.invoice.inv_prev_balance),
+				// 	// 	concession: 0,
+				// 	// 	adjustment: 0,
+				// 	// 	netpay: Number(this.invoice.inv_prev_balance)
+				// 	// };
+				// 	// this.invoiceTotal += element.netpay;
+				// 	// this.INVOICE_ELEMENT_DATA.push(element);
+				// 	// var fb = this.fbuild.group({	
+				// 	// 	rm_inv_id:'',
+				// 	// 	rm_head_type:'',
+				// 	// 	rm_fm_id:'',
+				// 	// 	rm_fh_id:'',
+				// 	// 	rm_fh_name:'',
+				// 	// 	rm_fh_amount:'',
+				// 	// 	rm_fcc_id:'',
+				// 	// 	rm_fcc_name:'',
+				// 	// 	rm_fcc_amount:'',
+				// 	// 	rm_adj_amount:'',
+				// 	// 	rm_total_amount:'',
 
 
-						netpay:Number(this.invoice.inv_prev_balance),
-						feehead: 'Previous Balance'
-					});
-					this.invoiceArrayForm.push(fb);
-					pos++;
-				}
+				// 	// 	netpay:Number(this.invoice.inv_prev_balance),
+				// 	// 	feehead: 'Previous Balance'
+				// 	// });
+				// 	// this.invoiceArrayForm.push(fb);
+				// 	pos++;
+				// }
 				for (const item of this.invoiceArray) {
 					if (Number(item.head_bal_amount) != 0) {
 					this.INVOICE_ELEMENT_DATA.push({
@@ -961,7 +963,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	setPayAmount(event) {
 		if (event.value === 2 || event.value === '2') {
 			// tslint:disable-next-line: max-line-length
-			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10);
+			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) ;
 
 			if (netAmount < 0) {
 				netAmount = 0;
@@ -1006,5 +1008,34 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		})
 
 
+	}
+	changeValue(val) {
+		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
+		let changeValue = 0
+		for(let i = 0; i <this.invoiceArrayForm.length -1; i++ ) {
+			console.log('-------------------', this.invoiceArray[i]);
+			if(this.invoiceArray[i].head_bal_amount < val - changeValue) {
+				this.invoiceArrayForm[i].patchValue({
+					netpay: this.invoiceArray[i].head_bal_amount
+				});
+				changeValue +=this.invoiceArray[i].head_bal_amount;
+			} else if (this.invoiceArray[i].head_bal_amount > val - changeValue) {
+				this.invoiceArrayForm[i].patchValue({
+					netpay: val - changeValue
+				});
+				changeValue +=(val - changeValue);
+
+			}
+			
+			
+		}
+		this.invoiceArrayForm[this.invoiceArrayForm.length - 1].patchValue({
+			netpay: val - changeValue
+		});
+		this.feeTransactionForm.patchValue({
+			ftr_amount:val
+		}); 
+		this.invoiceTotal = val;
+		
 	}
 }
