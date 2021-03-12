@@ -542,7 +542,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 									pos++;
 									j++;
 								} else {
-									missingDOJ.push(item.emp_code_no);
+									this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no '+item.emp_code_no,'error');
+									// missingDOJ.push(item.emp_code_no);
 								}
 							}
 							this.COPY_EMPLOYEE_ELEMENT = JSON.parse(JSON.stringify(this.EMPLOYEE_ELEMENT));
@@ -552,9 +553,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 								this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 								this.employeedataSource.sort = this.sort;
 							}
-							if(missingDOJ.length > 0) {
-								this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no '+missingDOJ,'error');
-							}
+							// if(missingDOJ.length > 0) {
+							// 	this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no '+missingDOJ,'error');
+							// }
 
 						}
 						console.log('this.employeeData',this.employeeData);
