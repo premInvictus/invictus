@@ -134,6 +134,18 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Section</mat-label>
+                  <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                      {{item.sec_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist('au_process_class')">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Admitted In</mat-label>
@@ -148,17 +160,6 @@
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Section</mat-label>
-                  <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                      {{item.sec_name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
-                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>House Name</mat-label>
                   <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
@@ -167,6 +168,16 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" >
+                <div [ngClass]="contact_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" 
+                    class="form-field">
+                    <mat-label>Reference No</mat-label>
+                    <input class="margin-left-10" formControlName="au_reference_no" [value]="studentdetailsform.get('au_reference_no').value" matInput [readonly]="viewOnly" >
+                    <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
+                  </mat-form-field>
+                </div>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_parent_name">
                 <div [ngClass]="studentdetailsform.value.epd_parent_name? 'remove-col-padding' : 'remove-col-padding '">

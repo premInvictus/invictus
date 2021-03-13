@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-12">
+    <form [formGroup]="classForm">
+      <div class="row">
+        <!-- <div class="col-3">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionsByClass()">
+              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-select placeholder="Section" formControlName="sec_id">
+              <mat-option *ngFor="let item of secArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+        <div class="col-3">
+          <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()"
+            style="position: relative !important;top: 14px;">
+            Create Bar Code
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row" *ngIf="barcodeArray.length > 0" id="print-bars2" class="visible-print-row">
+  <div class="col-lg-12">
+    <div class="accumulate-div-bar-code-2">
+      <div class="row">
+        <div class="col-3" *ngFor="let item of barcodeArray; let i = index">
+          <div [class]="getClass2(i)">
+            <div class="barcode-print-lib3">
+              <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.emp_code_no" bc-format="CODE128" bc-width="2">
+              </ngx-barcode>
+              <div class="barcode-id-div">
+                <span class="font-bold bar-isbn-span3">{{item.emp_code_no}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="barcodeArray.length > 0">
+  <div class="col-lg-12">
+    <div class="card-height-730" [hidden]="!(barcodeArray.length > 0)">
+      <div class="margin-left-15">
+        <div class="row">
+          <div class="col-4 smart-col-11" *ngFor="let item of barcodeArray">
+            <div class="bar-acc-div">
+              <span class="font-bold bar-tiltle-span"
+                style="font-size: 13px !important;">{{(item.emp_name | titlecase) | truncatetext : 18}}</span>
+            </div>
+            <div class="barcode-print-lib">
+              <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.emp_code_no" bc-format="CODE128" bc-width="2">
+              </ngx-barcode>
+            </div>
+            <br />
+            <span class="font-size-14 font-bold bar-isbn-span">{{item.emp_code_no}}</span></div> <br>
+          </div>
+        </div>
+        <hr class="margin-left-15 margin-right-15">
+        <div class="row text-center">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>

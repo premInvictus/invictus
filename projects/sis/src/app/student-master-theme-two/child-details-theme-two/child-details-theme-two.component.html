@@ -169,6 +169,16 @@
           </fieldset>
         </div>
         <div class="row">
+          <div class="col-12 " *ngIf="checkIfFieldExist('upd_is_minority')">
+            <span>Whether the child belong to minority?</span>
+            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isMinority"
+              (change)="isMinority_change($event)"></mat-slide-toggle>
+          </div>
+          <div class="col-12 " *ngIf="checkIfFieldExist('upd_special_need')">
+            <span>Whether the child is spically abled?</span>
+            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isSpeciallyAbled"
+              (change)="isSpecialChild_change($event)"></mat-slide-toggle>
+          </div>
           <div class="col-12 ">
             <span>Whether the child is having any sibling?</span>
             <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="siblingdetailsdiv"

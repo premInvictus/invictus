@@ -20,6 +20,8 @@
     </app-emp-details-report>
     <app-emp-salary-report (displyRep)="displyRep($event)" [userName]="userName" *ngIf="reportType === '2'">
     </app-emp-salary-report>
+    <app-bar-code-report (displyRep)="displyRep($event)" *ngIf="reportType === '3'">
+    </app-bar-code-report>
   </div>
 
   <div *ngIf="reportFlag" class="col-12">

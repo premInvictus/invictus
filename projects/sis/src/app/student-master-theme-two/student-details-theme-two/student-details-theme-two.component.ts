@@ -532,6 +532,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_hou_id: '',
 			au_sec_id: '',
 			epd_parent_name: '',
+			au_reference_no: '',
 			epd_contact_no: '',
 			epd_whatsapp_no: '',
 			mi_emergency_contact_name: '',
@@ -655,6 +656,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		}
 	}
 	patchStudentDetails() {
+		console.log(this.studentdetails , ' ssssssssssssssssssssssssssssssssss', this.studentdetails.au_reference_no);
+		
 		this.studentdetailsform.patchValue({
 			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
 			au_login_id: this.studentdetails.au_login_id,
@@ -665,8 +668,9 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_email: this.studentdetails.au_email,
 			au_hou_id: this.studentdetails.au_hou_id,
 			au_sec_id: this.studentdetails.au_sec_id,
+			au_reference_no: this.studentdetails.au_reference_no,
 			epd_parent_name: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_name : '',
-			epd_contact_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',
+			epd_contact_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',		
 			epd_whatsapp_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '',
 			epd_parent_type: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
 			mi_emergency_contact_name: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ?
@@ -978,7 +982,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 				au_ses_id: this.session.ses_id,
 				au_class_id: this.studentdetailsform.value.au_class_id,
 				au_full_name: this.studentdetailsform.value.au_full_name,
-				au_process_class: this.studentdetailsform.value.au_process_class
+				au_process_class: this.studentdetailsform.value.au_process_class,
+				au_reference_no: this.studentdetailsform.value.au_reference_no
 			});
 			this.studentDet.push(firstTabDetails.personalDetails[0]);
 			this.parentDet = firstTabDetails.parentDetails;
