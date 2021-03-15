@@ -33,6 +33,7 @@ export class BarCodeReportComponent implements OnInit {
     this.buildForm();
     this.getClassAll();
     this.getSession();
+    this.getBarCode();
   }
   buildForm() {
     this.classForm = this.fbuild.group({
@@ -97,7 +98,7 @@ export class BarCodeReportComponent implements OnInit {
     }
   }
   printbars() {
-    const barRow = document.getElementById('print-bars2').innerHTML;
+    const barRow = document.getElementById('print-bars').innerHTML;
     let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
     popupWin.document.open();
     popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib2.css">' +

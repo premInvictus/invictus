@@ -232,6 +232,12 @@ export class FeeLedgerComponent implements OnInit {
 
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
+			console.log("i am result data", result.data);
+			
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
@@ -255,6 +261,7 @@ export class FeeLedgerComponent implements OnInit {
 			}
 			let arr = [];
 			let continuev = false;
+			
 			result.data[0].map(element => {
 				console.log((element.rpt_receipt_no));
 				if(element.rpt_receipt_no) {
@@ -606,6 +613,9 @@ export class FeeLedgerComponent implements OnInit {
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
 			}
+			if(result.data[0].length == 0) {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
 			
 		})
 	}
@@ -676,6 +686,10 @@ export class FeeLedgerComponent implements OnInit {
 
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {

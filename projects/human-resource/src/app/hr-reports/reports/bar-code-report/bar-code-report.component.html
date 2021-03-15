@@ -1,29 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <form [formGroup]="classForm">
-      <div class="row">
-        <!-- <div class="col-3">
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionsByClass()">
-              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-3">
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-select placeholder="Section" formControlName="sec_id">
-              <mat-option *ngFor="let item of secArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
-        <div class="col-3">
-          <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()"
-            style="position: relative !important;top: 14px;">
-            Create Bar Code
-          </button>
-        </div>
-      </div>
-    </form>
+    
   </div>
 </div>
 <div class="row" *ngIf="barcodeArray.length > 0" id="print-bars2" class="visible-print-row">
@@ -45,7 +22,7 @@
     </div>
   </div>
 </div>
-<div class="row" *ngIf="barcodeArray.length > 0">
+<div class="row" id="print-bars" *ngIf="barcodeArray.length > 0">
   <div class="col-lg-12">
     <div class="card-height-730" [hidden]="!(barcodeArray.length > 0)">
       <div class="margin-left-15">
