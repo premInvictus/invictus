@@ -11,6 +11,7 @@ import { AttendanceReportsComponent } from './attendance-reports/attendance-repo
 import { AcumulativeDeductionComponent } from './acumulative-deduction/acumulative-deduction.component';
 import { EnquiryReportComponent } from './enquiry-report/enquiry-report.component';
 import { ShiftAttendanceReportComponent } from './reports/shift-attendance-report/shift-attendance-report.component';
+import { BarCodeReportComponent } from './reports/bar-code-report/bar-code-report.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -19,6 +20,6 @@ import { ShiftAttendanceReportComponent } from './reports/shift-attendance-repor
     AngularSlickgridModule.forRoot()
 
   ],
-  declarations: [ReportsComponent, EmpSalaryReportComponent, EmpDetailsReportComponent, RepotContainerComponent, AttendanceReportsComponent, AcumulativeDeductionComponent, EnquiryReportComponent, ShiftAttendanceReportComponent]
+  declarations: [ReportsComponent, EmpSalaryReportComponent, EmpDetailsReportComponent, RepotContainerComponent, AttendanceReportsComponent, AcumulativeDeductionComponent, EnquiryReportComponent, ShiftAttendanceReportComponent, BarCodeReportComponent]
 })
 export class ReportsModule { }

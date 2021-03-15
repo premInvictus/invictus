@@ -143,6 +143,11 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				if (this.childDetails.siblingArray.length > 0) {
 					this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 				}
+				// if (this.childDetails.siblingArray.length > 0) {
+				// 	this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
+				// }
+				this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
+				this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
 				this.taboneform.parentDetails = this.parentDetails ? this.parentJson : this.parentJson;
 				// this.medicalDetails.addMedicalInfo();
 				this.taboneform.medicalDetails = this.medicalDetails ? this.medicalDetails.medicalform.value : '';
@@ -229,6 +234,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			});
 			this.taboneform.personalDetails.addressDetails = [this.childDetails.paddressform.value, this.childDetails.raddressform.value];
 			this.taboneform.personalDetails.siblingDetails = [];
+			this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
+				this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
 			if (this.childDetails.siblingArray.length > 0) {
 				this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 			}

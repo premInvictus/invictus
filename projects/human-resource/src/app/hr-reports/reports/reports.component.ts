@@ -33,6 +33,15 @@ export class ReportsComponent implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
+		},
+		{
+			report_id: '3',
+			report_name: 'Employee Bar code',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
 		}
 	];
 	reportType: string;

@@ -109,37 +109,37 @@ export class SearchDialogComponent implements OnInit {
 				
 				let pos = 1;
 				this.invoiceTotal = 0;
-				if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
-					const element = {
-						srno: pos,
-						feehead: 'Previous Balance',
-						feedue: Number(this.invoice.inv_prev_balance),
-						concession: 0,
-						adjustment: 0,
-						netpay: Number(this.invoice.inv_prev_balance)
-					};
-					this.invoiceTotal += element.netpay;
-					this.INVOICE_ELEMENT_DATA.push(element);
-					pos++;
-					// var fb = this.fbuild.group({	
-					// 	rm_inv_id:'',
-					// 	rm_head_type:'',
-					// 	rm_fm_id:'',
-					// 	rm_fh_id:'',
-					// 	rm_fh_name:'',
-					// 	rm_fh_amount:'',
-					// 	rm_fcc_id:'',
-					// 	rm_fcc_name:'',
-					// 	rm_fcc_amount:'',
-					// 	rm_adj_amount:'',
-					// 	rm_total_amount:'',
+				// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
+				// 	// const element = {
+				// 	// 	srno: pos,
+				// 	// 	feehead: 'Previous Balance',
+				// 	// 	feedue: Number(this.invoice.inv_prev_balance),
+				// 	// 	concession: 0,
+				// 	// 	adjustment: 0,
+				// 	// 	netpay: Number(this.invoice.inv_prev_balance)
+				// 	// };
+				// 	// this.invoiceTotal += element.netpay;
+				// 	// this.INVOICE_ELEMENT_DATA.push(element);
+				// 	// pos++;
+				// 	// var fb = this.fbuild.group({	
+				// 	// 	rm_inv_id:'',
+				// 	// 	rm_head_type:'',
+				// 	// 	rm_fm_id:'',
+				// 	// 	rm_fh_id:'',
+				// 	// 	rm_fh_name:'',
+				// 	// 	rm_fh_amount:'',
+				// 	// 	rm_fcc_id:'',
+				// 	// 	rm_fcc_name:'',
+				// 	// 	rm_fcc_amount:'',
+				// 	// 	rm_adj_amount:'',
+				// 	// 	rm_total_amount:'',
 
 
-					// 	netpay:Number(this.invoice.inv_prev_balance),
-					// 	feehead: 'Previous Balance'
-					// });
-					// this.invoiceArrayForm.push(fb);
-				}
+				// 	// 	netpay:Number(this.invoice.inv_prev_balance),
+				// 	// 	feehead: 'Previous Balance'
+				// 	// });
+				// 	// this.invoiceArrayForm.push(fb);
+				// }
 				for (const item of this.invoiceArray) {
 					let head_amt =0;
 					let ccamount =0;

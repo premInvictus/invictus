@@ -341,6 +341,7 @@ export class FeeLedgerComponent implements OnInit {
 			doc.levelSubtotalFooter = [];
 			
 			
+			
 			async function getBase64ImageFromUrl(imageUrl) {
 				var res = await fetch(imageUrl);
 				var blob = await res.blob();
@@ -684,6 +685,10 @@ export class FeeLedgerComponent implements OnInit {
 				width: this.checkWidth('late_fine_amt', 'Fine')
 			});
 			columns.push({
+				key: 'short_access',
+				width: this.checkWidth('short_access', 'Short in Access')
+			});
+			columns.push({
 				key: 'rpt_net_amount',
 				width: this.checkWidth('rpt_net_amount', 'Total')
 			});
@@ -694,10 +699,14 @@ export class FeeLedgerComponent implements OnInit {
 				}
 			);
 			columndefinition.push({
+				id: 'short_access',
+				name: 'Short in Access'
+			});
+			columndefinition.push({
 				id: 'rpt_net_amount',
 				name: 'Total'
 			});
-			columValue.push('Fine');
+			columValue.push('Fine', 'Short in Access');
 			columValue.push('Total');
 
 			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );

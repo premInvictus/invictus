@@ -44,6 +44,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	minDate = new Date();
 	maxDate = new Date();
 	siblingdetailsdiv = false;
+	isSpeciallyAbled = false;
+	isMinority = false;
 	siblingedit = false;
 	checkReadOnlyStatus = false;
 	arrayCountry: any[] = [];
@@ -188,6 +190,23 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.siblingStaus = 'No';
 		}
 	}
+	isMinority_change(event) {
+		if (event.checked) {
+			this.isMinority = true;
+			
+
+		} else {
+			this.isMinority = false;
+		}
+	}
+	isSpecialChild_change(event) {
+		if (event.checked) {
+			this.isSpeciallyAbled = true;
+
+		} else {
+			this.isSpeciallyAbled = false;
+		}
+	}
 
 	// getConfigureSetting() {
 	// 	this.sisService.getConfigureSetting({
@@ -317,6 +336,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.siblingform.reset();
 		this.siblingArray = [];
 		this.siblingdetailsdiv = false;
+		this.isMinority = false;
+		this.isSpeciallyAbled = false;
 	}
 
 	openEditDialog = (data) => this.editReference.openModal(data);
@@ -625,6 +646,14 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			} else {
 				this.resetpaddressform();
 				this.resetraddressform();
+			}
+			if(personalDetails[0].upd_is_minority) {
+				if(personalDetails[0].upd_is_minority == 'Y')
+					this.isMinority = true;
+			}
+			if(personalDetails[0].upd_special_need) {
+				if(personalDetails[0].upd_special_need == 'Y')
+					this.isSpeciallyAbled = true;
 			}
 			if (personalDetails[0].siblingDetails.length > 0) {
 				this.siblingdetailsdiv = true;
