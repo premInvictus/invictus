@@ -232,6 +232,12 @@ export class FeeLedgerComponent implements OnInit {
 
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
+			console.log("i am result data", result.data);
+			
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
@@ -254,6 +260,15 @@ export class FeeLedgerComponent implements OnInit {
 
 			}
 			let arr = [];
+			let continuev = false;
+			
+			result.data[0].map(element => {
+				console.log((element.rpt_receipt_no));
+				if(element.rpt_receipt_no) {
+					continuev = true;
+				}
+				
+			});
 			result.data[0].map((element) => {
 				let bank_name_1 = '';
 				let bank_name = this.bankArray.filter((e) => {
@@ -593,7 +608,15 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			doc.save('Receipt_Ledger_' + this.loginId + ".pdf");
+			if(continuev) {
+				doc.save('Receipt_Ledger_' + this.loginId + ".pdf");
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			if(result.data[0].length == 0) {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			
 		})
 	}
 
@@ -663,6 +686,10 @@ export class FeeLedgerComponent implements OnInit {
 
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
@@ -684,10 +711,10 @@ export class FeeLedgerComponent implements OnInit {
 				key: 'late_fine_amt',
 				width: this.checkWidth('late_fine_amt', 'Fine')
 			});
-			columns.push({
-				key: 'short_access',
-				width: this.checkWidth('short_access', 'Short in Access')
-			});
+			// columns.push({
+			// 	key: 'short_access',
+			// 	width: this.checkWidth('short_access', 'Short in Access')
+			// });
 			columns.push({
 				key: 'rpt_net_amount',
 				width: this.checkWidth('rpt_net_amount', 'Total')
@@ -698,15 +725,15 @@ export class FeeLedgerComponent implements OnInit {
 					name: 'Fine'
 				}
 			);
-			columndefinition.push({
-				id: 'short_access',
-				name: 'Short in Access'
-			});
+			// columndefinition.push({
+			// 	id: 'short_access',
+			// 	name: 'Short in Access'
+			// });
 			columndefinition.push({
 				id: 'rpt_net_amount',
 				name: 'Total'
 			});
-			columValue.push('Fine', 'Short in Access');
+			columValue.push('Fine',);
 			columValue.push('Total');
 
 			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );
@@ -722,14 +749,14 @@ export class FeeLedgerComponent implements OnInit {
 
 			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
 			worksheet.getCell('A2').value = reportType;
-			worksheet.mergeCells('A3:' + this.alphabetJSON[Math.floor(columns.length / 2)] + '3');
+			worksheet.mergeCells('A3:' + this.alphabetJSON[4] + '3');
 			worksheet.getCell('A3').value = `Admission Number:  ${result.data[0][0].au_admission_no}`;
-			worksheet.mergeCells(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}3:` + this.alphabetJSON[columns.length] + '3');
-			worksheet.getCell(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}3`).value = `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`;
-			worksheet.mergeCells('A4:' + this.alphabetJSON[Math.floor(columns.length / 2)] + '4');
+			worksheet.mergeCells(`${this.alphabetJSON[5]}3:` + this.alphabetJSON[columns.length] + '3');
+			worksheet.getCell(`${this.alphabetJSON[5]}3`).value = `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`;
+			worksheet.mergeCells('A4:' + this.alphabetJSON[4] + '4');
 			worksheet.getCell('A4').value = `Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`;
-			worksheet.mergeCells(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}4:` + this.alphabetJSON[columns.length] + '4');
-			worksheet.getCell(`${this.alphabetJSON[Math.floor(columns.length / 2) + 1]}4`).value = `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`;
+			worksheet.mergeCells(`${this.alphabetJSON[5]}4:` + this.alphabetJSON[columns.length] + '4');
+			worksheet.getCell(`${this.alphabetJSON[5]}4`).value = `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`;
 			worksheet.mergeCells('A5:' + this.alphabetJSON[Math.floor(columns.length)] + '5');
 			worksheet.getCell('A5').value = `Student Name: ${result.data[0][0].au_full_name}`;
 
@@ -754,6 +781,13 @@ export class FeeLedgerComponent implements OnInit {
 			}
 
 			obj2.ftr_bnk_name = 'Grand Total';
+			let continuev = false;
+			result.data[0].map(element => {
+				if(element.rpt_receipt_no) {
+					continuev = true;
+				}
+				
+			})
 			result.data[0].map((element) => {
 				let obj: any = {}
 				let bank_name_1 = '';
@@ -907,7 +941,7 @@ export class FeeLedgerComponent implements OnInit {
 							bottom: { style: 'thin' },
 							right: { style: 'thin' }
 						};
-						cell.alignment = { horizontal: 'center', wrapText: true };
+						cell.alignment = { horizontal: 'left', wrapText: true };
 					});
 				} else if (rowNum > 5 && rowNum < worksheet._rows.length) {
 					// const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
@@ -958,12 +992,17 @@ export class FeeLedgerComponent implements OnInit {
 			worksheet.columns.forEach(column => {
 				column.width = 15
 			  })
-
-
-			workbook.xlsx.writeBuffer().then(data => {
-				const blob = new Blob([data], { type: 'application/octet-stream' });
-				saveAs(blob, fileName);
-			});
+			console.log(continuev);
+			
+			if(continuev) {
+				workbook.xlsx.writeBuffer().then(data => {
+					const blob = new Blob([data], { type: 'application/octet-stream' });
+					saveAs(blob, fileName);
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			
 		});
 
 	}
