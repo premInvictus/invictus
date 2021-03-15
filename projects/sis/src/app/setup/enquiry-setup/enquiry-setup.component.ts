@@ -11,26 +11,36 @@ export class EnquirySetupComponent implements OnInit {
 	finalFormTab: any[] = [{ label: 'Student Details', component: 'app-student-details', tab_id: '1' }];
 	formFieldArray: any[] = [];
 	finalFieldsArray: any[][] = [];
-	disableApiCall = false;
 	formLabelArray: any[] = [];
 	settingsArray: any[] = [];
 	savedSettingsArray: any[] = [];
+	disableApiCall = false;
+	tabIdArray: any[] = [];
+	configArray: any[] = [];
+	vaccinationByDuration: any[] = [];
 	constructor(private studentFormConfigService: StudentFormConfigService,
 		private sisService: SisService,
 		private common: CommonAPIService) { }
 
 	ngOnInit() {
-		this.formsTab = this.studentFormConfigService.getForm('enquiry');
-		let i = 0;
+		this.getTabsIndexes();
+		this.formsTab = this.studentFormConfigService.getForm('registration');
 		for (const item of this.formsTab) {
 			this.finalFormTab.push({
 				label: item.label,
 				component: item.component,
-				tab_id: i + 2
+				tab_id: ''
 			});
+		}
+		let i = 0;
+		for (const item of this.tabIdArray) {
+			this.finalFormTab[i + 1].tab_id = (Number(item) + 2).toString();
 			i++;
 		}
 		this.getFormFields();
+		this.getDocumentsAll(this);
+		this.getMedications(this);
+		this.getVaccinationByDuration(this);
 	}
 	getFormFields() {
 		this.sisService.getFormFields({ ff_tab_id: '' }).subscribe((result: any) => {
@@ -79,9 +89,9 @@ export class EnquirySetupComponent implements OnInit {
 		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.disableApiCall = false;
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
+				this.disableApiCall = false;
 			} else {
 				this.disableApiCall = false;
 			}
@@ -112,6 +122,93 @@ export class EnquirySetupComponent implements OnInit {
 		}
 		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'N') {
 			return false;
+		}
+	}
+	getTabsIndexes() {
+		this.tabIdArray = this.studentFormConfigService.getTabsIndex('registration');
+	}
+	getDocumentsAll(that) {
+		that.configArray = [];
+		that.sisService.getDocumentRequired().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				for (const item of result.data) {
+					that.configArray.push(item);
+				}
+			}
+		});
+	}
+	getMedications(that) {
+		that.medicineArray = [];
+		that.sisService.getMedications().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				for (const item of result.data) {
+					that.medicineArray.push(item);
+				}
+			}
+		});
+	}
+	getVaccinationByDuration(that) {
+		that.vaccinationByDuration = [];
+		that.sisService.getVaccinationByDuration().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				for (const item of result.data) {
+					that.vaccinationByDuration.push(item);
+				}
+			}
+		});
+	}
+	toggleDocStatus(value: any) {
+		if (value.docreq_status === '1') {
+			value.docreq_status = '0';
+		} else {
+			value.docreq_status = '1';
+		}
+		this.sisService.updateDocumentRequired(value).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.common.showSuccessErrorMessage('Status Changed', 'success');
+				this.getDocumentsAll(this);
+			}
+		});
+	}
+	getActiveDocStatus(value: any) {
+		if (value.docreq_status === '1') {
+			return true;
+		}
+	}
+	toggleMedStatus(value: any) {
+		if (value.med_status === '1') {
+			value.med_status = '0';
+		} else {
+			value.med_status = '1';
+		}
+		this.sisService.updateMedications(value).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.common.showSuccessErrorMessage('Status Changed', 'success');
+				this.getMedications(this);
+			}
+		});
+	}
+	getActiveMedStatus(value: any) {
+		if (value.med_status === '1') {
+			return true;
+		}
+	}
+	toggleMedDurationStatus(value: any) {
+		if (value.vd_status === '1') {
+			value.vd_status = '0';
+		} else {
+			value.vd_status = '1';
+		}
+		this.sisService.updateVaccinationByDuration(value).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.common.showSuccessErrorMessage('Status Changed', 'success');
+				this.getVaccinationByDuration(this);
+			}
+		});
+	}
+	getActiveMedDurationStatus(value: any) {
+		if (value.vd_status === '1') {
+			return true;
 		}
 	}
 }
