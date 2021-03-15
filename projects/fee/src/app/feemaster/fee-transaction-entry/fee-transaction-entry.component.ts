@@ -254,11 +254,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						concession: item.invg_fcc_amount,
 						adjustment: item.invg_adj_amount,
 						// tslint:disable-next-line: max-line-length
-						//netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-						netpay: Number(item.head_bal_amount)
+						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+						// netpay: Number(item.head_bal_amount)
 					});}
 					// tslint:disable-next-line: max-line-length
-					if (item.head_bal_amount && item.invg_fh_name != 'Previous Received Amt.' &&  Number(item.head_bal_amount) != 0) {
+					if (item.head_bal_amount && item.invg_fh_name != 'Previous Received Amt.' ) {
 						var fb = this.fbuild.group({
 							rm_inv_id:item.invg_inv_id,
 							rm_head_type:item.invg_head_type,
@@ -271,8 +271,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 							rm_fcc_amount:item.invg_fcc_amount,
 							rm_adj_amount:item.invg_adj_amount,
 							rm_total_amount:Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
-							//netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
-							netpay: Number(item.head_bal_amount)
+							netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
+							// netpay: Number(item.head_bal_amount)
 						});
 						this.invoiceArrayForm.push(fb);
 						pos++;
