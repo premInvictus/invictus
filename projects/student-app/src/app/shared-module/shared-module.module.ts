@@ -63,6 +63,7 @@ import { MatGridListModule } from '@angular/material';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import {PopoverModule} from 'ngx-bootstrap/popover';
+import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-payment-payu.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -113,6 +114,7 @@ import {PopoverModule} from 'ngx-bootstrap/popover';
 		PaymentOrderModalComponent,
 		MakePaymentComponent,
 		MakePaymentViaEazypayComponent,
+		MakePaymentPayuComponent,
 		MakePaymentBasedonproviderComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
@@ -186,6 +188,7 @@ import {PopoverModule} from 'ngx-bootstrap/popover';
 		InfiniteScrollModule,
 		ViewStudentProfileComponent,
 		MakePaymentHdfcComponent,
+		MakePaymentPayuComponent,
 		AdmitCodeConfirmationModalComponent,
 		AngularCalendarYearViewComponent,
 		MatGridListModule
@@ -197,6 +200,7 @@ import {PopoverModule} from 'ngx-bootstrap/popover';
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
+		MakePaymentPayuComponent,
 		AdmitCodeConfirmationModalComponent
 	]
 })

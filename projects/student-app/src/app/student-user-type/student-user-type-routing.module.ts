@@ -11,6 +11,7 @@ import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-
 import { ViewStudentProfileComponent } from '../shared-module/view-student-profile/view-student-profile.component';
 import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-payment-hdfc.component';
 import { DownCertificateComponent } from '../down-certificate/down-certificate.component';
+import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-payment-payu.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -76,6 +77,11 @@ const routes: Routes = [
 		path: 'make-paymentviarazorpay',
 		canActivate: [AuthGuard],
 		component: MakePaymentHdfcComponent
+	},
+	{
+		path: 'make-paymentviapayu',
+		canActivate: [AuthGuard],
+		component: MakePaymentPayuComponent
 	}
 ];
 
