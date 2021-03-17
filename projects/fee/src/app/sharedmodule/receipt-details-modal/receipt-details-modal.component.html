@@ -88,7 +88,7 @@
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_date | date:'dd MMM, yyyy'}}</span>
             </div>
           </div>
-          <div class="row" *ngIf="invoiceDetails?.pay_id != '1'>
+          <div class="row" *ngIf="invoiceDetails?.pay_id != '1'">
             <div class="col-12">
               <span *ngIf="invoiceDetails && invoiceDetails.ftr_bnk_name" class="font-size-16 font-light">Bank Details:
               </span><span class="font-size-16 font-regular" >{{invoiceDetails?.ftr_bnk_name}} <span *ngIf="invoiceDetails?.pay_id === '3' && invoiceDetails?.ftr_status === '2'">,
