@@ -80,6 +80,9 @@ export class BarCodeReportComponent implements OnInit {
         if (res) {
           this.barcodeArray = [];
           this.barcodeArray = res;
+          this.barcodeArray.map(e => {
+            e.item_name = e.emp_name
+          })
           console.log("i am here", this.barcodeArray);
           
         }
@@ -98,8 +101,8 @@ export class BarCodeReportComponent implements OnInit {
     }
   }
   printbars() {
-    const barRow = document.getElementById('print-bars').innerHTML;
-    let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
+    const barRow = document.getElementById('print-bars2').innerHTML;
+    let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height * 2);
     popupWin.document.open();
     popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib2.css">' +
       '<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
