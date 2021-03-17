@@ -140,6 +140,7 @@ export class SearchDialogComponent implements OnInit {
 				// 	// });
 				// 	// this.invoiceArrayForm.push(fb);
 				// }
+				let arr = [];
 				for (const item of this.invoiceArray) {
 					let head_amt =0;
 					let ccamount =0;
@@ -158,7 +159,8 @@ export class SearchDialogComponent implements OnInit {
 					});
 					// tslint:disable-next-line: max-line-length
 					console.log('item.invg_fh_name--',item.invg_fh_name);
-					if (item.invg_fh_name != 'Previous Received Amt.') {
+					
+					if (Number(item.head_bal_amount)!= 0 && item.invg_fh_name != 'Previous Received Amt.') {
 					var fb = this.fbuild.group({
 						rm_inv_id:item.invg_inv_id,
 						rm_head_type:item.invg_head_type,
@@ -177,9 +179,10 @@ export class SearchDialogComponent implements OnInit {
 					this.invoiceArrayForm.push(fb);
 					console.log('this.invoiceArrayForm 173-->',this.invoiceArrayForm)
 					this.invoiceFormArrayClone.push(fb);
+					arr.push(item);
 				}
 					pos++;
-				} else {
+				} else if(Number(item.head_bal_amount) != 0 ) {
 					this.INVOICE_ELEMENT_DATA.push({
 						srno: pos,
 						feehead: item.invg_fh_name,
@@ -227,6 +230,7 @@ export class SearchDialogComponent implements OnInit {
 					
 					
 				}
+				this.invoiceArray = arr;
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
 					const element = {
 						srno: pos,
