@@ -609,7 +609,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 							rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
 							rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
 							rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-							rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+							rm_total_amount:this.invoiceArrayForm[i].value.netpay,
 						}) }
 					}
 					inputjson.receipt_mapping= receiptMappArr;
@@ -649,7 +649,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
 						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
 						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.netpay,
 					}) }
 				}
 				inputjson.receipt_mapping= receiptMappArr;
@@ -768,7 +768,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
 						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
 						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.netpay,
 					}) }
 				}
 				inputjson.receipt_mapping= receiptMappArr;
@@ -1024,7 +1024,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		let changeValue = 0
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
 			console.log('-------------------', this.invoiceArray[i]);
-			if(this.invoiceArray[i].head_bal_amount < val - changeValue) {
+			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
 				});
