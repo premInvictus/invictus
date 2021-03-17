@@ -340,11 +340,11 @@
               <td width="70%">
 
               </td>
-              <td align="right" width="30%" style="padding-right: 50px;">
+              <!-- <td align="right" width="30%" style="padding-right: 50px;">
                 <span class="float-right"><span class="font-size-16">Grand Total : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
                     {{invoiceDetails?.inv_fee_amount | indianCurrency}} </span></span>
-              </td>
+              </td> -->
             </tr>
             <tr class="grey-box" height="50">
               <td style="padding-left: 15px;">
@@ -358,7 +358,7 @@
                     {{invoiceDetails?.rpt_net_amount | indianCurrency}} </span></span>
               </td>
             </tr>
-            <tr *ngIf="balance && invoiceDetails.ftr_emod_id != '2'">
+            <tr *ngIf="balance && balance != 0">
               <td>
 
               </td>

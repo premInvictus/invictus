@@ -276,13 +276,13 @@ export class SearchDialogComponent implements OnInit {
 		this.feeService.getReceiptBifurcation({flgr_invoice_receipt_no:this.searchForm.value.receipt_number}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.showTable = true;
-				console.log('result--', result);
-				console.log('this.invoiceArray--',this.invoiceArrayForm);
+				// console.log('result--', result);
+				// console.log('this.invoiceArray--',this.invoiceArrayForm);
 				if (result && result.data && result.data[0]) {
 					let receipt_amt = Number(result.data[0]['ftr_amount']);
 					this.receiptData = result.data[0];
 					for(var i=0; i<this.invoiceArrayForm.length;i++) {
-						 console.log('receipt_amt--',receipt_amt, i,Number(this.invoiceArrayForm[i].value.rm_total_amount))
+						//  console.log('receipt_amt--',receipt_amt, i,Number(this.invoiceArrayForm[i].value.rm_total_amount))
 						if (this.invoiceArrayForm[i] && (Number(this.invoiceArrayForm[i].value.rm_total_amount) >= Number(receipt_amt))) {
 							this.invoiceArrayForm[i].patchValue({
 								rm_total_amount: Number(receipt_amt),
@@ -303,11 +303,10 @@ export class SearchDialogComponent implements OnInit {
 							});}
 							
 						}	
-						this.setNetPay();
 
-
-
-					}
+						// this.setNetPay()
+					};
+					this.changeValue(Number(result.data[0]['ftr_amount']));
 
 				}
 				
@@ -331,6 +330,37 @@ export class SearchDialogComponent implements OnInit {
 		// 	this.common.showSuccessErrorMessage('Please choose reason to delete invoice', 'error');
 		// }
 
+	}
+
+	changeValue(val) {
+		let changeValue = 0;
+		console.log("i am val;", this.invoiceArray, val);
+		
+		for(let i = 0; i <this.invoiceArray.length; i++ ) {
+			
+			if(this.invoiceArray[i].head_bal_amount < val - changeValue) {
+				this.invoiceArrayForm[i].patchValue({
+					netpay: this.invoiceArray[i].head_bal_amount
+				});
+				changeValue +=this.invoiceArray[i].head_bal_amount;
+			} else if (this.invoiceArray[i].head_bal_amount > val - changeValue) {
+				this.invoiceArrayForm[i].patchValue({
+					netpay: val - changeValue
+				});
+				changeValue +=(val - changeValue);
+
+			}
+			
+			
+		}
+		this.invoiceArrayForm[0].patchValue({
+			netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)
+		});
+		// this.feeTransactionForm.patchValue({
+		// 	ftr_amount:val
+		// }); 
+		this.invoiceTotal = val;
+		
 	}
 
 	cancel() {
@@ -385,7 +415,7 @@ export class SearchDialogComponent implements OnInit {
 				rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
 				rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
 				rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-				rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+				rm_total_amount:this.invoiceArrayForm[i].value.netpay,
 			}) }
 		}
 		inputJson.receipt_mapping= receiptMappArr;
