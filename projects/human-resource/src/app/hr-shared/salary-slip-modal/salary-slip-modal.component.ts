@@ -91,8 +91,8 @@ export class SalarySlipModalComponent implements OnInit {
     let tds = 0;
       console.log("i am value", value2, 'ssss', values);
       
-      tds = value2 && value2.emp_salary_structure && value2.emp_salary_structure.tds ?
-        Math.round(Number(value2.emp_salary_structure.tds)) : 0;
+      tds = value2 && value2.emp_modes_data && value2.emp_modes_data.tds ?
+        Math.round(Number(value2.emp_modes_data.tds)) : 0;
     
     if (values) {
 

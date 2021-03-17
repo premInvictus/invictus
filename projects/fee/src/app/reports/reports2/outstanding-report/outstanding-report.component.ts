@@ -4757,6 +4757,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 		const rowData: any[] = [];
 		for (const item of this.exportColumnDefinitions) {
+			console.log()
 			if(!(item.id.includes('checkbox_select'))) {
 				headerData.push(item.name);
 			}
@@ -4954,6 +4955,14 @@ export class OutstandingReportComponent implements OnInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
+		let exportColumnDefinitionsTemp = [];
+		for (const item2 of this.exportColumnDefinitions) {
+			if(!(item2.id.includes('checkbox_select'))) {
+				exportColumnDefinitionsTemp.push(item2);
+			}
+		}
+		console.log(this.exportColumnDefinitions);
+		console.log(item);
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
@@ -4970,6 +4979,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
+						obj3['"tag_name"'] = '';
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -5111,7 +5121,7 @@ export class OutstandingReportComponent implements OnInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						for (const item2 of this.exportColumnDefinitions) {
+						for (const item2 of exportColumnDefinitionsTemp) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -5145,6 +5155,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
+						obj3['"tag_name"'] = '';
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {

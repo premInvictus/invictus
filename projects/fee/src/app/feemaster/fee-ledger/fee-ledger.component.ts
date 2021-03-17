@@ -229,7 +229,9 @@ export class FeeLedgerComponent implements OnInit {
 	async downloadPdf() {
 
 		let headName = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Ch. No/Txn. No', 'Drawn on Bank'];
-
+		// let columnWidth_arr:any = {
+		// 	'Rpt. No':15
+		// }
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
 			console.log("i am result data", result.data);
@@ -241,7 +243,7 @@ export class FeeLedgerComponent implements OnInit {
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
-					headName.push(element.fh_name)
+					headName.push(element.fh_name+'')
 				}
 
 			});
@@ -347,15 +349,13 @@ export class FeeLedgerComponent implements OnInit {
 			pdfrowdata.push(alast);
 			let objct: any = {};
 			for (let i = 0; i < headName.length; i++) {
-				objct.i = { 'cellWidth': 300 / headName.length }
+				objct.i = { 'cellWidth': 400 / headName.length }
 			}
 
 			const doc = new jsPDF('l', 'mm', 'a4');
 			doc.levelHeading = [];
 			doc.levelTotalFooter = [];
 			doc.levelSubtotalFooter = [];
-			
-			
 			
 			async function getBase64ImageFromUrl(imageUrl) {
 				var res = await fetch(imageUrl);
@@ -377,7 +377,6 @@ export class FeeLedgerComponent implements OnInit {
 			var imageurl = await getBase64ImageFromUrl(this.schoolInfo.school_logo);
 			
 			
-			
 			doc.autoTable({
 				// startY: doc.previousAutoTable.finalY + 0.2,
 				
@@ -397,8 +396,8 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			
 			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				startY: doc.previousAutoTable.finalY + 0.2,
+				head: [[this.schoolInfo.school_address + ',' +this.schoolInfo.school_city]],
+				startY: doc.previousAutoTable.finalY - 2,
 				didDrawPage: function (data) {
 					// doc.setFont('Roboto');
 				},
@@ -412,10 +411,25 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			
+			doc.autoTable({
+				head: [['Website: '+this.schoolInfo.school_website + ', Affiliation No: ' +this.schoolInfo.school_afflication_no]],
+				startY: doc.previousAutoTable.finalY - 2,
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 7,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			// doc.addImage(imageurl, 'jpg', 20, 10, 40, 30);
 			doc.autoTable({
 				head: [[new TitleCasePipe().transform('Receipt Ledger ' + this.sessionName)]],
-				startY: doc.previousAutoTable.finalY + 0.2,
+				startY: doc.previousAutoTable.finalY - 2,
 				didDrawPage: function (data) {
 
 				},
@@ -429,72 +443,84 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			doc.addImage(imageurl, 'jpg', 20, 10, 40, 30);
+			let pdfdetaileddata = [];
+			let details = [];
+			details.push('Admission Number');
+			details.push(':');
+			details.push(result.data[0][0].au_admission_no);
+			details.push('Active Parent');
+			details.push(':');
+			details.push( new CapitalizePipe().transform(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name));
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
+			details = [];
+			details.push('Class');
+			details.push(':');
+			details.push(result.data[0][0].class_name +'-'+ result.data[0][0].sec_name);
+			details.push('Active Parent No');
+			details.push(':');
+			details.push(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no);
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
+			details = [];
+			details.push('Student Name');
+			details.push(':');
+			details.push(new TitleCasePipe().transform(result.data[0][0].au_full_name));
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
 			doc.autoTable({
-				wrap: true,
-				startY: doc.previousAutoTable.finalY + 0.2,
-				// tslint:disable-next-line:max-line-length
-				head: [[`Admission Number:  ${result.data[0][0].au_admission_no}`,'      ', `Active Parent     : ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`]],
+				head: [],
+				body: pdfdetaileddata,
+				startY: doc.previousAutoTable.finalY -2,
 				didDrawPage: function (data) {
-
+					doc.setFontStyle('bold');
 				},
-				headStyles: {
-					// fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 10,
+				willDrawCell: function (data) {
+					// tslint:disable-next-line:no-shadowed-variable
+					const doc = data.doc;
+					const rows = data.table.body;
+					doc.setFillColor(255, 255, 255);
 				},
+				drawRow: function (row, data) {
+					row.height = 80
+				},
+			  
 				useCss: true,
-				theme: 'striped',
-				columnStyles: {
-					0: { 'cellWidth': 'wrap' },
-					1: {  margin: { left: -10} }
-				}
-			});
-			doc.autoTable({
-				startY: doc.previousAutoTable.finalY + 0.1,
-				// tslint:disable-next-line:max-line-length
-				head: [[`Class                        : ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`, `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`]],
-				didDrawPage: function (data) {
 
-				},
-				headStyles: {
+				styles: {
+					fontSize: 8,
 					fontStyle: 'bold',
-					fillColor: '#ffffff',
+					cellWidth: 'auto',
 					textColor: 'black',
+					valign: 'middle',
 					halign: 'left',
-					fontSize: 10,
-
+					// columnWidth: 'wrap',
+					fillColor: false,
+					rowHeight: 5, 
+                	cellPadding: 0,
 				},
-				useCss: true,
-				theme: 'striped',
 				columnStyles: {
-					0: { cellWidth: 'wrap' },
-					1: { margin: { left: -10}}
-				}
-			});
-			doc.autoTable({
-				startY: doc.previousAutoTable.finalY + 0.1,
-				// tslint:disable-next-line:max-line-length
-				head: [[`Student Name         : ${result.data[0][0].au_full_name}`]],
-				didDrawPage: function (data) {
-
+					0: {cellWidth: 15},
+					1: {cellWidth: 2},
+					2: {cellWidth: 15},
+					3: {cellWidth: 15},
+					4: {cellWidth: 2},
+					5: {cellWidth: 15},
+					6: {cellWidth: 15},
+					7: {cellWidth: 2},
+					8: {cellWidth: 15},
+					// etc
 				},
-				headStyles: {
-					// fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 10,
-				},
-
-				useCss: true,
-				theme: 'striped',
-				columnStyles: {
-					0: { cellWidth: 200,  },
-					1: { cellWidth: 100 }
-				}
+				
 			});
 			doc.autoTable({
 				head: [headName],
@@ -551,7 +577,8 @@ export class FeeLedgerComponent implements OnInit {
 					fontSize: 8,
 					halign: 'center',
 					lineWidth: 0.1,
-        			lineColor: [0, 0, 0]
+					lineColor: [0, 0, 0],
+					cellPadding: 0.7,
 				},
 				alternateRowStyles: {
 					fillColor: '#f1f4f7'
@@ -563,7 +590,9 @@ export class FeeLedgerComponent implements OnInit {
 					fontSize: 7,
 					cellWidth: 'auto',
 					textColor: 'black',
-					lineColor: '#89a8c8',
+					// lineColor: '#89a8c8',
+					lineWidth: 0.1,
+        			lineColor: [0, 0, 0],
 					valign: 'middle',
 					halign: 'center',
 					columnWidth: 'wrap'
@@ -575,6 +604,7 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			doc.autoTable({
 				// tslint:disable-next-line:max-line-length
+				// startY: doc.previousAutoTable.finalY -2,
 				head: [['Generated On: '
 					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
 				didDrawPage: function (data) {
@@ -593,7 +623,7 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			doc.autoTable({
 				// tslint:disable-next-line:max-line-length
-				startY: doc.previousAutoTable.finalY + 0.5,
+				startY: doc.previousAutoTable.finalY -2,
 				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
 				didDrawPage: function (data) {
 
