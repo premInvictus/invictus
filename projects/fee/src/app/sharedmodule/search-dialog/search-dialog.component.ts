@@ -182,7 +182,7 @@ export class SearchDialogComponent implements OnInit {
 					arr.push(item);
 				}
 					pos++;
-				} else {
+				} else if(Number(item.head_bal_amount) != 0 ) {
 					this.INVOICE_ELEMENT_DATA.push({
 						srno: pos,
 						feehead: item.invg_fh_name,
