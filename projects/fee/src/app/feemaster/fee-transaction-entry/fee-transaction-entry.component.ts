@@ -245,6 +245,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				// 	// this.invoiceArrayForm.push(fb);
 				// 	pos++;
 				// }
+				let arr = [];
 				for (const item of this.invoiceArray) {
 					if (Number(item.head_bal_amount) != 0) {
 					this.INVOICE_ELEMENT_DATA.push({
@@ -258,7 +259,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						netpay: Number(item.head_bal_amount)
 					});}
 					// tslint:disable-next-line: max-line-length
-					if (item.head_bal_amount && item.invg_fh_name != 'Previous Received Amt.' ) {
+					if (item.head_bal_amount && Number(item.head_bal_amount) != 0 && item.invg_fh_name != 'Previous Received Amt.' ) {
 						var fb = this.fbuild.group({
 							rm_inv_id:item.invg_inv_id,
 							rm_head_type:item.invg_head_type,
@@ -276,13 +277,16 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						});
 						this.invoiceArrayForm.push(fb);
 						pos++;
+						this.invoiceTotal += Number(item.head_bal_amount);
+						arr.push(item);
 					}
 					
-					this.invoiceTotal += Number(item.head_bal_amount);
+					
 					
 					
 					
 				}
+				this.invoiceArray = arr;
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
 					const element = {
 						srno: pos,
@@ -311,6 +315,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.invoiceArrayForm.push(fb);
 				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
+				console.log("i am here", this.invoiceTotal);
+				
 			}
 		});
 	}
@@ -1013,7 +1019,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
 		let changeValue = 0
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
-			console.log('-------------------', this.invoiceArray[i]);
+			console.log(i, '-------------------', this.invoiceArrayForm[i]);
 			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
