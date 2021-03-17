@@ -338,7 +338,7 @@ export class SearchDialogComponent implements OnInit {
 		
 		for(let i = 0; i <this.invoiceArray.length; i++ ) {
 			
-			if(this.invoiceArray[i].head_bal_amount < val - changeValue) {
+			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
 				});
