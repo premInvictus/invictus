@@ -268,7 +268,13 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							}
 						}
 					}
-
+					let deductions = item && item.details &&
+					item.details.emp_total_deductions ?
+					-(item.details.emp_total_deductions) : 0;
+					deductions += item && item.details &&
+					item.details.emp_modes_data &&
+					item.details.emp_modes_data.tds ?
+					item.details.emp_modes_data.tds : 0;
 					obj['srno'] = srno;
 					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id, item.id) + ')';
 					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id, item.id);
@@ -279,9 +285,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 					obj['netearnings'] = item && item.details &&
 						item.details.emp_total_earnings ?
 						item.details.emp_total_earnings : 0;
-					obj['deductions'] = item && item.details &&
-						item.details.emp_total_deductions ?
-						item.details.emp_total_deductions : 0;
+					obj['deductions'] = deductions
 					obj['advance'] = item && item.details &&
 						item.details.emp_modes_data && item.details.emp_modes_data.advance
 						? Number(item.details.emp_modes_data.advance) : 0;
