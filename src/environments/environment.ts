@@ -1,7 +1,7 @@
 export const environment = {
 	production: false,
 	apiAxiomUrl: 'http://localhost:83/axiom-backend/index.php',
-	apiSisUrl: 'http://localhost:83/sis-backend/index.php',
+	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://localhost:83/feesmanagementbackend/index.php',
 	apiSmartUrl: 'http://localhost:83/smartbackend/index.php',
 	apiExamUrl: 'http://localhost:83/examination-backend/index.php',
@@ -11,6 +11,9 @@ export const environment = {
 	apiFaUrl: 'http://localhost:3000',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
+	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
+	helpDeskAgentUrl: "https://support.invictusprojects.com/scp/login.php",
+	payuApi : 'https://test.payu.in/_payment',
 	testInitiateCode: 'T100',
 	testStartCode: 'T101',
 	testOngoingCode: 'T102',
