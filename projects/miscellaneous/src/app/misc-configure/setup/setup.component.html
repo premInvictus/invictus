@@ -394,7 +394,7 @@
                                               </mat-form-field>
                                             </div>
                                           </div>
-                                          <ng-container [formArrayName]="'permission'">
+                                          <!-- <ng-container [formArrayName]="'permission'">
                                             <ng-container
                                               *ngFor="let permission of item.get('permission').controls; let j = index;"
                                               [formGroupName]="j">
@@ -406,6 +406,38 @@
                                                   </mat-checkbox>
                                                 </div>
                                               </div>
+                                            </ng-container>
+                                          </ng-container> -->
+                                          <ng-container [formArrayName]="'report_assigned'">
+                                            <ng-container
+                                              *ngFor="let reports of item.get('report_assigned').controls; let j = index;"
+                                              [formGroupName]="j">
+                                              <div class="row">
+                                                <div class="col-6">
+                                                  <mat-checkbox formControlName="status" (click) = "checklowerchild( reports)"
+                                                    [checked]="reports.value.status">
+                                                    {{reports.value.report_name}}
+                                                  </mat-checkbox>
+                                                </div>
+                                                
+                                              </div>
+                                              
+                                            
+                                            <ng-container [formArrayName]="'permission'">
+                                              <ng-container
+                                                *ngFor="let report of reports.get('permission').controls; let k = index;"
+                                                [formGroupName]="k">
+                                                <div class="row">
+                                                  <div class="col-6" style="margin-left: 30px;">
+                                                    <mat-checkbox formControlName="status"
+                                                      [checked]="report.value.status">
+                                                      {{report.value.section_name}}
+                                                    </mat-checkbox>
+                                                  </div>
+                                                  
+                                                </div>
+                                              </ng-container>
+                                              </ng-container>
                                             </ng-container>
                                           </ng-container>
                                         </ng-container>

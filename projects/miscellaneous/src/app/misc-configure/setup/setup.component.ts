@@ -467,21 +467,45 @@ export class SetupComponent implements OnInit {
                 const jsontemp = [];
                 temp.forEach(element => {
                     const tempPermission: any[] = [];
-                    if (element.permission.length > 0) {
-                        element.permission.forEach(element1 => {
-                            tempPermission.push(this.fbuild.group({
-                                section_name: element1.section_name,
-                                status: element1.status
+                    const tempReport: any [] = [];
+                    // if (element.permission.length > 0) {
+                    //     element.permission.forEach(element1 => {
+                    //         tempPermission.push(this.fbuild.group({
+                    //             section_name: element1.section_name,
+                    //             status: element1.status
+                    //         }));
+                    //     });
+                    // }
+                    if (element.report_assigned.length > 0) {
+                        element.report_assigned.forEach(element1 => {
+                            let normaldata: any[] = [];
+                            element1.permission.forEach(element => {
+                                normaldata.push(this.fbuild.group({
+                                    section_name: element.section_name,
+                                    status: element.status
+                                }));
+                            });
+                            
+                            tempReport.push(this.fbuild.group({
+                                report_name: element1.report_name,
+                                status: element1.status,
+                                permission: this.fbuild.array(normaldata)
                             }));
                         });
                     }
+
                     jsontemp.push(this.fbuild.group({
                         id: element.id,
                         name: element.name,
                         email: element.email,
-                        permission: this.fbuild.array(tempPermission)
-                    }))
+                        // permission: this.fbuild.array(tempPermission),
+                        report_assigned : this.fbuild.array(tempReport)
+                    }));
+
+
                 });
+                console.log("i am form build ", jsontemp);
+                
                 return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'mis_report_setting_data') {
                 const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
@@ -563,6 +587,14 @@ export class SetupComponent implements OnInit {
             ps_show_stu_addr: data.ps_show_stu_addr === '1' ? true : false,
             ps_hide_stu_bg: data.ps_hide_stu_bg === '1' ? true : false,
         });
+    }
+
+    checklowerchild( form) {
+        console.log("i am form", form);
+        form.value.permission.forEach(e => {
+            e.status = !(form.value.status)
+        });
+        
     }
     checkStudentIdCardData(data) {
         this.headerforecolor = data.ps_header_fore_color;
