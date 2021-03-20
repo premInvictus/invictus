@@ -3,7 +3,7 @@
     <br /> Amount payable : &#8377; {{outStandingAmt | number: '2.'}} </p>
   <div>
     <form ngNoForm #myFormPost name="myFormPost" id="payForm"
-      action="https://sandboxsecure.payu.in/_payment" method="POST">
+      [action]="pauEnv" method="POST">
       <ng-container *ngFor="let item of payFields">
         <input type="hidden" [name]="item.name" [value]="item.value">
       </ng-container>

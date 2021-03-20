@@ -388,7 +388,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 					if (result && result.status === 'ok') {
 						this.paytmResult = result.data[0];
 						const ORDER_ID = this.paytmResult.txnid;
-						const MID = this.getMID(bank);
+						const MID = this.paytmResult.key;
 						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 						const hostName = window.location.href.split('/')[2];
 						var left = (screen.width / 2) - (800 / 2);
@@ -396,6 +396,11 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						window.open(location.protocol + '//' + hostName + '/student/make-paymentviapayu', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
 							top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
 					}
 				});
 			}
