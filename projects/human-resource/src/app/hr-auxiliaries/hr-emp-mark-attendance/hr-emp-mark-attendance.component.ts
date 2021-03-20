@@ -378,7 +378,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                     counter++;
 
                   }
-                  this.totalStudent = counter;
+                  this.totalStudent = this.studentArray.length;
 
                 }
               }
