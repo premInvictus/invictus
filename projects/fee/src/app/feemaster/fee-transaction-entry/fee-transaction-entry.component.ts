@@ -1017,9 +1017,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	changeValue(val) {
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
-		let changeValue = 0
+		let changeValue = 0;
+		console.log("----------------------------------------", val);
+		
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
-			console.log(i, '-------------------', this.invoiceArrayForm[i]);
 			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
@@ -1043,5 +1044,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}); 
 		this.invoiceTotal = val;
 		
+	}
+	getAMount(itotal, prevBal, fineA) {
+		
+		return (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)) > 0 ? (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)): 0
 	}
 }

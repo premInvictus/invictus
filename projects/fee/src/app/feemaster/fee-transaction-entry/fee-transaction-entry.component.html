@@ -210,12 +210,12 @@
                               </div>
                            </div>
 
-                           <!-- <div class="row">
+                           <div class="row">
                               <div class="font-size-16 font-regular col-sm">Previous Balance: </div>
                               <div class="font-size-16 font-bold col-sm">
                                  : {{invoice.balance_amt ? (invoice.balance_amt | number): 0}}
                               </div>
-                           </div> -->
+                           </div>
 
                            <div class="row">
                               <div class="font-size-16 font-regular col-sm">Fine & Penalties: </div>
@@ -227,7 +227,7 @@
                            <div class="row">
                               <div class="font-size-16 font-regular col-sm">Total Amount: </div>
                               <div class="font-size-16 font-bold col-sm">
-                                 : {{invoiceTotal | number}}
+                                 : {{getAMount(invoiceTotal ,invoice.balance_amt , invoice.late_fine_amt) | number}}
                               </div>
                            </div>
                         </div>
