@@ -33,7 +33,7 @@
           </div>
           <div class="col-3">
             <div class="row remove-top-margin">
-              <div class="col-8">
+              <div class="col-7">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>
                     {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login
@@ -43,6 +43,10 @@
                     [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
                     formControlName="searchId" autocomplete="off" />
                 </mat-form-field>
+              </div>
+              <div class="col-1">
+                <i *ngIf="searchForm.value.user_role_id == '4'" style="cursor: pointer;" class="fas fa-search margin-top-20" matTooltip="Search Students"
+                (click)="openSearchDialog()"></i>
               </div>
               <div class="col-4 margin-top-10  text-right">
                 <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">

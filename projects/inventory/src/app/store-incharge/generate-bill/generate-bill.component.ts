@@ -8,6 +8,8 @@ import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SelectionModel} from '@angular/cdk/collections';
+import { SearchViaNameComponent } from '../../inventory-shared/search-via-name/search-via-name.component';
+
 
 @Component({
   selector: 'app-generate-bill',
@@ -43,6 +45,7 @@ export class GenerateBillComponent implements OnInit {
   locationId: any;
   bundleArray: any[] = [];
   requiredArray: any[] = [];
+  studentArrayByName:any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -600,4 +603,24 @@ export class GenerateBillComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
+  openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '20%',
+			height: '30%',
+			position: {
+				top: '10%'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+        console.log(result);
+        this.searchForm.patchValue({
+          searchId : result.adm_no
+        });
+        this.searchUser();
+        
+			}
+		});
+	}
 }
