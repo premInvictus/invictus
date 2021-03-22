@@ -1950,7 +1950,7 @@ export class OutstandingReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -4768,21 +4768,32 @@ export class OutstandingReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ?this.dataset[key][item2.id]: '0' ));
+
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
+						// console.log("i am here", (this.dataset[key]) );
+						
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
 						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						
+						
 					}
 					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ?this.dataset[key][item2.id]: '0' ));
 					}
 					
+					
 				}
+				// if(key == 1 ) {
+				// 	console.log("i am here", (this.dataset[1]), this.dataset.length);
+					
+				// }
+				
 				arr.shift();
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);
@@ -4793,8 +4804,22 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
+			let prev = false;
 			for (const item of this.exportColumnDefinitions) {
-				arr.push(this.totalRow[item.id]);
+				if(!prev ) {
+					arr.push(this.totalRow[item.id]);
+				} else {
+					prev = false;
+				}
+				if(this.totalRow[item.id] == "Grand Total") {
+					prev = true
+					
+				} 
+				
+				console.log(this.totalRow[item.id], ' ----------------------------------');
+				
+				
+				
 			}
 			rowData.push(arr);
 			this.pdfrowdata.push(arr);
