@@ -116,8 +116,20 @@
             </div>
             <div class="col-6 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                <span *ngIf="userData?.au_mobile">{{userData?.au_mobile}}</span>
+                <span *ngIf="userData?.au_mobile">{{userData?.active_contact}}</span>
                 <span *ngIf="!(userData?.au_mobile)">-</span>
+              </span>
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-4 remove-col-padding">
+              <span class="font-size-16 font-bold">Active Parent</span>
+              <span class="font-size-16 font-bold float-right">:</span>
+            </div>
+            <div class="col-8 remove-col-padding-right">
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.active_parent">{{userData?.active_parent}}</span>
+                <span *ngIf="!(userData?.active_parent)">-</span>
               </span>
             </div>
           </div>
@@ -215,6 +227,15 @@
                   </tr>
                 </ng-container>
               </tbody>
+              <tfoot>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">Total</td>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">{{getTotalPriceSum()}}</td>
+                <td class="custom-td"></td>
+              </tfoot>
             </table>
           </div>
         </div>

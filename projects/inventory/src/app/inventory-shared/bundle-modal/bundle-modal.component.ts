@@ -50,7 +50,7 @@ export class BundleModalComponent implements OnInit {
       this.selection.clear();
       this.itemSearchForm.patchValue({
         bundle_id:this.data.value.bundle_id,
-        bundle_name:this.data.value.bundle_id
+        bundle_name:this.data.value.bundle_name
       })
       if(this.data.value.item_assign && this.data.value.item_assign.length > 0){
         this.data.value.item_assign.forEach(item => {
@@ -63,6 +63,11 @@ export class BundleModalComponent implements OnInit {
           if(item.item_optional == '1'){
             this.selection.toggle(item.item_code);
           }
+          this.formGroupArray.push({
+            formGroup: this.fbuild.group({
+              item_quantity: item.item_quantity ? item.item_quantity : 1,
+            })
+          });
         });
       }
     }
@@ -116,6 +121,11 @@ export class BundleModalComponent implements OnInit {
             item_selling_price: item.item_selling_price,
             item_optional: '',
           });
+          this.formGroupArray.push({
+            formGroup: this.fbuild.group({
+              item_quantity: 1,
+            })
+          });
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }
@@ -123,8 +133,21 @@ export class BundleModalComponent implements OnInit {
     }
 
   }
+  getTotalPriceRow(index) {
+    if (this.formGroupArray[index].formGroup.value.item_quantity) {
+      return Number(this.tableArray[index].item_selling_price
+      ) * Number(this.formGroupArray[index].formGroup.value.item_quantity)
+    } else {
+      return '-';
+    }
+  }
   getTotalPrice(index) {
-    return this.tableArray.map(e => e.item_selling_price).reduce((a,b) => a += Number(b),0);
+    let sum=0;
+    for (let index = 0; index < this.tableArray.length; index++) {
+      const element = this.tableArray[index];
+      sum += Number(this.tableArray[index].item_selling_price) * Number(this.formGroupArray[index].formGroup.value.item_quantity)
+    }
+    return sum;
   }
   closeDialog(value=null){
     this.dialogRef.close(value);
@@ -132,12 +155,15 @@ export class BundleModalComponent implements OnInit {
   finalSubmit() {
     var finalJson: any = {};
     const itemAssign: any[] = [];
+    let i=0;
     for (let item of this.tableArray) {
       const temp:any = {};
       const findex = this.selection.selected.findIndex(e => e == item.item_code);
       temp.item_code = item.item_code;
+      temp.item_quantity = this.formGroupArray[i].formGroup.value.item_quantity ? this.formGroupArray[i].formGroup.value.item_quantity : 1;
       temp.item_optional = findex != -1 ? '1' : '0';
       itemAssign.push(temp);
+      i++;
     }
     finalJson = {
       emp_id : this.data.emp_id,
@@ -168,6 +194,8 @@ export class BundleModalComponent implements OnInit {
   }
   removeItem(i){
     this.tableArray.splice(i,1);
+    this.formGroupArray.splice(i,1);
+    
   }
 
 }
