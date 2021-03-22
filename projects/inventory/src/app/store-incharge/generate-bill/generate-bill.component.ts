@@ -359,7 +359,7 @@ export class GenerateBillComponent implements OnInit {
       this.tableReciptArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
       this.tableReciptArray['school_website'] = this.schoolInfo.school_website;
       this.tableReciptArray['name'] = this.userData.au_full_name;
-      this.tableReciptArray['mobile'] = this.userData.au_mobile;
+      this.tableReciptArray['mobile'] = this.userData.active_contact;
       if (this.userData.au_role_id === 3) {
         this.tableReciptArray['adm_no'] = this.userData.emp_id;
         this.tableReciptArray['class_name'] = '';
