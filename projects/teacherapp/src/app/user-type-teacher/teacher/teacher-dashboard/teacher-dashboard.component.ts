@@ -991,7 +991,7 @@ export class TeacherDashboardComponent implements OnInit {
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
 		this.erpCommonService.getTeacherwiseTableDetails({ uc_login_id: this.currentUser.login_id }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
+			if (result && result.status === 'ok' && result.data) {
 				this.weekArr = [];
 				this.timetableArray = result.data.tabledata;
 				const no_of_day = this.timetableArray[0].length - 1;

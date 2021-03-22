@@ -66,6 +66,13 @@
                 {{element?.subscription_frequency}}
               </td>
             </ng-container>
+            <ng-container matColumnDef="subscription_cost">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Cost (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.subscription_cost}}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="subscription_start_date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Start Date</th>
               <td mat-cell *matCellDef="let element">

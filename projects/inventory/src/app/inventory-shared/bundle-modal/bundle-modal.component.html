@@ -1,0 +1,89 @@
+<div class="row remove-modal-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="dialog-title-container ">
+      <span class="font-size-24 font-white">{{data.title}}</span>
+      <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+        cancel
+      </i>
+    </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-12 remove-col-padding margin-top-30">
+      <form [formGroup]="itemSearchForm">
+          <div class="row">
+              <div class="col-4">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Bundle Name</mat-label>
+                  <input matInput placeholder="Bundle Name" formControlName="bundle_name" autocomplete="off" />
+                </mat-form-field>
+              </div>
+            <div class="col-8">
+              <div class="row remove-top-margin">
+                <div class="col-8">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Scan Item Code</mat-label>
+                    <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                    (click)="searchItemData()" style="width: auto !important;">
+                    Add To List
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row margin-top-15" [hidden]="!(tableArray.length > 0)">
+            <div class="col-12 remove-col-padding">
+              <table class="table-100 custom-table">
+                <thead>
+                  <tr class="custom-tr text-center">
+                    <th class="custom-th">Sr No.</th>
+                    <th class="custom-th">Item Code</th>
+                    <th class="custom-th ">Item Name</th>
+                    <th class="custom-th">Item Price</th>
+                    <th class="custom-th">Optional</th>
+                    <th class="custom-th">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let item of tableArray; let i=index;">
+                    <tr class="custom-tr book-list">
+                      <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
+                      <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
+                      <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                      <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
+                      <td width="15%" class="custom-td">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(item.item_code) : null"
+                        [checked]="selection.isSelected(item.item_code)"
+                        [aria-label]="checkboxLabel(item.item_code)">
+                        </mat-checkbox>
+                      </td>
+                      <td width="10%" class="custom-td">
+                        <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="text-center" *ngIf="tableArray.length == 0">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="" [subText]="'Please Search Items To Add In Cart'"></app-no-data>
+          </div>
+          <div class="row margin-top-20" *ngIf="tableArray.length>0">
+            <div class="col-12 text-center">
+              <button mat-raised-button class="btn-success-green" *ngIf="!data.edit"
+                (click)="finalSubmit();">Submit</button>
+              <button mat-raised-button class="btn-success-green" *ngIf="data.edit"
+                (click)="finalSubmit();">Update</button>
+            </div>
+          </div>
+      </form>
+    </div>
+</div>

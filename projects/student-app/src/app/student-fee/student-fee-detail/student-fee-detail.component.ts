@@ -73,6 +73,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	settings: any[] = [];
 	settingArr7: any[] = [];
 	counter = 0;
+	currentUser: any = {};
 	constructor(
 		public dialog: MatDialog,
 		private fb: FormBuilder,
@@ -94,9 +95,9 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		this.FEE_LEDGER_ELEMENT = [];
 		this.ledgerDataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 
-		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.loginId = currentUser.login_id;
-		this.processType = currentUser.au_process_type;
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.loginId = this.currentUser.login_id;
+		this.processType = this.currentUser.au_process_type;
 		this.getStudentInvoiceDetail();
 	}
 
@@ -372,6 +373,37 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				out_standing_amt: this.outStandingAmt,
 				bank: bank
 			};
+			if (bank === 'payu') {
+				inputJson['name'] = this.currentUser.full_name.split(' ')[0];
+				inputJson['udf5'] = '';
+				inputJson['udf1'] = '';
+				inputJson['udf2'] = '';
+				inputJson['udf3'] = '';
+				inputJson['udf4'] = '';
+				inputJson['mobile'] = 1234567890;
+				inputJson['pinfo'] = 'fees';
+				inputJson['email'] = 'test@gmail.com';
+				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+					localStorage.setItem('paymentData', '');
+					if (result && result.status === 'ok') {
+						this.paytmResult = result.data[0];
+						const ORDER_ID = this.paytmResult.txnid;
+						const MID = this.paytmResult.key;
+						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+						const hostName = window.location.href.split('/')[2];
+						var left = (screen.width / 2) - (800 / 2);
+						var top = (screen.height / 2) - (800 / 2);
+						window.open(location.protocol + '//' + hostName + '/student/make-paymentviapayu', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+							top + ',' + 'left=' + left);
+						localStorage.setItem('paymentWindowStatus', '1');
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
+					}
+				});
+			}
 			if (bank === 'icici') {
 				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
 					localStorage.setItem('paymentData', '');

@@ -110,7 +110,7 @@
     <ul class="preview-attachment-base" style="display:flex">
       <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
           <img [src]="getuploadurl(item.imgUrl)"
-              (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+              (click)="previewImage(attachmentArray, i)" height="75" width="70">
       </li>
   </ul>
 </div>

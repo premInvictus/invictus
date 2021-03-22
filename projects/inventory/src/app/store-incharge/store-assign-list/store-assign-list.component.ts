@@ -32,6 +32,10 @@ export class StoreAssignListComponent implements OnInit {
   }
   viewData(item) {
     this.inventory.setAssignEmp(item);
-    this.inventory.receipt.next({ 'currentTab': 0 });
+    this.inventory.receipt.next({ 'currentTab': 0, currentChildTab:''});
+  }
+  bundleList(item) {
+    this.inventory.setAssignEmp(item);
+    this.inventory.receipt.next({ 'currentTab': 0, currentChildTab:'bundlelist'});
   }
 }

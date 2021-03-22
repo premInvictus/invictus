@@ -3,9 +3,25 @@
     <mat-card>
       <form [formGroup]="searchForm">
         <div class="row">
-          <div class="col-7 margin-top-15">
-            <span class="font-size-24">Generate Bill</span>
+          <div class="col-5 margin-top-15">
+            <!-- <span class="font-size-24">Generate Bill</span> -->
           </div>
+          <!-- <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input type="text" matInput placeholder="Enter Location" formControlName="location_id" required
+                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup2"
+                (keyup)="searchLocationByName($event)">
+              <mat-autocomplete #autoGroup2="matAutocomplete">
+                <mat-option (onSelectionChange)="getLocationId(item)" (keyup.enter)="getLocationId(item)"
+                  (click)="getLocationId(item)" *ngFor="let item of locationArray" [value]="item?.location_id">
+                  {{item?.location_name}}</mat-option>
+              </mat-autocomplete>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div> -->
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Choose User Type</mat-label>
@@ -128,12 +144,20 @@
     <form [formGroup]="itemSearchForm">
       <mat-card class="mat-card-108">
         <div class="row">
-          <div class="col-9 margin-top-15">
+          <div class="col-8 margin-top-15">
             <span class="font-size-20 font-bold">Add Items</span>
           </div>
-          <div class="col-3">
+          <div class="col-4">
             <div class="row remove-top-margin">
-              <div class="col-8">
+              <div class="col-4">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Bundle</mat-label>
+                  <mat-select formControlName="bundle_id" required (selectionChange)="addBundleItems()">
+                      <mat-option *ngFor="let item of bundleArray" [value]="item.bundle_id">{{item.bundle_name | titlecase}}</mat-option>                    
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Scan Item Code</mat-label>
                   <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
@@ -180,7 +204,13 @@
                     </td>
                     <td width="10%" class="custom-td">{{getTotalPrice(i)}}</td>
                     <td width="10%" class="custom-td">
-                      <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i>
+                      <!-- <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i> -->
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(item.item_code) : null"
+                      [checked]="selection.isSelected(item.item_code)"
+                      [disabled]="checkRequired(item.item_code)"
+                      [aria-label]="checkboxLabel(item.item_code)">
+                      </mat-checkbox>
                     </td>
                   </tr>
                 </ng-container>

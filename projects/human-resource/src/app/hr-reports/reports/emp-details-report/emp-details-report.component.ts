@@ -497,6 +497,21 @@ export class EmpDetailsReportComponent implements OnInit {
         filterable: true,
         width: 120,
         filterSearchType: FieldType.string
+      },
+      {
+        id: 'emp_status', name: 'Status', field: 'emp_status', sortable: true,
+        filterable: true,
+        width: 120,
+        filterSearchType: FieldType.string,
+        grouping: {
+          getter: 'emp_status',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false,
+        },
       }
 
     ];
@@ -566,7 +581,8 @@ export class EmpDetailsReportComponent implements OnInit {
               item.emp_personal_contact.relationship_personal_detail.rel_address_detail.state + ',' +
               item.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin : '-',
             obj['reference'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_reference_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-'
+              item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-';
+            obj['emp_status'] = item.emp_status ? new CapitalizePipe().transform(item.emp_status) : '-';
           for (const item of this.documentArray) {
             for (const detz of item.files_data) {
               console.log("i am here", detz);

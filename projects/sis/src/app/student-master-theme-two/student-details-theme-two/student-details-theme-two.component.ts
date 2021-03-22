@@ -49,7 +49,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	classArray = [];
 	sectionArray = [];
-	houseArray = [];
+	houseArray:any[] = [];
 	bloodGroupArray: any[] = [];
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];

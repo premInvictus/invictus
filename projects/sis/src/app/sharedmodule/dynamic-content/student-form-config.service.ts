@@ -36,7 +36,7 @@ export class StudentFormConfigService {
 				{ 'label': 'Admission Remarks', 'component': 'app-admission-remarks' }
 		];
 		formconfig = {
-				'enquiry': [0, 1, 9],
+				'enquiry': [0, 1, 3, 4, 5, 6, 7, 9],
 				'registration': [0, 1, 3, 4, 5, 6, 7, 9],
 				'provisional': [0, 1, 3, 4, 5, 6, 7, 8, 9],
 				'admission': [0, 1, 3, 4, 5, 6, 7, 8, 9],

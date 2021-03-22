@@ -22,7 +22,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
   currentSubscriptionId = '';
   SUBSCRIPTION_LIST_ELEMENT: SubscriptionListElement[] = [];
   subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
-  displayedSubscriptionListColumns: string[] = ['srno', 'subscription_id', 'subscription_name', 'subscription_type', 'subscription_frequency', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
+  displayedSubscriptionListColumns: string[] = ['srno', 'subscription_id', 'subscription_name', 'subscription_type', 'subscription_frequency','subscription_cost', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
   // subscriptionListPageIndex = 0;
   // subscriptionListPageSize = 10;
   // subscriptionListPageSizeOptions = [10, 25, 50, 100];
@@ -55,6 +55,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
       data: {
         subscription_id: '',
         subscription_name: '',
+        subscription_cost: '',
         subscription_type: '',
         subscription_frequency: '',
         subscription_start_date: '',
@@ -87,6 +88,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
             srno: pos,
             subscription_id: item.subscription_id,
             subscription_name: item.subscription_name,
+            subscription_cost: item.subscription_cost,
             subscription_type: item.subscription_type,
             subscription_frequency: item.subscription_frequency,
             subscription_start_date: item.subscription_start_date,
@@ -117,6 +119,7 @@ export class PeriodicalMasterComponent implements OnInit, AfterViewInit {
       data: {
         subscription_id: element.subscription_id,
         subscription_name: element.subscription_name,
+        subscription_cost: element.subscription_cost,
         subscription_type: element.subscription_type,
         subscription_frequency: element.subscription_frequency,
         subscription_start_date: element.subscription_start_date,
@@ -172,6 +175,7 @@ export interface SubscriptionListElement {
   subscription_name: string;
   subscription_type: string;
   subscription_frequency: string;
+  subscription_cost: string;
   subscription_start_date: string;
   subscription_end_date: string;
   subscription_vendor_id: string;

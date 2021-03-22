@@ -9,6 +9,7 @@ import { VoucherRefModalComponent } from '../../fa-shared/voucher-ref-modal/vouc
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemCodeGenerationComponent } from 'projects/inventory/src/app/inventory-configuration/item-code-generation/item-code-generation.component';
 import * as moment from 'moment';
+
 @Component({
 	selector: 'app-voucher-entry',
 	templateUrl: './voucher-entry.component.html',
@@ -30,6 +31,7 @@ export class VoucherEntryComponent implements OnInit {
 	currentVcType = 'Journal';
 	suffix = 'Voucher';
 	accountsArray: any[] = [];
+	allaccountsArray: any[] = [];
 	editMode = false;
 	currentVoucherId = '';
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
@@ -296,6 +298,7 @@ export class VoucherEntryComponent implements OnInit {
 			this.faService.getAllChartsOfAccount(param).subscribe((data: any) => {
 				if (data) {
 					this.accountsArray = data;
+					this.allaccountsArray = JSON.parse(JSON.stringify(data));
 				} else {
 					this.accountsArray = [];
 				}
@@ -386,37 +389,73 @@ export class VoucherEntryComponent implements OnInit {
 		return valid;
 	}
 
+	getParticularData(){
+		this.voucherEntryArray = [];
+		for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+			if (this.voucherFormGroupArray[i].value.vc_credit || this.voucherFormGroupArray[i].value.vc_debit) {
+				let vFormJson:any = {};
+				if(this.getAccountName(this.voucherFormGroupArray[i].value.vc_account_type_id) != this.voucherFormGroupArray[i].value.vc_account_type){
+					this.voucherEntryArray = [];
+					this.commonAPIService.showSuccessErrorMessage('Account does not exist','error')
+					break;
+				} else {
+					vFormJson = {
+						vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+						vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+						vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
+						vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
+						selected: this.voucherFormGroupArray[i].value.selected,
+						vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+						vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
+						// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
+						// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
+					};
+					if(vFormJson.vc_debit == 0) {
+						vFormJson.vc_debit='';
+					}
+					if(vFormJson.vc_credit == 0) {
+						vFormJson.vc_credit='';
+					}
+					this.voucherEntryArray.push(vFormJson);
+				}
+			}
+
+		}
+	}
+
 	saveAsDraft() {
 		console.log('this.voucherForm', this.voucherForm);
 		console.log('this.voucherForm', this.voucherFormGroupArray);
 		this.voucherEntryArray = [];
 		if (this.validateVoucher()) {
 			if (this.voucherForm.valid) {
-				for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
-					if (this.voucherFormGroupArray[i].value.vc_credit || this.voucherFormGroupArray[i].value.vc_debit) {
-						let vFormJson:any = {};
-						vFormJson = {
-							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
-							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
-							vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
-							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
-							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
-							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
-							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
-							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
-							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
-						};
-						if(vFormJson.vc_debit == 0) {
-							vFormJson.vc_debit='';
-						}
-						if(vFormJson.vc_credit == 0) {
-							vFormJson.vc_credit='';
-						}
-						this.voucherEntryArray.push(vFormJson);
-					}
+				// for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+				// 	if (this.voucherFormGroupArray[i].value.vc_credit || this.voucherFormGroupArray[i].value.vc_debit) {
+				// 		let vFormJson:any = {};
+				// 		vFormJson = {
+				// 			vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+				// 			vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+				// 			vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+				// 			vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
+				// 			vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
+				// 			selected: this.voucherFormGroupArray[i].value.selected,
+				// 			vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+				// 			vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
+				// 			// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
+				// 			// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
+				// 		};
+				// 		if(vFormJson.vc_debit == 0) {
+				// 			vFormJson.vc_debit='';
+				// 		}
+				// 		if(vFormJson.vc_credit == 0) {
+				// 			vFormJson.vc_credit='';
+				// 		}
+				// 		this.voucherEntryArray.push(vFormJson);
+				// 	}
 
-				}
+				// }
+				this.getParticularData();
 				if (this.voucherEntryArray.length > 0) {
 					let tempdate: any;
 					if (!moment.isMoment(this.voucherForm.value.vc_date)) {
@@ -447,31 +486,31 @@ export class VoucherEntryComponent implements OnInit {
 						vc_sattle_status: 1
 					}
 					console.log('inputJson',inputJson);
-					// if (this.currentVoucherId ) {
-					// 	if (this.voucherForm.value.vc_narrations.trim() === "") {
-					// 		this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
-					// 	} else {
-					// 	this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
-					// 		if (data) {
-					// 			this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					// 			this.cancel();
-					// 		} else {
-					// 			this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					// 		}
-					// 	});}
-					// } else {
-					// 	if (this.voucherForm.value.vc_narrations.trim() === "") {
-					// 		this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
-					// 	} else {
-					// 	this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
-					// 		if (data) {
-					// 			this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					// 			this.cancel();
-					// 		} else {
-					// 			this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					// 		}
-					// 	});}
-					// }
+					if (this.currentVoucherId ) {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
+						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});}
+					} else {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
+						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});}
+					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 				}
@@ -494,28 +533,29 @@ export class VoucherEntryComponent implements OnInit {
 		if (this.validateVoucher()) {
 			if (this.voucherForm.valid) {
 				if (this.totalDebit == this.totalCredit) {
-					for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
-						let vFormJson:any = {};
-						vFormJson = {
-							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
-							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
-							vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
-							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
-							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
-							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
-							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
-							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
-							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
-						};
-						if(vFormJson.vc_debit == 0) {
-							vFormJson.vc_debit='';
-						}
-						if(vFormJson.vc_credit == 0) {
-							vFormJson.vc_credit='';
-						}
-						this.voucherEntryArray.push(vFormJson);
-					}
+					// for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+					// 	let vFormJson:any = {};
+					// 	vFormJson = {
+					// 		vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+					// 		vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+					// 		vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+					// 		vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
+					// 		vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
+					// 		selected: this.voucherFormGroupArray[i].value.selected,
+					// 		vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+					// 		vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
+					// 		// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
+					// 		// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
+					// 	};
+					// 	if(vFormJson.vc_debit == 0) {
+					// 		vFormJson.vc_debit='';
+					// 	}
+					// 	if(vFormJson.vc_credit == 0) {
+					// 		vFormJson.vc_credit='';
+					// 	}
+					// 	this.voucherEntryArray.push(vFormJson);
+					// }
+					this.getParticularData();
 					let tempdate: any;
 					if (!moment.isMoment(this.voucherForm.value.vc_date)) {
 						tempdate = moment(this.voucherForm.value.vc_date);
@@ -591,28 +631,29 @@ export class VoucherEntryComponent implements OnInit {
 		if (this.validateVoucher()) {
 			if (this.voucherForm.valid) {
 				if (this.totalDebit == this.totalCredit) {
-					for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
-						let vFormJson:any = {};
-						vFormJson = {
-							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
-							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
-							vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
-							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
-							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
-							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
-							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
-							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
-							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
-						};
-						if(vFormJson.vc_debit == 0) {
-							vFormJson.vc_debit='';
-						}
-						if(vFormJson.vc_credit == 0) {
-							vFormJson.vc_credit='';
-						}
-						this.voucherEntryArray.push(vFormJson);
-					}
+					// for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+					// 	let vFormJson:any = {};
+					// 	vFormJson = {
+					// 		vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+					// 		vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+					// 		vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+					// 		vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
+					// 		vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
+					// 		selected: this.voucherFormGroupArray[i].value.selected,
+					// 		vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+					// 		vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
+					// 		// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
+					// 		// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
+					// 	};
+					// 	if(vFormJson.vc_debit == 0) {
+					// 		vFormJson.vc_debit='';
+					// 	}
+					// 	if(vFormJson.vc_credit == 0) {
+					// 		vFormJson.vc_credit='';
+					// 	}
+					// 	this.voucherEntryArray.push(vFormJson);
+					// }
+					this.getParticularData();
 					let tempdate: any;
 					if (!moment.isMoment(this.voucherForm.value.vc_date)) {
 						tempdate = moment(this.voucherForm.value.vc_date);
@@ -741,6 +782,8 @@ export class VoucherEntryComponent implements OnInit {
 
 	previewImage(imgArray, index) {
 		console.log('imgArray--', imgArray, index);
+		const length = imgArray[index].imgUrl.split('/').length;
+		saveAs(imgArray[index].imgUrl, imgArray[index].imgUrl.split('/')[length - 1]);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
 				images: imgArray,
@@ -848,7 +891,16 @@ export class VoucherEntryComponent implements OnInit {
 			this.totalCredit = this.totalCredit + Number(this.voucherFormGroupArray[i].value.vc_credit);
 		}
 	}
+	getAccountName(coa_id) {
+		let coa = this.allaccountsArray.find(e => e.coa_id == coa_id);
+		console.log(coa_id,coa);
 
+		if(coa){
+			return coa.coa_acc_name
+		} else {
+			return '';
+		}
+	}
 	getVcName() {
 		let vcType = '';
 		let currentVcTypeTemp = this.currentVcType+' '+this.suffix;

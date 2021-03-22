@@ -31,6 +31,33 @@ export class ReportsComponent implements OnInit {
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
 		},
+		{
+			report_id: '4',
+			report_name: 'Periodical Log',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		},
+		{
+			report_id: '5',
+			report_name: 'Books Due/Overdue Report',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		},
+		{
+			report_id: '6',
+			report_name: 'Flaged Books',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		},
 		// {
 		// 	report_id: '3',
 		// 	report_name: 'Over Due Books Log',
@@ -135,6 +162,15 @@ export class ReportsComponent implements OnInit {
 		}
 		if (actionT === '2') {
 			return this.CommonAPIService.isExistUserAccessMenu('591');
+		}
+		if (actionT === '4') {
+			return true;
+		}
+		if (actionT === '5') {
+			return true;
+		}
+		if (actionT === '6') {
+			return true;
 		}
 	}
 }

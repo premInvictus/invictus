@@ -247,8 +247,8 @@
 
               <ul class="preview-attachment-base" style="display:flex">
                 <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
-                  <img [src]="getuploadurl(item.imgUrl)" (click)="previewImage(attachmentArray, i)" height="145px"
-                    width="150px">
+                  <img [src]="getuploadurl(item.imgUrl)" (click)="previewImage(attachmentArray, i)" height="75"
+                    width="70">
                   <!-- <img *ngIf="!checkThumbnail(item.imgName)"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                     (click)="previewImage(attachmentArray, i)" height="145px" width="150px"> -->

@@ -11,7 +11,7 @@
 </div>
 <br>
 <br>
-<div class="border-div">
+<div class="border-div" *ngIf="employeeDetailsFlag">
   <table width="100%" border="0" style="border-collapse: collapse; border-bottom: 2.5px solid;" cellspacing="0"
     cellpadding="0">
     <tbody>
@@ -229,9 +229,10 @@
                   T. D .S
                 </td>
                 <td class="cus-td" align="right">
-                  {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.emp_salary_structure
+                  <!-- {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.emp_salary_structure
                   && employeeDetails?.emp_salary_compute_data?.emp_salary_structure.tds  ? 
-                  employeeDetails.emp_salary_compute_data.emp_salary_structure.tds : '0'}}
+                  employeeDetails.emp_salary_compute_data.emp_salary_structure.tds : '0'}} -->
+                  {{employeeDetails?.emp_salary_compute_data?.emp_modes_data.tds ? employeeDetails?.emp_salary_compute_data?.emp_modes_data.tds : '-'}}
                 </td>
               </tr>
               

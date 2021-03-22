@@ -14,6 +14,7 @@ export class SalarySlipModalComponent implements OnInit {
   schoolInfo: any = '';
   values: any = {};
   ch:any = {};
+  employeeDetailsFlag=false;
   constructor(private dialogRef: MatDialogRef<SalarySlipModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data, private common: CommonAPIService,
     private sis: SisService,
@@ -29,14 +30,14 @@ export class SalarySlipModalComponent implements OnInit {
     //   });
     //   this.values.action.leaves.emp_leave_availed = emp_leave_availed;
     // }
-    this.ch = this.data.ch;
-    console.log(this.ch.security_details[0].security_month_amount);
+    this.ch = this.data.ch ? this.data.ch : {};
     this.getSchoolInfo();
   }
   getEmployeeDetails(emp_id) {
     this.common.getEmployeeSalaryDetail({ emp_ids: [emp_id], month_id: this.values.action.id.toString() }).subscribe((res: any) => {
       if (res) {
         this.employeeDetails = res[0];
+        this.employeeDetailsFlag = true;
         console.log('this.employeeDetails',this.employeeDetails);
         this.employeeDetails.datax = this.ch.security_details ? this.ch.security_details[0].security_month_amount: '-';
         console.log('__________________________', this.employeeDetails);
@@ -90,8 +91,8 @@ export class SalarySlipModalComponent implements OnInit {
     let tds = 0;
       console.log("i am value", value2, 'ssss', values);
       
-      tds = value2 && value2.emp_salary_structure && value2.emp_salary_structure.tds ?
-        Math.round(Number(value2.emp_salary_structure.tds)) : 0;
+      tds = value2 && value2.emp_modes_data && value2.emp_modes_data.tds ?
+        Math.round(Number(value2.emp_modes_data.tds)) : 0;
     
     if (values) {
 

@@ -53,7 +53,6 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 	this.getVoucherTypeMaxId();
 	this.checkFeeHead();
   }
-
   getVoucherTypeMaxId() {
 	let param: any = {};
 	param.vc_type = this.currentVcType;;
@@ -80,7 +79,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			opening_balance: '',
 			opening_balance_type: ''
 		});
-		// console.log('this.data.formData', this.data.formData);
+		console.log('this.data.formData', this.data.formData);
 		if(this.data.formData && this.data.formData.coa_id) {
 			this.setFormValue();
 
@@ -103,36 +102,34 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 	return this.data.formData.coa_opening_balance_data;
   }
   async setFormValue() {
-	  console.log('first')
+	console.log('first')
 	await this.getDependancy();
 	console.log('last')
 	this.currentCoaId =this.data.formData.coa_id;
 	
-	let openingBalanceDataObject:any = this.getOpeningBalanceData();
-
-	console.log('openingBalanceDataObject--',openingBalanceDataObject)
-
-
-
-	
-
-
-	this.accountform.patchValue({
-		coa_code: this.data.formData.coa_code,
-		coa_acc_name: this.data.formData.coa_acc_name,
-		coa_acc_group: this.data.formData.coa_acc_group.group_id,
-		coa_acc_group_name: this.data.formData.coa_acc_group.group_name,
-		coa_acc_type: this.data.formData.coa_acc_type.acc_type_id,
-		coa_particulars: this.data.formData.coa_particulars,
-		coa_dependency_local: this.data.formData.coa_dependency_local,
-		dependencies_type: this.data.formData.dependencies_type,
-		opening_balance_date: (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today),
-		opening_balance: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance : 0),
-		opening_balance_type: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance_type : ''),
-	});
-	this.today = (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today);
-	console.log('this.accountform', this.accountform.value)
-	this.setDependancyValue();
+	// let openingBalanceDataObject:any = this.getOpeningBalanceData();
+	// console.log('openingBalanceDataObject--',openingBalanceDataObject)
+	await this.faService.getChartsOfAccount({coa_id:this.data.formData.coa_id}).toPromise().then((result: any) => {
+		let data = result;
+		this.data.formData=result;
+		let openingBalanceDataObject = data.coa_opening_balance_data.find(e => e.opening_ses_id == this.sessionId);
+		this.accountform.patchValue({
+			coa_code: data.coa_code,
+			coa_acc_name: data.coa_acc_name,
+			coa_acc_group: data.coa_acc_group.group_id,
+			coa_acc_group_name: data.coa_acc_group.group_name,
+			coa_acc_type: data.coa_acc_type.acc_type_id,
+			coa_particulars: data.coa_particulars,
+			coa_dependency_local: data.coa_dependency_local,
+			dependencies_type: data.dependencies_type,
+			opening_balance_date: (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today),
+			opening_balance: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance : 0),
+			opening_balance_type: (openingBalanceDataObject ? openingBalanceDataObject.opening_balance_type : ''),
+		});
+		this.today = (openingBalanceDataObject ? moment(openingBalanceDataObject.opening_balance_date) : this.today);
+		console.log('this.accountform', this.accountform.value)
+		this.setDependancyValue();
+    });
 
   }
   async getDependancy(){
@@ -394,9 +391,14 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 }
 	getParentName(id) {
 		var accName = '';
-		const temp1 = this.accountGroupArr.find(e => e.acc_id == id);
-		if(temp1.acc_parent !=  0 && temp1.acc_parent != ''){
-			accName = this.accountGroupArr.find(e => e.acc_id == temp1.acc_parent).acc_name
+		if(id){
+			const temp1 = this.accountGroupArr.find(e => e.acc_id == id);
+			if(temp1.acc_parent !=  0 && temp1.acc_parent != ''){
+				let tempname = this.accountGroupArr.find(e => e.acc_id == temp1.acc_parent);
+				if(tempname){
+					accName = tempname.acc_name
+				}			
+			}
 		}
 		return accName;
 	}

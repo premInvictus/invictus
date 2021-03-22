@@ -369,7 +369,7 @@ export class OutstandingReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			
-			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
+			enableCheckboxSelector: this.reportType === 'aging' || this.reportType=== 'defaulter_month_wise' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
 			},
@@ -2079,7 +2079,7 @@ export class OutstandingReportComponent implements OnInit {
 							comparer: (a, b) => {
 								// (optional) comparer is helpful to sort the grouped data
 								// code below will sort the grouped value in ascending order
-								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+								return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -2328,7 +2328,7 @@ export class OutstandingReportComponent implements OnInit {
 							comparer: (a, b) => {
 								// (optional) comparer is helpful to sort the grouped data
 								// code below will sort the grouped value in ascending order
-								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+								return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -3917,7 +3917,11 @@ export class OutstandingReportComponent implements OnInit {
 			comparer: (a, b) => {
 				// (optional) comparer is helpful to sort the grouped data
 				// code below will sort the grouped value in ascending order
-				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+				if(this.reportType == 'defaulter_month_wise') {
+					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+				} else {
+					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+				}
 			},
 			aggregators: this.aggregatearray,
 			aggregateCollapsed: true,
@@ -3974,6 +3978,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulters list: ') + this.sessionName;
+		} else if (this.reportType === 'defaulter_month_wise') {
+			reportType = new TitleCasePipe().transform('defaulters list Month Wise: ') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'aging') {
@@ -4033,6 +4039,16 @@ export class OutstandingReportComponent implements OnInit {
 				columValue.push(item.name);}
 			}
 			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
+		} else if (this.reportType === 'defaulter_month_wise') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			reportType2 = new TitleCasePipe().transform('defaulter month wise list_') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			for (const item of this.exportColumnDefinitions) {
 				if(!(item.id.includes('checkbox_select'))) {
@@ -4698,7 +4714,10 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
-		} else if (this.reportType === 'feedue') {
+		} else if (this.reportType === 'defaulter_month_wise') {
+			reportType = new TitleCasePipe().transform('defaulter month wise list: ') + this.sessionName;
+		} 
+		else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues Detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'aging') {
 			reportType = new TitleCasePipe().transform('Aging outstanding report: ') + this.sessionName;
@@ -4738,6 +4757,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 		const rowData: any[] = [];
 		for (const item of this.exportColumnDefinitions) {
+			console.log()
 			if(!(item.id.includes('checkbox_select'))) {
 				headerData.push(item.name);
 			}
@@ -4935,6 +4955,14 @@ export class OutstandingReportComponent implements OnInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
+		let exportColumnDefinitionsTemp = [];
+		for (const item2 of this.exportColumnDefinitions) {
+			if(!(item2.id.includes('checkbox_select'))) {
+				exportColumnDefinitionsTemp.push(item2);
+			}
+		}
+		console.log(this.exportColumnDefinitions);
+		console.log(item);
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
@@ -4951,6 +4979,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
+						obj3['"tag_name"'] = '';
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -5092,7 +5121,7 @@ export class OutstandingReportComponent implements OnInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						for (const item2 of this.exportColumnDefinitions) {
+						for (const item2 of exportColumnDefinitionsTemp) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -5126,6 +5155,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
+						obj3['"tag_name"'] = '';
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {

@@ -859,6 +859,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					}
 					msgToArr.push(userJson);
 				}
+				console.log(this.currentReceivers);
 				
 				inputJson = {
 					"msg_from": this.currentUser.login_id,
@@ -876,7 +877,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 					"msg_thread": [],
-					"user_type": "student",
+					"user_type": this.currentReceivers === 'Student' ? "student" : "user",
 					"message_title": this.messageForm.value.messageSubject,
 					"message_content": this.commonAPIService.htmlToText(this.messageForm.value.messageBody),
 					"message_type": {
@@ -911,6 +912,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					inputJson['delMessage'] = "This will consume " + consumeMessage + " SMS" + "<br/> Would you like to broadcast this message as shown";
 					this.deleteModal.openModal(inputJson);
 				} else {
+				
 					console.log(this.messageForm.value);
 					this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
 						if (result) {

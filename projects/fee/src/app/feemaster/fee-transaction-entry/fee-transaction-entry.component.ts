@@ -139,7 +139,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': '',
-			'walletProcess':''
+			'walletProcess':'',
+			'ftr_actual_amount':''
 		});
 	}
 	checkEmit(process_type) {
@@ -560,10 +561,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
-			validateFlag = false;
-			this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
-		}
+		// if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
+		// 	validateFlag = false;
+		// 	this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
+		// }
 		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
@@ -721,10 +722,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
 		}
-		if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
-			validateFlag = false;
-			this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
-		}
+		// if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
+		// 	validateFlag = false;
+		// 	this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
+		// }
 		if (this.selectedMode === '1' && this.invoiceArray.length === 0) {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
@@ -874,7 +875,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 		if (this.selectedMode == '5') {
 			this.feeTransactionForm.patchValue({
-				'ftr_amount' : this.studentInfo.student_opening_balance
+				'ftr_amount' : this.studentInfo.student_opening_balance,
+				'ftr_actual_amount': this.studentInfo.student_opening_balance
 			});
 		}
 	}
@@ -897,7 +899,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint': ''
+			'saveAndPrint': '',
+			'ftr_actual_amount':''
 		});
 	}
 
@@ -982,6 +985,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		} else {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.netPay,
+				'ftr_pay_id': event.value
+			});
+		}
+
+		if (this.selectedMode == '5') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount' : this.studentInfo.student_opening_balance,
 				'ftr_pay_id': event.value
 			});
 		}

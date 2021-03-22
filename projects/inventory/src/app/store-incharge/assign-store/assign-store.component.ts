@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
+import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+
 @Component({
   selector: 'app-assign-store',
   templateUrl: './assign-store.component.html',
@@ -25,6 +28,8 @@ export class AssignStoreComponent implements OnInit {
   assignEmpArray: any = {};
   tableDataArray: any[] = [];
   showDefaultData = false;
+  currentChildTab='';
+  bundleArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -37,6 +42,7 @@ export class AssignStoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getBundle();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
       this.assignEmpArray = this.inventory.getAssignEmp();
@@ -51,6 +57,15 @@ export class AssignStoreComponent implements OnInit {
         this.inventory.resetAssignEmp();
       }
     }
+    this.inventory.receipt.subscribe((result: any) => {
+      if (result) {
+        this.inventory.setcurrentChildTab(result.currentChildTab);
+        this.currentChildTab = result.currentChildTab;
+        if(result.currentChildTab == 'bundlelist') {
+          // this.getBundle();
+        }
+      }
+    })
   }
   buildForm() {
     this.assignStoreForm = this.fbuild.group({
@@ -120,6 +135,22 @@ export class AssignStoreComponent implements OnInit {
     this.currentLocationId = locationData.location_id;
     this.locationDataArray.push(locationData);
     //console.log(this.currentLocationId);
+  }
+  getBundle(){
+    this.bundleArray = [];
+    this.inventory.getAllBundle({}).subscribe((result:any) => {
+      if(result && result.length > 0) {
+        this.bundleArray = result;
+        this.bundleArray.forEach(element => {
+          let itemNameArr:any[]=[];
+          element.item_assign.forEach(e => {
+            itemNameArr.push(new TitleCasePipe().transform(e.selling_item.item_name));
+          });
+          element['itemNameArr'] = itemNameArr.join(', ');
+        });
+        console.log('this.bundleArray',this.bundleArray);
+      }
+    })
   }
   getItemList() {
     if (this.assignStoreForm.valid && this.employeeId) {
@@ -275,5 +306,45 @@ export class AssignStoreComponent implements OnInit {
     } else {
       return '';
     }
+  }
+  addBundle(value=null){
+    console.log('this.assignEmpArray',this.assignEmpArray);
+    const item : any = {};
+    if(value){
+      item.title = 'Update Bundle';
+      item.edit = true;
+      
+    } else {
+      item.title = 'Add Bundle';
+      item.edit = false;
+    }
+    item.value = value;
+    item.emp_id = this.assignEmpArray.emp_id;
+    item.item_location = this.assignEmpArray.item_location;
+    const dialogRef = this.dialog.open(BundleModalComponent, {
+      width: '50%',
+      height: '500',
+      data: item
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result && result.status == 'ok'){
+        this.getBundle();
+      }
+    });
+  }
+  deleteBundle(item){
+    console.log(item);
+    let param:any = {};
+    param.bundle_id = item.bundle_id;
+    param.status = '5';
+    this.inventory.updateBundle(param).subscribe((result:any) => {
+      if(result){
+        this.commonService.showSuccessErrorMessage('Updated Successfully','success');
+        this.getBundle();
+      } else {
+        this.commonService.showSuccessErrorMessage('Updated Failed','error');
+      }
+    })
   }
 }

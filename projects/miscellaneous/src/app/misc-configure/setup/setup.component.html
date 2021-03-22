@@ -183,6 +183,16 @@
                                         </mat-select>
                                       </mat-form-field>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'reset_physical_verification'">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-select [formControlName]="control.gs_alias">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
+                                              {{item.ses_name}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </ng-container>
                                   </ng-container>
                                   <ng-container *ngIf="control.gs_type == 'json'">
                                     <ng-container *ngIf="control.gs_alias == 'library_user_setting'">

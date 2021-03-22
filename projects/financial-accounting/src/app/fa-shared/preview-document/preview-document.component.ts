@@ -17,6 +17,7 @@ export class PreviewDocumentComponent implements OnInit {
 		public sanitizer: DomSanitizer) { }
 
 	ngOnInit() {
+		console.log('preview document - this.data',this.data)
 		this.finalImageArray = [];
 		if (this.data.index) {
 			this.data.index = this.data.index;

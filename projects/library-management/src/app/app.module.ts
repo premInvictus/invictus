@@ -1,4 +1,4 @@
-import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from './_services';
+import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService,FeeService } from './_services';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotificationsService } from 'angular2-notifications';
@@ -19,7 +19,8 @@ const providers = [NotificationsService,
   SisService,
   LibraryusertypeService,
 	AxiomService,
-	SmartService];
+	SmartService,
+	FeeService];
 @NgModule({
   declarations: [
     AppComponent
