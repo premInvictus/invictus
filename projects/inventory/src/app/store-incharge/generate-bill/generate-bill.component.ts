@@ -128,6 +128,7 @@ export class GenerateBillComponent implements OnInit {
   }
   searchUser() {
     if (this.searchForm && this.searchForm.value.searchId) {
+      this.resetItem();
       const au_role_id = this.searchForm.value.user_role_id;
       const au_admission_no = this.searchForm.value.searchId;
       if (au_role_id === '4') {
