@@ -8,6 +8,8 @@ import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SelectionModel} from '@angular/cdk/collections';
+import { SearchViaNameComponent } from '../../inventory-shared/search-via-name/search-via-name.component';
+
 
 @Component({
   selector: 'app-generate-bill',
@@ -43,6 +45,7 @@ export class GenerateBillComponent implements OnInit {
   locationId: any;
   bundleArray: any[] = [];
   requiredArray: any[] = [];
+  studentArrayByName:any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -125,6 +128,7 @@ export class GenerateBillComponent implements OnInit {
   }
   searchUser() {
     if (this.searchForm && this.searchForm.value.searchId) {
+      this.resetItem();
       const au_role_id = this.searchForm.value.user_role_id;
       const au_admission_no = this.searchForm.value.searchId;
       if (au_role_id === '4') {
@@ -194,6 +198,7 @@ export class GenerateBillComponent implements OnInit {
   addBundleItems(){
     const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
     if(bundleDetails){
+      console.log(bundleDetails);
       bundleDetails.item_assign.forEach(element => {
         const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
         if (findex == -1) {
@@ -210,12 +215,18 @@ export class GenerateBillComponent implements OnInit {
   pushItem() {
     this.tableArray = [];
     for (let item of this.itemArray) {
+      const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
+      const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+      let tempitem_quantity = 1;
+      if (findex1 != -1) {
+        tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+      }
       this.tableArray.push({
         item_code: item.item_code,
         item_name: item.item_name,
         item_selling_price: item.item_selling_price,
         available_item: item.item_quantity,
-        item_quantity: '',
+        item_quantity: tempitem_quantity,
         total_price: '',
       });
       const findex = this.formGroupArray.findIndex(f => Number(f.formGroup.value.item_code) === Number(item.item_code));
@@ -225,7 +236,7 @@ export class GenerateBillComponent implements OnInit {
             item_code: item.item_code,
             item_name: item.item_name,
             item_selling_price: item.item_selling_price,
-            item_quantity: '',
+            item_quantity: tempitem_quantity,
             total_price: '',
           })
         });
@@ -264,6 +275,14 @@ export class GenerateBillComponent implements OnInit {
       return '-';
     }
   }
+  getTotalPriceSum(index) {
+    let sum=0;
+    for (let index = 0; index < this.tableArray.length; index++) {
+      const element = this.tableArray[index];
+      sum += Number(this.tableArray[index].item_selling_price) * Number(this.formGroupArray[index].formGroup.value.item_quantity)
+    }
+    return sum;
+  }
   previewSaveItem() {
     this.tableReciptArray = [];
     let grandTotal = 0;
@@ -279,6 +298,9 @@ export class GenerateBillComponent implements OnInit {
         console.log('item.formGroup.value',item.formGroup.value);
         if (this.formGroupArray[index].formGroup.valid) {
           if (item.formGroup.value.item_location !== '') {
+            item.formGroup.patchValue({
+              total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
+            })
             itemAssign.push(item.formGroup.value);
             updateFlag = true;
           } else {
@@ -316,6 +338,7 @@ export class GenerateBillComponent implements OnInit {
 
       this.previewTableFlag = true;
       let i = 0;
+      console.log('at preview', itemAssign);
       for (let item of itemAssign) {
         grandTotal = Number(grandTotal) + Number(item.total_price);
         itemAssign[i].item_name = new TitleCasePipe().transform(item.item_name);
@@ -340,7 +363,7 @@ export class GenerateBillComponent implements OnInit {
       this.tableReciptArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
       this.tableReciptArray['school_website'] = this.schoolInfo.school_website;
       this.tableReciptArray['name'] = this.userData.au_full_name;
-      this.tableReciptArray['mobile'] = this.userData.au_mobile;
+      this.tableReciptArray['mobile'] = this.userData.active_contact;
       if (this.userData.au_role_id === 3) {
         this.tableReciptArray['adm_no'] = this.userData.emp_id;
         this.tableReciptArray['class_name'] = '';
@@ -581,4 +604,24 @@ export class GenerateBillComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
+  openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '20%',
+			height: '30%',
+			position: {
+				top: '10%'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+        console.log(result);
+        this.searchForm.patchValue({
+          searchId : result.adm_no
+        });
+        this.searchUser();
+        
+			}
+		});
+	}
 }
