@@ -218,7 +218,7 @@
                            </div>
 
                            <div class="row" *ngIf="0 > invoice.balance_amt">
-                              <div class="font-size-16 font-regular col-sm">Advance: </div>
+                              <div class="font-size-16 font-regular col-sm">Previous Advance: </div>
                               <div class="font-size-16 font-bold col-sm">
                                  : {{invoice.balance_amt ? (- invoice.balance_amt | number): 0}}
                               </div>
@@ -235,6 +235,18 @@
                               <div class="font-size-16 font-regular col-sm">Total Amount: </div>
                               <div class="font-size-16 font-bold col-sm">
                                  : {{invoice.netPay | number}}
+                              </div>
+                           </div>
+                           <div class="row" *ngIf="invoiceTotal > invoice.netPay">
+                              <div class="font-size-16 font-regular col-sm">Advance: </div>
+                              <div class="font-size-16 font-bold col-sm">
+                                 : {{ invoiceTotal - invoice.netPay | number}}
+                              </div>
+                           </div>
+                           <div class="row" *ngIf=" invoice.netPay > invoiceTotal ">
+                              <div class="font-size-16 font-regular col-sm">Balance: </div>
+                              <div class="font-size-16 font-bold col-sm">
+                                 : {{  invoice.netPay - invoiceTotal | number}}
                               </div>
                            </div>
                         </div>
