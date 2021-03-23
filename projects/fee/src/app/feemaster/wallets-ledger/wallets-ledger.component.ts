@@ -19,9 +19,11 @@ import * as Excel from 'exceljs/dist/exceljs';
   styleUrls: ['./wallets-ledger.component.css']
 })
 export class WalletsLedgerComponent implements OnInit {
+	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	@ViewChild('billDetailsModal') billDetailsModal;
   	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
-  displayedColumns: string[] = ['w_rpt_no', 'w_transaction_date','particulars', 'w_amount'
+  displayedColumns: string[] = ['w_rpt_no', 'w_transaction_date','particulars', 'w_amount','action'
   //, 'w_amount_type'
   	// , 'w_pay_id', 'w_cheque_no', 'w_cheque_date', 'w_bnk_id', 'w_branch', 'w_transaction_id', 'w_remarks'
 	];
@@ -246,7 +248,8 @@ export class WalletsLedgerComponent implements OnInit {
 				w_branch: item.w_branch ? item.w_branch : '-',
 				w_transaction_id: item.w_transaction_id ? item.w_transaction_id : '-',
 				w_opening: item.w_opening,
-				w_amount_status:item.w_amount_status
+				w_amount_status:item.w_amount_status,
+				action:item
 			};
 			if(item.w_pay_id == 3){
 				element.w_bnk_id = item.tb_name_deposit ? item.tb_name_deposit : '-';
@@ -594,6 +597,29 @@ export class WalletsLedgerComponent implements OnInit {
 		if (element && element.colorCode) {
 			return element.colorCode;
 		}
+	}
+	openDeleteDialog = (data) => this.deleteModal.openModal(data);
+
+	deleteInvoiceFinal(value) {
+		console.log(value);
+		if(value.reason_id && value.reason_remark) {
+			const param:any = {};
+			param.w_reason_id = value.reason_id;
+			param.w_reason_remark = value.reason_remark;
+			param.w_id = value.inv_id.action.w_id;
+			param.w_status = '5';
+			this.feeService.updateWalletStatus(param).subscribe((result:any) => {
+				if(result && result.status == 'ok') {
+					this.common.showSuccessErrorMessage(result.data,'success');
+					this.getWallets(this.loginId);
+				} else {
+					this.common.showSuccessErrorMessage(result.data,'error');
+				}
+			})
+		}
+	}
+	deleteConfirm(value) {
+		this.deleteWithReasonModal.openModal(value);
 	}
 
 }

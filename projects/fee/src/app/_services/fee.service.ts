@@ -601,7 +601,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/getWalletsReport',value);
 	}
-
+	updateWalletStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/updateWalletStatus',value);
+	}
 	insertWallets(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/insertWallets',value);
