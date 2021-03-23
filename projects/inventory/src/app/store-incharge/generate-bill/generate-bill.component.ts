@@ -500,7 +500,8 @@ export class GenerateBillComponent implements OnInit {
           billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
           billArray['school_website'] = this.schoolInfo.school_website;
           billArray['name'] = result.buyer_details.au_full_name;
-          billArray['mobile'] = result.buyer_details.au_mobile;
+          billArray['mobile'] = result.buyer_details.active_contact;
+          billArray['active_parent'] = result.buyer_details.active_parent;
           if (result.buyer_details.au_role_id === 3) {
             billArray['adm_no'] = result.buyer_details.emp_id;
             billArray['class_name'] = '';

@@ -108,6 +108,11 @@
                         <td mat-cell *matCellDef="let element"> {{element.w_transaction_id}} </td>
                         
                      </ng-container>
+                     <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element"><i class="material-icons icon-danger icon-spacer" (click)="deleteConfirm(element)">delete</i></td>
+                        
+                     </ng-container>
                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
@@ -124,3 +129,8 @@
       <div class="col-2"></div>
  </div>
  <app-bill-details-modal #billDetailsModal></app-bill-details-modal>
+ <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>
+ <app-delete-with-reason #deleteWithReasonModal
+   [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete'"
+   (deleteOk)="deleteInvoiceFinal($event)">
+</app-delete-with-reason>
