@@ -192,6 +192,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					console.log("i am here ", this.invoice.balance_amt);
 					
 					this.invoice.balance_amt = Number(this.invoice.balance_amt);
+					this.invoice.netPay += this.invoice.balance_amt;
 					// this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
 				// if (this.invoice.prev_balance) {
@@ -214,7 +215,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
 				});
 				let pos = 1;
-				this.invoiceTotal = 0;
+				
 				// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
 				// 	// const element = {
 				// 	// 	srno: pos,
