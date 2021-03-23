@@ -247,6 +247,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				// 	// this.invoiceArrayForm.push(fb);
 				// 	pos++;
 				// }
+				this.invoiceTotal = 0;
 				let arr = [];
 				for (const item of this.invoiceArray) {
 					if (Number(item.head_bal_amount) != 0) {
@@ -316,8 +317,31 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					});
 					this.invoiceArrayForm.push(fb);
 				}
+
+				
+				
+				if((this.invoice.netPay - this.invoiceTotal) > 0) {
+					this.INVOICE_ELEMENT_DATA[0].netpay += this.invoice.netPay - this.invoiceTotal;
+				}
+				if((this.invoice.netPay - this.invoiceTotal) < 0) {
+					let catchData = this.invoice.netPay;
+					for(let  i = this.INVOICE_ELEMENT_DATA.length -1; i > 0; i--) {
+						if(this.INVOICE_ELEMENT_DATA[i].netpay > catchData - this.invoiceTotal) {
+							this.INVOICE_ELEMENT_DATA[i].netpay -= (catchData - this.invoiceTotal);
+							break;
+						} else {
+							catchData -= this.INVOICE_ELEMENT_DATA[i].netpay;
+							this.INVOICE_ELEMENT_DATA[i].netpay = 0;
+						}
+					} 
+				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-				console.log("i am here", this.invoiceTotal);
+				this.invoiceArrayForm[0].patchValue({
+					netpay: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal),
+					rm_total_amount: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal)
+				})
+				console.log("i am here", this.invoiceArrayForm[0].value, this.invoice.netPay - this.invoiceTotal, this.invoice.netPay , this.invoiceTotal);
+				this.invoiceTotal = this.invoice.netPay;
 				
 			}
 		});
