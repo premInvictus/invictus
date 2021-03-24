@@ -13,6 +13,7 @@ import { RepairDamagedReportComponent } from './repair-damaged-report/repair-dam
 import { StoreLedgerComponent } from './store-ledger/store-ledger.component';
 import { ConsumptionReportsComponent } from './consumption-reports/consumption-reports.component';
 import { StoreAssignReportComponent } from './store-assign-report/store-assign-report.component';
+import { StoreCollectionReportComponent } from './store-collection-report/store-collection-report.component';
 
 
 const moment = _moment;
@@ -42,7 +43,8 @@ export const MY_FORMATS = {
 		RepairDamagedReportComponent,
 		StoreLedgerComponent,
 		ConsumptionReportsComponent,
-		StoreAssignReportComponent
+		StoreAssignReportComponent,
+		StoreCollectionReportComponent
 	],
 	entryComponents: [],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

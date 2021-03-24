@@ -41,6 +41,7 @@ export class GenerateBillComponent implements OnInit {
     min_wallet_balance:0
   };
   storeinchargeDetails:any;
+  storeinchargeLocation:any;
   locationArray: any[] = [];
   locationId: any;
   bundleArray: any[] = [];
@@ -106,6 +107,7 @@ export class GenerateBillComponent implements OnInit {
     this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
+        this.storeinchargeLocation = this.bundleArray[0].item_location
         console.log('this.bundleArray',this.bundleArray);
       }
     })
@@ -256,6 +258,7 @@ export class GenerateBillComponent implements OnInit {
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
+          this.storeinchargeLocation = this.storeinchargeDetails.item_location;
           this.itemArray.push(result[0].item_assign[0]);
           this.selection.toggle(result[0].item_assign[0].item_code);
           this.pushItem();
@@ -469,7 +472,10 @@ export class GenerateBillComponent implements OnInit {
       finalJson = {
         buyer_details: this.userData,
         bill_details: itemAssign,
-        bill_total: grandTotal
+        bill_total: grandTotal,
+        status:'approved',
+        mop:this.payForm.value.pay_id,
+        item_location:this.storeinchargeLocation
       }
       filterJson = {
         emp_id: Number(this.currentUser.login_id),
@@ -513,7 +519,8 @@ export class GenerateBillComponent implements OnInit {
           }
           if(this.payForm.value.pay_id == 'wallet') {
             const inputJson:any={};
-            inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+            // inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+            inputJson.ftr_ref_location_id = this.storeinchargeLocation;
             inputJson.ftr_ref_no_of_items=result.bill_details.length;
             inputJson.ftr_ref_id=result.bill_no;
             inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
