@@ -29,7 +29,10 @@ export class StoreCollectionReportComponent implements OnInit {
 
   today = new Date();
   @ViewChild('billDetailsModal') billDetailsModal;
+  @ViewChild('deleteWithReasonModal') deleteWithReasonModal;
   @Input() userName: any = '';
+  rowsChosen: any[] = [];
+  rowChosenData: any[] = [];
   assignListArray: any[] = [];
   notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
@@ -121,7 +124,7 @@ export class StoreCollectionReportComponent implements OnInit {
     44: 'AR',
   };
   locationArray: any[] = [];
-  constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
+  constructor(private fbuild: FormBuilder, private inventory: InventoryService, public CommonService: CommonAPIService,
     private erpCommonService: ErpCommonService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
@@ -202,6 +205,7 @@ export class StoreCollectionReportComponent implements OnInit {
     this.dataset = [];
     this.tableFlag = false;
   }
+  
   changeReportType() {
     if (this.reportFilterForm.valid) {
       this.dataArr = [];
@@ -226,6 +230,10 @@ export class StoreCollectionReportComponent implements OnInit {
         fullWidthRows: true,
         enableAutoTooltip: true,
         enableCellNavigation: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          columnId: 'checkbox_select'
+        },
         headerMenu: {
           iconColumnHideCommand: 'fas fa-times',
           iconSortAscCommand: 'fas fa-sort-up',
@@ -432,8 +440,8 @@ export class StoreCollectionReportComponent implements OnInit {
       inputJson = {
         "status": this.reportFilterForm.value.status,
         "item_location": this.reportFilterForm.value.locationid,
-        "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'MMMM dd yyyy, h:mm:ss'),
-        "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'MMMM dd yyyy, h:mm:ss')
+        "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
+        "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd')
       }
       this.inventory.storeCollection(inputJson).subscribe((result: any) => {
         if (result) {
@@ -554,6 +562,25 @@ export class StoreCollectionReportComponent implements OnInit {
     return '<a style="text-decoration:underline !important;cursor:pointer">' + value + '</a>';
   }
   onCellClicked(e, args) {
+    if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
+			const index = this.rowsChosen.indexOf(args.row);
+			if (index === -1) {
+				this.rowsChosen.push(args.row);
+			} else {
+				this.rowsChosen.splice(index, 1);
+			}
+			const item = args.grid.getDataItem(args.row);
+			const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
+			if (index2 === -1) {
+				this.rowChosenData.push({
+					data: item,
+					index: args.row
+				});
+			} else {
+				this.rowChosenData.splice(index2, 1);
+			}
+			console.log('this.rowChosenData',this.rowChosenData);
+		}
     if (args.cell === args.grid.getColumnIndex('receipt_no')) {
       const item: any = args.grid.getDataItem(args.row);
       if (item['receipt_no']) {
@@ -561,6 +588,67 @@ export class StoreCollectionReportComponent implements OnInit {
       }
     }
   }
+  onSelectedRowsChanged(e, args) {
+		if (args.rows.length === this.dataset.length) {
+			this.rowChosenData = [];
+			this.rowsChosen = args.rows;
+			for (const item of this.rowsChosen) {
+				this.rowChosenData.push({
+					data: this.dataset[item],
+					index: item
+				});
+			}
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else if (args.rows.length === 0) {
+			this.rowsChosen = [];
+			this.rowChosenData = [];
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else {
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		}
+  }
+  deleteSaleReceipt(value){
+    console.log('value -----',value);
+		if(value.reason_id && value.reason_remark) {
+      const param:any[] = [];
+      const data:any={};
+			data.reason_id = value.reason_id;
+			data.reason_remark = value.reason_remark;
+      data.status = 'canceled';
+      if(value.inv_id.length > 0){
+        value.inv_id.forEach(element => {
+          param.push(element.data.action.bill_id);
+        });
+        this.inventory.deleteSaleReeipt({bill_id:param,data:data}).subscribe((result:any) => {
+          if(result && result.status == 'ok'){
+            this.CommonService.showSuccessErrorMessage(result.data,'success');
+          }
+          this.changeReportType();
+        })
+      }
+		}
+  }
+  deleteModal() {
+    console.log(this.rowChosenData);
+		this.deleteWithReasonModal.openModal(this.rowChosenData);
+		// const change: any = this.deleteWithReasonModal.subscribeModalChange();
+		// change.afterClosed().subscribe((res: any) => {
+		// 	if (res && res.data && res.data.length > 0) {
+		// 		this.rowsChosen = [];
+		// 		this.rowChosenData = [];
+		// 		for (const item of res.data) {
+		// 			this.rowsChosen.push(item.index);
+		// 		}
+		// 		this.gridObj.setSelectedRows(this.rowsChosen);
+		// 		this.rowChosenData = res.data;
+
+		// 	} else {
+		// 		this.rowsChosen = [];
+		// 		this.rowChosenData = [];
+		// 		this.gridObj.setSelectedRows(this.rowsChosen);
+		// 	}
+		// });
+	}
   actionList(item, action) {
     this.billDetailsModal.openModal(item);
   }
@@ -578,7 +666,12 @@ export class StoreCollectionReportComponent implements OnInit {
     this.levelTotalFooter = [];
     this.levelSubtotalFooter = [];
     this.exportColumnDefinitions = [];
-    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    for (const item of exportColumnDefinitions) {
+      if(!(item.id.includes('checkbox_select'))) {
+        this.exportColumnDefinitions.push(item)
+      }
+    }
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
     reportType = new TitleCasePipe().transform('Store Assign Report: ') + this.sessionName;
@@ -887,7 +980,12 @@ export class StoreCollectionReportComponent implements OnInit {
     const columns: any[] = [];
     const columValue: any[] = [];
     this.exportColumnDefinitions = [];
-    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    for (const item of exportColumnDefinitions) {
+      if(!(item.id.includes('checkbox_select'))) {
+        this.exportColumnDefinitions.push(item)
+      }
+    }
     for (const item of this.exportColumnDefinitions) {
       columns.push({
         key: item.id,

@@ -81,7 +81,7 @@ export class ReportsComponent implements OnInit {
   userArray: any[] = [];
   userName: any = '';
   currentUser: any = {};
-  constructor(private CommonAPIService: CommonAPIService) { }
+  constructor(public CommonAPIService: CommonAPIService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -174,7 +174,7 @@ export class ReportsComponent implements OnInit {
       return this.CommonAPIService.isExistUserAccessMenu('648');
     }
     if (actionT === '7') {
-      return true;
+      return this.CommonAPIService.isExistUserAccessMenu('803');
     }
   }
 }

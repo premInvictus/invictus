@@ -209,6 +209,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/updateStoreItem', value);
   }
+  deleteSaleReeipt(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/store-bill/deleteSaleReeipt', value);
+  }
   getParentLocationOnly(value) {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/location/getParentLocationOnly', value);
