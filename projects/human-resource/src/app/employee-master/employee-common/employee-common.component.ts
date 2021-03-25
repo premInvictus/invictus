@@ -22,7 +22,7 @@ export class EmployeeCommonComponent implements OnInit {
 	@Output() nextUserEvent: EventEmitter<any> = new EventEmitter<any>();
 	employeeDetailsForm: FormGroup;
 	studentdetails: any = {};
-	commonDetails:any;
+	commonDetails: any;
 	lastEmployeeDetails: any;
 	lastrecordFlag = true;
 	navigation_record: any = {};
@@ -79,7 +79,7 @@ export class EmployeeCommonComponent implements OnInit {
 	ngOnInit() {
 		var result = this.employeedetails;
 		this.commonAPIService.employeeData.subscribe((data: any) => {
-			console.log('data--',data);
+			console.log('data--', data);
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
 				this.lastRecordId = data.last_record;
@@ -142,7 +142,7 @@ export class EmployeeCommonComponent implements OnInit {
 		});
 	}
 	getWing() {
-		this.commonAPIService.getMaster({ type_id: '1', status:'1' }).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1', status: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -151,9 +151,9 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
-	onCancelSet(){
+	onCancelSet() {
 		if (this.commonDetails) {
-			const result =this.commonDetails;
+			const result = this.commonDetails;
 			let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
 			let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
 			let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
@@ -163,7 +163,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.employeeDetailsForm.patchValue({
 				emp_profile_pic: result.emp_profile_pic,
 				emp_id: result.emp_id,
-				emp_code_no : result.emp_code_no,
+				emp_code_no: result.emp_code_no,
 				emp_name: result.emp_name,
 				emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
 				emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
@@ -185,7 +185,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.nextB = true;
 			this.firstB = true;
 			this.lastB = true;
-			console.log('emp_code_no',emp_code_no);
+			console.log('emp_code_no', emp_code_no);
 			//this.setActionControls({viewMode : true})
 			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				if (result) {
@@ -199,7 +199,7 @@ export class EmployeeCommonComponent implements OnInit {
 					this.employeeDetailsForm.patchValue({
 						emp_profile_pic: result.emp_profile_pic,
 						emp_id: result.emp_id,
-						emp_code_no : result.emp_code_no,
+						emp_code_no: result.emp_code_no,
 						emp_name: result.emp_name,
 						emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
 						emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
@@ -295,7 +295,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.employeeDetailsForm = this.fbuild.group({
 			emp_profile_pic: '',
 			emp_id: '',
-			emp_code_no : '',
+			emp_code_no: '',
 			emp_name: '',
 			emp_category_id: '',
 			emp_honorific_id: '',
@@ -385,7 +385,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	loadEmployee(event) {
 		this.viewOnly = true;
-		
+
 		this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		this.lastRecordId = event.target.value;
 		this.commonAPIService.employeeData.next(
@@ -420,7 +420,7 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	deleteUser($event) {
-		
+
 		const date = new DatePipe('en-in').transform($event.processDate, 'yyyy-MM-dd')
 		this.commonAPIService.deleteEmployee({
 			"emp_id": this.employeeDetailsForm.value.emp_id,
@@ -429,8 +429,19 @@ export class EmployeeCommonComponent implements OnInit {
 
 		}).subscribe((result: any) => {
 			if (result) {
-				this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
-				this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
+				const empData = new FormData();
+				empData.append('au_login_id', this.employeedetails.emp_login_id.toString());
+				empData.append('au_status', '0');
+				this.commonAPIService.updateUser(empData).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
+							this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Deleting Employee Detail', 'error');
+						}
+					});
+
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error While Deleting Employee Detail', 'error');
 			}

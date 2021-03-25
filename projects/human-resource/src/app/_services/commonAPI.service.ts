@@ -13,7 +13,7 @@ export class CommonAPIService {
 	homeUrl: string;
 	userData: any;
 	menus: any[] = [];
-	subscribedEmployeeId:any;
+	subscribedEmployeeId: any;
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
 		private _cookieService: CookieService,
@@ -55,7 +55,10 @@ export class CommonAPIService {
 			return this.userData = JSON.parse(this._cookieService.get('userData'));
 		}
 	}
-
+	updateUser(value) {
+		this.startLoading();
+		return this.http.post('/users/updateUser', value);
+	}
 	getUserAccessMenu(value) {
 		const param: any = {};
 		if (value.login_id) {
@@ -239,7 +242,7 @@ export class CommonAPIService {
 	}
 
 	updateEnquiry(value) {
-		
+
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/career-enquiry/update-career-enquiry', value);
 	}
@@ -506,7 +509,7 @@ export class CommonAPIService {
 		this.subscribedEmployeeId = empId;
 	}
 
-	getEmployeeSalaryDetail(value){
+	getEmployeeSalaryDetail(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
 	}
@@ -526,13 +529,13 @@ export class CommonAPIService {
 		return this.http.post(environment.apiHRUrl + '/hr-shift/updateShift', value);
 	}
 	getShiftAttendance(value) {
-		return this.http.post(environment.apiHRUrl + '/shiftattendance/get',value);
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/get', value);
 	}
 	getShiftAttendanceAll(value) {
-		return this.http.post(environment.apiHRUrl + '/shiftattendance/getall',value);
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/getall', value);
 	}
 	updateShiftAttendance(value) {
-		return this.http.post(environment.apiHRUrl + '/shiftattendance/updateAttendance',value);
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/updateAttendance', value);
 	}
 
 }

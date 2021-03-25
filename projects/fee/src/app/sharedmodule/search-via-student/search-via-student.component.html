@@ -15,7 +15,7 @@
 
       <div class="row">
         <div class="col-lg-12">
-            <span class="font-size-16 font-black font-regular">Please Enter Student Details</span><br>
+          <span class="font-size-16 font-black font-regular">Please Enter Student Details</span><br>
           <mat-form-field appearance="outline">
             <input id="search" matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
               (blur)="searchStudentByName($event.target.value)">
@@ -44,8 +44,12 @@
                       <tbody>
                         <tr *ngFor="let item of studentArrayByName let i = index">
                           <td>{{i+1}}</td>
-                          <td><a style="color: #007bff !important; cursor: pointer !important"
+                          <td *ngIf="item.au_process_type !== '5'"><a
+                              style="color: #007bff !important; cursor: pointer !important"
                               (click)="setId(item.au_admission_no, item.au_process_type)">{{item.au_admission_no}}</a>
+                          </td>
+                          <td *ngIf="item.au_process_type === '5'"><a
+                              style="color: #000 !important">{{item.au_admission_no}}</a>
                           </td>
                           <td style="text-align: left">
                             <span class="icon-spacer">{{item.au_full_name}}
