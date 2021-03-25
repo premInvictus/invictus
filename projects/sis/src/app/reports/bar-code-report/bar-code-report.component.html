@@ -38,8 +38,8 @@
     <div class="accumulate-div-bar-code-2">
       <div class="row">
         <div class="col-3" *ngFor="let item of barcodeArray; let i = index">
-          <span class="font-bold bar-tiltle-span"
-            style="font-size: 5px !important;font-weight: bold;">{{(item.au_full_name | titlecase) | truncatetext : 18}}</span>
+          <!-- <span class="font-bold bar-tiltle-span"
+            style="font-size: 5px !important;font-weight: bold;">{{(item.au_full_name | titlecase) | truncatetext : 18}}</span> -->
           <div [class]="getClass2(i)">
             <div class="barcode-print-lib3">
               <ngx-barcode bc-element-type="img" [bc-value]="classForm.value.enrollment_type === '4' ? item.em_admission_no
