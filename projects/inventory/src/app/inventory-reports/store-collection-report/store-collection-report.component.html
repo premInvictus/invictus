@@ -34,7 +34,7 @@
         <mat-label>Status</mat-label>
         <mat-select formControlName="status">
           <mat-option value="approved">Approved</mat-option>
-          <mat-option value="deleted">Deleted</mat-option>
+          <mat-option value="canceled">Canceled</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -67,12 +67,19 @@
     </div>
   </div>
 </form>
-
+<div *ngIf="rowsChosen.length > 0 && CommonService.isExistUserAccessMenu('804')" style="position: absolute;
+  right: 2.1%;
+  top: 7%;">
+  <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+      (click)="$event.preventDefault();deleteModal()" style="margin-left:0 !important">Delete</button>
+</div>
+<br>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
-    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
 <div *ngIf="tableFlag && dataset.length === 0">
@@ -94,3 +101,7 @@
   <br>
 </div>
 <app-bill-details-modal #billDetailsModal></app-bill-details-modal>
+<app-delete-with-reason #deleteWithReasonModal
+   [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete'"
+   (deleteOk)="deleteSaleReceipt($event)">
+</app-delete-with-reason>

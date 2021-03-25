@@ -48,6 +48,7 @@ import { BillDetailsModalComponent } from './bill-details-modal/bill-details-mod
 import { BundleModalComponent } from './bundle-modal/bundle-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
+import {DeleteWithReasonComponent} from './delete-with-reason/delete-with-reason.component'
 
 
 export const MY_FORMATS = {
@@ -130,7 +131,8 @@ export const MY_FORMATS = {
 		ReceiptModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
-		SearchViaNameComponent
+		SearchViaNameComponent,
+		DeleteWithReasonComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -148,7 +150,8 @@ export const MY_FORMATS = {
 		ReceiptModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
-		SearchViaNameComponent
+		SearchViaNameComponent,
+		DeleteWithReasonComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -201,7 +204,8 @@ export const MY_FORMATS = {
 		ReceiptModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
-		SearchViaNameComponent
+		SearchViaNameComponent,
+		DeleteWithReasonComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
