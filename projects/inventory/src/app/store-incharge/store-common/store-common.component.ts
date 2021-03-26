@@ -29,6 +29,7 @@ export class StoreCommonComponent implements OnInit {
     })
   }
   setTabValue(value) {
+    console.log('tabindex',value);
     this.tabSelectedIndex = value;
     this.inventory.setTabIndex({ 'currentTab': this.tabSelectedIndex });
   }

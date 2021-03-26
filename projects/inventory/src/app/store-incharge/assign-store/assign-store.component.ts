@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +11,7 @@ import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
   templateUrl: './assign-store.component.html',
   styleUrls: ['./assign-store.component.css']
 })
-export class AssignStoreComponent implements OnInit {
+export class AssignStoreComponent implements OnInit,OnDestroy {
   assignStoreForm: FormGroup;
   existForm: FormGroup;
   currentLocationId: any;
@@ -59,6 +59,7 @@ export class AssignStoreComponent implements OnInit {
     }
     this.inventory.receipt.subscribe((result: any) => {
       if (result) {
+        console.log('result.currentChildTab',result.currentChildTab);
         this.inventory.setcurrentChildTab(result.currentChildTab);
         this.currentChildTab = result.currentChildTab;
         if(result.currentChildTab == 'bundlelist') {
@@ -66,6 +67,9 @@ export class AssignStoreComponent implements OnInit {
         }
       }
     })
+  }
+  ngOnDestroy(){
+    this.inventory.setcurrentChildTab('');
   }
   buildForm() {
     this.assignStoreForm = this.fbuild.group({
