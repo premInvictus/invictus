@@ -185,27 +185,27 @@ export class StudentDashboardComponent implements OnInit {
 							this.phoneNumber = resutl1.data[0].au_mobile;
 							this.currentUser['class_id'] = resutl1.data[0] && resutl1.data[0]['class_id'] ? resutl1.data[0]['class_id'] : '';
 							localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
-							const gender =this.studentdetails.au_gender;
-							if (gender === 'M') {
-								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
-							} else if (gender === 'F') {
-								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
-							} else {
-								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
-							}
-							this.defaultsrc = this.studentdetails.au_profileimage
-								? this.studentdetails.au_profileimage
-								: this.defaultsrc;
-
 							const class_name = this.studentdetails.class_name;
 							const section_name = this.studentdetails.sec_name;
-							if (section_name !== ' ') {
+							if (section_name) {
 								this.class_sec = class_name + ' - ' + section_name;
 							} else {
 								this.class_sec = class_name;
 							}
 						}
 					})
+					const gender =this.userDetail.personal_details ? this.userDetail.personal_details.upd_gender : '';
+					if (gender === 'M') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+					} else if (gender === 'F') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+					} else {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+					}
+					this.defaultsrc = this.studentdetails.au_profileimage
+						? this.studentdetails.au_profileimage
+						: this.defaultsrc;
+						
 					this.getOverallPerformance();
 					this.getSmartToAxiom();
 					// this.getPeriodDayByClass();

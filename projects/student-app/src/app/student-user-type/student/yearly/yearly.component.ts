@@ -82,7 +82,7 @@ export class YearlyComponent implements OnInit, OnChanges {
 		param.au_login_id = this.reloadScheduler.au_login_id;
 		await this.erpCommonService.getStudentAttendence(param).toPromise().then((result: any) => {
 			if (result && result.status === 'ok') {
-				if (result.data.attendence && result.data.attendence[0].attendence) {
+				if (result.data.attendence && result.data.attendence.length > 0 && result.data.attendence[0].attendence) {
 					const attendence = result.data.attendence[0].attendence;
 					const fromDate = moment(this.reloadScheduler.year_id+'-'+this.reloadScheduler.fm_id+'-01');
 					const toDate = moment(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
