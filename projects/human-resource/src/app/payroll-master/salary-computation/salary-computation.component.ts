@@ -480,14 +480,21 @@ export class SalaryComputationComponent implements OnInit {
 									if (this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns &&
 										this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns.length > 0) {
 										const empShacolumnsdata = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns.find(e => e.columnDef == this.shacolumns[i]['data']['sc_name']);
+										console.log("i am jhere",empShacolumnsdata );
+										
 										if (empShacolumnsdata) {
 											this.empShacolumns[i] = empShacolumnsdata;
 										} else {
 											this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 										}
 
+									} else {
+										this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: this.shacolumns[i]['data']['sc_value'] };
 									}
-									//this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
+									//
+
+									// console.log("check ---------------------------->>>>", this.empShacolumns[i], this.shacolumns[i]);
+									
 								}
 
 								// if (this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_salary_structure.emp_salary_heads) {
@@ -559,7 +566,12 @@ export class SalaryComputationComponent implements OnInit {
 										this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0, isUpper: false };
 									}
 
+								} else {
+									this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: this.shdcolumns[i]['data']['sc_value'], isUpper: false };
 								}
+
+								// console.log("i am here      ----------------------------------------------------           ",this.shdcolumns[i],  this.empShdcolumns[i], empShdcolumnsdata);
+								
 								// var value = 0;
 								// this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0, isUpper: false };
 
@@ -729,6 +741,9 @@ export class SalaryComputationComponent implements OnInit {
 								} else {
 									this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 								}
+
+								console.log("i am here -------------------------- ", this.empShacolumns[i]);
+								
 
 								if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 									// console.log('emp_salary_heads', item.emp_salary_detail.emp_salary_structure.emp_salary_heads);
@@ -1349,7 +1364,7 @@ export class SalaryComputationComponent implements OnInit {
 			for (let i = 0; i < this.shacolumns.length; i++) {
 				if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 					let value = 0;
-					// console.log("33333333333333333333333333333333333333333333333333333333333333");
+					console.log("33333333333333333333333333333333333333333333333333333333333333");
 					
 					if (this.shacolumns[i]['header'] === 'Basic Pay') {
 						empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: prorataBasicPay };

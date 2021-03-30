@@ -5,9 +5,10 @@ import {
 	Filters,
 	Formatters
 } from 'angular-slickgrid';
+import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
@@ -15,6 +16,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+import * as Excel from 'exceljs/dist/exceljs';
+
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
@@ -33,6 +36,8 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	gridOptions2: GridOption;
 	tableFlag = false;
 	dataset1: any[];
+	notFormatedCellArray: any[] = [];
+	currentUser: any;
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
@@ -61,6 +66,53 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	schoolInfo: any;
 	activeReport = 1;
 	currentSession;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -69,6 +121,8 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
+
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
 		this.getSession();
 		this.buildForm();
@@ -206,6 +260,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					iconCssClass: 'fas fa-download'
 				},
 				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
 					title: 'expand',
 					titleKey: 'Expand Groups',
 					command: 'expandGroup',
@@ -232,6 +292,10 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.exportAsPDF();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel();
 					}
 					if (args.command === 'expandGroup') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -722,20 +786,48 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		console.log(this.dataviewObj);
-		console.log(this.dataviewObj.getGrouping());
+		console.log("=====================", this.dataset);
+		// console.log(this.dataviewObj.getGrouping());
 		if (this.dataviewObj.getGroups().length === 0) {
-			Object.keys(this.dataset).forEach(key => {
+			this.dataset.forEach(key => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-						arr.push(this.dataset[key][key2]);
-					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-						arr.push(this.dataset[key][key2][0]);
-					}
-				});
+				// Object.keys(this.dataset).forEach(key2 => {
+				// 	if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
+				// 		arr.push(this.dataset[key][key2]);
+				// 	} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
+				// 		arr.push(this.dataset[key][key2][0]);
+				// 	}
+				// });
+				arr.push(key['srno']);
+				arr.push(key['stu_admission_no']);
+				arr.push(key['stu_full_name']);
+				arr.push(key['stu_class_name']);
+				arr.push(key['opening_outstanding']);
+				arr.push(key['opening_advances']);
+				arr.push(key['due_for_period']);
+				arr.push(key['total_receivables']);
+				arr.push(key['receipt_during_the_period']);
+				arr.push(key['balance']);
+				arr.push(key['outstanding_end_of_period']);
+				arr.push(key['adv_end_of_period']);
+
+
 				rowData.push(arr);
 			});
+			let arr = [];
+			arr.push(this.totalRow['srno']);
+			arr.push(this.totalRow['stu_admission_no']);
+			arr.push(this.totalRow['stu_full_name']);
+			arr.push(this.totalRow['stu_class_name']);
+			arr.push(this.totalRow['opening_outstanding']);
+			arr.push(this.totalRow['opening_advances']);
+			arr.push(this.totalRow['due_for_period']);
+			arr.push(this.totalRow['total_receivables']);
+			arr.push(this.totalRow['receipt_during_the_period']);
+			arr.push(this.totalRow['balance']);
+			arr.push(this.totalRow['outstanding_end_of_period']);
+			arr.push(this.totalRow['adv_end_of_period']);
+			rowData.push(arr);
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
 				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
@@ -791,6 +883,39 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					fontSize: 22,
 					cellWidth: 'auto',
 				},
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+	
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 20,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+				didDrawPage: function (data) {
+	
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 20,
+				},
+				useCss: true,
 				theme: 'striped'
 			});
 			//doc.save('table.pdf');
@@ -859,6 +984,167 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			console.log(rowData);
 		}
 	}
+
+	exportToExcel() {
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		for (const item of this.columnDefinitions) {
+			// console.log("i am item --------------", item);
+			columns.push({
+				key: item.id,
+				width: 8
+			});
+			
+			columValue.push(item.name);
+		}
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet("Summarized Fee Review Report", { properties: { showGridLines: true } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = 'Summarized Fee Review Report';
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.getRow(4).values = columValue;
+		worksheet.columns = columns;
+
+		this.dataset.forEach(e => {
+			worksheet.addRow(e);
+		});
+
+		worksheet.addRow(this.totalRow);
+
+		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+			this.columnDefinitions.forEach(element => {
+				cell.font = {
+					color: { argb: 'ffffff' },
+					bold: true,
+					name: 'Arial',
+					size: 10
+				};
+				cell.alignment = { wrapText: true, horizontal: 'center', vertical: 'middle' };
+				cell.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '439f47' },
+					bgColor: { argb: '439f47' }
+				};
+				cell.border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+			});
+		});
+		// style all row of excel
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			} else if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+			} else if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', wrapText: true };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+				if (cellIndex === -1) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+						};
+						cell.alignment = { wrapText: true, horizontal: 'center' };
+					});
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
+
+				}
+			}
+		});
+
+		worksheet.addRow({});
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, 'Summarized_fee_review.xlsx');
+		});
+	}
+
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
