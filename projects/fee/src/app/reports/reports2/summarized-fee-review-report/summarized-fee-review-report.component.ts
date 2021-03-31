@@ -919,7 +919,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				theme: 'striped'
 			});
 			//doc.save('table.pdf');
-			doc.save(reportType + '_' + this.reportdate + '.pdf');
+			doc.save("Summarized_Fee_Review_Report" + '_' + this.reportdate + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
@@ -980,7 +980,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				});
 			}
 			//doc.save('table.pdf');
-			doc.save(reportType + '_' + this.reportdate + '.pdf');
+			doc.save('Summarized_Fee_Review_Report' + '_' + this.reportdate + '.pdf');
 			console.log(rowData);
 		}
 	}
