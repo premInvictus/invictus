@@ -184,18 +184,21 @@ export class GenerateBillComponent implements OnInit {
   }
 
   setTotal(item, i) {
-    if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
-      this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
-      this.formGroupArray[i].formGroup.patchValue({
-        'item_quantity': ''
-      })
-    } else {
-      this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    // if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
+    //   this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     'item_quantity': ''
+    //   })
+    // } else {
+    //   this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     total_price: this.tableArray[i]['total_price']
+    //   })
+    // }
+    this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
       this.formGroupArray[i].formGroup.patchValue({
         total_price: this.tableArray[i]['total_price']
       })
-      // this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
-    }
   }
   addBundleItems(){
     const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
@@ -218,11 +221,18 @@ export class GenerateBillComponent implements OnInit {
     this.tableArray = [];
     for (let item of this.itemArray) {
       const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
-      const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+      
       let tempitem_quantity = 1;
-      if (findex1 != -1) {
-        tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+      if(bundleDetails){
+        const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+        if (findex1 != -1) {
+          tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+        }
       }
+      
+      // if(item.item_quantity - tempitem_quantity < 0) {
+      //   tempitem_quantity = 0;
+      // }
       this.tableArray.push({
         item_code: item.item_code,
         item_name: item.item_name,
@@ -301,16 +311,25 @@ export class GenerateBillComponent implements OnInit {
         console.log('item.formGroup.value',item.formGroup.value);
         if (this.formGroupArray[index].formGroup.valid) {
           if (item.formGroup.value.item_location !== '') {
-            item.formGroup.patchValue({
-              total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
-            })
-            itemAssign.push(item.formGroup.value);
-            updateFlag = true;
+            const tempdata = this.tableArray.find(e => e.item_code == item.formGroup.value.item_code);
+            if (item.formGroup.value.item_quantity <= tempdata['available_item']) {
+              item.formGroup.patchValue({
+                total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
+              })
+              itemAssign.push(item.formGroup.value);
+              updateFlag = true;
+            } else {
+              this.common.showSuccessErrorMessage('Item quantity exceed quantity available in shop', 'error');
+              updateFlag = false;
+              break;
+            }
+            
           } else {
             updateFlag = false;
             break;
           }
         } else {
+          this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
           updateFlag = false;
           break;
         }
@@ -378,7 +397,7 @@ export class GenerateBillComponent implements OnInit {
       }
       // console.log(this.tableReciptArray, 'tableReciptArray');
     } else {
-      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+      // this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
   async getWallets() {

@@ -196,6 +196,7 @@
                   <th class="custom-th">Sr No.</th>
                   <th class="custom-th">Item Code</th>
                   <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Quantity Available</th>
                   <th class="custom-th">Item Price</th>
                   <th class="custom-th">Item Quantity</th>
                   <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
@@ -208,6 +209,7 @@
                     <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
                     <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
                     <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.available_item}}</span></td>
                     <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
                     <td width="20%" class="custom-td">
                       <form [formGroup]="formGroupArray[i].formGroup">
@@ -235,6 +237,7 @@
                 <td class="custom-td"></td>
                 <td class="custom-td"></td>
                 <td class="custom-td">Total</td>
+                <td class="custom-td"></td>
                 <td class="custom-td"></td>
                 <td class="custom-td"></td>
                 <td class="custom-td">{{getTotalPriceSum()}}</td>
