@@ -4,8 +4,8 @@
 }
 .bar-tiltle-span2 {
     position: relative;
-    top: -2px;
-    font-size: 10px;
+    /* top: -2px; */
+    font-size: 8px;
     left: 14px;
 }
 .bar-isbn-span {
