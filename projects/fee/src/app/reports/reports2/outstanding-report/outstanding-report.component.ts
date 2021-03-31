@@ -2233,7 +2233,7 @@ export class OutstandingReportComponent implements OnInit {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': 'defaulter',
-					'classId':  new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd'),
+					'classId': value.fee_value,
 					'to_date': value.from_date,
 					'pageSize': '10',
 					'pageIndex': '0',
