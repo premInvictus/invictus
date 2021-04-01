@@ -38,10 +38,10 @@
           <mat-error>
             This field is required
           </mat-error>
-        </mat-form-field>
+        </mat-form-field> 
       </div>
       <div class="col-2">
-        <mat-form-field class="form-field" appearance="outline">
+        <!-- <mat-form-field class="form-field" appearance="outline">
           <mat-label>Employee</mat-label>
           <input type="text" matInput placeholder="Employee" formControlName="emp_id" required
             [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
@@ -54,6 +54,12 @@
           <mat-error>
             This field is required
           </mat-error>
+        </mat-form-field> -->
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Employee</mat-label>
+          <mat-select placeholder="Employee" formControlName="emp_id" required (selectionChange)="addBundleItems()" multiple>
+              <mat-option *ngFor="let item of employeeArray" [value]="item.emp_id">{{item.emp_name | titlecase}}({{item.emp_id}})</mat-option>                    
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="col-1" style="padding:12px">

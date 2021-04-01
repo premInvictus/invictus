@@ -103,7 +103,7 @@ export class GenerateBillComponent implements OnInit {
   getBundle(){
     this.bundleArray = [];
     const param:any = {};
-    param.emp_id =  Number(this.currentUser.login_id),
+    param.item_location =  this.storeinchargeDetails.item_location,
     this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
@@ -207,6 +207,8 @@ export class GenerateBillComponent implements OnInit {
       bundleDetails.item_assign.forEach(element => {
         const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
         if (findex == -1) {
+          //replacing store incharge item_quantity with inv_item_master item_quantity
+          element.selling_item.item_quantity = element.inv_item_master ? element.inv_item_master.item_location.item_qty: 0
           this.itemArray.push(element.selling_item);
           this.selection.toggle(element.item_code);
           if(element.item_optional != '1') {
@@ -269,8 +271,12 @@ export class GenerateBillComponent implements OnInit {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
           this.storeinchargeLocation = this.storeinchargeDetails.item_location;
-          this.itemArray.push(result[0].item_assign[0]);
-          this.selection.toggle(result[0].item_assign[0].item_code);
+          let item = result[0].item_assign[0];
+          if(item && item.inv_item_master) {
+            item.item_quantity = item.inv_item_master.item_location.item_qty;
+          }
+          this.itemArray.push(item);
+          this.selection.toggle(item.item_code);
           this.pushItem();
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
@@ -498,6 +504,7 @@ export class GenerateBillComponent implements OnInit {
       }
       filterJson = {
         emp_id: Number(this.currentUser.login_id),
+        location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
       console.log('finalJson',finalJson);

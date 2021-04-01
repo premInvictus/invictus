@@ -43,6 +43,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.getBundle();
+    this.getAllEmployee();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
       this.assignEmpArray = this.inventory.getAssignEmp();
@@ -81,6 +82,19 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
       exist_emp_id: ''
     });
     this.formGroupArray = [];
+  }
+  getAllEmployee(){
+    this.employeeArray = [];
+    this.commonService.getAllEmployee({emp_cat_id:2}).subscribe((result: any) => {
+      if (result.length > 0) {
+        this.employeeArray = result;
+      }
+    });
+    // this.commonService.getFilterData({}).subscribe((result: any) => {
+    //   if (result.status === 'ok') {
+    //     this.employeeArray = result.data;
+    //   }
+    // });
   }
 
   searchStudentByName($event) {
@@ -156,16 +170,64 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
       }
     })
   }
+  // getItemList() {
+  //   if (this.assignStoreForm.valid && this.employeeId) {
+  //     this.inventory.checkItemOrLocation({ emp_id: this.employeeId, item_location: this.locationId }).subscribe((result: any) => {
+  //       if (result) {
+  //         this.tableDataArray = [];
+  //         this.formGroupArray = [];
+  //         this.itemArray = [];
+  //         this.commonService.showSuccessErrorMessage(result, 'error');
+  //       } else {
+  //         this.tableDataArray = [];
+  //         this.formGroupArray = [];
+  //         this.itemArray = [];
+  //         var filterJson = {
+  //           "filters": [
+  //             {
+  //               "filter_type": "item_location",
+  //               "filter_value": this.locationId,
+  //               "type": "autopopulate"
+  //             }
+  //           ],
+  //           "page_index": 0,
+  //           "page_size": 100
+  //         };
+  //         this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
+  //           if (result && result.status === 'ok') {
+  //             this.itemArray = result.data;
+  //             for (let item of this.itemArray) {
+  //               this.tableDataArray.push({
+  //                 item_code: item.item_code,
+  //                 item_name: item.item_name,
+  //                 item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
+  //                 item_selling_price: ''
+  //               });
+  //               this.formGroupArray.push({
+  //                 formGroup: this.fbuild.group({
+  //                   item_code: item.item_code,
+  //                   item_name: item.item_name,
+  //                   item_quantity: item.item_location[0].item_qty,
+  //                   item_selling_price: ''
+  //                 })
+  //               });
+  //             }
+  //           } else {
+  //             this.commonService.showSuccessErrorMessage('No item added this location', 'error');
+  //           }
+  //         });
+  //       }
+  //     });
+
+
+  //   } else {
+  //     this.commonService.showSuccessErrorMessage('please fill required field', 'error');
+  //   }
+
+  // }
   getItemList() {
-    if (this.assignStoreForm.valid && this.employeeId) {
-      this.inventory.checkItemOrLocation({ emp_id: this.employeeId, item_location: this.locationId }).subscribe((result: any) => {
-        if (result) {
-          this.tableDataArray = [];
-          this.formGroupArray = [];
-          this.itemArray = [];
-          this.commonService.showSuccessErrorMessage(result, 'error');
-        } else {
-          this.tableDataArray = [];
+    if (this.assignStoreForm.valid) {
+      this.tableDataArray = [];
           this.formGroupArray = [];
           this.itemArray = [];
           var filterJson = {
@@ -202,14 +264,11 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
               this.commonService.showSuccessErrorMessage('No item added this location', 'error');
             }
           });
-        }
-      });
 
 
     } else {
       this.commonService.showSuccessErrorMessage('please fill required field', 'error');
     }
-
   }
   finalSubmit() {
     var finalJson: any = {};
@@ -217,9 +276,15 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
     }
+    const emp:any[] = [];
+    for(let item of this.assignStoreForm.value.emp_id){
+      const temp = this.employeeArray.find(e => e.emp_id == item);
+      if(temp){
+        emp.push({emp_id:item,emp_name: temp.emp_name})
+      }
+    }
     finalJson = {
-      emp_id: this.employeeId,
-      emp_name: this.assignStoreForm.value.emp_id,
+      employees: emp,
       item_location: Number(this.locationId),
       item_assign: itemAssign
     }
