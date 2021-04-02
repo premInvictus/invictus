@@ -43,7 +43,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.getBundle();
+    
     this.getAllEmployee();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
@@ -58,6 +58,9 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
         this.locationId = Number(this.assignEmpArray.item_location);
         this.editAssignData(this.assignEmpArray);
         this.inventory.resetAssignEmp();
+      }
+      if(this.inventory.getcurrentChildTab() == 'bundlelist') {
+        this.getBundle();
       }
     }
     this.inventory.receipt.subscribe((result: any) => {
@@ -168,7 +171,9 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   }
   getBundle(){
     this.bundleArray = [];
-    this.inventory.getAllBundle({}).subscribe((result:any) => {
+    const param:any = {};
+    param.item_location =  this.assignEmpArray.location_id.location_id,
+    this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
         this.bundleArray.forEach(element => {

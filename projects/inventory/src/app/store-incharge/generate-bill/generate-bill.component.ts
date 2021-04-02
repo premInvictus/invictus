@@ -47,6 +47,7 @@ export class GenerateBillComponent implements OnInit {
   bundleArray: any[] = [];
   requiredArray: any[] = [];
   studentArrayByName:any[] = [];
+  session:any
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -57,6 +58,7 @@ export class GenerateBillComponent implements OnInit {
     public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -513,7 +515,8 @@ export class GenerateBillComponent implements OnInit {
         bill_total: grandTotal,
         status:'approved',
         mop:this.payForm.value.pay_id,
-        item_location:this.storeinchargeLocation
+        item_location:this.storeinchargeLocation,
+        ses_id: this.session.ses_id
       }
       filterJson = {
         emp_id: this.currentUser.login_id,

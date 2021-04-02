@@ -109,7 +109,8 @@ export class BundleModalComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: this.currentUser.login_id,
+        // emp_id: this.currentUser.login_id,
+        item_location : this.data.item_location,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {

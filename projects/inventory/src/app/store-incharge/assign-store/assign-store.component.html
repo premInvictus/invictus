@@ -18,7 +18,7 @@
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>Employee</mat-label>
           <mat-select placeholder="Employee" formControlName="emp_id" required multiple>
-              <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name | titlecase}}({{item.emp_id}})</mat-option>                    
+              <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name | titlecase}}({{item.emp_code_no}})</mat-option>                    
           </mat-select>
         </mat-form-field>
         </form>

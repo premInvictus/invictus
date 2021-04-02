@@ -43,6 +43,7 @@ export class GenerateBillBulkComponent implements OnInit {
   storeinchargeLocation:any;
   locationArray: any[] = [];
   locationId: any;
+  session:any;
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -53,6 +54,7 @@ export class GenerateBillBulkComponent implements OnInit {
     public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -363,7 +365,8 @@ export class GenerateBillBulkComponent implements OnInit {
               bill_total: grandTotal,
               status:'approved',
               mop:'wallet',
-              item_location:this.storeinchargeLocation
+              item_location:this.storeinchargeLocation,
+              ses_id: this.session.ses_id
             }
           )
         } else {
