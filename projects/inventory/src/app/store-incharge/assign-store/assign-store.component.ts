@@ -30,6 +30,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   showDefaultData = false;
   currentChildTab='';
   bundleArray: any[] = [];
+  edit = false;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -47,6 +48,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
       this.assignEmpArray = this.inventory.getAssignEmp();
+      console.log('this.assignEmpArray',this.assignEmpArray);
       if (this.assignEmpArray) {
         this.showDefaultData = true;
         this.existForm.patchValue({
@@ -82,6 +84,16 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
       exist_emp_id: ''
     });
     this.formGroupArray = [];
+  }
+  editstoreincharge(){
+    this.edit = true;
+    if(this.assignEmpArray){
+      this.assignStoreForm.patchValue({
+        'emp_id': this.assignEmpArray.employees.map(e => e.emp_id),
+        'location_id': this.assignEmpArray.location_id.location_id
+      });
+    }
+    
   }
   getAllEmployee(){
     this.employeeArray = [];
@@ -278,9 +290,9 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     }
     const emp:any[] = [];
     for(let item of this.assignStoreForm.value.emp_id){
-      const temp = this.employeeArray.find(e => e.emp_id == item);
+      const temp = this.employeeArray.find(e => e.emp_login_id == item);
       if(temp){
-        emp.push({emp_id:item,emp_name: temp.emp_name})
+        emp.push({emp_id:temp.emp_login_id,emp_name: temp.emp_name,emp_login_id:temp.emp_login_id})
       }
     }
     finalJson = {
@@ -303,8 +315,15 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
     }
+    const emp:any[] = [];
+    for(let item of this.assignStoreForm.value.emp_id){
+      const temp = this.employeeArray.find(e => e.emp_login_id == item);
+      if(temp){
+        emp.push({emp_id:temp.emp_login_id,emp_name: temp.emp_name,emp_login_id:temp.emp_login_id})
+      }
+    }
     finalJson = {
-      emp_id: this.assignEmpArray.emp_id,
+      employees: emp,
       item_location: Number(this.assignEmpArray.item_location),
       item_assign: itemAssign
     }

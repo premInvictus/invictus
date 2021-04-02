@@ -64,7 +64,20 @@ export class GenerateBillComponent implements OnInit {
     this.getSchool();
     this.formGroupArray = [];
     this.getGlobalSettingReplace();
-    this.getBundle();
+    this.getStoreIncharge()
+  }
+  getStoreIncharge(){
+    let inputJson: any = {};
+      inputJson = {
+        emp_id: this.currentUser.login_id,
+      }
+    this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+      if (result.length > 0) {
+        this.storeinchargeDetails = result[0];
+        this.storeinchargeLocation = this.storeinchargeDetails.item_location;
+        this.getBundle();
+      }
+    })
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -264,7 +277,7 @@ export class GenerateBillComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
@@ -503,7 +516,7 @@ export class GenerateBillComponent implements OnInit {
         item_location:this.storeinchargeLocation
       }
       filterJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
         location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
