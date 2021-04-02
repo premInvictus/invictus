@@ -43,6 +43,7 @@ export class BundleModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     console.log(this.data);
     this.buildForm();
     if(this.data.value) {
@@ -101,14 +102,15 @@ export class BundleModalComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-  searchItemData() {
+  searchItemData() { 
     const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.itemSearchForm.value.scanItemId));
     if (findex !== -1) {
       this.common.showSuccessErrorMessage('Item Already exist in the cart', 'error');
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: this.data.emp_id,
+        // emp_id: this.currentUser.login_id,
+        item_location : this.data.item_location,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {

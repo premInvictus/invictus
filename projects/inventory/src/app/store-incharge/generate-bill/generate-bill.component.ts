@@ -47,6 +47,7 @@ export class GenerateBillComponent implements OnInit {
   bundleArray: any[] = [];
   requiredArray: any[] = [];
   studentArrayByName:any[] = [];
+  session:any
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -57,6 +58,7 @@ export class GenerateBillComponent implements OnInit {
     public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -64,7 +66,20 @@ export class GenerateBillComponent implements OnInit {
     this.getSchool();
     this.formGroupArray = [];
     this.getGlobalSettingReplace();
-    this.getBundle();
+    this.getStoreIncharge()
+  }
+  getStoreIncharge(){
+    let inputJson: any = {};
+      inputJson = {
+        emp_id: this.currentUser.login_id,
+      }
+    this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+      if (result.length > 0) {
+        this.storeinchargeDetails = result[0];
+        this.storeinchargeLocation = this.storeinchargeDetails.item_location;
+        this.getBundle();
+      }
+    })
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -103,7 +118,7 @@ export class GenerateBillComponent implements OnInit {
   getBundle(){
     this.bundleArray = [];
     const param:any = {};
-    param.emp_id =  Number(this.currentUser.login_id),
+    param.item_location =  this.storeinchargeDetails.item_location,
     this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
@@ -184,18 +199,21 @@ export class GenerateBillComponent implements OnInit {
   }
 
   setTotal(item, i) {
-    if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
-      this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
-      this.formGroupArray[i].formGroup.patchValue({
-        'item_quantity': ''
-      })
-    } else {
-      this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    // if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
+    //   this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     'item_quantity': ''
+    //   })
+    // } else {
+    //   this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     total_price: this.tableArray[i]['total_price']
+    //   })
+    // }
+    this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
       this.formGroupArray[i].formGroup.patchValue({
         total_price: this.tableArray[i]['total_price']
       })
-      // this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
-    }
   }
   addBundleItems(){
     const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
@@ -204,6 +222,8 @@ export class GenerateBillComponent implements OnInit {
       bundleDetails.item_assign.forEach(element => {
         const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
         if (findex == -1) {
+          //replacing store incharge item_quantity with inv_item_master item_quantity
+          element.selling_item.item_quantity = element.inv_item_master ? element.inv_item_master.item_location.item_qty: 0
           this.itemArray.push(element.selling_item);
           this.selection.toggle(element.item_code);
           if(element.item_optional != '1') {
@@ -218,11 +238,18 @@ export class GenerateBillComponent implements OnInit {
     this.tableArray = [];
     for (let item of this.itemArray) {
       const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
-      const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+      
       let tempitem_quantity = 1;
-      if (findex1 != -1) {
-        tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+      if(bundleDetails){
+        const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+        if (findex1 != -1) {
+          tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+        }
       }
+      
+      // if(item.item_quantity - tempitem_quantity < 0) {
+      //   tempitem_quantity = 0;
+      // }
       this.tableArray.push({
         item_code: item.item_code,
         item_name: item.item_name,
@@ -252,15 +279,19 @@ export class GenerateBillComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
           this.storeinchargeLocation = this.storeinchargeDetails.item_location;
-          this.itemArray.push(result[0].item_assign[0]);
-          this.selection.toggle(result[0].item_assign[0].item_code);
+          let item = result[0].item_assign[0];
+          if(item && item.inv_item_master) {
+            item.item_quantity = item.inv_item_master.item_location.item_qty;
+          }
+          this.itemArray.push(item);
+          this.selection.toggle(item.item_code);
           this.pushItem();
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
@@ -301,16 +332,25 @@ export class GenerateBillComponent implements OnInit {
         console.log('item.formGroup.value',item.formGroup.value);
         if (this.formGroupArray[index].formGroup.valid) {
           if (item.formGroup.value.item_location !== '') {
-            item.formGroup.patchValue({
-              total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
-            })
-            itemAssign.push(item.formGroup.value);
-            updateFlag = true;
+            const tempdata = this.tableArray.find(e => e.item_code == item.formGroup.value.item_code);
+            if (item.formGroup.value.item_quantity <= tempdata['available_item']) {
+              item.formGroup.patchValue({
+                total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
+              })
+              itemAssign.push(item.formGroup.value);
+              updateFlag = true;
+            } else {
+              this.common.showSuccessErrorMessage('Item quantity exceed quantity available in shop', 'error');
+              updateFlag = false;
+              break;
+            }
+            
           } else {
             updateFlag = false;
             break;
           }
         } else {
+          this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
           updateFlag = false;
           break;
         }
@@ -378,7 +418,7 @@ export class GenerateBillComponent implements OnInit {
       }
       // console.log(this.tableReciptArray, 'tableReciptArray');
     } else {
-      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+      // this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
   async getWallets() {
@@ -475,10 +515,12 @@ export class GenerateBillComponent implements OnInit {
         bill_total: grandTotal,
         status:'approved',
         mop:this.payForm.value.pay_id,
-        item_location:this.storeinchargeLocation
+        item_location:this.storeinchargeLocation,
+        ses_id: this.session.ses_id
       }
       filterJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
+        location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
       console.log('finalJson',finalJson);

@@ -278,5 +278,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/insertWallets',value);
 	}
+	getAllEmployee(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
+	}
 
 }

@@ -7,11 +7,24 @@
           <input type="text" matInput placeholder="Location" formControlName="exist_location_id" readonly>
         </mat-form-field>
       </div>
-      <div class="col-2">
+      <div class="col-2" *ngIf="!edit">
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>Employee</mat-label>
           <input type="text" matInput placeholder="Employee" formControlName="exist_emp_id" readonly>
         </mat-form-field>
+      </div>
+      <div class="col-2" *ngIf="edit">
+        <form [formGroup]="assignStoreForm" novalidate>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Employee</mat-label>
+          <mat-select placeholder="Employee" formControlName="emp_id" required multiple>
+              <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name | titlecase}}({{item.emp_code_no}})</mat-option>                    
+          </mat-select>
+        </mat-form-field>
+        </form>
+      </div>
+      <div class="col-1" style="padding:12px" *ngIf="inventory.getcurrentChildTab() != 'bundlelist'">
+        <button mat-raised-button class="btn-success-green" (click)="editstoreincharge()">Edit</button>
       </div>
       <div class="col-1" style="padding:12px" *ngIf="inventory.getcurrentChildTab() == 'bundlelist'">
         <button mat-raised-button class="btn-success-green" (click)="addBundle()">Add Bundle</button>
@@ -38,10 +51,10 @@
           <mat-error>
             This field is required
           </mat-error>
-        </mat-form-field>
+        </mat-form-field> 
       </div>
       <div class="col-2">
-        <mat-form-field class="form-field" appearance="outline">
+        <!-- <mat-form-field class="form-field" appearance="outline">
           <mat-label>Employee</mat-label>
           <input type="text" matInput placeholder="Employee" formControlName="emp_id" required
             [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
@@ -54,6 +67,12 @@
           <mat-error>
             This field is required
           </mat-error>
+        </mat-form-field> -->
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Employee</mat-label>
+          <mat-select placeholder="Employee" formControlName="emp_id" required multiple>
+              <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name | titlecase}}({{item.emp_id}})</mat-option>                    
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="col-1" style="padding:12px">
