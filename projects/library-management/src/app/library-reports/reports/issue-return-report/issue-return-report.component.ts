@@ -847,15 +847,17 @@ export class IssueReturnReportComponent implements OnInit {
 						
 					// }
 					currentClassName = repoArray[Number(index)]['user_class_name'];
-					for (let i =0; i < this.sectionDataArray.length;i++) {
-						if (repoArray[Number(index)]['user_sec_id']) {
-							var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.sectionDataArray[i]['sec_id']);
-							if (cindex > -1) {
-								currentSectionName += this.sectionDataArray[cindex]['sec_name'];						
-							}						
-						}
-						
-					}
+					
+					// for (let i =0; i < this.sectionDataArray.length;i++) {
+					// 	if (repoArray[Number(index)]['user_sec_id']) {
+							
+					// 		var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.sectionDataArray[i]['sec_id']);
+					// 		if (cindex > -1) {
+					// 			currentSectionName += this.sectionDataArray[cindex]['sec_name'];						
+					// 		}						
+					// 	}						
+					// }
+					currentSectionName = repoArray[Number(index)]['user_sec_name'];
 
 					for (let i =0; i < this.subjectDataArray.length;i++) {
 						if (this.subjectDataArray[i]['sub_id'] === repoArray[Number(index)]['reserv_user_logs']['reserv_sub_id']) {
