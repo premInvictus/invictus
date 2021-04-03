@@ -469,22 +469,22 @@ export class IssueReturnReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'issued_to', name: 'Issued To', field: 'issued_to', sortable: true,
-				filterable: true,
-				width: 120,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'book_sub_title',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false
-				},
-			},
+			// {
+			// 	id: 'issued_to', name: 'Issued To', field: 'issued_to', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filterSearchType: FieldType.string,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'book_sub_title',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false
+			// 	},
+			// },
 			{
 				id: 'issued_by', name: 'Issued By', field: 'issued_by', sortable: true,
 				filterable: true,
@@ -837,15 +837,16 @@ export class IssueReturnReportComponent implements OnInit {
 						}
 					}
 
-					for (let i =0; i < this.classDataArray.length;i++) {
-						if (repoArray[Number(index)]['user_class_id']) {
-							var cindex = repoArray[Number(index)]['user_class_id'].indexOf(this.classDataArray[i]['class_id']);
-							if (cindex > -1) {
-								currentClassName += this.classDataArray[cindex]['class_name']+",";						
-							}						
-						}
+					// for (let i =0; i < this.classDataArray.length;i++) { 
+					// 	if (repoArray[Number(index)]['user_class_id']) {
+					// 		var cindex = repoArray[Number(index)]['user_class_id'].indexOf(this.classDataArray[i]['class_id']);
+					// 		if (cindex > -1) {
+					// 			currentClassName += this.classDataArray[cindex]['class_name']+",";						
+					// 		}						
+					// 	}
 						
-					}
+					// }
+					currentClassName = repoArray[Number(index)]['user_class_name'];
 					for (let i =0; i < this.sectionDataArray.length;i++) {
 						if (repoArray[Number(index)]['user_sec_id']) {
 							var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.sectionDataArray[i]['sec_id']);
@@ -1395,7 +1396,7 @@ export class IssueReturnReportComponent implements OnInit {
 					};
 					cell.alignment = { horizontal: 'center' };
 				});
-			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+			} else if (rowNum > 4 && rowNum <= worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
 				if (cellIndex === -1) {
 					row.eachCell((cell) => {
@@ -1805,10 +1806,10 @@ export class IssueReturnReportComponent implements OnInit {
 
 				// grand total
 				if (data.row.index === rows.length - 1) {
-					doc.setFontStyle('bold');
-					doc.setFontSize('18');
-					doc.setTextColor('#ffffff');
-					doc.setFillColor(67, 160, 71);
+					// doc.setFontStyle('bold');
+					// doc.setFontSize('18');
+					// doc.setTextColor('#ffffff');
+					// doc.setFillColor(67, 160, 71);
 				}
 			},
 			headStyles: {

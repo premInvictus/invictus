@@ -256,7 +256,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
               }
             ],
             "page_index": 0,
-            "page_size": 100
+            "page_size": 500
           };
           this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
             if (result && result.status === 'ok') {
