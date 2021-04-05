@@ -1219,4 +1219,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setup/insertOrUpdateBankDetails', value);
 	}
+	getConcessionPerUser(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getConcessionPerUser', value);
+	}
 }

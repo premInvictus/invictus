@@ -1019,4 +1019,9 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/studentTags');
 	}
+
+	getConcessionPerUser(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getConcessionPerUser', value);
+	}
 }

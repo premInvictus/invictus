@@ -167,7 +167,8 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Concession Category</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
+              class="font-size-16 font-bold" >{{concess_new != "" ? (concess_new | capitalize) : '-'}} </span>
+              <span *ngIf="concess_extra.length > 0" class="font-size-16 font-bold" [matTooltip]="concess_extra[0]"> + {{concess_extra != "" ? (concess_extra.length) : "" }}</span>
           </div>
         </div>
       </div>

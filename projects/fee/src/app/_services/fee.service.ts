@@ -659,4 +659,16 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
 	}
+	getConcessionRectificationNew() {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/concessionGroup/getConcessionRectificationNew');
+	}
+	getNameById(value) {
+		// this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/concessionGroup/getNameById', value);
+	}
+	updateConcessionRectificationNew(value) {
+		// this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/concessionGroup/updateConcessionRectificationNew', value);
+	}
 }
