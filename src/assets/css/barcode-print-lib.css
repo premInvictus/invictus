@@ -99,11 +99,11 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     top: -8px;
     font-size: 11px;
 }
-.barcode-margin-div6 {
-    margin-top: 76px !important;
-}
 .barcode-margin-div {
-    margin-top: 131.5px !important;
+    margin-top: 91.5px !important;
+}
+.barcode-margin-div7 {
+    margin-top: 136px !important;
 }
 
 .barcode-margin-div5 {
