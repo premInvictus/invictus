@@ -100,5 +100,8 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     font-size: 11px;
 }
 .barcode-margin-div {
-    margin-top: 76px !important;
+    margin-top: 91.5px !important;
+}
+.barcode-margin-div5 {
+    margin-top: 106.5px !important;
 }
