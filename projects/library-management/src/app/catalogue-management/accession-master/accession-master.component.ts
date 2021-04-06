@@ -518,7 +518,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			this.notif.stopLoading();
 		}
 		document.getElementById('isbn_id').blur();
-	}
+	} 
 	openSearchDialog = (data) => this.searchModal.openModal(data);
 	getLanguageName(code) {
 		const findex = this.languageArray.findIndex(f => f.lang_code === code);

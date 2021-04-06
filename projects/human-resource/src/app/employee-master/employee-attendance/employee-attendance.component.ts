@@ -542,6 +542,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									pos++;
 									j++;
 								} else {
+									console.log('DOJ does not exist for employee no '+item.emp_code_no);
 									this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no '+item.emp_code_no,'error');
 									// missingDOJ.push(item.emp_code_no);
 								}
@@ -694,14 +695,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	saveEmployeeAttendance() {
-		console.log('this.employeeData',this.employeeData);
+		
 		this.disabledApiButton = true;
 		let inputJson = {};
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
+			if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
+				// console.log('this.EMPLOYEE_ELEMENT[i] --------------------63',this.EMPLOYEE_ELEMENT[i]);
+				// console.log('this.formGroupArray[i] --------',this.formGroupArray[i]);
+				// console.log('this.employeeData[i] --------',this.employeeData[i]);
+			}
 			var flag = false;
 			let emp_month_attendance_data:any
-			this.employeeData[i]['emp_month_attendance_data'].forEach(ema => {
+			let employeeData = this.employeeData.find(e => e.emp_id == this.EMPLOYEE_ELEMENT[i]['emp_id'])
+			employeeData['emp_month_attendance_data'].forEach(ema => {
 				if(ema.ses_id == this.session_id.ses_id){
 					emp_month_attendance_data = ema;
 				}
@@ -713,7 +720,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			let emp_balance_leaves:any[]=[];
 			this.formGroupArray[i].formGroup.value.emp_leave_form.forEach(e => {
 				const tempdataa = this.leaveTypeArray.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
-				console.log('tempdata',tempdataa);
+				// console.log('tempdata',tempdataa);
 				let tempavailed:any={};
 				let tempgranted:any={};
 				tempavailed.leave_id = tempdataa.leave_id;
@@ -729,7 +736,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 			});
 			if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
 				let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
-				
+				if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
+					console.log('tempmonthdata',JSON.parse(JSON.stringify(tempmonthdata)));
+				}
 				if (tempmonthdata && tempmonthdata.attendance_detail.emp_leave_credited &&
 					tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
 						emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
@@ -775,29 +784,34 @@ export class EmployeeAttendanceComponent implements OnInit {
 						//inputJson["session_id"]["month_data"].push(monthJson);
 						emp_month_attendance_data['month_data'].push(monthJson);
 					}
+					if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
+						console.log('emp_month_attendance_data if--63 ',emp_month_attendance_data);
+					}
 				} else {
 					inputJson["month_data"].push(monthJson);
 					let isSessionExist = 0;
-					this.employeeData[i]['emp_month_attendance_data'].forEach(ema => {
+					employeeData['emp_month_attendance_data'].forEach(ema => {
 						if(ema.ses_id == this.session_id.ses_id){
 							emp_month_attendance_data = inputJson;
 							isSessionExist=1;
 						}
 					});
 					if(isSessionExist == 0){
-						if(!this.employeeData[i]['emp_month_attendance_data']){
-							this.employeeData[i]['emp_month_attendance_data']=[];
+						if(!employeeData['emp_month_attendance_data']){
+							employeeData['emp_month_attendance_data']=[];
 						}
 						inputJson['ses_id'] =  this.session_id.ses_id;
-						this.employeeData[i]['emp_month_attendance_data'].push(inputJson)
+						employeeData['emp_month_attendance_data'].push(inputJson)
 					}
-					//this.employeeData[i]['emp_month_attendance_data'] = inputJson;
+					//employeeData['emp_month_attendance_data'] = inputJson;
+					if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
+						console.log('emp_month_attendance_data else--63',employeeData['emp_month_attendance_data']);
+					}
 				}
 
 			}
 		}
 		const filterArr: any[] = [];
-		console.log('this.employeeData',this.employeeData)
 		for (const item of this.employeeData) {
 			// item.emp_month_attendance_data.forEach(element => {
 			// 	if(element.ses_id == this.session_id.ses_id){

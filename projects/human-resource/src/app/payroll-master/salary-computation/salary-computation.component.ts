@@ -493,7 +493,7 @@ export class SalaryComputationComponent implements OnInit {
 									}
 									//
 
-									// console.log("check ---------------------------->>>>", this.empShacolumns[i], this.shacolumns[i]);
+									console.log("check ---------------------------->>>>", this.empShacolumns[i], this.shacolumns[i]);
 									
 								}
 
