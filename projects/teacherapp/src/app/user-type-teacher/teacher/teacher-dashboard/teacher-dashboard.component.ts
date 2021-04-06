@@ -192,6 +192,7 @@ export class TeacherDashboardComponent implements OnInit {
 				if (result && result.length > 0) {
 					this.userDetails = result[0];
 					if(this.userDetails.emp_profile_pic){
+						
 						this.defaultsrc = this.userDetails.emp_profile_pic;
 					}
 					this.getAttendanceReport();

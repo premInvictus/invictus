@@ -102,6 +102,7 @@ export class CommonStudentProfileComponent1 implements OnInit, OnChanges {
 	class_name: any;
 	section_name: any;
 	class_sec: any;
+	userConcessionArray:any[] = [];
 	gender: any;
 	showWalletLedger=true;
 	processTypeArray: any[] = [
@@ -160,7 +161,6 @@ export class CommonStudentProfileComponent1 implements OnInit, OnChanges {
 		// 	this.studentdetailsflag = true;
 		// 	this.getStudentInformation(this.feeRenderId);
 		// }
-
 		this.studentdetailsflag = true;
 		let floginID = this.loginId ? this.loginId : (this.feeRenderId ? this.feeRenderId : '');
 		this.getStudentInformation(floginID);
@@ -187,6 +187,8 @@ export class CommonStudentProfileComponent1 implements OnInit, OnChanges {
 			mi_emergency_contact_no: ''
 		});
 	}
+
+	
 	getStudentInformation(au_login_id) {
 		this.studentLoginId = '';
 		console.log('au_login_id--',au_login_id, 'this.studentdetailsflag--',this.studentdetailsflag);

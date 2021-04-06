@@ -61,6 +61,10 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	buildingArray: any[] = [];
 	roomArray: any[] = [];
 	bedArray: any[] = [];
+	userConcessionArray: any[] = [];
+	userConcessionForm: FormGroup;
+	indexUpdate = -1;
+	currentUser: any = {};
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -84,6 +88,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	ngOnChanges() {
 		if (this.feeDet && this.feeDet.class_id) {
@@ -128,6 +133,112 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			hs_bed: '',
 			optedFacilites:''
 		});
+		this.userConcessionForm = this.fbuild.group({
+			
+			tucc_con_end_date: "",
+			tucc_con_start_date: "",
+			tucc_created_by: "",
+			tucc_doc_url: "",
+			tucc_fcg_id: "",
+			tucc_id: "",
+			tucc_login_id: "",
+			tucc_remarks: "",
+			tucc_status: ""
+		})
+	}
+
+	addUserConcessionGrouptoUser() {
+		if (this.userConcessionForm.valid) {
+			this.userConcessionForm.patchValue({
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
+				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd'),
+				tucc_login_id: this.feeLoginId,
+				tucc_created_by: this.currentUser.login_id
+
+			});
+			this.userConcessionArray.push(this.userConcessionForm.value);
+			this.userConcessionForm.reset();
+		}
+	}
+
+	updateConcessions() {
+		if (this.indexUpdate > -1) {
+			this.userConcessionForm.patchValue({
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
+				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd') 
+			});
+			this.userConcessionArray[this.indexUpdate] = this.userConcessionForm.value;
+		
+			this.userConcessionForm.reset();
+			this.indexUpdate = -1;
+		}
+	}
+
+	deleteUserConcessionGroup(si) {
+		if (si > -1) {
+			this.userConcessionArray.splice(si, 1);
+			this.userConcessionForm.reset();
+		}
+	}
+
+	editUserConcessionGroup(si) {
+		this.indexUpdate = si;
+		if (si > -1) {
+			this.userConcessionForm.patchValue({
+				tucc_con_end_date: this.userConcessionArray[si].tucc_con_end_date,
+				tucc_con_start_date: this.userConcessionArray[si].tucc_con_start_date,
+				tucc_created_by: this.userConcessionArray[si].tucc_created_by,
+				tucc_doc_url: this.userConcessionArray[si].tucc_doc_url,
+				tucc_fcg_id: this.userConcessionArray[si].tucc_fcg_id,
+				tucc_id: this.userConcessionArray[si].tucc_id,
+				tucc_login_id: this.userConcessionArray[si].tucc_login_id,
+				tucc_remarks: this.userConcessionArray[si].tucc_remarks,
+				tucc_status: this.userConcessionArray[si].tucc_status
+			});
+			
+		}
+	}
+
+
+	getConcessionByIdInTable(id) {
+		return this.conGroupArray.filter((element) => {
+			if(id == element.fcg_id) {
+				return true
+			}
+		})[0].fcg_name;
+		
+		
+	}
+
+	getConcessionDescByIdInTable(id) {
+		return this.conGroupArray.filter((element) => {
+			if(id == element.fcg_id) {
+				return true
+			}
+		})[0].fcg_description;
+		
+		
+	}
+
+	getStatus(item) {
+		if(item == "" || item =="0") {
+			return "Pending"
+		} else if( item == "1") {
+			return "Approved"
+		} else if(item == '2') {
+			return "Rejected"
+		}
+	}
+	getConcessionPerUser(feeLoginId) {
+		console.log("i am here ---------------------------------");
+		
+		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
+			if(res.data) {
+				this.userConcessionArray = res.data
+				console.log("i am res.data", this.userConcessionArray);
+				
+			}
+		})
 	}
 	isAllocatedToStudent() {
 		this.feeService.isAllocatedToStudent({
@@ -600,12 +711,14 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 				hs_building: this.accountsForm.value.hs_building,
 				hs_room: this.accountsForm.value.hs_room,
-				hs_bed: this.accountsForm.value.hs_bed
+				hs_bed: this.accountsForm.value.hs_bed,
+				concess_table: this.userConcessionArray
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.additionalFeeComponent();
 					this.renderData();
+					this.getConcessionPerUser(this.feeLoginId);
 				}
 			});
 		}
@@ -642,13 +755,15 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 				hs_building: this.accountsForm.value.hs_building,
 				hs_room: this.accountsForm.value.hs_room,
-				hs_bed: this.accountsForm.value.hs_bed
+				hs_bed: this.accountsForm.value.hs_bed,
+				concess_table: this.userConcessionArray
 			};
 			if (this.accountsForm.value.accd_id) {
 				this.sisService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.additionalFeeComponent();
 						this.renderData();
+						this.getConcessionPerUser(this.feeLoginId);
 					}
 				});
 			} else {
@@ -656,6 +771,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 					if (result && result.status === 'ok') {
 						this.additionalFeeComponent();
 						this.renderData();
+						this.getConcessionPerUser(this.feeLoginId);
 					}
 				});
 			}
@@ -695,6 +811,58 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		});
 	}
+	// fileChangeEvent(fileInput, doc_req_id) {
+	// 	this.multipleFileArray = [];
+	// 	this.counter = 0;
+	// 	this.currentFileChangeEvent = fileInput;
+	// 	const files = fileInput.target.files;
+	// 	for (let i = 0; i < files.length; i++) {
+	// 		this.IterateFileLoop(files[i], doc_req_id);
+	// 	}
+	// }
+	// IterateFileLoop(files, doc_req_id) {
+	// 	const reader = new FileReader();
+	// 	reader.onloadend = (e) => {
+	// 		this.currentImage = reader.result;
+	// 		const fileJson = {
+	// 			fileName: files.name,
+	// 			imagebase64: this.currentImage,
+	// 			module: 'attachment'
+	// 		};
+	// 		this.multipleFileArray.push(fileJson);
+	// 		this.counter++;
+	// 		if (this.counter === this.currentFileChangeEvent.target.files.length) {
+	// 			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+	// 				if (result) {
+	// 					this.documentPath = result.data[0].file_url;
+	// 					//console.log(this.documentPath);
+
+	// 				}
+	// 			});
+	// 		}
+	// 	};
+	// 	reader.readAsDataURL(files);
+	// }
+	previewImage(imgArray, index) {
+		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				imageArray: imgArray,
+				index: index
+			},
+			height: '100vh',
+			width: '100vh'
+		});
+	}
+	checkThumbnail(url: any) {
+		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+			url.match(/gif/) || url.match(/jpeg/) ||
+			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+			url.match(/GIF/) || url.match(/JPEG/)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	fileChangeEvent(fileInput, doc_req_id) {
 		this.multipleFileArray = [];
 		this.counter = 0;
@@ -720,31 +888,14 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 					if (result) {
 						this.documentPath = result.data[0].file_url;
 						//console.log(this.documentPath);
+						this.userConcessionForm.patchValue({
+							tucc_doc_url: result.data[0].file_url
+						})
 
 					}
 				});
 			}
 		};
 		reader.readAsDataURL(files);
-	}
-	previewImage(imgArray, index) {
-		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
-			data: {
-				imageArray: imgArray,
-				index: index
-			},
-			height: '100vh',
-			width: '100vh'
-		});
-	}
-	checkThumbnail(url: any) {
-		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
-			url.match(/gif/) || url.match(/jpeg/) ||
-			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
-			url.match(/GIF/) || url.match(/JPEG/)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

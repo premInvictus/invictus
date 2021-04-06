@@ -31,6 +31,7 @@ import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { SearchViaStudentComponent } from '../../sharedmodule/search-via-student/search-via-student.component';
 import { element } from '@angular/core/src/render3/instructions';
+import { delay } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-common-student-profile',
@@ -103,6 +104,9 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	section_name: any;
 	class_sec: any;
 	gender: any;
+	concess_new = '';
+	concess_extra:any[] = [];
+	userConcessionArray:any[] = [];
 	showWalletLedger=true;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
@@ -127,6 +131,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getConGroup();
+		console.log("i am this ", this.feeRenderId);
+		
+		this.getConcessionPerUser(this.loginId);
 		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
 			this.processType = this.studentRouteMoveStoreService.getProcesRouteType();
 		} else {
@@ -150,8 +158,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.router.navigate([`../${url}`], { relativeTo: this.route });
 	}
 	ngOnChanges() {
-		console.log('this.loginId', this.loginId);
-		console.log('this.feeRenderId', this.feeRenderId);
+		this.concess_extra = [];
+		this.concess_new = '';
 		// if (this.loginId) {
 		// 	this.studentdetailsflag = true;
 		// 	this.getStudentInformation(this.loginId);
@@ -164,11 +172,65 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.studentdetailsflag = true;
 		let floginID = this.loginId ? this.loginId : (this.feeRenderId ? this.feeRenderId : '');
 		this.getStudentInformation(floginID);
+
+		this.getConcessionPerUser(floginID );
 		// document.getElementById('blur_id').focus();
 		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
 		fe.focus();
 		fe.select();
 	}
+
+	getConGroup() {
+		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 0 }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.conGroupArray = result.data;
+
+				this.getConcessionPerUser(this.loginId);
+			}
+		});
+	}
+	getConcessionPerUser(feeRenderId) {
+		console.log("i am feeRenderId", feeRenderId);
+		
+		
+		this.sisService.getConcessionPerUser({au_login_id: feeRenderId}).subscribe((res:any) => {
+			if(res) {
+				if(res.data.length > 0) {
+					this.userConcessionArray = res.data;
+				}
+				console.log("--------------------------------------", this.userConcessionArray, this.conGroupArray );
+				
+				this.userConcessionArray.forEach(element => {
+					if(this.concess_new == "") {
+						console.log("in here");
+						
+						let name = this.conGroupArray.filter(e => {
+							console.log("--------------------------------------------------==============================================");
+							
+							if(parseInt(element.tucc_fcg_id) == parseInt(e.fcg_id)) {
+								this.concess_new = e.fcg_name
+							}
+						});
+						console.log("i am name here", name);
+						
+						
+						
+					} else {
+						
+							this.conGroupArray.filter(e => {
+								if(parseInt(element.tucc_fcg_id) == parseInt(e.fcg_id)) {
+									this.concess_extra.push(e.fcg_name)
+								}
+							}) 
+						
+					}
+					
+				});
+				
+			}
+		})
+	}
+
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
 			au_profileimage: '',
@@ -205,6 +267,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
+							this.getConcessionPerUser(this.studentdetails.au_login_id)
 							this.gender = this.studentdetails.au_gender;
 							if (this.gender === 'M') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';

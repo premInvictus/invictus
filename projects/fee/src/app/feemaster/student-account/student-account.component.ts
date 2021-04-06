@@ -60,6 +60,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	buildingArray: any[] = [];
 	roomArray: any[] = [];
 	bedArray: any[] = [];
+	userConcessionArray: any[] = [];
+	userConcessionForm: FormGroup;
+	indexUpdate = -1;
+	currentUser: any = {};
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -69,6 +73,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		//console.log('this.loginId', this.loginId);
 		this.stoppageArray = [];
 		this.slabArray = [];
@@ -86,13 +91,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getRoutes();
 		if (this.feeLoginId) {
 			this.getFeeAccount(this.feeLoginId);
+			this.getConcessionPerUser(this.feeLoginId);
 		}
 
 	}
 	ngOnChanges() {
 		//console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
+			this.userConcessionArray = [];
 			this.getFeeAccount(this.feeLoginId);
+			this.getConcessionPerUser(this.feeLoginId);
 		} else {
 			this.accountsForm.reset();
 			this.transportFlag = false;
@@ -140,6 +148,72 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			hs_bed: '',
 			optedFacilites:''
 		});
+		this.userConcessionForm = this.fbuild.group({
+			
+			tucc_con_end_date: "",
+			tucc_con_start_date: "",
+			tucc_created_by: "",
+			tucc_doc_url: "",
+			tucc_fcg_id: "",
+			tucc_id: "",
+			tucc_login_id: "",
+			tucc_remarks: "",
+			tucc_status: ""
+		})
+	}
+	getConcessionByIdInTable(id) {
+		return this.conGroupArray.filter((element) => {
+			if(id == element.fcg_id) {
+				return true
+			}
+		})[0].fcg_name;
+		
+		
+	}
+
+	getConcessionDescByIdInTable(id) {
+		return this.conGroupArray.filter((element) => {
+			if(id == element.fcg_id) {
+				return true
+			}
+		})[0].fcg_description;
+		
+		
+	}
+
+	getStatus(item) {
+		if(item == "" || item =="0") {
+			return "Pending"
+		} else if( item == "1") {
+			return "Approved"
+		} else if(item == '2') {
+			return "Rejected"
+		}
+	}
+
+	addUserConcessionGrouptoUser() {
+		if (this.userConcessionForm.valid) {
+			this.userConcessionForm.patchValue({
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
+				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd'),
+				tucc_login_id: this.feeLoginId,
+				tucc_created_by: this.currentUser.login_id
+
+			});
+			this.userConcessionArray.push(this.userConcessionForm.value);
+			this.userConcessionForm.reset();
+		}
+	}
+	getConcessionPerUser(feeLoginId) {
+		console.log("i am here ---------------------------------");
+		
+		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
+			if(res.data) {
+				this.userConcessionArray = res.data
+				console.log("i am res.data", this.userConcessionArray);
+				
+			}
+		})
 	}
 	isAllocatedToStudent() {
 		this.feeService.isAllocatedToStudent({
@@ -579,12 +653,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_status: '1',
 				hs_building: this.accountsForm.value.hs_building,
 				hs_room: this.accountsForm.value.hs_room,
-				hs_bed: this.accountsForm.value.hs_bed
+				hs_bed: this.accountsForm.value.hs_bed,
+				concess_table: this.userConcessionArray
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Inserted SucessFully', 'success');
+					this.userConcessionArray = [];
 					this.getFeeAccount(this.feeLoginId);
+					this.getConcessionPerUser(this.feeLoginId);
 					this.editChange.emit(this.feeLoginId);
 				} else {
 					this.editChange.emit(this.feeLoginId);
@@ -684,13 +761,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 				hs_building: this.accountsForm.value.hs_building,
 				hs_room: this.accountsForm.value.hs_room,
-				hs_bed: this.accountsForm.value.hs_bed
+				hs_bed: this.accountsForm.value.hs_bed,
+				concess_table: this.userConcessionArray
 			};
 			if (this.isExist('350')) {
 				this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage('Updated SucessFully', 'success');
+						this.userConcessionArray = [];
 						this.getFeeAccount(this.feeLoginId);
+						this.getConcessionPerUser(this.feeLoginId);
 						this.editChange.emit(this.feeLoginId);
 					} else {
 						this.editChange.emit(this.feeLoginId);
@@ -777,6 +857,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
 				accd_status: this.accountsForm.value.accd_status,
 				accd_afc_id: this.accountsForm.value.accd_afc_id,
+				concess_table: this.userConcessionArray
 			};
 			this.checkFormChangedValue();
 		} else {
@@ -785,28 +866,40 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	next(admno) {
 		this.loginId = admno;
+		this.userConcessionArray = [];
 		this.getFeeAccount(this.loginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	prev(admno) {
+		this.userConcessionArray = [];
 		this.loginId = admno;
 		this.getFeeAccount(this.loginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	first(admno) {
+		this.userConcessionArray = [];
 		this.loginId = admno;
 		this.getFeeAccount(this.loginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	last(admno) {
+		this.userConcessionArray = [];
 		this.loginId = admno;
 		this.getFeeAccount(this.loginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	key(admno) {
+		this.userConcessionArray = [];
 		this.loginId = admno;
 		this.getFeeAccount(this.loginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	getPreviousData() {
+		this.userConcessionArray = [];
 		this.getFeeAccount(this.feeLoginId);
 		this.viewOnly = true;
 		this.editChange.emit(this.feeLoginId);
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	isExist(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
@@ -823,6 +916,44 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.editChange.emit(this.feeLoginId);
 		}
 	}
+	deleteUserConcessionGroup(si) {
+		if (si > -1) {
+			this.userConcessionArray.splice(si, 1);
+			this.userConcessionForm.reset();
+		}
+	}
+
+	editUserConcessionGroup(si) {
+		this.indexUpdate = si;
+		if (si > -1) {
+			this.userConcessionForm.patchValue({
+				tucc_con_end_date: this.userConcessionArray[si].tucc_con_end_date,
+				tucc_con_start_date: this.userConcessionArray[si].tucc_con_start_date,
+				tucc_created_by: this.userConcessionArray[si].tucc_created_by,
+				tucc_doc_url: this.userConcessionArray[si].tucc_doc_url,
+				tucc_fcg_id: this.userConcessionArray[si].tucc_fcg_id,
+				tucc_id: this.userConcessionArray[si].tucc_id,
+				tucc_login_id: this.userConcessionArray[si].tucc_login_id,
+				tucc_remarks: this.userConcessionArray[si].tucc_remarks,
+				tucc_status: this.userConcessionArray[si].tucc_status
+			});
+			
+		}
+	}
+
+	updateConcessions() {
+		if (this.indexUpdate > -1) {
+			this.userConcessionForm.patchValue({
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
+				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd') 
+			});
+			this.userConcessionArray[this.indexUpdate] = this.userConcessionForm.value;
+		
+			this.userConcessionForm.reset();
+			this.indexUpdate = -1;
+		}
+	}
+
 	checkFormChangedValue() {
 		this.finalSibReqArray = [];
 		this.finalArray = [];
@@ -947,6 +1078,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					if (result) {
 						this.documentPath = result.data[0].file_url;
 						//console.log(this.documentPath);
+						this.userConcessionForm.patchValue({
+							tucc_doc_url: result.data[0].file_url
+						})
 
 					}
 				});

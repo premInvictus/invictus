@@ -1,0 +1,16 @@
+.top-margin {
+    margin-top: 15.875mm !important;
+}
+
+.margin-column {
+    height: 11mm !important;
+    width: 46mm !important;
+    margin-bottom: 1.675mm !important;
+    margin-right: 2.3365mm !important;
+    margin-left: 2.3365mm !important;
+}
+.margin-column > ngx-barcode > div > img {
+    height: 95%  !important;
+    width: 80%  !important;
+
+}

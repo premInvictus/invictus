@@ -49,6 +49,7 @@
                             </div>
                         </div>
                     </fieldset>
+                    
                     <div class="row">
                         <div class="col-12 ">
                             <!-- <div class="row"> 
@@ -178,9 +179,9 @@
                 <div class="col-6">
                     <fieldset class="col-12 fieldset_invoice">
                         <legend class="invoice_legend"> <b>Concession</b></legend>
-                        <div class="row mar-top-30">
-                            <div class="col-6">
-                                <div class="col-sm">
+                        <!-- <div class="row mar-top-30"> -->
+                            <!-- <div class="col-6"> -->
+                                <!-- <div class="col-sm">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Concession Group</mat-label>
                                         <mat-select placeholder="Concession Group" [disabled]="viewOnly"
@@ -193,7 +194,7 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
+                                </div> -->
                                 <!-- <div class="col-sm" *ngIf="conDescFlag">
                                     <mat-form-field appearance="outline" class="form-field">
                                         <mat-label>Reason For Approve Concession</mat-label>
@@ -207,8 +208,8 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div> -->
-                            </div>
-                            <div class="col-6" *ngIf="conDescFlag">
+                            <!-- </div> -->
+                            <!-- <div class="col-6" *ngIf="conDescFlag">
                                 <div class="col-sm">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Remarks</mat-label>
@@ -217,8 +218,9 @@
                                             placeholder="Remarks" [readonly]="viewOnly" rows="1" required></textarea>
                                     </mat-form-field>
                                 </div>
-                            </div>
-                        </div>
+                            </div> -->
+                            
+                        <!-- </div>
                         <div class="row" *ngIf="conDescFlag">
                             <div class="col-2 padding-left-20" *ngIf="!viewOnly">
                                 <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
@@ -234,13 +236,8 @@
                             </div>
                             <div class="col-1 pad-left-22" *ngIf="conDescFlag && concession_document">
                                 <div style="float:right;">
-                                    <!-- <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
-                                        (click)="deleteFile(img.imgName,img.ed_docreq_id)">
-                                        <mat-icon class="btn-upload-icon">delete</mat-icon>
-                                    </button> -->
+                                   
                                 </div>
-                                <!-- <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
-                                    [src]="img.imgName" (click)="previewImage(imageArray, i)"> -->
                                 <img class="btn-doc-upload-preview-1 thumbnail-img" src="{{concession_document}}"
                                     (click)="previewImage(concessionArray, 0)"><br>
 
@@ -255,9 +252,119 @@
                                 </div>
                             </div>
 
+                        </div> -->
+                        <div class="row" [formGroup] = "userConcessionForm" *ngIf="!viewOnly">
+                            <div class="col-12 remove-col-padding">
+                                <div class="inline-flex">
+                                    <mat-form-field appearance="outline" class="form-field-225">
+                                        <mat-label>Concession Group</mat-label>
+                                        <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="tucc_fcg_id"
+                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                            (selectionChange)="setDescription($event);changeValue($event)">
+                                            <mat-option>Please Select</mat-option>
+                                            <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div  class="inline-flex margin-left-15">
+                                    <div >
+                                        <mat-form-field appearance="outline" class="form-field-220">
+                                            <mat-label>Concession Start Date</mat-label>
+                                            <input matInput [matDatepicker]="picker1" [max]="maxDate" [readonly]="viewOnly"
+                                                placeholder="Concession Start Date" formControlName="tucc_con_start_date"
+                                                [errorStateMatcher]="confirmValidParentMatcher" required />
+                                            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker1" [disabled]="viewOnly">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker tabindex="-1" #picker1 [disabled]="viewOnly"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div  class="inline-flex margin-left-15">
+                                    <div >
+                                        <mat-form-field appearance="outline" class="form-field-220">
+                                            <mat-label>Concession End Date</mat-label>
+                                            <input matInput [matDatepicker]="picker2" [max]="maxDate" [readonly]="viewOnly"
+                                                placeholder="Concession End Date" formControlName="tucc_con_end_date"
+                                                [errorStateMatcher]="confirmValidParentMatcher"  />
+                                            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker2" [disabled]="viewOnly">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker tabindex="-1" #picker2 [disabled]="viewOnly"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <!-- <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Reason For Approve Concession</mat-label>
+                                        <mat-select placeholder="Reason For Approve Concession" [disabled]="viewOnly"
+                                            formControlName="accd_reason_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                            <mat-option>Please Select</mat-option>
+                                            <mat-option *ngFor="let item of reasonArr" [value]="item.reason_id">{{item.reason_title}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
+                                    <mat-form-field appearance="outline" class="form-field-320">
+                                        <mat-label>Remarks</mat-label>
+                                        <input matInput placeholder="Remarks" formControlName="tucc_remarks" [readonly]="viewOnly"
+                                            required>
+                                    </mat-form-field>
+                                </div>
+                                <div class="inline-flex margin-left-50" *ngIf="conDesc && conStatus === 'pending'">
+                                    <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top" multiple="true"
+                                        (change)="fileChangeEvent($event,docreq_id)" id="docreq_id" style="display: none !important">
+                
+                                    <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                                        <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
+                                        &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" for="docreq_id"></label>
+                                    </a>
+                                </div>
+                            </div>
+                            <button mat-raised-button class="btn-neutral margin-top-10" *ngIf="!viewOnly && indexUpdate == -1" (click)="addUserConcessionGrouptoUser()"> Add Concession </button>
+                            <button mat-raised-button class="btn-neutral margin-top-10" *ngIf="!viewOnly && indexUpdate > -1" (click)="updateConcessions()"> Update Concession </button>
                         </div>
+                        <br/>
+                        <div class="col-12" *ngIf="userConcessionArray.length > 0 ">
+                            <table class="table table-bordered table-stripped custom-table">
+                              <thead class="table-skill__head text-center">
+                                <tr class="custom-tr">
+                                  <th class="custom-th">Sr No.</th>
+                                  <th class="custom-th">Concession.</th>
+                                  <th  class="custom-th">Start Date </th>
+                                  <th class="custom-th">End Date</th>
+                                  <th  class="custom-th">Remarks</th>
+                                  <th  class="custom-th">Status</th>
+                                  <th class="custom-th">Document</th>
+                                  <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+                                </tr>
+                              </thead>
+                              <tbody class="table-skill__body text-center">
+                                <tr class="custom-tr" *ngFor="let item of userConcessionArray; let i=index">
+                                  <td class="custom-td">{{i+1}}</td>
+                                  <td  class="custom-td">
+                                    {{getConcessionByIdInTable(item.tucc_fcg_id)}}</td>
+                                  <td  class="custom-td  text-capitalize">{{item.tucc_con_start_date | date}}</td>
+                                  <td  class="custom-td">{{item.tucc_con_end_date | date}}
+                                  </td>
+                                  <td  class="custom-td text-capitalize">
+                                    {{item.tucc_remarks}}</td>
+                                    <td  class="custom-td text-capitalize">
+                                      {{getStatus(item.tucc_status)}}</td>
+          
+                                  <td class="custom-td"><a href='{{item.tucc_doc_url}}'><mat-icon>file_download</mat-icon></a> </td>
+                                  <td *ngIf="!viewOnly" class="custom-td"><i class="far fa-edit modify-icon" style="cursor: pointer"
+                                      (click)="editUserConcessionGroup(i)"></i>&nbsp;
+                                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" style="cursor: pointer"
+                                      (click)="deleteUserConcessionGroup(i)"></i>
+                                  </td>
+                              </tbody>
+                            </table>
+                          </div>
                     </fieldset>
                     <br>
+                    
+                      <br/>
                     <fieldset class="col-12 fieldset_invoice" *ngIf="hostelFlag">
                         <legend class="invoice_legend"> <b>Hostel details</b></legend> 
                         <div *ngIf="hostelFlag" class="row margin-top-30">
@@ -352,7 +459,7 @@
                         </div>
                     </div>
                 </div>
-
+                
             </div>
 
 

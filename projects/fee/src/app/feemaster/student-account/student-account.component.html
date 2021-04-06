@@ -49,12 +49,12 @@
                 <span class="font-size-20 font-medium">Concession</span>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 remove-col-padding">
+        <div class="row remove-top-margin" [formGroup] = "userConcessionForm">
+            <div class="col-12 remove-col-padding" *ngIf="!viewOnly">
                 <div class="inline-flex">
                     <mat-form-field appearance="outline" class="form-field-225">
                         <mat-label>Concession Group</mat-label>
-                        <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
+                        <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="tucc_fcg_id"
                             [errorStateMatcher]="confirmValidParentMatcher"
                             (selectionChange)="setDescription($event);changeValue($event)">
                             <mat-option>Please Select</mat-option>
@@ -62,6 +62,32 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                </div>
+                <div  class="inline-flex margin-left-15">
+                    <div >
+                        <mat-form-field appearance="outline" class="form-field-220">
+                            <mat-label>Concession Start Date</mat-label>
+                            <input matInput [matDatepicker]="picker1" [max]="maxDate" [readonly]="viewOnly"
+                                placeholder="Concession Start Date" formControlName="tucc_con_start_date"
+                                [errorStateMatcher]="confirmValidParentMatcher" required />
+                            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker1" [disabled]="viewOnly">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker tabindex="-1" #picker1 [disabled]="viewOnly"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div  class="inline-flex margin-left-15">
+                    <div >
+                        <mat-form-field appearance="outline" class="form-field-220">
+                            <mat-label>Concession End Date</mat-label>
+                            <input matInput [matDatepicker]="picker2" [max]="maxDate" [readonly]="viewOnly"
+                                placeholder="Concession End Date" formControlName="tucc_con_end_date"
+                                [errorStateMatcher]="confirmValidParentMatcher"  />
+                            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker2" [disabled]="viewOnly">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker tabindex="-1" #picker2 [disabled]="viewOnly"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
                 </div>
                 <!-- <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
                     <mat-form-field appearance="outline" class="form-field">
@@ -77,7 +103,7 @@
                 <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
                     <mat-form-field appearance="outline" class="form-field-320">
                         <mat-label>Remarks</mat-label>
-                        <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly"
+                        <input matInput placeholder="Remarks" formControlName="tucc_remarks" [readonly]="viewOnly"
                             required>
                     </mat-form-field>
                 </div>
@@ -91,18 +117,63 @@
                             File</label>
                     </a>
                 </div>
+
+                <button mat-raised-button class="btn-neutral margin-top-10" *ngIf="!viewOnly && indexUpdate == -1" (click)="addUserConcessionGrouptoUser()"> Add Concession </button>
+                <button mat-raised-button class="btn-neutral margin-top-10" *ngIf="!viewOnly && indexUpdate > -1" (click)="updateConcessions()"> Update Concession </button>
             </div>
-            <div class="col-12 remove-col-padding">
+            
+            <!-- <div class="col-12 remove-col-padding">
                 <div class="inline-flex margin-left-15 pad-bot-10" *ngIf="conDesc">
                     Description: {{conDesc}} <span *ngIf="conStatus === 'approved'"
                         class="approved">{{conStatus | capitalize}}</span>
                     <span *ngIf="conStatus === 'pending'" class="pending">{{conStatus | capitalize}}</span>
                     <span *ngIf="conStatus === 'reject'" class="pending">Rejected</span>
                 </div>
-            </div>
+            </div> -->
+
+                <div class="col-12 remove-col-padding margin-bottom-10" *ngIf="userConcessionArray.length > 0 ">
+                  <table class="table table-bordered table-stripped custom-table">
+                    <thead class="table-skill__head text-center">
+                      <tr class="custom-tr">
+                        <th class="custom-th">Sr No.</th>
+                        <th class="custom-th">Concession.</th>
+                        <th class="custom-th">Concession dicription.</th>
+                        <th  class="custom-th"> Start Date </th>
+                        <th class="custom-th"> End Date</th>
+                        <th  class="custom-th">Remarks</th>
+                        <th  class="custom-th">Status</th>
+                        <th class="custom-th">Document</th>
+                        <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-skill__body text-center">
+                      <tr class="custom-tr" *ngFor="let item of userConcessionArray; let i=index">
+                        <td class="custom-td">{{i+1}}</td>
+                        <td  class="custom-td">
+                          {{getConcessionByIdInTable(item.tucc_fcg_id)}}</td>
+                          <td  class="custom-td">
+                            {{getConcessionDescByIdInTable(item.tucc_fcg_id)}}</td>
+                        <td  class="custom-td  text-capitalize">{{item.tucc_con_start_date | date}}</td>
+                        <td  class="custom-td">{{item.tucc_con_end_date | date}}
+                        </td>
+                        <td  class="custom-td text-capitalize">
+                          {{item.tucc_remarks}}</td>
+                          <td  class="custom-td text-capitalize">
+                            {{getStatus(item.tucc_status)}}</td>
+
+                        <td class="custom-td"><a href='{{item.tucc_doc_url}}'><mat-icon>file_download</mat-icon></a> </td>
+                        <td *ngIf="!viewOnly" class="custom-td"><i class="far fa-edit modify-icon" style="cursor: pointer"
+                            (click)="editUserConcessionGroup(i)"></i>&nbsp;
+                          <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" style="cursor: pointer"
+                            (click)="deleteUserConcessionGroup(i)"></i>
+                        </td>
+                    </tbody>
+                  </table>
+                </div>
+             
 
 
-            <div class="col-12 remove-col-padding">
+            <div class="col-12 " >
                 <!-- <div class="inline-flex">
                     <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
                         (change)="enableTransport($event)">Whether the child has opted for Transport facility
@@ -112,7 +183,7 @@
                     <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel"
                         (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
                 </div> -->
-                <mat-radio-group formControlName="optedFacilites" (change)="optedFacilitesEvent($event)" [disabled]="viewOnly">
+                <mat-radio-group formControlName="optedFacilites" (change)="optedFacilitesEvent($event)" [disabled]="viewOnly" >
                     <mat-radio-button class="example-radio-button" value="1">Whether the child has opted for Transport facility</mat-radio-button>
                     <mat-radio-button class="example-radio-button" value="2">Whether the child has opted for Hostel facility</mat-radio-button>
                     <mat-radio-button class="example-radio-button" value="3">None</mat-radio-button>
@@ -120,7 +191,7 @@
 
             </div>
         </div>
-        <div *ngIf="transportFlag" class="row remove-top-margin">
+        <div *ngIf="transportFlag" class="row ">
             <div class="col-12 remove-col-padding">
                 <span class="font-size-20 font-medium">Transport Details </span> <a
                     class="pointer font-bold font-skyblue font-underline" *ngIf="(transport_history?.length > 0)"

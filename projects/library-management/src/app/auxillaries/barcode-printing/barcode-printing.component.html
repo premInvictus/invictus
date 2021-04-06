@@ -37,7 +37,7 @@
         <div class="col-3" *ngFor="let item of barCodeArray; let i = index">
           <div [class]="getClass(i)">
             <div class="barcode-print-lib2">
-              <span class="font-bold bar-tiltle-span2">{{(item.title | titlecase) | truncatetext : 18}}</span>
+              <span class="font-bold bar-tiltle-span2" style="font-size: 8px; top: -1px">{{(item.title | titlecase) | truncatetext : 25}}</span>
               <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.book_no" bc-format="CODE128" bc-width="2">
               </ngx-barcode>
               <span class="font-size-14 font-bold bar-isbn-span2">{{item.book_no}}</span>
