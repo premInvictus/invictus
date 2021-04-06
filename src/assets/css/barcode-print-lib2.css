@@ -141,3 +141,7 @@ div.barcode-print-lib3 > ngx-barcode > div > img {
 .barcode-margin-div3 {
     margin-top: 55px;
 }
+
+.barcode-margin-div5 {
+    margin-top: 106.5px !important;
+}
