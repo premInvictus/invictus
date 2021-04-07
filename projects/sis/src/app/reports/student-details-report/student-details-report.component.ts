@@ -1184,23 +1184,29 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
 			this.reportProcessWiseData[key]['student_parent_data'][2] ?
 			this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
-
-			tempObj['father_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][0] &&
-				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_name'] ?
-				father_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_name'] : '-');
-			tempObj['father_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][0] &&
-				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_contact_no'] ?
-				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_contact_no'] : '-';
-			tempObj['mother_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][1] &&
-				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_name'] ?
-				mother_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_name'] : '-');
-			tempObj['mother_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][1] &&
-				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_contact_no'] ?
-				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_contact_no'] : '-';
+			let fdetail = {
+				name: '-',
+				contact: '-'
+			}
+			let mdetail = {
+				name: '-',
+				contact: '-'
+			}
+			if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
+				this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
+					if(element.epd_parent_type == "M") {
+						mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
+						mdetail.contact = element.epd_contact_no
+					} else if(element.epd_parent_type == "F") {
+						fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
+						fdetail.contact = element.epd_contact_no
+					}
+				});
+			}
+			tempObj['father_name'] = fdetail.name;
+			tempObj['father_contact'] = fdetail.contact;
+			tempObj['mother_name'] = mdetail.name;
+			tempObj['mother_contact'] = mdetail.contact;
 			tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
 				this.reportProcessWiseData[key]['student_parent_data'][2] &&
 				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
