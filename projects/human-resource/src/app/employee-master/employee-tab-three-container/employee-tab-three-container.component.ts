@@ -40,7 +40,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	salaryDetailsArray: any[] = [];
 	categoryOneArray: any[] = [];
 	categoryTwoArray: any[] = [];
-	categoryThreeArray: any[] = [];
+	categoryThreeArray: any[] = [{
+		config_id: 1,
+		name: 'On Site'
+	}, {
+		config_id: 2,
+		name: 'On Deputation/Field'
+	}];
 	scaleArray: any[] = [];
 	scaleData: any[] = [];
 	tempData: any[] = [];
@@ -240,7 +246,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getBank();
 		this.getCategoryOne();
 		this.getCategoryTwo();
-		this.getCategoryThree();
+		// this.getCategoryThree();
 		this.getAllEpmployeeList();
 		this.getSession();
 		if (this.employeedetails) {
@@ -460,14 +466,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			return this.categoryTwoArray[findex].name;
 		}
 	}
-	getCategoryThree() {
-		this.categoryThreeArray = [];
-		this.commonAPIService.getMaster({ type_id: '5' }).subscribe((res: any) => {
-			if (res) {
-				this.categoryThreeArray = res;
-			}
-		});
-	}
+	// getCategoryThree() {
+	// 	this.categoryThreeArray = [];
+	// 	this.commonAPIService.getMaster({ type_id: '5' }).subscribe((res: any) => {
+	// 		if (res) {
+	// 			this.categoryThreeArray = res;
+	// 		}
+	// 	});
+	// }
 	getCategoryThreeName(config_id) {
 		const findex = this.categoryThreeArray.findIndex(e => Number(e.config_id) === Number(config_id));
 		if (findex !== -1) {
