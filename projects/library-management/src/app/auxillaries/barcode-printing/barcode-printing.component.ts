@@ -86,7 +86,16 @@ export class BarcodePrintingComponent implements OnInit {
   }
   getClass(index) {
     if (index > 47) {
-      if(index % 96 === 0 || index % 96 === 1 || index % 96 === 2 || index % 96 === 3) {
+      if(index % 188 === 0 || index % 188 === 1 || index % 188 === 2 || index % 188 === 3) {
+        return 'barcode-div-print barcode-margin-div7';
+      }
+
+      else
+      if(index % 144 === 0 || index % 144 === 1 || index % 144 === 2 || index % 144 === 3) {
+        return 'barcode-div-print barcode-margin-div6';
+      }
+
+      else if(index % 96 === 0 || index % 96 === 1 || index % 96 === 2 || index % 96 === 3) {
         return 'barcode-div-print barcode-margin-div5';
       } else if (index % 48 === 0 || index % 48 === 1 || index % 48 === 2 || index % 48 === 3) {
         return 'barcode-div-print barcode-margin-div';
