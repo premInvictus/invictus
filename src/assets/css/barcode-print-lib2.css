@@ -91,7 +91,7 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     margin-top: 0px;
 }
 .barcode-margin-div {
-    margin-top: 78px !important;
+    margin-top: 73px !important;
 }
 .bar-isbn-span2 {
     position: relative;
@@ -139,9 +139,5 @@ div.barcode-print-lib3 > ngx-barcode > div > img {
     word-break: break-all;
 }
 .barcode-margin-div3 {
-    margin-top: 55px;
-}
-
-.barcode-margin-div5 {
-    margin-top: 106.5px !important;
+    margin-top: 50px;
 }
