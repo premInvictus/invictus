@@ -20,6 +20,7 @@ import { VoucherPrintSetupComponent } from './voucher-print-setup/voucher-print-
 import { ModeltableComponent } from './modeltable/modeltable.component';
 import { WalletComponent } from './daybook/wallet/wallet.component';
 import { WalletModalComponent } from './wallet-modal/wallet-modal.component';
+import { SalaryDisburseComponent } from './daybook/salary-disburse/salary-disburse.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -43,7 +44,8 @@ import { WalletModalComponent } from './wallet-modal/wallet-modal.component';
     AdjustmentComponent,
     ModeltableComponent,
     WalletComponent,
-    WalletModalComponent
+    WalletModalComponent,
+    SalaryDisburseComponent
   ],
   entryComponents: [VoucherPrintSetupComponent, ModeltableComponent, WalletModalComponent]
 })
