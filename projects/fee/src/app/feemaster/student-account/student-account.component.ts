@@ -146,7 +146,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			hs_building: '',
 			hs_room: '',
 			hs_bed: '',
-			optedFacilites:''
+			optedFacilites:'3'
 		});
 		this.userConcessionForm = this.fbuild.group({
 			
@@ -287,6 +287,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_transport_from: '',
 			accd_transport_to: '',
 			accd_remark: '',
+			optedFacilites :'3'
 		});
 		this.stoppageArray = [];
 		this.slabArray = [];

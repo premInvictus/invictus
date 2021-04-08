@@ -131,7 +131,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			hs_building: '',
 			hs_room: '',
 			hs_bed: '',
-			optedFacilites:''
+			optedFacilites:'3'
 		});
 		this.userConcessionForm = this.fbuild.group({
 			
@@ -289,7 +289,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 
 
 	renderData() {
-		console.log(this.feeDet, 'renderData');
+		console.log(this.feeDet, 'renderData', this.accountsForm.value.optedFacilites);
 		this.conStatus = '';
 		this.concessionArray = [];
 		this.stoppageArray = [];
@@ -307,7 +307,10 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			imgName: this.concession_document
 		});
 		this.concessionArray.push(this.concession_document);
+		
 		if (this.feeDet.accd_login_id) {
+			
+			
 			if (this.feeDet.accd_is_transport === 'Y') {
 				this.transportFlag = true;
 				this.accountsForm.patchValue({
@@ -392,6 +395,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.slabModel = this.feeDet.accd_ts_id;
 		} else {
 			this.accountsForm.reset();
+			this.accountsForm.patchValue({
+				optedFacilites :'3'
+			});
 			this.transportFlag = false;
 			this.hostelFlag = false;
 			this.modeFlag = false;

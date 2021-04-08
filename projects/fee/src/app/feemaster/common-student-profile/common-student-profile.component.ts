@@ -574,6 +574,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.getStudentInformation(admno);
 	}
 	nextId(admno) {
+		this.concess_extra = [];
+		this.concess_new = '';
 		console.log(admno);
 		this.nextFlag = false;
 		this.prevFlag = false;
@@ -584,6 +586,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	prevId(admno) {
+		this.concess_extra = [];
+		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
 		this.firstFlag = false;
@@ -593,6 +597,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	firstId(admno) {
+		this.concess_extra = [];
+		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
 		this.firstFlag = false;
@@ -602,6 +608,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	lastId(admno) {
+		this.concess_extra = [];
+		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
 		this.firstFlag = false;
