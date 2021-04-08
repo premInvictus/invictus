@@ -219,8 +219,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 					this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 						let element: any = {};
 						let recordArray = [];
-						this.employeeData = result;
-						console.log('this.employeeData',this.employeeData);
+						this.employeeData = [];
 						this.EMPLOYEE_ELEMENT = [];
 						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 						if (result && result.length > 0) {
@@ -231,7 +230,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 							//console.log('result', result);
 							let missingDOJ:any[] = [];
 							for (const item of result) {
-	
 								if(item.emp_salary_detail &&
 								item.emp_salary_detail.emp_organisation_relation_detail &&
 								item.emp_salary_detail.emp_organisation_relation_detail.doj) {
@@ -539,6 +537,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									// }
 									console.log('before push element',element);
 									this.EMPLOYEE_ELEMENT.push(element);
+									this.employeeData.push(item);
 									pos++;
 									j++;
 								} else {
@@ -700,6 +699,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 		let inputJson = {};
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
+			const employeeDataIndex = this.employeeData.findIndex(e => e.emp_id == this.EMPLOYEE_ELEMENT[i]['emp_id'])
 			if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
 				// console.log('this.EMPLOYEE_ELEMENT[i] --------------------63',this.EMPLOYEE_ELEMENT[i]);
 				// console.log('this.formGroupArray[i] --------',this.formGroupArray[i]);
