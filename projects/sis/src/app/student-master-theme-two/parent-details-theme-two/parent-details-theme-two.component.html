@@ -69,7 +69,7 @@
                                  <input matInput placeholder="Full name" [readonly]="viewOnly" minlength="2"
                                     maxlength="50" formControlName="epd_parent_name"
                                     [errorStateMatcher]="confirmValidParentMatcher" required class="text-capitalize"
-                                    [value]="formGroupArray[i].formGroup.get('epd_parent_name').value | capitalize" />
+                                    [value]="formGroupArray[i].formGroup.get('epd_parent_name').value" />
                                  <mat-error>
                                     Please enter full name
                                  </mat-error>

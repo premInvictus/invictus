@@ -159,6 +159,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.concess_extra = [];
+		this.userConcessionArray = [];
 		this.concess_new = '';
 		// if (this.loginId) {
 		// 	this.studentdetailsflag = true;
@@ -198,16 +199,13 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 				if(res.data.length > 0) {
 					this.userConcessionArray = res.data;
 				}
-				console.log("--------------------------------------", this.userConcessionArray, this.conGroupArray );
 				
 				this.userConcessionArray.forEach(element => {
 					if(this.concess_new == "") {
-						console.log("in here");
+						console.log("----------------------------", element.tucc_fcg_id);
 						
 						let name = this.conGroupArray.filter(e => {
-							console.log("--------------------------------------------------==============================================");
-							
-							if(parseInt(element.tucc_fcg_id) == parseInt(e.fcg_id)) {
+							if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
 								this.concess_new = e.fcg_name
 							}
 						});
@@ -218,7 +216,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 					} else {
 						
 							this.conGroupArray.filter(e => {
-								if(parseInt(element.tucc_fcg_id) == parseInt(e.fcg_id)) {
+								if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
 									this.concess_extra.push(e.fcg_name)
 								}
 							}) 
@@ -576,6 +574,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	nextId(admno) {
 		this.concess_extra = [];
 		this.concess_new = '';
+		this.userConcessionArray = [];
 		console.log(admno);
 		this.nextFlag = false;
 		this.prevFlag = false;
@@ -587,6 +586,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	prevId(admno) {
 		this.concess_extra = [];
+		this.userConcessionArray = [];
 		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
@@ -598,6 +598,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	firstId(admno) {
 		this.concess_extra = [];
+		this.userConcessionArray = [];
 		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
@@ -609,6 +610,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	lastId(admno) {
 		this.concess_extra = [];
+		this.userConcessionArray = [];
 		this.concess_new = '';
 		this.nextFlag = false;
 		this.prevFlag = false;
