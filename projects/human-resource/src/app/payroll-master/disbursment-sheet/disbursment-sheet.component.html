@@ -4,7 +4,7 @@
       <form [formGroup]="searchForm">
         <div class="row">
 
-          <div class="col-8 margin-top-15">
+          <div class="col-6 margin-top-15">
             <span class="font-size-24">Disbursement Sheet</span>
           </div>
 
@@ -20,7 +20,16 @@
               </mat-select>
             </mat-form-field>
           </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="disburse_date" required 
+              (dateChange)="getSalaryCompute()" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
+          </div>
           <div class="col-2">
             <button mat-raised-button class="btn-success-blue" (click)="openFilter()">
               Filter
@@ -111,10 +120,11 @@
                     'header-row-four-group'
                   ]"></tr>
             <!-- Checkbox Column -->
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
+            <ng-container matColumnDef="select" >
+              <th mat-header-cell *matHeaderCellDef width="4%">
                 <mat-checkbox (change)="$event ? masterToggle() : null"
                               [checked]="selection.hasValue() && isAllSelected()"
+                              
                               [indeterminate]="selection.hasValue() && !isAllSelected()"
                               [aria-label]="checkboxLabel()">
                 </mat-checkbox>
@@ -123,6 +133,7 @@
                 <mat-checkbox (click)="$event.stopPropagation()"
                               (change)="$event ? selection.toggle(row) : null"
                               [checked]="selection.isSelected(row)"
+                              [disabled]="isDisburseExist(row)"
                               [aria-label]="checkboxLabel(row)">
                 </mat-checkbox>
               </td>
@@ -332,14 +343,11 @@
       </div>
     </mat-card>
 
-    <!-- <div class="row text-center" *ngIf="SALARY_DISBURSMENT_ELEMENT.length > 0">
-            <div class="col-12" *ngIf="!editFlag">
-              <button mat-raised-button class="btn-success-green margin-right-15" (click)="save()">Confirm and Process</button>
-              <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
-                Reset
-              </button>
-            </div>
-          </div> -->
+    <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
+      <div class="col-12" *ngIf="!editFlag">
+        <button mat-raised-button class="btn-success-green margin-right-15" (click)="saveDisburse()">Save</button>
+      </div>
+    </div>
   </div>
 </div>
 <app-advanced-search-modal (searchOk)="searchOk($event)" (searchCancel)="searchCancel($event)" #searchModal></app-advanced-search-modal>

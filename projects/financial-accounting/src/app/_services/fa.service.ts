@@ -60,6 +60,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/daybook/getNonPartialDayBook', value);
 	}
+	daybookDisburse(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/daybookDisburse', value);
+	}
 	getFeeMonths(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');

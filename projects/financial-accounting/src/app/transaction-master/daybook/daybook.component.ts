@@ -125,7 +125,7 @@ export class DaybookComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				if (result.data && result.data[0]) {
 					this.adjustmentStatus = result.data[0]['gs_value'] == '1' ? 1 : 0;
-					this.currentTabIndex = this.adjustmentStatus ? 5 : 4;
+					this.currentTabIndex = this.adjustmentStatus ? 6 : 5;
 				}
 
 			}
@@ -2069,7 +2069,7 @@ export class DaybookComponent implements OnInit {
 
 				}
 			)
-		} else if (this.currentTabIndex == 4) {
+		} else if (this.currentTabIndex == 4) {	
 
 		}
 	}

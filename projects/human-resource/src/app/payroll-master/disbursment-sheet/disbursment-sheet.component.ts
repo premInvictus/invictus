@@ -131,7 +131,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 	// tslint:disable-next-line: max-line-length
 	displayedSalaryComputeColumns: string[] = [];
-
+	disburseArr:any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -157,8 +157,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	buildForm() {
 		this.searchForm = this.fbuild.group({
 			month_id: '',
-			//pay_date: ''
-
+			disburse_date: ''
 		});
 	}
 	/** Whether the number of selected elements matches the total number of rows. */
@@ -342,6 +341,18 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 	totalGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
+	}
+	getSalaryCompute(){
+		let inputJson = {
+			'disburse_date': new DatePipe('en-in').transform(this.searchForm.value.disburse_date, 'yyyy-MM-dd'),
+			'is_disburse': true
+		};
+		this.disburseArr = [];
+		this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
+			if (result && result.length > 0) {
+				this.disburseArr = result;
+			}
+		});
 	}
 	getAllEmployee() {
 		//this.displayedSalaryComputeColumns.push('emp_salary_heads', 'emp_allowances', 'emp_total_earnings', 'emp_deductions', 'emp_present_days', 'emp_salary_payable', 'emp_pay_mode', 'emp_total', 'emp_status']
@@ -647,6 +658,36 @@ export class DisbursmentSheetComponent implements OnInit {
 		this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
 			this.commonAPIService.showSuccessErrorMessage('Slary Compute Successfully', 'success');
 		});
+	}
+	isDisburseExist(value){
+		// const findex = this.disburseArr.findIndex(e => e.emp_id == value.emp_id);
+		// return findex == -1 ? false : true;
+		const temp = this.employeeData.find(e => e.emp_id == value.emp_id);
+		return temp.is_disburse
+	}
+	saveDisburse() {
+		if(this.searchForm.value.disburse_date && this.selection.selected.length > 0) {
+			var inputArr = [];
+			this.selection.selected.forEach(element => {
+				const inputJson:any = {};
+				inputJson.emp_id =element.emp_id;
+				inputJson.emp_salary_compute_month_id = this.searchForm.value.month_id;
+				inputJson.disburse_date =new DatePipe('en-in').transform(this.searchForm.value.disburse_date, 'yyyy-MM-dd');
+				inputJson.disburse_by ={emp_login_id:this.currentUser.login_id,emp_name:this.currentUser.full_name};
+				inputJson.is_disburse =true;
+				inputArr.push(inputJson);
+			});
+			console.log('inputArr--',inputArr);
+			this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+				if(result){
+					this.commonAPIService.showSuccessErrorMessage('Salary Disbursed Successfully', 'success');
+					this.getSalaryCompute();
+					this.checkForFilter();
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Plese select date' , 'error');
+		}
 	}
 
 	print() {
