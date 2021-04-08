@@ -44,17 +44,26 @@
                     <th class="custom-th">Item Code</th>
                     <th class="custom-th ">Item Name</th>
                     <th class="custom-th">Item Price</th>
+                    <th class="custom-th">Item Quantity</th>
+                    <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
                     <th class="custom-th">Optional</th>
                     <th class="custom-th">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody> 
                   <ng-container *ngFor="let item of tableArray; let i=index;">
                     <tr class="custom-tr book-list">
                       <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
                       <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
                       <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
                       <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
+                      <td width="20%" class="custom-td">
+                        <form [formGroup]="formGroupArray[i].formGroup">
+                          <input matInput type="number" formControlName="item_quantity" required
+                            placeholder="Please Enter Item Quantity" />
+                        </form>
+                      </td>
+                      <td width="10%" class="custom-td">{{getTotalPriceRow(i)}}</td>
                       <td width="15%" class="custom-td">
                         <mat-checkbox (click)="$event.stopPropagation()"
                         (change)="$event ? selection.toggle(item.item_code) : null"
@@ -68,6 +77,17 @@
                     </tr>
                   </ng-container>
                 </tbody>
+                <tfoot>
+                  
+                  <td class="custom-td"></td>
+                  <td class="custom-td"></td>
+                  <td class="custom-td">Total</td>
+                  <td class="custom-td"></td>
+                  <td class="custom-td"></td>
+                  <td class="custom-td">{{getTotalPrice()}}</td>
+                  <td class="custom-td"></td>
+                  <td class="custom-td"></td>
+                </tfoot>
               </table>
             </div>
           </div>

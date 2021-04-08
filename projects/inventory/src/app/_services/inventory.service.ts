@@ -209,6 +209,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/updateStoreItem', value);
   }
+  deleteSaleReeipt(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/store-bill/deleteSaleReeipt', value);
+  }
   getParentLocationOnly(value) {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/location/getParentLocationOnly', value);
@@ -220,6 +224,10 @@ export class InventoryService {
   allStoreBill(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
+  }
+  storeCollection(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/store-bill/get-store-collection', value);
   }
   insertVendor(value) {
     this.service.startLoading();

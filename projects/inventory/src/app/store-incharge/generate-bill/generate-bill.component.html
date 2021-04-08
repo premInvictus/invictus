@@ -33,7 +33,7 @@
           </div>
           <div class="col-3">
             <div class="row remove-top-margin">
-              <div class="col-8">
+              <div class="col-7">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>
                     {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login
@@ -43,6 +43,10 @@
                     [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
                     formControlName="searchId" autocomplete="off" />
                 </mat-form-field>
+              </div>
+              <div class="col-1">
+                <i *ngIf="searchForm.value.user_role_id == '4'" style="cursor: pointer;" class="fas fa-search margin-top-20" matTooltip="Search Students"
+                (click)="openSearchDialog()"></i>
               </div>
               <div class="col-4 margin-top-10  text-right">
                 <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
@@ -116,8 +120,20 @@
             </div>
             <div class="col-6 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                <span *ngIf="userData?.au_mobile">{{userData?.au_mobile}}</span>
+                <span *ngIf="userData?.au_mobile">{{userData?.active_contact}}</span>
                 <span *ngIf="!(userData?.au_mobile)">-</span>
+              </span>
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-4 remove-col-padding">
+              <span class="font-size-16 font-bold">Active Parent</span>
+              <span class="font-size-16 font-bold float-right">:</span>
+            </div>
+            <div class="col-8 remove-col-padding-right">
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.active_parent">{{userData?.active_parent}}</span>
+                <span *ngIf="!(userData?.active_parent)">-</span>
               </span>
             </div>
           </div>
@@ -172,14 +188,15 @@
             </div>
           </div>
         </div>
-        <div class="row margin-top-15 itemlog" [hidden]="!(tableArray.length > 0)">
+        <div class="row margin-top-15" [hidden]="!(tableArray.length > 0)">
           <div class="col-12 remove-col-padding">
-            <table class="table-100 custom-table">
+            <table class="table-100">
               <thead>
                 <tr class="custom-tr text-center">
                   <th class="custom-th">Sr No.</th>
                   <th class="custom-th">Item Code</th>
                   <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Available Qty</th>
                   <th class="custom-th">Item Price</th>
                   <th class="custom-th">Item Quantity</th>
                   <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
@@ -192,6 +209,7 @@
                     <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
                     <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
                     <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.available_item}}</span></td>
                     <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
                     <td width="20%" class="custom-td">
                       <form [formGroup]="formGroupArray[i].formGroup">
@@ -215,6 +233,16 @@
                   </tr>
                 </ng-container>
               </tbody>
+              <tfoot>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">Total</td>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">{{getTotalPriceSum()}}</td>
+                <td class="custom-td"></td>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -280,7 +308,7 @@
                   <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 30%;">
-                  <span>Class</span><span> : {{tableReciptArray.class}}</span>
+                  <span>Class</span><span> : {{tableReciptArray.class_name}}</span>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 40%;">
                 </td>

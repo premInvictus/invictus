@@ -424,9 +424,11 @@
       </div>
       <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
         <div class="col-8" *ngIf="!editFlag" style="text-align: right">
+          <!-- [disabled]="disabledApiButton" -->
           <button *ngIf="!isProcessed && isExistUserAccessMenu('752')" mat-raised-button class="btn-success-green-1  margin-right-15"
             style="color:white;background: blue !important" (click)="save()"
-            [disabled]="disabledApiButton">Save</button> &nbsp;&nbsp;&nbsp;
+            
+            >Save</button> &nbsp;&nbsp;&nbsp;
           <button  mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
             >Confirm and
             Process</button>

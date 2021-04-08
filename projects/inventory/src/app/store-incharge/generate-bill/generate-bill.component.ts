@@ -8,6 +8,8 @@ import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SelectionModel} from '@angular/cdk/collections';
+import { SearchViaNameComponent } from '../../inventory-shared/search-via-name/search-via-name.component';
+
 
 @Component({
   selector: 'app-generate-bill',
@@ -39,10 +41,13 @@ export class GenerateBillComponent implements OnInit {
     min_wallet_balance:0
   };
   storeinchargeDetails:any;
+  storeinchargeLocation:any;
   locationArray: any[] = [];
   locationId: any;
   bundleArray: any[] = [];
   requiredArray: any[] = [];
+  studentArrayByName:any[] = [];
+  session:any
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -53,6 +58,7 @@ export class GenerateBillComponent implements OnInit {
     public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -60,7 +66,20 @@ export class GenerateBillComponent implements OnInit {
     this.getSchool();
     this.formGroupArray = [];
     this.getGlobalSettingReplace();
-    this.getBundle();
+    this.getStoreIncharge()
+  }
+  getStoreIncharge(){
+    let inputJson: any = {};
+      inputJson = {
+        emp_id: this.currentUser.login_id,
+      }
+    this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+      if (result.length > 0) {
+        this.storeinchargeDetails = result[0];
+        this.storeinchargeLocation = this.storeinchargeDetails.item_location;
+        this.getBundle();
+      }
+    })
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -99,10 +118,11 @@ export class GenerateBillComponent implements OnInit {
   getBundle(){
     this.bundleArray = [];
     const param:any = {};
-    param.emp_id =  Number(this.currentUser.login_id),
+    param.item_location =  this.storeinchargeDetails.item_location,
     this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
+        this.storeinchargeLocation = this.bundleArray[0].item_location
         console.log('this.bundleArray',this.bundleArray);
       }
     })
@@ -125,6 +145,7 @@ export class GenerateBillComponent implements OnInit {
   }
   searchUser() {
     if (this.searchForm && this.searchForm.value.searchId) {
+      this.resetItem();
       const au_role_id = this.searchForm.value.user_role_id;
       const au_admission_no = this.searchForm.value.searchId;
       if (au_role_id === '4') {
@@ -178,25 +199,31 @@ export class GenerateBillComponent implements OnInit {
   }
 
   setTotal(item, i) {
-    if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
-      this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
-      this.formGroupArray[i].formGroup.patchValue({
-        'item_quantity': ''
-      })
-    } else {
-      this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    // if (this.formGroupArray[i].formGroup.value.item_quantity > this.tableArray[i]['available_item']) {
+    //   this.common.showSuccessErrorMessage('Item available in shop is ' + this.tableArray[i]['available_item'], 'error');
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     'item_quantity': ''
+    //   })
+    // } else {
+    //   this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
+    //   this.formGroupArray[i].formGroup.patchValue({
+    //     total_price: this.tableArray[i]['total_price']
+    //   })
+    // }
+    this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.item_quantity) * this.tableArray[i]['item_selling_price'];
       this.formGroupArray[i].formGroup.patchValue({
         total_price: this.tableArray[i]['total_price']
       })
-      // this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
-    }
   }
   addBundleItems(){
     const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
     if(bundleDetails){
+      console.log(bundleDetails);
       bundleDetails.item_assign.forEach(element => {
         const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(element.selling_item.item_code));
         if (findex == -1) {
+          //replacing store incharge item_quantity with inv_item_master item_quantity
+          element.selling_item.item_quantity = element.inv_item_master ? element.inv_item_master.item_location.item_qty: 0
           this.itemArray.push(element.selling_item);
           this.selection.toggle(element.item_code);
           if(element.item_optional != '1') {
@@ -210,12 +237,25 @@ export class GenerateBillComponent implements OnInit {
   pushItem() {
     this.tableArray = [];
     for (let item of this.itemArray) {
+      const bundleDetails = this.bundleArray.find(e => e.bundle_id == this.itemSearchForm.value.bundle_id);
+      
+      let tempitem_quantity = 1;
+      if(bundleDetails){
+        const findex1 = bundleDetails.item_assign.findIndex(f => Number(f.item_code) === Number(item.item_code));
+        if (findex1 != -1) {
+          tempitem_quantity = bundleDetails.item_assign[findex1].item_quantity ? bundleDetails.item_assign[findex1].item_quantity : 1;
+        }
+      }
+      
+      // if(item.item_quantity - tempitem_quantity < 0) {
+      //   tempitem_quantity = 0;
+      // }
       this.tableArray.push({
         item_code: item.item_code,
         item_name: item.item_name,
         item_selling_price: item.item_selling_price,
         available_item: item.item_quantity,
-        item_quantity: '',
+        item_quantity: tempitem_quantity,
         total_price: '',
       });
       const findex = this.formGroupArray.findIndex(f => Number(f.formGroup.value.item_code) === Number(item.item_code));
@@ -225,7 +265,7 @@ export class GenerateBillComponent implements OnInit {
             item_code: item.item_code,
             item_name: item.item_name,
             item_selling_price: item.item_selling_price,
-            item_quantity: '',
+            item_quantity: tempitem_quantity,
             total_price: '',
           })
         });
@@ -239,14 +279,19 @@ export class GenerateBillComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
-          this.itemArray.push(result[0].item_assign[0]);
-          this.selection.toggle(result[0].item_assign[0].item_code);
+          this.storeinchargeLocation = this.storeinchargeDetails.item_location;
+          let item = result[0].item_assign[0];
+          if(item && item.inv_item_master) {
+            item.item_quantity = item.inv_item_master.item_location.item_qty;
+          }
+          this.itemArray.push(item);
+          this.selection.toggle(item.item_code);
           this.pushItem();
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
@@ -264,6 +309,14 @@ export class GenerateBillComponent implements OnInit {
       return '-';
     }
   }
+  getTotalPriceSum(index) {
+    let sum=0;
+    for (let index = 0; index < this.tableArray.length; index++) {
+      const element = this.tableArray[index];
+      sum += Number(this.tableArray[index].item_selling_price) * Number(this.formGroupArray[index].formGroup.value.item_quantity)
+    }
+    return sum;
+  }
   previewSaveItem() {
     this.tableReciptArray = [];
     let grandTotal = 0;
@@ -279,13 +332,25 @@ export class GenerateBillComponent implements OnInit {
         console.log('item.formGroup.value',item.formGroup.value);
         if (this.formGroupArray[index].formGroup.valid) {
           if (item.formGroup.value.item_location !== '') {
-            itemAssign.push(item.formGroup.value);
-            updateFlag = true;
+            const tempdata = this.tableArray.find(e => e.item_code == item.formGroup.value.item_code);
+            if (item.formGroup.value.item_quantity <= tempdata['available_item']) {
+              item.formGroup.patchValue({
+                total_price: Number(item.formGroup.value.item_selling_price) * Number(item.formGroup.value.item_quantity)
+              })
+              itemAssign.push(item.formGroup.value);
+              updateFlag = true;
+            } else {
+              this.common.showSuccessErrorMessage('Item quantity exceed quantity available in shop', 'error');
+              updateFlag = false;
+              break;
+            }
+            
           } else {
             updateFlag = false;
             break;
           }
         } else {
+          this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
           updateFlag = false;
           break;
         }
@@ -316,6 +381,7 @@ export class GenerateBillComponent implements OnInit {
 
       this.previewTableFlag = true;
       let i = 0;
+      console.log('at preview', itemAssign);
       for (let item of itemAssign) {
         grandTotal = Number(grandTotal) + Number(item.total_price);
         itemAssign[i].item_name = new TitleCasePipe().transform(item.item_name);
@@ -340,7 +406,7 @@ export class GenerateBillComponent implements OnInit {
       this.tableReciptArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
       this.tableReciptArray['school_website'] = this.schoolInfo.school_website;
       this.tableReciptArray['name'] = this.userData.au_full_name;
-      this.tableReciptArray['mobile'] = this.userData.au_mobile;
+      this.tableReciptArray['mobile'] = this.userData.active_contact;
       if (this.userData.au_role_id === 3) {
         this.tableReciptArray['adm_no'] = this.userData.emp_id;
         this.tableReciptArray['class_name'] = '';
@@ -352,7 +418,7 @@ export class GenerateBillComponent implements OnInit {
       }
       // console.log(this.tableReciptArray, 'tableReciptArray');
     } else {
-      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+      // this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
   async getWallets() {
@@ -446,10 +512,15 @@ export class GenerateBillComponent implements OnInit {
       finalJson = {
         buyer_details: this.userData,
         bill_details: itemAssign,
-        bill_total: grandTotal
+        bill_total: grandTotal,
+        status:'approved',
+        mop:this.payForm.value.pay_id,
+        item_location:this.storeinchargeLocation,
+        ses_id: this.session.ses_id
       }
       filterJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_id: this.currentUser.login_id,
+        location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
       console.log('finalJson',finalJson);
@@ -477,7 +548,8 @@ export class GenerateBillComponent implements OnInit {
           billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
           billArray['school_website'] = this.schoolInfo.school_website;
           billArray['name'] = result.buyer_details.au_full_name;
-          billArray['mobile'] = result.buyer_details.au_mobile;
+          billArray['mobile'] = result.buyer_details.active_contact;
+          billArray['active_parent'] = result.buyer_details.active_parent;
           if (result.buyer_details.au_role_id === 3) {
             billArray['adm_no'] = result.buyer_details.emp_id;
             billArray['class_name'] = '';
@@ -489,7 +561,8 @@ export class GenerateBillComponent implements OnInit {
           }
           if(this.payForm.value.pay_id == 'wallet') {
             const inputJson:any={};
-            inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+            // inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+            inputJson.ftr_ref_location_id = this.storeinchargeLocation;
             inputJson.ftr_ref_no_of_items=result.bill_details.length;
             inputJson.ftr_ref_id=result.bill_no;
             inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
@@ -581,4 +654,24 @@ export class GenerateBillComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
+  openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '20%',
+			height: '30%',
+			position: {
+				top: '10%'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+        console.log(result);
+        this.searchForm.patchValue({
+          searchId : result.adm_no
+        });
+        this.searchUser();
+        
+			}
+		});
+	}
 }

@@ -22,9 +22,10 @@
           <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
         </td>
         <td class="text-left pad-overall-2" style="width: 30%;">
-          <span>Class</span><span> : {{tableReciptArray.class}}</span>
+          <span>Class</span><span> : {{tableReciptArray.class_name}}</span>
         </td>
-        <td class="text-left pad-overall-2" style="width: 40%;">
+        <td class="text-right pad-overall-2" style="width: 40%;">
+          <div class="text-right"><button mat-raised-button class="btn-success-green" (click)="print()">Print</button></div>
         </td>
       </tr>
       <tr>
@@ -34,7 +35,7 @@
         <td class="text-left pad-overall-2" style="width: 30%;">
           <span>Mobile No.</span><span> : {{tableReciptArray.mobile}}</span>
         </td>
-        <td class="text-left pad-overall-2" style="width: 40%;">
+        <td class="text-right pad-overall-2" style="width: 40%;">
         </td>
       </tr>
       <tr>
@@ -45,9 +46,9 @@
                 <th style="width:10% " class=" pad-overall border-table-th">Sr No.</th>
                 <th style="width:50% " class=" pad-overall-name border-table-th">Item Name
                 </th>
-                <th class=" pad-overall border-table-th">Item Price</th>
+                <th class=" pad-overall border-table-th">Item Price(<i class="fas fa-rupee-sign"></i>)</th>
                 <th class=" pad-overall border-table-th">Item Quantity</th>
-                <th class=" pad-overall border-table-th">Total</th>
+                <th class=" pad-overall border-table-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
               </tr>
             </thead>
             <tbody>
@@ -104,7 +105,7 @@
         </td>
       </tr>
       <tr style="margin-top: 10%;">
-        <td class="text-left pad-overall-2" style="width: 30%;font-size: 11px;">
+        <td class="text-left pad-overall-2" style="width: 30%;font-size: 12px;">
           Amount Payable : {{tableReciptArray.bill_total_words}}
         </td>
         <td class="text-left pad-overall-2" style="width: 30%;">

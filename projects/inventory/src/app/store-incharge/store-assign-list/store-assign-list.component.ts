@@ -24,9 +24,18 @@ export class StoreAssignListComponent implements OnInit {
     this.allStoreIncharge();
   }
   allStoreIncharge() {
+    this.assignListArray = [];
     this.inventory.allStoreIncharge({}).subscribe((result: any) => {
       if (result) {
-        this.assignListArray = result;
+        for(let item of result){
+          item['emp_name'] = [];
+          if(item.employees) {
+            const emp = item.employees.map(e => e.emp_name);
+            console.log('emp',emp);
+            item['emp_name'] = emp;
+          }  
+          this.assignListArray.push(item);         
+        }
       }
     });
   }

@@ -14,6 +14,7 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
 	selector: 'app-disbursment-sheet',
@@ -24,6 +25,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
+	selection = new SelectionModel<SalaryComputeElement>(true, []);
 	searchForm: FormGroup;
 	employeeData: any;
 	salaryHeadsArr: any[] = [];
@@ -159,6 +161,27 @@ export class DisbursmentSheetComponent implements OnInit {
 
 		});
 	}
+	/** Whether the number of selected elements matches the total number of rows. */
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.salaryComputeDataSource.data.length;
+		return numSelected === numRows;
+	  }
+	
+	  /** Selects all rows if they are not all selected; otherwise clear selection. */
+	  masterToggle() {
+		this.isAllSelected() ?
+			this.selection.clear() :
+			this.salaryComputeDataSource.data.forEach(row => this.selection.select(row));
+	  }
+	
+	  /** The label for the checkbox on the passed row */
+	  checkboxLabel(row?: SalaryComputeElement): string {
+		if (!row) {
+		  return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+		}
+		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.srno + 1}`;
+	  }
 
 	getPaymentModes() {
 		this.commonAPIService.getBanks({}).subscribe((res: any) => {
@@ -333,7 +356,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			this.employeeData = result;
 			this.SALARY_COMPUTE_ELEMENT = [];
 			//			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
-			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_acc_no'];
+			this.displayedSalaryComputeColumns = ['select', 'emp_id', 'emp_name', 'emp_designation', 'emp_acc_no'];
 			this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 			if (result && result.length > 0) {
 				for (let i = 0; i < this.shacolumns.length; i++) {

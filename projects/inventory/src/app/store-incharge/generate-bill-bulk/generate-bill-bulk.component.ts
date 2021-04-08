@@ -40,8 +40,10 @@ export class GenerateBillBulkComponent implements OnInit {
     min_wallet_balance:0
   };
   storeinchargeDetails:any;
+  storeinchargeLocation:any;
   locationArray: any[] = [];
   locationId: any;
+  session:any;
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -52,6 +54,7 @@ export class GenerateBillBulkComponent implements OnInit {
     public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -175,12 +178,13 @@ export class GenerateBillBulkComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        emp_id: Number(this.currentUser.login_id),
+        emp_login_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.storeinchargeDetails = result[0];
+          this.storeinchargeLocation = this.storeinchargeDetails.item_location;
           this.tableArray = [];
           this.itemArray.push(result[0].item_assign[0]);
           for (let item of this.itemArray) {
@@ -358,7 +362,11 @@ export class GenerateBillBulkComponent implements OnInit {
             {
               buyer_details: element,
               bill_details: itemAssign,
-              bill_total: grandTotal
+              bill_total: grandTotal,
+              status:'approved',
+              mop:'wallet',
+              item_location:this.storeinchargeLocation,
+              ses_id: this.session.ses_id
             }
           )
         } else {
@@ -368,6 +376,7 @@ export class GenerateBillBulkComponent implements OnInit {
       }
       filterJson = {
         emp_id: Number(this.currentUser.login_id),
+        location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
       if(param.length > 0 && walletvalidation) {
@@ -377,7 +386,7 @@ export class GenerateBillBulkComponent implements OnInit {
               let walletparam:any[] = [];
               results.forEach(result => {
                 const inputJson:any={};
-                inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+                inputJson.ftr_ref_location_id = this.storeinchargeLocation;
                 inputJson.ftr_ref_no_of_items=result.bill_details.length;
                 inputJson.ftr_ref_id=result.bill_no;
                 inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');

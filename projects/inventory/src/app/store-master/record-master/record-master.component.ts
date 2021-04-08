@@ -135,9 +135,9 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     //   return current;
     // },[]);
     // console.log(DATA);
-    let location = '';
     let index = 1;
     for (let item of this.itemArray) {
+      let location = '';
       let quantity = 0;
       for (let dety of item.item_location) {
         quantity = Number(quantity) + Number(dety.item_qty);

@@ -1,0 +1,58 @@
+<ng-template #deleteWithReasonModal>
+    <div class="modal-main-box">
+       <div>
+          <div>
+             <div class="row">
+                <div class="col-lg-12">
+                   <div class="close-button-content">
+                      <button mat-icon-button class="close-button" (click)="closeDialog()">
+                      <img src="/assets/images/clear-button.svg"></button>
+                   </div>
+                </div>
+             </div>
+             <br>
+             <div class="row">
+                <div class="col-lg-12">
+                   <div>
+                      <h6 class="text-center"><b>Confirmation Message With Reason</b></h6>
+                   </div>
+                </div>
+             </div>
+          </div>
+          <form [formGroup]="reasonForm">
+          <div class="text-center">
+             <br>
+             <p [innerHTML]="deleteMessage"></p>
+             <br>
+             <div class="row">
+                <div class="col-12">
+                   <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Reason For Delete Invoice</mat-label>
+                      <mat-select placeholder="Reason" formControlName="reason_id" required>
+                         <mat-option value="">Please Select</mat-option>
+                         <mat-option *ngFor="let reason of reasonArr" [value]="reason.reason_id">{{reason.reason_title}}
+                         </mat-option>
+                      </mat-select>
+                   </mat-form-field>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-12">
+                   <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Remarks</mat-label>
+                      <textarea placeholder="Write your message" required formControlName="reason_remark"
+                         matInput rows="4"></textarea>
+                   </mat-form-field>
+                </div>
+             </div>
+          </div>
+          <div class="text-center">
+              <br>
+     
+              <button mat-raised-button class="btn-success" (click)="$event.preventDefault();delete();">Yes</button>&nbsp;
+              <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
+           </div>
+          </form>
+       </div>
+    </div>
+ </ng-template>

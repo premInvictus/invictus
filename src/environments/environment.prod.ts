@@ -13,7 +13,7 @@ export const environment = {
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
 	helpDeskAgentUrl: "https://support.invictusprojects.com/scp/login.php",
-	payuApi : 'https://sandbox.payu.in/_payment',
+	payuApi : 'https://secure.payu.in/_payment',
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',
 	testOngoingCode : 'T102',
