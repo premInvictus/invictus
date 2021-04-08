@@ -100,18 +100,18 @@
                         </mat-select>
                     </mat-form-field>
                 </div> -->
-                <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
+                <div class="inline-flex margin-left-15" >
                     <mat-form-field appearance="outline" class="form-field-320">
                         <mat-label>Remarks</mat-label>
                         <input matInput placeholder="Remarks" formControlName="tucc_remarks" [readonly]="viewOnly"
                             required>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-50" *ngIf="conDesc && conStatus === 'pending'">
+                <div class="inline-flex margin-left-50" >
                     <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top" multiple="true"
                         (change)="fileChangeEvent($event,docreq_id)" id="docreq_id" style="display: none !important">
 
-                    <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                    <a class=" text-center cursor-pointer" [disabled]="viewOnly" >
                         <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
                         &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" for="docreq_id">Choose
                             File</label>

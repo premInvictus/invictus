@@ -209,17 +209,17 @@ export class GeneralRemarksThemeTwoComponent implements OnInit, OnChanges {
 	}
 
 	capitalizeRemarks($event) {
-		let remark: any = '';
-		for (let i = 0; i < $event.target.value.length; i++) {
-			if (i === 0) {
-				remark = $event.target.value.charAt(i).toUpperCase();
-			} else {
-				remark = remark + $event.target.value;
-			}
-		}
-		this.generalRemarkForm.patchValue({
-			'era_teachers_remark': remark
-		});
+	// 	let remark: any = '';
+	// 	// for (let i = 0; i < $event.target.value.length; i++) {
+	// 	// 	if (i === 0) {
+	// 	// 		remark = $event.target.value.charAt(i).toUpperCase();
+	// 	// 	} else {
+	// 	// 		remark = remark + $event.target.value;
+	// 	// 	}
+	// 	// }
+	// 	this.generalRemarkForm.patchValue({
+	// 		'era_teachers_remark': remark
+	// 	});
 	}
 }
 
