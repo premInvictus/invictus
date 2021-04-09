@@ -17,7 +17,7 @@
           <p [ngStyle]="{'font-weight':allContentBold, 'font-size': addressFontSize}" *ngIf="stuAddressFlag"
             class="id-card-school-address remove-paragraph-bottom-padding">{{schoolInfo.school_address}},
             {{schoolInfo.school_city}},
-            {{schoolInfo.school_state}} -
+            {{schoolInfo.school_state}} - {{schoolInfo.school_pincode}}
           </p>
           <p [ngStyle]="{'font-weight':allContentBold}"
             class="id-card-school-contactno remove-paragraph-bottom-padding">Tel No : {{schoolInfo.school_phone}}
