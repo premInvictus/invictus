@@ -170,11 +170,11 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				});
 			} else {
 				this.disabledApiCall = false;
-				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields2', 'error');
 			}
 		} else {
 			this.disabledApiCall = false;
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields1', 'error');
 		}
 	}
 	cancelForm() {
@@ -211,6 +211,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	}
 	updateForm(isview) {
 		this.validateParent();
+		
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
@@ -260,7 +261,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			});
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields4', 'error');
 		}
 	}
 	resetForm() {
@@ -475,6 +476,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				const tablePrefix = keys.split('_', 1);
 				const tableKey = tablePrefix[0] + '_id';
 				const tableKeyValue = this.childDetails.baseform.value[tableKey];
+				// console.log("i am this", tableKeyValue, tableKey);
+				
 				const formControl = <FormControl>this.childDetails.baseform.controls[keys];
 				if (formControl.dirty && formControl.touched) {
 					if (keys === 'upd_dob' || 'upd_doj') {

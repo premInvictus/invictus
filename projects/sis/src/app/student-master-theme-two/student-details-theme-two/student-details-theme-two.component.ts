@@ -41,6 +41,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	viewOnly = true;
 	deleteOnly = true;
 	editOnly = true;
+	allowImg = true;
 	divFlag = false;
 	stopFlag = false;
 	addOnly = true;
@@ -49,7 +50,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	classArray = [];
 	sectionArray = [];
-	houseArray:any[] = [];
+	houseArray: any[] = [];
 	bloodGroupArray: any[] = [];
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];
@@ -108,8 +109,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	pdfUrl: any;
 	registrationNo: any;
 	cityName: any;
-	contact_no:any;
-	whatsapp_no:any;
+	contact_no: any;
+	whatsapp_no: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -216,6 +217,9 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		}).subscribe((res: any) => {
 			if (res.status === 'ok') {
 				this.savedSettingsArray = res.data;
+				const findex = this.savedSettingsArray.findIndex(f => f.ff_field_name === 'au_mobile');
+				console.log("i am saved setting array", this.savedSettingsArray, findex);
+
 				for (const item of this.savedSettingsArray) {
 					this.settingsArray.push({
 						cos_tb_id: item.cos_tb_id,
@@ -441,6 +445,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	}
 	checkIfFieldExist2(value) {
 		const findex = this.savedSettingsArray.findIndex(f => f.ff_field_name === value);
+
 		if (findex !== -1 && this.savedSettingsArray[findex]['cos_status'] === 'Y') {
 			return true;
 		} else if (findex !== -1 && this.savedSettingsArray[findex]['cos_status'] === 'N') {
@@ -463,7 +468,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		localStorage.removeItem('remark_entry_last_state');
 	}
 	checkIfFieldExist(value) {
-		
+
 		const findex = this.settingsArray2.findIndex(f => f.ff_field_name === value);
 		if (findex !== -1 && this.settingsArray2[findex]['cos_status'] === 'Y') {
 			return true;
@@ -577,7 +582,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.studentdetails = [];
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
-						
+
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
@@ -645,19 +650,40 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 
 	}
 
+	changeAllow() {
+		this.allowImg = true;
+	}
+
 	// read image from html and bind with formGroup
 	bindImageToForm(event) {
-		let files = event.target.files[0].name;
-		var ext = files.substring(files.lastIndexOf('.') + 1);
-		if (ext === 'svg') {
-			this.commonAPIService.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
-		} else {
-			this.openCropDialog(event);
+		console.log("i am here", this.allowImg);
+		
+		if (this.allowImg == true) {
+			let files = event.target.files[0].name;
+			var ext = files.substring(files.lastIndexOf('.') + 1);
+			if (ext === 'svg') {
+				this.commonAPIService.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+			} else {
+				this.openCropDialog(event);
+			}
 		}
 	}
+	removeImage() {
+		this.allowImg = false
+		if (this.gender === 'M') {
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+		} else if (this.gender === 'F') {
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+		} else {
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+		}
+		this.studentdetailsform.patchValue({
+			au_profileimage: this.defaultsrc
+		})
+	}
+
 	patchStudentDetails() {
-		console.log(this.studentdetails , ' ssssssssssssssssssssssssssssssssss', this.studentdetails.au_reference_no);
-		
+
 		this.studentdetailsform.patchValue({
 			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
 			au_login_id: this.studentdetails.au_login_id,
@@ -670,7 +696,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_sec_id: this.studentdetails.au_sec_id,
 			au_reference_no: this.studentdetails.au_reference_no,
 			epd_parent_name: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_name : '',
-			epd_contact_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',		
+			epd_contact_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',
 			epd_whatsapp_no: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '',
 			epd_parent_type: this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
 			mi_emergency_contact_name: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ?
@@ -679,7 +705,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			mi_blood_group: this.studentdetails.medicalinfo && this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_blood_group : '',
 		});
 		this.contact_no = this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '';
-		this.whatsapp_no= this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '';
+		this.whatsapp_no = this.studentdetails.parentinfo && this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '';
 
 	}
 	uploadImage(fileName, au_profileimage) {
@@ -1044,7 +1070,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					if (res && res.status === 'ok') {
 						this.transportDet.push(res.data[0]);
 						this.downPdf();
-						
+
 					} else {
 						this.downPdf();
 					}
@@ -1056,19 +1082,19 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	}
 	downPdf() {
 		const studentJson: any = {};
-			setTimeout(() => {
-				const pdfHTML = document.getElementById('report_table').innerHTML;
+		setTimeout(() => {
+			const pdfHTML = document.getElementById('report_table').innerHTML;
 
-				studentJson['html'] = pdfHTML;
-				studentJson['id'] = this.studentdetailsform.value.au_enrollment_id;
-				this.sisService.downPdf(studentJson).subscribe((res: any) => {
-					if (res && res.status === 'ok') {
-						this.pdfUrl = res.downloadData;
-						const length = this.pdfUrl.split('/').length;
-						saveAs(this.pdfUrl, this.pdfUrl.split('/')[length - 1]);
-					}
-				});
+			studentJson['html'] = pdfHTML;
+			studentJson['id'] = this.studentdetailsform.value.au_enrollment_id;
+			this.sisService.downPdf(studentJson).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.pdfUrl = res.downloadData;
+					const length = this.pdfUrl.split('/').length;
+					saveAs(this.pdfUrl, this.pdfUrl.split('/')[length - 1]);
+				}
+			});
 
-			}, 1000);
+		}, 1000);
 	}
 }

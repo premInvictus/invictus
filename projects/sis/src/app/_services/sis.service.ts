@@ -920,6 +920,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/generateReportClasswise', value);
 	}
+	sessionMappingReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/sessionMappingReport', value);
+	}
 	generateReportProcessWise(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/generateReportProcessWise', value);
