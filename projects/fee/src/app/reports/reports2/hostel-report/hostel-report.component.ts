@@ -149,25 +149,21 @@ export class HostelReportComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.getBuilding();
-		this.reportTypeArray.push(
-			{
-				report_type: 'hosteldet', report_name: 'Hostel Details'
-			},
-			{
-				report_type: 'hostelcoll', report_name: 'Hostel Fee Collection'
-			},
-			{
-				report_type: 'hostelout', report_name: 'Hostel Fee Outstanding'
-			});
-			// if(this.common.isExistUserAccessMenu('667')) {
-			// 	this.reportTypeArray.push({report_type: 'hosteldet', report_name: 'Transport Allotee'});
-			// }
-			// if(this.common.isExistUserAccessMenu('668')) {
-			// 	this.reportTypeArray.push({report_type: 'hostelcoll', report_name: 'Hostel Fee Collection'});
-			// }
-			// if(this.common.isExistUserAccessMenu('669')) {
-			// 	this.reportTypeArray.push({report_type: 'hostelout', report_name: 'Hostel Fee Outstanding'});
-			// }
+			if(this.common.isExistUserAccessMenu('807')) {
+				this.reportTypeArray.push({
+					report_type: 'hosteldet', report_name: 'Hostel Details'
+				});
+			}
+			if(this.common.isExistUserAccessMenu('808')) {
+				this.reportTypeArray.push({
+					report_type: 'hostelcoll', report_name: 'Hostel Fee Collection'
+				});
+			}
+			if(this.common.isExistUserAccessMenu('809')) {
+				this.reportTypeArray.push({
+					report_type: 'hostelout', report_name: 'Hostel Fee Outstanding'
+				});
+			}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {

@@ -345,8 +345,7 @@ export class Reports2Component implements OnInit {
 			return true;
 		}
 		if (actionT === '20') {
-			// return this.CommonAPIService.isExistUserAccessMenu('787');
-			return true;
+			return this.CommonAPIService.isExistUserAccessMenu('806');
 		}
 	}
 }
