@@ -25,6 +25,7 @@ import { ReportComponent } from './report/report.component';
 import { BarCodeReportComponent } from './bar-code-report/bar-code-report.component';
 import { AdmissionProcessReportComponent } from './admission-process-report/admission-process-report.component';
 import { PrevSchoolReportComponent } from './prev-school-report/prev-school-report.component';
+import { StudentEnqAdmnRegReportComponent } from './student_enq_admn_reg_report/student-enq-admn-reg-report/student-enq-admn-reg-report.component';
 
 @NgModule({
 	imports: [
@@ -54,7 +55,8 @@ import { PrevSchoolReportComponent } from './prev-school-report/prev-school-repo
 		SkillAndAwardsReportComponent,
 		BarCodeReportComponent,
 		AdmissionProcessReportComponent,
-		PrevSchoolReportComponent
+		PrevSchoolReportComponent,
+		StudentEnqAdmnRegReportComponent
 	],
 	providers: [TranslateService],
 })

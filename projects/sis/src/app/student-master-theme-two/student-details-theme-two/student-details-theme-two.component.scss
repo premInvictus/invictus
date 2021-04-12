@@ -155,3 +155,12 @@
   button.mat-fab:hover mat-icon {
     display:none;
   }
+
+  .position_delete_button{
+    margin-top: 5.4rem;
+    font-size: 30px;
+    /* z-index: 133; */
+    margin-left: -7rem;
+    position: absolute;
+    color: red;
+  }

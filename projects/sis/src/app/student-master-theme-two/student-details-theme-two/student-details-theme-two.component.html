@@ -34,11 +34,17 @@
             <label for="image" class="main-label-img margin-top-10">
               <img class="student-pic--imgone student-pic__circle "
                 [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=100&w=100'" />
-              <img *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
+              <img (click)="changeAllow()"  *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
+                <img *ngIf="!viewOnly" (click)="changeAllow()" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
+                src="/assets/images/twitpic-symbol.svg">
+                <span *ngIf="!viewOnly && defaultsrc != 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png' && defaultsrc !='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png' " (click)="removeImage()" class="material-icons position_delete_button">
+                  delete
+                </span>
             </label>
-            <input type="file" placeholder="Upload image" id="image" class="image-upload-btn"
-              (change)="bindImageToForm($event)" [disabled]="viewOnly">
+            
+            <input *ngIf="allowImg" type="file" placeholder="Upload image" id="image" class="image-upload-btn"
+              (change)="bindImageToForm($event)" [disabled]="viewOnly && allowImg">
             <div>
               <div
                 [ngClass]="studentdetails?.prevStep?.process_name ? 'registration-container__box':'registration-container__box'"
@@ -107,7 +113,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
-                    required [readonly]="viewOnly" [value]="studentdetailsform.get('au_full_name').value | capitalize">
+                    required [readonly]="viewOnly" [value]="studentdetailsform.get('au_full_name').value">
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
@@ -170,7 +176,7 @@
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" >
-                <div [ngClass]="contact_no? 'remove-col-padding' : 'remove-col-padding '">
+                <div [ngClass]= 'remove-col-padding'>
                   <mat-form-field appearance="outline" 
                     class="form-field">
                     <mat-label>Reference No</mat-label>
@@ -189,13 +195,23 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="contact_no">
-                <div [ngClass]="contact_no? 'remove-col-padding' : 'remove-col-padding '">
-                  <mat-form-field appearance="outline" *ngIf="contact_no"
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_mobile')" >
+                <div [ngClass]='remove-col-padding' >
+                  <mat-form-field appearance="outline" 
                     class="form-field">
-                    <mat-label>Mobile No.</mat-label>
-                    <input class="margin-left-10" formControlName="epd_contact_no" mask="00000 00000" matInput readonly>
-                    <i class="fas fa-phone call-field-icon" matPrefix></i>
+                    <mat-label>Mobile No</mat-label>
+                    <input class="margin-left-10" formControlName="au_mobile" mask="00000 00000" matInput [readonly]="viewOnly" >
+                    <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_email')" >
+                <div [ngClass]='remove-col-padding' >
+                  <mat-form-field appearance="outline" 
+                    class="form-field">
+                    <mat-label>Email</mat-label>
+                    <input class="margin-left-10" formControlName="au_email" matInput [readonly]="viewOnly">
+                    <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
                   </mat-form-field>
                 </div>
               </div>
@@ -1378,6 +1394,6 @@
     </div>
   </div>
 </form>
-<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
+<app-imagecrop #cropModal *ngIf="allowImg == true" (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteUser()"
   (deleteCancel)="deleteCancel()"></app-delete-modal>

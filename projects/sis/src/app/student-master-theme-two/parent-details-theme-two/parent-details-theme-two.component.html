@@ -268,7 +268,7 @@
                                     [readonly]="!(aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')) && viewOnly"
                                     pattern="[0-9]*" minlength="4" maxlength="4"
                                     formControlName="epd_parent_alumni_last_year"
-                                    [errorStateMatcher]="confirmValidParentMatcher" required />
+                                    [errorStateMatcher]="confirmValidParentMatcher"  />
                                  <mat-error>
                                     Please enter value in year format.
                                  </mat-error>
@@ -281,7 +281,7 @@
                               <mat-select placeholder="Last Class Attended"
                                  [disabled]="!(aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')) && viewOnly"
                                  formControlName="epd_parent_alumni_last_class"
-                                 [errorStateMatcher]="confirmValidParentMatcher" required>
+                                 [errorStateMatcher]="confirmValidParentMatcher" >
                                  <mat-option value="">Please Select</mat-option>
                                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
                                  </mat-option>

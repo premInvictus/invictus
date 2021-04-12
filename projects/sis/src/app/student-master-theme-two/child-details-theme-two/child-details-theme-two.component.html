@@ -104,6 +104,18 @@
                         <input formControlName="upd_reference" matInput [readonly]="viewOnly" placeholder="Reference">
                       </mat-form-field>
                     </div>
+                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_designation')">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Current Designation</mat-label>
+                        <input formControlName="upd_designation" matInput [readonly]="viewOnly" placeholder="Current Designation">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_organization')">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Organisation</mat-label>
+                        <input formControlName="upd_organization" matInput [readonly]="viewOnly" placeholder="Organisation">
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
                 <div class="col-6">
@@ -160,7 +172,12 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-
+                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_qualification')">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Educational Qualification</mat-label>
+                        <input formControlName="upd_qualification" matInput [readonly]="viewOnly" placeholder="Educational Qualification">
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
 
