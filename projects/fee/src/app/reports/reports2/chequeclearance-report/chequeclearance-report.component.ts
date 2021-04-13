@@ -128,7 +128,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 	notFormatedCellArray: any[] = [];
 	chequeType: any[] = [
 		{ name: 'Cheque Recieved', id: 'cp' },
-		{ name: 'Cheque Clearance', id: 'cr' }
+		{ name: 'Cheque Clearance', id: 'cr' },
+		{ name: 'Cheque Disonered', id: 'cd' }
 	];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
@@ -158,6 +159,10 @@ export class ChequeclearanceReportComponent implements OnInit {
 
 				this.getChequeReport2(this.reportFilterForm.value);
 			}
+			if (this.reportFilterForm.value.c_type === 'cd') {
+
+				this.getChequeReport(this.reportFilterForm.value);
+			}
 		} else {
 			this.common.showSuccessErrorMessage('Please choose type', 'error');
 		}
@@ -170,6 +175,10 @@ export class ChequeclearanceReportComponent implements OnInit {
 		if ($event.value === 'cp') {
 
 			this.getChequeReport2(this.reportFilterForm.value);
+		}
+		if ($event.value === 'cd') {
+
+			this.getChequeReport(this.reportFilterForm.value);
 		}
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -479,24 +488,49 @@ export class ChequeclearanceReportComponent implements OnInit {
 					aggregateCollapsed: true,
 					collapsed: false,
 				},
-			},
-			{
-				id: 'dishonor_date', name: 'Dishonour/ Cleareance Date', field: 'dishonor_date', sortable: true,
-				filterable: true,
-				width: 100,
-				filterSearchType: FieldType.dateIso,
-				filter: { model: Filters.compoundDate },
-				formatter: this.checkDateFormatter,
-				grouping: {
-					getter: 'dishonor_date',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
+			}];
+			if(this.reportFilterForm.value.c_type === 'cr'){
+				this.columnDefinitions.push(
+					{
+						id: 'dishonor_date', name: 'Cleareance Date', field: 'dishonor_date', sortable: true,
+						filterable: true,
+						width: 100,
+						filterSearchType: FieldType.dateIso,
+						filter: { model: Filters.compoundDate },
+						formatter: this.checkDateFormatter,
+						grouping: {
+							getter: 'dishonor_date',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					}
+				)
+			} else if(this.reportFilterForm.value.c_type === 'cd'){
+				this.columnDefinitions.push(
+					{
+						id: 'dishonor_date', name: 'Dishonour Date', field: 'dishonor_date', sortable: true,
+						filterable: true,
+						width: 100,
+						filterSearchType: FieldType.dateIso,
+						filter: { model: Filters.compoundDate },
+						formatter: this.checkDateFormatter,
+						grouping: {
+							getter: 'dishonor_date',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					}
+				)
+			}
+			this.columnDefinitions.push(
 			{
 				id: 'receipt_no',
 				name: 'Receipt No.',
@@ -559,7 +593,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-			}];
+			});
 		this.feeService.getCheckControlReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -1365,9 +1399,19 @@ export class ChequeclearanceReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('cheque clearance_') + this.sessionName;
 		let reportType2: any = '';
-		reportType2 = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
+		if (this.reportFilterForm.value.c_type === 'cp') {
+			reportType = new TitleCasePipe().transform('cheque_recieved_') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('cheque recieved report: ') + this.sessionName;
+		}
+		if (this.reportFilterForm.value.c_type === 'cr') {
+			reportType = new TitleCasePipe().transform('cheque_clearance_') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
+		}
+		if (this.reportFilterForm.value.c_type === 'cd') {
+			reportType = new TitleCasePipe().transform('cheque_disonered_') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('cheque disonered report: ') + this.sessionName;
+		}
 		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -1784,7 +1828,15 @@ export class ChequeclearanceReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
+		if (this.reportFilterForm.value.c_type === 'cp') {
+			reportType = new TitleCasePipe().transform('cheque recieved report') + this.sessionName;
+		}
+		if (this.reportFilterForm.value.c_type === 'cr') {
+			reportType = new TitleCasePipe().transform('cheque clearance report') + this.sessionName;
+		}
+		if (this.reportFilterForm.value.c_type === 'cd') {
+			reportType = new TitleCasePipe().transform('cheque disonered report') + this.sessionName;
+		}
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
