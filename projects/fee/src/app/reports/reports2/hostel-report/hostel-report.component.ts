@@ -187,6 +187,7 @@ export class HostelReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	parseRoman(s) {
@@ -577,7 +578,7 @@ export class HostelReportComponent implements OnInit {
 						this.columnDefinitions.push(
 							{
 								id: 'fh'+element.fh_id,
-								name: element.invg_fh_name,
+								name: element.fh_name,
 								field: 'fh'+element.fh_id,
 								sortable: true,
 								width: 60,
@@ -640,8 +641,8 @@ export class HostelReportComponent implements OnInit {
 						let rowsum = 0;
 						this.tempHeadArray.forEach(element => {
 							const tdata = repoArray[Number(index)]['fee_head_data'].find(e => e.fh_id == element.fh_id);
-							obj['fh'+element.fh_id] =  Number(tdata.invg_fh_amount);	
-							rowsum += Number(tdata.invg_fh_amount)		;			
+							obj['fh'+element.fh_id] =  Number(tdata.fh_amount);	
+							rowsum += Number(tdata.fh_amount)		;			
 						})
 						obj['total'] = rowsum;
 						this.dataset.push(obj);
@@ -793,18 +794,18 @@ export class HostelReportComponent implements OnInit {
 						collapsed: false,
 					},
 				},
-				{
-					id: 'receipt_no',
-					name: 'Reciept No.',
-					field: 'receipt_no',
-					sortable: true,
-					width: 60,
-					filterable: true,
-					filterSearchType: FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					formatter: this.checkReceiptFormatter,
-					cssClass: 'receipt_collection_report'
-				},
+				// {
+				// 	id: 'receipt_no',
+				// 	name: 'Reciept No.',
+				// 	field: 'receipt_no',
+				// 	sortable: true,
+				// 	width: 60,
+				// 	filterable: true,
+				// 	filterSearchType: FieldType.number,
+				// 	filter: { model: Filters.compoundInputNumber },
+				// 	formatter: this.checkReceiptFormatter,
+				// 	cssClass: 'receipt_collection_report'
+				// },
 				{
 					id: 'building_name',
 					name: 'Building',
@@ -876,7 +877,7 @@ export class HostelReportComponent implements OnInit {
 						this.columnDefinitions.push(
 							{
 								id: 'fh'+element.fh_id,
-								name: element.invg_fh_name,
+								name: element.fh_name,
 								field: 'fh'+element.fh_id,
 								sortable: true,
 								width: 60,
@@ -928,8 +929,8 @@ export class HostelReportComponent implements OnInit {
 							repoArray[Number(index)]['fp_name'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 							repoArray[Number(index)]['rpt_id'] : '0';
-						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
+						// obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
+						// 	repoArray[Number(index)]['receipt_no'] : '-';
 						obj['building_name'] = repoArray[Number(index)]['building_name'] ?
 							repoArray[Number(index)]['building_name'] : '-';
 						obj['room_name'] = repoArray[Number(index)]['room_name'] ?
@@ -939,8 +940,8 @@ export class HostelReportComponent implements OnInit {
 						let rowsum = 0;
 						this.tempHeadArray.forEach(element => {
 							const tdata = repoArray[Number(index)]['fee_head_data'].find(e => e.fh_id == element.fh_id);
-							obj['fh'+element.fh_id] =  Number(tdata.invg_fh_amount);	
-							rowsum += Number(tdata.invg_fh_amount)		;			
+							obj['fh'+element.fh_id] =  Number(tdata.fh_amount);	
+							rowsum += Number(tdata.fh_amount)		;			
 						})
 						obj['total'] = rowsum;
 						this.dataset.push(obj);
@@ -955,7 +956,7 @@ export class HostelReportComponent implements OnInit {
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
 					obj3['fp_name'] = '';
-					obj3['receipt_no'] = '';
+					// obj3['receipt_no'] = '';
 					obj3['building_name'] = '';
 					obj3['room_name'] = '';
 					obj3['bed_name'] = '';
@@ -1989,7 +1990,9 @@ export class HostelReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
+						if(this.reportType === 'hostelcoll') {
+							obj3['receipt_no'] = '';
+						}
 						obj3['building_name'] = '';
 						obj3['room_name'] = '';
 						obj3['bed_name'] = '';
@@ -2327,7 +2330,9 @@ export class HostelReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
+						if(this.reportType === 'hostelcoll') {
+							obj3['receipt_no'] = '';
+						}
 						obj3['building_name'] = '';
 						obj3['room_name'] = '';
 						obj3['bed_name'] = '';
@@ -2388,7 +2393,9 @@ export class HostelReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
+						if(this.reportType === 'hostelcoll') {
+							obj3['receipt_no'] = '';
+						}
 						obj3['building_name'] = '';
 						obj3['room_name'] = '';
 						obj3['bed_name'] = '';
