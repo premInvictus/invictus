@@ -106,7 +106,7 @@ export class Reports2Component implements OnInit {
 		},
 		{
 			report_id: '11',
-			report_name: 'Cheque Clearance Report',
+			report_name: 'Cheque Report',
 			report_image: '/assets/images/Fee Reports/cheque_clearance.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
