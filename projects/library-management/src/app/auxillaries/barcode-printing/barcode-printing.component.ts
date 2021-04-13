@@ -48,38 +48,55 @@ export class BarcodePrintingComponent implements OnInit {
     }
   }
   printbars() {
+    let inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
     // if (this.printformat && Number(this.printformat) === 1) {
-    //   const barRow = document.getElementById('print-bars').innerHTML;
-    //   let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-    //   popupWin.document.open();
-    //   popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib.css">' +
-    //     '<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
-    //     'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
-    //     '<body onload="window.print()">' + barRow + '</body></html>');
-    //   popupWin.document.close();
+    //   this.common.getReservoirDataPdf(inputJson).subscribe((result:any) => {
+    //     if (result && result.status === 'ok') {
+    //       console.log('result', result.data);
+    //       // this.familyDetailArr = result.data;
+    //       const length = result.data.split('/').length;
+    //       saveAs(result.data, result.data.split('/')[length - 1]);
+    //       window.open(result.data, '_blank');
+    //     }
+    //   } )
     // }if (this.printformat && Number(this.printformat) === 2) {
-    //   const barRow = document.getElementById('print-bars2').innerHTML;
-    //   let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-    //   popupWin.document.open();
-    //   popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib2.css">' +
-    //     '<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
-    //     'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
-    //     '<body onload="window.print()">' + barRow + '</body></html>');
-    //   popupWin.document.close();
+    //   this.common.getReservoirDataPdf84(inputJson).subscribe((result:any) => {
+    //     if (result && result.status === 'ok') {
+    //       console.log('result', result.data);
+    //       // this.familyDetailArr = result.data;
+    //       const length = result.data.split('/').length;
+    //       saveAs(result.data, result.data.split('/')[length - 1]);
+    //       window.open(result.data, '_blank');
+    //     }
+    //   } )
     // } else {
     //   this.com.showSuccessErrorMessage('Please select print format', 'error');
     // }
-
-    let inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
-    this.common.getReservoirDataPdf(inputJson).subscribe((result:any) => {
-      if (result && result.status === 'ok') {
-        console.log('result', result.data);
-        // this.familyDetailArr = result.data;
-        const length = result.data.split('/').length;
-        saveAs(result.data, result.data.split('/')[length - 1]);
-        window.open(result.data, '_blank');
+    if (this.printformat && Number(this.printformat) === 1) {
+      this.common.getReservoirDataPdf(inputJson).subscribe((result:any) => {
+        if (result && result.status === 'ok') {
+          console.log('result', result.data);
+          // this.familyDetailArr = result.data;
+          const length = result.data.split('/').length;
+          saveAs(result.data, result.data.split('/')[length - 1]);
+          window.open(result.data, '_blank');
+        }
+      } )
+    } else if (this.printformat && Number(this.printformat) === 2) {
+      this.common.getReservoirDataPdf84(inputJson).subscribe((result:any) => {
+        if (result && result.status === 'ok') {
+          console.log('result', result.data);
+          // this.familyDetailArr = result.data;
+          const length = result.data.split('/').length;
+          saveAs(result.data, result.data.split('/')[length - 1]);
+          window.open(result.data, '_blank');
+        }
+      } )
+    } else {
+        this.com.showSuccessErrorMessage('Please select print format', 'error');
       }
-    } )
+    
+   
   }
 
   searchOk($event) {

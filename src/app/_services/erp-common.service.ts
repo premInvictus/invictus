@@ -169,6 +169,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataPdf', value);
 	}
+	getReservoirDataPdf84(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataPdf84', value);
+	}
 	getReservoirDataFlaged(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataFlaged', value);
