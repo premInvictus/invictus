@@ -5312,11 +5312,15 @@ export class CollectionReportComponent implements OnInit {
 			
 			this.pdfrowdata.push(arr);
 		}
+		let h2 = [];
+		headerData.map(element => {
+			h2.push(element.replace("(₹)", ''));
+		})
 		doc.levelHeading = this.levelHeading;
 		doc.levelTotalFooter = this.levelTotalFooter;
 		doc.levelSubtotalFooter = this.levelSubtotalFooter;
 		doc.autoTable({
-			head: [headerData],
+			head: [h2],
 			body: this.pdfrowdata,
 			startY: doc.previousAutoTable.finalY + 0.5,
 			tableLineColor: 'black',
@@ -5665,6 +5669,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						levelArray.push("");
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
