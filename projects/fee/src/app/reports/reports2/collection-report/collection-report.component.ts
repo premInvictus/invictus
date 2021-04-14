@@ -2347,8 +2347,12 @@ export class CollectionReportComponent implements OnInit {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
-							obj['stu_opening_balance'] = repoArray[Number(index)]['stu_opening_balance'] ?
+							obj['stu_opening_balance'] = repoArray[Number(index)] && repoArray[Number(index)]['stu_opening_balance'] && Number(repoArray[Number(index)]['stu_opening_balance']) ?
 								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
+								console.log(obj['stu_opening_balance'] , " ----------------------------------------------- ");
+							if(obj['stu_opening_balance'] === undefined) {
+								obj['stu_opening_balance'] = 0;
+							}	
 							obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
 							for (const titem of item['inv_invoice_generated_status']) {
 								Object.keys(titem).forEach((key: any) => {
@@ -5280,9 +5284,19 @@ export class CollectionReportComponent implements OnInit {
 							arr.push(this.dataset[key][item2.id]);
 						}
 					}
-				}
-				rowData.push(arr);
-				this.pdfrowdata.push(arr);
+				};
+				let aa = [];
+				arr.forEach(e => {
+					if(e === undefined || e === 'undefined') {
+						aa.push('0');
+					} else {
+						aa.push(e)
+					}
+					
+				});
+				// console.log("-------------------------------------------------", arr, aa);
+				rowData.push(aa);
+				this.pdfrowdata.push(aa);
 			});
 		} else {
 			// iterate all groups
@@ -5294,6 +5308,8 @@ export class CollectionReportComponent implements OnInit {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
+			
+			
 			this.pdfrowdata.push(arr);
 		}
 		doc.levelHeading = this.levelHeading;
