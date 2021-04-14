@@ -13,6 +13,7 @@ export class BarcodePrintingComponent implements OnInit {
   barCodePrintForm: FormGroup;
   barCodeArray: any[] = [];
   printformat: any = '';
+  inputJson:any = {};
   printTypeArray: any[] = [{
     id: '1',
     name: 'ST-48 A4100'
@@ -36,8 +37,12 @@ export class BarcodePrintingComponent implements OnInit {
   }
   getBarCode() {
     if (this.barCodePrintForm.value.reserv_id) {
-      let inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
-      this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
+      console.log("i am here");
+      
+      this.inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
+      console.log("i am this.inputjson", this.inputJson);
+      
+      this.common.getReservoirDataBasedOnFilter(this.inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.barCodeArray = [];
           this.barCodeArray = res.data.resultData;
@@ -48,32 +53,10 @@ export class BarcodePrintingComponent implements OnInit {
     }
   }
   printbars() {
-    let inputJson = { 'filters': [{ 'filter_type': 'reserv_no', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
-    // if (this.printformat && Number(this.printformat) === 1) {
-    //   this.common.getReservoirDataPdf(inputJson).subscribe((result:any) => {
-    //     if (result && result.status === 'ok') {
-    //       console.log('result', result.data);
-    //       // this.familyDetailArr = result.data;
-    //       const length = result.data.split('/').length;
-    //       saveAs(result.data, result.data.split('/')[length - 1]);
-    //       window.open(result.data, '_blank');
-    //     }
-    //   } )
-    // }if (this.printformat && Number(this.printformat) === 2) {
-    //   this.common.getReservoirDataPdf84(inputJson).subscribe((result:any) => {
-    //     if (result && result.status === 'ok') {
-    //       console.log('result', result.data);
-    //       // this.familyDetailArr = result.data;
-    //       const length = result.data.split('/').length;
-    //       saveAs(result.data, result.data.split('/')[length - 1]);
-    //       window.open(result.data, '_blank');
-    //     }
-    //   } )
-    // } else {
-    //   this.com.showSuccessErrorMessage('Please select print format', 'error');
-    // }
+    console.log("i am this.inputjson", this.inputJson);
+    
     if (this.printformat && Number(this.printformat) === 1) {
-      this.common.getReservoirDataPdf(inputJson).subscribe((result:any) => {
+      this.common.getReservoirDataPdf(this.inputJson).subscribe((result:any) => {
         if (result && result.status === 'ok') {
           console.log('result', result.data);
           // this.familyDetailArr = result.data;
@@ -83,7 +66,7 @@ export class BarcodePrintingComponent implements OnInit {
         }
       } )
     } else if (this.printformat && Number(this.printformat) === 2) {
-      this.common.getReservoirDataPdf84(inputJson).subscribe((result:any) => {
+      this.common.getReservoirDataPdf84(this.inputJson).subscribe((result:any) => {
         if (result && result.status === 'ok') {
           console.log('result', result.data);
           // this.familyDetailArr = result.data;
@@ -102,6 +85,11 @@ export class BarcodePrintingComponent implements OnInit {
   searchOk($event) {
     localStorage.removeItem('invoiceBulkRecords');
     if ($event) {
+      this.inputJson = {
+        filters: $event.filters,
+        generalFilters: $event.generalFilters,
+        search_from: 'master'
+      }
       this.common.getReservoirDataBasedOnFilter({
         filters: $event.filters,
         generalFilters: $event.generalFilters,

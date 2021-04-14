@@ -2347,8 +2347,12 @@ export class CollectionReportComponent implements OnInit {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
-							obj['stu_opening_balance'] = repoArray[Number(index)]['stu_opening_balance'] ?
+							obj['stu_opening_balance'] = repoArray[Number(index)] && repoArray[Number(index)]['stu_opening_balance'] && Number(repoArray[Number(index)]['stu_opening_balance']) ?
 								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
+								console.log(obj['stu_opening_balance'] , " ----------------------------------------------- ");
+							if(obj['stu_opening_balance'] === undefined) {
+								obj['stu_opening_balance'] = 0;
+							}	
 							obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
 							for (const titem of item['inv_invoice_generated_status']) {
 								Object.keys(titem).forEach((key: any) => {
@@ -5280,9 +5284,19 @@ export class CollectionReportComponent implements OnInit {
 							arr.push(this.dataset[key][item2.id]);
 						}
 					}
-				}
-				rowData.push(arr);
-				this.pdfrowdata.push(arr);
+				};
+				let aa = [];
+				arr.forEach(e => {
+					if(e === undefined || e === 'undefined') {
+						aa.push('0');
+					} else {
+						aa.push(e)
+					}
+					
+				});
+				console.log("-------------------------------------------------", arr, aa);
+				rowData.push(aa);
+				this.pdfrowdata.push(aa);
 			});
 		} else {
 			// iterate all groups
@@ -5294,13 +5308,19 @@ export class CollectionReportComponent implements OnInit {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
+			
+			
 			this.pdfrowdata.push(arr);
 		}
+		let h2 = [];
+		headerData.map(element => {
+			h2.push(element.replace("(₹)", ''));
+		})
 		doc.levelHeading = this.levelHeading;
 		doc.levelTotalFooter = this.levelTotalFooter;
 		doc.levelSubtotalFooter = this.levelSubtotalFooter;
 		doc.autoTable({
-			head: [headerData],
+			head: [h2],
 			body: this.pdfrowdata,
 			startY: doc.previousAutoTable.finalY + 0.5,
 			tableLineColor: 'black',
@@ -5460,10 +5480,13 @@ export class CollectionReportComponent implements OnInit {
 				// add and style for groupeditem level heading
 				this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
 				this.levelHeading.push(this.pdfrowdata.length - 1);
+				
 				if (groupItem.groups) {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
 					if (this.reportType === 'headwise') {
+						console.log("headwise");
+						
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
@@ -5500,15 +5523,17 @@ export class CollectionReportComponent implements OnInit {
 						}
 					}
 					if (this.reportType === 'modewise') {
+						console.log("i am modewise");
+						
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
+						// obj3['srno'] = '';
+						// obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						// obj3['stu_admission_no'] = '';
+						// obj3['stu_full_name'] = '';
+						// obj3['stu_class_name'] = '';
+						// obj3['receipt_id'] = '';
+						// obj3['receipt_no'] = '';
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
@@ -5580,33 +5605,40 @@ export class CollectionReportComponent implements OnInit {
 					}
 
 				} else {
+					
 					const rowData: any[] = [];
+					// console.log("-----------------------------------------------------",this.reportType, groupItem);
+					
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
+						// console.log("i am keys------------------", groupItem.rows[key][item2.id]);
+						
 						for (const item2 of this.exportColumnDefinitions) {
-							if (this.reportType !== 'mfr') {
+							
+						
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
 								}
 								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
 									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
 								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
+								
 								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-							} else {
-								if (item2.id.toString().match(/Q/)) {
-									arr.push(groupItem.rows[key][item2.id].status);
-								} else {
-									arr.push(groupItem.rows[key][item2.id]);
-								}
-							}
+								}	
+							
 						}
-						rowData.push(arr);
-						this.pdfrowdata.push(arr);
+						let aa = [];
+						arr.forEach(element => {
+							if(element != 'undefined' && element != undefined) {
+								aa.push(element)
+							} else {
+								aa.push('0')
+							}
+						});
+						rowData.push(aa);
+						
+						this.pdfrowdata.push(aa);
 					});
 					const levelArray: any[] = [];
 					if (this.reportType === 'headwise') {
@@ -5637,6 +5669,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						levelArray.push("");
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -5646,6 +5679,8 @@ export class CollectionReportComponent implements OnInit {
 						}
 					}
 					if (this.reportType === 'modewise') {
+						console.log("i am modewise");
+						
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
@@ -5670,6 +5705,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['fp_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
+								
+								
 								if (col.id === key) {
 									levelArray.push(obj3[key]);
 								}
@@ -5717,11 +5754,54 @@ export class CollectionReportComponent implements OnInit {
 							});
 						}
 					}
+					if( this.reportType == 'cumulativeheadwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						// console.log("------------------------------------------", this.feeHeadJSON);
+						
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+
+											
+											obj3[key2] = groupItem.rows.map(t => t[key2]  ).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+						obj3['fp_name'] = '';
+						// console.log("i am here -------------------------", this.exportColumnDefinitions);
+						levelArray.push("","");
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								// console.log("i am here---------------------", key, col.id);
+								
+								
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
 					// style row having total
 					if (groupItem.level === 0) {
+						// console.log("i am levelarray", levelArray);
+						
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
 					} else if (groupItem.level > 0) {
+						
 						this.pdfrowdata.push(levelArray);
 						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
 					}
