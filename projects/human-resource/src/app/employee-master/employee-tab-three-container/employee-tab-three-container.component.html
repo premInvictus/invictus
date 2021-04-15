@@ -126,6 +126,18 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Weekly off</mat-label>
+                                        <mat-select formControlName="weekly_off" placeholder="Category I"
+                                            [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly" multiple>
+                                            <mat-option *ngFor="let item of days" [value]="item.id">
+                                                {{item.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
                                     <!-- <ng-container *ngIf="employeedetails.emp_status === 'left'">
                                         <mat-checkbox [checked]="salaryDetails.value.fnf_status" [disabled]="
                                     viewOnly || 

@@ -99,6 +99,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		{ id: "2", name: '%' },
 	];
 	disabledApiButton = false;
+	days = [
+		{id:0,name:'Sunday'},
+		{id:1,name:'Monday'},
+		{id:2,name:'Tuesday'},
+		{id:3,name:'Wednesday'},
+		{id:4,name:'Thursday'},
+		{id:5,name:'Friday'},
+		{id:6,name:'Saturday'}
+	];
 	constructor(
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -173,6 +182,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				advance: '',
 				deposite_month_amount: '',
 				starting_month: '',
+				weekly_off:''
 
 			});
 		}
@@ -228,6 +238,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			tds: '',
 			gratuity: '',
 			total_earning: '',
+			weekly_off:''
 		});
 
 
@@ -845,6 +856,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			tds: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.tds : '',
 			gratuity: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
+			weekly_off:this.employeedetails.weekly_off
 		});
 		console.log('this.employeedetails.emp_salary_detail', this.employeedetails.emp_salary_detail);
 		console.log('this.employeedetails.emp_salary_detail', this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id)
@@ -1196,6 +1208,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				};
+				this.employeedetails['weekly_off'] = this.salaryDetails.value.weekly_off
 				// this.employeedetails.emp_month_attendance_data = {
 				// 	ses_id: this.employeedetails.emp_month_attendance_data
 				// 		&& this.employeedetails.emp_month_attendance_data.ses_id ?
