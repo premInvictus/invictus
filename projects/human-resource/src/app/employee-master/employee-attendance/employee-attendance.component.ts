@@ -188,6 +188,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			const inputJson2: any = {};
 			inputJson2.datefrom = new Date().getFullYear() + '-' + this.searchForm.value.month_id + '-1';
 			inputJson2.dateto = new Date().getFullYear() + '-' + this.searchForm.value.month_id + '-' + no_of_days2;
+			inputJson2.sunday = 0;
 			this.smartService.getHolidayOnly(inputJson2).subscribe((res: any) => {
 				if (res) {
 					this.holidayArray = res.data ? res.data : [];
@@ -227,9 +228,27 @@ export class EmployeeAttendanceComponent implements OnInit {
 							let recordArray = result;
 							this.formGroupArray = [];
 							let j = 0;
-							//console.log('result', result);
+							console.log('getAllEmployee', result);
 							let missingDOJ:any[] = [];
 							for (const item of result) {
+								let tempdateArray = JSON.parse(JSON.stringify(dateArray));
+								tempdateArray.forEach(e => {
+									const tdate = new Date(e.date);
+									const dow = tdate.getDay();
+									if(item.weekly_off && item.weekly_off.length > 0) {
+										if(item.weekly_off.includes(dow))  {
+										e.attendance = 'h';                    
+										}
+									} else {
+										if(dow == 0){
+										e.attendance = 'h';
+										}
+									}
+								})
+								if(item.emp_code_no == 169) {
+								console.log('tempdateArray------',JSON.parse(JSON.stringify(tempdateArray)));
+								}
+
 								if(item.emp_salary_detail &&
 								item.emp_salary_detail.emp_organisation_relation_detail &&
 								item.emp_salary_detail.emp_organisation_relation_detail.doj) {
@@ -342,7 +361,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 													lwpDays = absentDays > lg ? absentDays - lg : 0
 												} else if(item.shiftAttendanceDetails){
 													if(item.shiftAttendanceDetails.length > 0) {
-														let tempholyday = dateArray.filter(e => e.attendance == 'h');
+														let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 														for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 															const element = item.shiftAttendanceDetails[index];
 															const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
@@ -417,7 +436,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 												totP = totP- lwpDays;
 											} else if(item.shiftAttendanceDetails){
 												if(item.shiftAttendanceDetails.length > 0) {
-													let tempholyday = dateArray.filter(e => e.attendance == 'h');
+													let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 													for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 														const element = item.shiftAttendanceDetails[index];
 														const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
@@ -477,7 +496,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 											totP = totP- lwpDays;
 										} else if(item.shiftAttendanceDetails){
 											if(item.shiftAttendanceDetails.length > 0) {
-												let tempholyday = dateArray.filter(e => e.attendance == 'h');
+												let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 												for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 													const element = item.shiftAttendanceDetails[index];
 													const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
