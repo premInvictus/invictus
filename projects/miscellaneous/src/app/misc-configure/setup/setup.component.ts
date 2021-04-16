@@ -1442,7 +1442,12 @@ export class SetupComponent implements OnInit {
                 });
             }
         }
-        if (this.settingForm.value && this.settingForm.value.gradecard_report_settings_app) {
+        // if (this.settingForm.value && this.settingForm.value.gradecard_report_settings_app) {
+        //     this.settingForm.value.gradecard_report_settings_app = JSON.stringify(this.GRADE_CARD_SETTINS);
+        //     this.paramform.reset();
+        // }
+        if(this.GRADE_CARD_SETTINS.length > 0) {
+            console.log('this.GRADE_CARD_SETTINS---',this.GRADE_CARD_SETTINS);
             this.settingForm.value.gradecard_report_settings_app = JSON.stringify(this.GRADE_CARD_SETTINS);
             this.paramform.reset();
         }

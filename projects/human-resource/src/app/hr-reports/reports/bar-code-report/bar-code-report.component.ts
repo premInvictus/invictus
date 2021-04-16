@@ -75,8 +75,7 @@ export class BarCodeReportComponent implements OnInit {
   }
   getBarCode() {
     
-      this.common.getAllEmployee({
-      }).subscribe((res: any) => {
+      this.common.getAllEmployee({fnf_status:false}).subscribe((res: any) => {
         if (res) {
           this.barcodeArray = [];
           this.barcodeArray = res;

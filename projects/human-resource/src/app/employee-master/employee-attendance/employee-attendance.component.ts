@@ -182,7 +182,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				emp_cat_id: this.searchForm.value.cat_id,
 				session_id: this.session_id.ses_id,
 				from_attendance: true,
-				year: this.currSess
+				year: this.currSess,
+				fnf_status:false
 			};
 			var no_of_days2 = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			const inputJson2: any = {};

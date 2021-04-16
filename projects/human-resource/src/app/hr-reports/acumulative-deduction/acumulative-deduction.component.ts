@@ -160,8 +160,14 @@ export class AcumulativeDeductionComponent implements OnInit {
 
     ]
     },
+    {id:'PTAX',head:'PAN',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'Prof. Tax Deducted for the month of ',keyname:false,
+    moreColumn:[
+      {name:'ptax_deducted',value:'Prof. Tax',percentage:false,onfield:false,mapname:false,total:true},
+      {name:'gross_salary',value:'PT Gross',percentage:false,onfield:false,mapname:'emp_salary_compute_data.emp_total_earnings',total:true}
+    ]
+    },
     {id:'Security',head:'Security Deposit',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'TDS Deducted for the month of ',keyname:'deposite_amount',
-    }
+    },
   ];
   currentDeduction:any;
   constructor(
@@ -437,11 +443,13 @@ export class AcumulativeDeductionComponent implements OnInit {
         if(this.currentDeduction.deductiontype) {
           const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
           if(deductiondetails) {
-            this.columnDefinitions.push({
-              id: deductiondetails.keyname, name: deductiondetails.head, field: deductiondetails.keyname, sortable: true,
-              filterable: true,
-              filterSearchType: FieldType.string
-            });
+            if(deductiondetails.keyname) {
+              this.columnDefinitions.push({
+                id: deductiondetails.keyname, name: deductiondetails.head, field: deductiondetails.keyname, sortable: true,
+                filterable: true,
+                filterSearchType: FieldType.string
+              });
+            }
           }
         }
         
@@ -454,6 +462,7 @@ export class AcumulativeDeductionComponent implements OnInit {
             const deductionHead: any[] = [];
             this.commonAPIService.showSuccessErrorMessage('Salary detail fetched', 'success');
             repoArray = result;
+            console.log('repoArray------------',repoArray);
             let index = 0;
             for (const item of repoArray) {
               this.empShacolumns = item.emp_salary_compute_data.empShacolumns;

@@ -255,7 +255,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
         'month_id': this.acumulativeReport.value.month_id,
         'emp_status': 'all',
         from_attendance: true,
-        year:currSess
+        year:currSess,
+        fnf_status:false
       };      
     }
     this.dateArray=[];
