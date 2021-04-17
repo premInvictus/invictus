@@ -820,7 +820,10 @@ export class ErpCommonService {
 	resetReservoirVerification(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/resetReservoirVerification', value);
+	}printGradecard(value) {
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/printGradecard', value);
 	}
+
 }
 
 
