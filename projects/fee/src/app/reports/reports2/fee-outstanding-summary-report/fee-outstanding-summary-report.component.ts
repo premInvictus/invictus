@@ -144,21 +144,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.getSchool();
 		this.getSession();
 		this.buildForm();
-		this.getClassData();
-		this.getStoppages();
 
-			if(this.common.isExistUserAccessMenu('667')) {
-				this.reportTypeArray.push({report_type: 'transportAlloted', report_name: 'Transport Allotee'});
-			}
-			if(this.common.isExistUserAccessMenu('668')) {
-				this.reportTypeArray.push({report_type: 'routewisecoll', report_name: 'Route Wise Collection'});
-			}
-			if(this.common.isExistUserAccessMenu('669')) {
-				this.reportTypeArray.push({report_type: 'routewiseout', report_name: 'Route Wise Outstanding'});
-			}
-			if(this.common.isExistUserAccessMenu('670')) {
-				this.reportTypeArray.push({report_type: 'routeslabstopwise', report_name: 'Route Wise '});
-			}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -244,7 +230,8 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'order_by': '',
+			'month': ''
 		});
 	}
 
@@ -367,864 +354,197 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		if (this.reportType === 'routewisecoll') {
-			const collectionJSON: any = {
-				'admission_no': '',
-				'studentName': '',
-				'report_type': 'routewise',
-				'routeId': value.fee_value,
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'collection',
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{
-					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
-					filterable: true,
-					width: 60,
-					grouping: {
-						getter: 'stu_admission_no',
-						formatter: (g) => {
-							return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-				},
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-					filterable: true,
-					width: 140,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterable: true,
-					width: 60,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
-					filterable: true,
-					width: 120,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'invoice_created_date',
-						formatter: (g) => {
-							if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${''}`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{
-					id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
-					filterable: true,
-					width: 120,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'fp_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'receipt_no',
-					name: 'Reciept No.',
-					field: 'receipt_no',
-					sortable: true,
-					width: 60,
-					filterable: true,
-					filterSearchType: FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					formatter: this.checkReceiptFormatter,
-					cssClass: 'receipt_collection_report'
-				},
-				{
-					id: 'transport_amount',
-					name: 'Transport Amt.',
-					field: 'transport_amount',
-					width: 60,
-					cssClass: 'amount-report-fee',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.number,
-					type:FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					formatter: this.checkFeeFormatter,
-					groupTotalsFormatter: this.sumTotalsFormatter
-				},
-				{
-					id: 'route_name',
-					name: 'Route',
-					field: 'route_name',
-					sortable: true,
-					width: 100,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'route_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						comparer: (a, b) => {
-							// (optional) comparer is helpful to sort the grouped data
-							// code below will sort the grouped value in ascending order
-							return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'stoppages_name',
-					name: 'Stoppage',
-					width: 100,
-					field: 'stoppages_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stoppages_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'slab_name',
-					name: 'Slab',
-					field: 'slab_name',
-					width: 100,
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'slab_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				}];
-			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
-					for (const item of repoArray) {
-						const obj: any = {};
-						obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-							repoArray[Number(index)]['stu_admission_no'] : '-';
-						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-						if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-						}
-						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
-						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-							repoArray[Number(index)]['fp_name'] : '-';
-						obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-							repoArray[Number(index)]['rpt_id'] : '0';
-						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
-						obj['transport_amount'] = repoArray[Number(index)]['transport_amount'] ?
-							Number(repoArray[Number(index)]['transport_amount']) : 0;
-						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							repoArray[Number(index)]['route_name'] : '-';
-						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							repoArray[Number(index)]['stoppages_name'] : '-';
-						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							repoArray[Number(index)]['slab_name'] : '-';
-						this.dataset.push(obj);
-						index++;
-					}
-					this.totalRow = {};
-					const obj3: any = {};
-					obj3['id'] = 'footer';
-					obj3['srno'] = '';
-					obj3['invoice_created_date'] = '<b>Grand Total</b>';
-					obj3['stu_admission_no'] = '';
-					obj3['stu_full_name'] = '';
-					obj3['stu_class_name'] = '';
-					obj3['fp_name'] = '';
-					obj3['receipt_no'] = '';
-					obj3['transport_amount'] =
-						new DecimalPipe('en-in').transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
-					obj3['route_name'] = '';
-					obj3['stoppages_name'] = '';
-					obj3['slab_name'] = '';
-					this.totalRow = obj3;
-					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
-					this.aggregatearray.push(new Aggregators.Sum('srno'));
-					this.tableFlag = true;
-					if (this.dataset.length <= 5) {
-						this.gridHeight = 300;
-					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-						this.gridHeight = 400;
-					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-						this.gridHeight = 550;
-					} else if (this.dataset.length > 20) {
-						this.gridHeight = 750;
-					}
-					setTimeout(() => this.groupByRoute(), 2);
-				} else {
-					this.tableFlag = true;
-				}
-			});
-		} else if (this.reportType === 'routewiseout') {
-			const collectionJSON: any = {
-				'admission_no': '',
-				'studentName': '',
-				'report_type': 'routewise',
-				'routeId': value.fee_value,
-				// 'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'outstanding',
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{
-					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'stu_admission_no',
-						formatter: (g) => {
-							return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					width: 60,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-				},
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-					filterable: true,
-					width: 140,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterable: true,
-					width: 60,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
-					filterable: true,
-					width: 120,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'fp_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'transport_amount',
-					name: 'Transport Amt.',
-					field: 'transport_amount',
-					width: 60,
-					cssClass: 'amount-report-fee',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					formatter: this.checkFeeFormatter,
-					groupTotalsFormatter: this.sumTotalsFormatter
-				},
-				{
-					id: 'route_name',
-					name: 'Route',
-					field: 'route_name',
-					sortable: true,
-					width: 100,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'route_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						comparer: (a, b) => {
-							// (optional) comparer is helpful to sort the grouped data
-							// code below will sort the grouped value in ascending order
-							return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'stoppages_name',
-					name: 'Stoppage',
-					width: 100,
-					field: 'stoppages_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stoppages_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'slab_name',
-					name: 'Slab',
-					field: 'slab_name',
-					width: 100,
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'slab_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				}];
-			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
-					for (const item of repoArray) {
-						const obj: any = {};
-						obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-							repoArray[Number(index)]['stu_admission_no'] : '-';
-						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-						if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-						}
-						obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-							repoArray[Number(index)]['fp_name'] : '-';
-						obj['receipt_id'] = repoArray[Number(index)]['invoice_id'] ?
-							repoArray[Number(index)]['invoice_id'] : '0';
-						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
-							repoArray[Number(index)]['invoice_no'] : '-';
-						obj['transport_amount'] = repoArray[Number(index)]['transport_amount'] ?
-							Number(repoArray[Number(index)]['transport_amount']) : 0;
-						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							repoArray[Number(index)]['route_name'] : '-';
-						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							repoArray[Number(index)]['stoppages_name'] : '-';
-						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							repoArray[Number(index)]['slab_name'] : '-';
-						this.dataset.push(obj);
-						index++;
-					}
-					this.totalRow = {};
-					const obj3: any = {};
-					obj3['id'] = 'footer';
-					obj3['srno'] = '';
-					obj3['invoice_created_date'] = '<b>Grand Total</b>';
-					obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
-					obj3['stu_full_name'] = '';
-					obj3['stu_class_name'] = '';
-					obj3['fp_name'] = '';
-					obj3['receipt_no'] = '';
-					obj3['transport_amount'] =
-						new DecimalPipe('en-in').transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
-					obj3['route_name'] = '';
-					obj3['stoppages_name'] = '';
-					obj3['slab_name'] = '';
-					this.totalRow = obj3;
-					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
-					this.aggregatearray.push(new Aggregators.Sum('srno'));
-					this.tableFlag = true;
-					if (this.dataset.length <= 5) {
-						this.gridHeight = 300;
-					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-						this.gridHeight = 400;
-					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-						this.gridHeight = 550;
-					} else if (this.dataset.length > 20) {
-						this.gridHeight = 750;
-					}
-					setTimeout(() => this.groupByRoute(), 2);
-				} else {
-					this.tableFlag = true;
-				}
-			});
-		} else if (this.reportType === 'transportAlloted') {
-			const collectionJSON: any = {
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': value.pageSize,
-				'pageIndex': value.pageIndex,
-				'routeId': value.fee_value,
-				'slabId': value.hidden_value4,
-				'stoppageId': value.hidden_value5,
-				'admission_no': value.admission_no,
-				'studentName': value.au_full_name,
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{
-					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
-					sortable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_admission_no',
-						formatter: (g) => {
-							return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-					sortable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					filterable: true,
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'route_name',
-					name: 'Route',
-					field: 'route_name',
-					sortable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					filterable: true,
-					grouping: {
-						getter: 'route_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						comparer: (a, b) => {
-							// (optional) comparer is helpful to sort the grouped data
-							// code below will sort the grouped value in ascending order
-							return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'stoppages_name',
-					name: 'Stoppage',
-					field: 'stoppages_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stoppages_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'slab_name',
-					name: 'Slab',
-					field: 'slab_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'slab_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'applicable_from', name: 'Applicable From', field: 'applicable_from', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'applicable_from',
-						formatter: (g) => {
-							if (g.value !== '') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{
-					id: 'applicable_to', name: 'Applicable To', field: 'applicable_to', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'applicable_to',
-						formatter: (g) => {
-							if (g.value !== '') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				}];
-			this.feeService.getTransportReport(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
-					for (const item of repoArray) {
-						const obj: any = {};
-						obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-							repoArray[Number(index)]['stu_admission_no'] : '-';
-						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-						if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-						}
-						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['route_name']) : '-';
-						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['slab_name']) : '-';
-						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['stoppages_name']) : '-';
-						obj['applicable_from'] = repoArray[Number(index)]['applicable_from'] ? repoArray[Number(index)]['applicable_from'] : '-';
-						obj['applicable_to'] = repoArray[Number(index)]['applicable_to'] ? repoArray[Number(index)]['applicable_to'] : '-';
-						this.dataset.push(obj);
-						index++;
-					}
-					this.tableFlag = true;
-					if (this.dataset.length <= 5) {
-						this.gridHeight = 300;
-					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-						this.gridHeight = 400;
-					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-						this.gridHeight = 550;
-					} else if (this.dataset.length > 20) {
-						this.gridHeight = 750;
-					}
-					setTimeout(() => this.groupByRoute(), 2);
-				} else {
-					this.tableFlag = true;
-				}
-			});
-		} else if (this.reportType === 'routeslabstopwise') {
-			const collectionJSON: any = {
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': value.pageSize,
-				'pageIndex': value.pageIndex,
-				'routeId': value.fee_value,
-				'slabId': value.hidden_value4,
-				'stoppageId': value.hidden_value5,
-				'admission_no': value.admission_no,
-				'studentName': value.au_full_name,
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'route_name',
-					name: 'Route',
-					field: 'route_name',
-					sortable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					filterable: true,
-					grouping: {
-						getter: 'route_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						comparer: (a, b) => {
-							// (optional) comparer is helpful to sort the grouped data
-							// code below will sort the grouped value in ascending order
-							return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'stoppages_name',
-					name: 'Stoppage',
-					field: 'stoppages_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'stoppages_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter
-				},
-				{
-					id: 'slab_name',
-					name: 'Slab',
-					field: 'slab_name',
-					sortable: true,
-					filterable: true,
-					filterSearchType: FieldType.string,
-					filter: { model: Filters.compoundInput },
-					grouping: {
-						getter: 'slab_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'slab_amount',
-					name: 'Slab Amount.',
-					field: 'slab_amount',
-					sortable: true,
-					filterSearchType: FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					filterable: true,
-					width: 1,
-					cssClass: 'amount-report-fee',
-					groupTotalsFormatter: this.sumTotalsFormatter,
-					formatter: this.checkFeeFormatter
-				}];
-			this.feeService.getRouteWiseTransportReport(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData[0];
-					this.totalRecords = Number(result.data.totalRecords);
-					let index = 0;
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					for (const item of repoArray) {
-						let j = 0;
-						for (const titem of item['stoppages_data']) {
-							const obj: any = {};
-							obj['id'] = item['tr_route_name'] + item['tr_id'] + titem['tsp_id'] +
-								titem['tsp_name'];
-							obj['route_name'] = item['tr_route_name'];
-							obj['stoppages_name'] = titem['tsp_name'];
-							obj['slab_name'] = titem['slab_data'][0]['ts_name'];
-							obj['slab_amount'] = titem['slab_data'][0]['ts_cost'] ? Number(titem['slab_data'][0]['ts_cost']) : 0;
-							j++;
+		const collectionJSON: any = {
+			'admission_no': '',
+			'studentName': '',
+			'report_type': this.reportType,
+			'routeId': value.fee_value,
+			'from_date': value.from_date,
+			'to_date': value.to_date,
+			'pageSize': '10',
+			'pageIndex': '0',
+			'filterReportBy': 'collection',
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
+			'downloadAll': true,
+			'month': value.month
+		};
+		this.feeService.getFeeSummaryPeriodWiseReport(collectionJSON).subscribe((res:any) => {
+			if(res.status) {
+				if(res.data.length > 0) {
+					if(this.reportType == "daily") {
+						this.columnDefinitions = [
+									{
+										id: 'id',
+										name: 'SNo.',
+										field: 'id',
+										sortable: true,
+										width: 4
+									},
+									{
+										id: 'fh_name',
+										name: 'Fee Head',
+										field: 'fh_name',
+										sortable: true,
+										width: 4
+									},
+									{
+										id: 'fh_amount',
+										name: 'Amount',
+										field: 'fh_amount',
+										sortable: true,
+										width: 4
+									},
+						];
+						let pos = 1;
+						res.data.forEach(element => {
+							let obj: any = {};
+							obj.id = pos;
+							obj.fh_name = element.fh_name;
+							obj.fh_amount = element.fh_amount;
 							this.dataset.push(obj);
-						}
-						index++;
+							pos++;
+						});
+						this.tableFlag = true
+					} else if(this.reportType == "monthly") {
+						this.columnDefinitions = [
+									// {
+									// 	id: 'id',
+									// 	name: 'SNo.',
+									// 	field: 'id',
+									// 	sortable: true,
+									// },
+									{
+										id: 'fh_name',
+										name: 'Fee Head',
+										field: 'fh_name',
+										sortable: true,
+									},
+						];
+						let aa = Object.keys(res.data[0]);
+						console.log(res.data);
+						
+
+						aa.forEach(element => {
+							if(element != "id" && element != "fh_id" && element != "fh_name") {
+								let obj = {
+									id: element,
+									name: element != 'Total' ? new DatePipe('en-in').transform(element, 'dd-MMM'): element,
+									field: element,
+									sortable: true,
+								}
+								this.columnDefinitions.push(obj);
+							}
+						});
+						
+						this.dataset = res.data;
+						this.tableFlag = true
+					} else if(this.reportType == "yearly") {
+						this.columnDefinitions = [
+									{
+										id: 'id',
+										name: 'SNo.',
+										field: 'id',
+										sortable: true,
+									},
+									{
+										id: 'fh_name',
+										name: 'Fee Head',
+										field: 'fh_name',
+										sortable: true,
+									},
+									{
+										id: 'April',
+										name:'April',
+										field: 'April',
+										sortable: true
+									},
+									{
+										id: 'May',
+										name:'May',
+										field: 'May',
+										sortable: true
+									},
+									{
+										id: 'June',
+										name:'June',
+										field: 'June',
+										sortable: true
+									},
+									{
+										id: 'July',
+										name:'July',
+										field: 'July',
+										sortable: true
+									},
+									{
+										id: 'August',
+										name:'August',
+										field: 'August',
+										sortable: true
+									},
+									{
+										id: 'September',
+										name:'September',
+										field: 'September',
+										sortable: true
+									},
+									{
+										id: 'October',
+										name:'October',
+										field: 'October',
+										sortable: true
+									},
+									{
+										id: 'November',
+										name:'November',
+										field: 'November',
+										sortable: true
+									},
+									{
+										id: 'December',
+										name:'December',
+										field: 'December',
+										sortable: true
+									},
+									{
+										id: 'January',
+										name:'January',
+										field: 'January',
+										sortable: true
+									},
+									{
+										id: 'Feburary',
+										name:'Feburary',
+										field: 'Feburary',
+										sortable: true
+									},
+									{
+										id: 'March',
+										name:'March',
+										field: 'March',
+										sortable: true
+									},
+									{
+										id: 'Total',
+										name:'Total',
+										field: 'Total',
+										sortable: true
+									}
+						];
+						
+						
+						this.dataset = res.data;
+						this.tableFlag = true
 					}
-					this.aggregatearray.push(new Aggregators.Sum('slab_amount'));
-					this.totalRow = {};
-					const obj3: any = {};
-					obj3['id'] = 'footer';
-					obj3['route_name'] = this.common.htmlToText('<b>Grand Total</b>');
-					obj3['stoppages_name'] = '';
-					obj3['slab_name'] = '';
-					obj3['slab_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['slab_amount']).reduce((acc, val) => acc + val, 0));
-					this.totalRow = obj3;
-					this.tableFlag = true;
-					if (this.dataset.length <= 5) {
-						this.gridHeight = 300;
-					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-						this.gridHeight = 400;
-					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-						this.gridHeight = 550;
-					} else if (this.dataset.length > 20) {
-						this.gridHeight = 750;
-					}
-					setTimeout(() => this.groupByRoute(), 2);
-				} else {
-					this.tableFlag = false;
 				}
-			});
-		}
+				
+			} else {
+				this.tableFlag = true;
+			}
+		})
+
+
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
@@ -1650,26 +970,22 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			columValue.push(item.name);
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'routewisecoll') {
-			reportType = new TitleCasePipe().transform('routewisecoll_') + this.sessionName;
-		} else if (this.reportType === 'routewiseout') {
-			reportType = new TitleCasePipe().transform('routewiseout_') + this.sessionName;
-		} else if (this.reportType === 'transportAlloted') {
-			reportType = new TitleCasePipe().transform('transportAlloted_') + this.sessionName;
-		} else if (this.reportType === 'routeslabstopwise') {
-			reportType = new TitleCasePipe().transform('routeslabstopwise_') + this.sessionName;
-		}
+		if (this.reportType === 'yearly') {
+			reportType = new TitleCasePipe().transform('Yearly_Fee_Summary_Report_') + this.sessionName;
+		} else if (this.reportType === 'monthly') {
+			reportType = new TitleCasePipe().transform('Monthly_Fee_Summary_Report_') + this.sessionName;
+		} else if (this.reportType === 'daily') {
+			reportType = new TitleCasePipe().transform('Daily_Fee_Summary_Report_') + this.sessionName;
+		} 
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'routewisecoll') {
-			reportType2 = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewiseout') {
-			reportType2 = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
-		} else if (this.reportType === 'transportAlloted') {
-			reportType2 = new TitleCasePipe().transform('transport allotee report: ') + this.sessionName;
-		} else if (this.reportType === 'routeslabstopwise') {
-			reportType2 = new TitleCasePipe().transform('route slab stopwise report: ') + this.sessionName;
-		}
+		if (this.reportType === 'yearly') {
+			reportType2 = new TitleCasePipe().transform('Yearly Fee Summary Report: ') + this.sessionName;
+		} else if (this.reportType === 'monthly') {
+			reportType2 = new TitleCasePipe().transform('Monthly Fee Summary Report: ') + this.sessionName;
+		} else if (this.reportType === 'daily') {
+			reportType2 = new TitleCasePipe().transform('Daily Fee Summary Report: ') + this.sessionName;
+		} 
 		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -1829,14 +1145,14 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			};
 		}
 
-		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as:' + this.getParamValue();
-		worksheet.getCell('A' + worksheet._rows.length).font = {
-			name: 'Arial',
-			size: 10,
-			bold: true
-		};
+		// worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+		// 	this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		// worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as:' + this.getParamValue();
+		// worksheet.getCell('A' + worksheet._rows.length).font = {
+		// 	name: 'Arial',
+		// 	size: 10,
+		// 	bold: true
+		// };
 
 		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
@@ -2078,16 +1394,14 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'routewisecoll') {
-			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewiseout') {
-			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
-		} else if (this.reportType === 'transportAlloted') {
-			reportType = new TitleCasePipe().transform('transport allotee report: ') + this.sessionName;
-		} else if (this.reportType === 'routeslabstopwise') {
-			reportType = new TitleCasePipe().transform('route slab stopwise report: ') + this.sessionName;
-		}
-		const doc = new jsPDF('p', 'mm', 'a0');
+		if (this.reportType === 'yearly') {
+			reportType = new TitleCasePipe().transform('Yearly Fee Summary Report: ') + this.sessionName;
+		} else if (this.reportType === 'monthly') {
+			reportType = new TitleCasePipe().transform('Monthly Fee Summary Report: ') + this.sessionName;
+		} else if (this.reportType === 'daily') {
+			reportType = new TitleCasePipe().transform('Daily Fee Summary Report: ') + this.sessionName;
+		} 
+		const doc = new jsPDF('l', 'mm', 'a4');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
@@ -2099,14 +1413,14 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 12,
 			},
 			useCss: true,
 			theme: 'striped'
 		});
 		doc.autoTable({
 			head: [[reportType]],
-			margin: { top: 0 },
+			startY: doc.previousAutoTable.finalY + 0.5,
 			didDrawPage: function (data) {
 
 			},
@@ -2115,7 +1429,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -2178,7 +1492,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
 				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					doc.setFontSize('6');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(0, 62, 120);
 				}
@@ -2187,7 +1501,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
 				if (lsfIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					doc.setFontSize('6');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(229, 136, 67);
 				}
@@ -2196,7 +1510,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
 				if (lhIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					doc.setFontSize('6');
 					doc.setTextColor('#5e666d');
 					doc.setFillColor('#c8d6e5');
 				}
@@ -2204,7 +1518,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				// grand total
 				if (data.row.index === rows.length - 1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					doc.setFontSize('6');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(67, 160, 71);
 				}
@@ -2213,57 +1527,24 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: 18,
+				fontSize: 6,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: 18,
+				fontSize: 6,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
 			},
 			theme: 'grid'
 		});
-		if (this.groupColumns.length > 0) {
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
-				didDrawPage: function (data) {
-
-				},
-				headStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 20,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-		}
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [['Report Filtered as:  ' + this.getParamValue()]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'left',
-				fontSize: 20,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [['No of records: ' + json.length]],
+			startY: doc.previousAutoTable.finalY + 0.1,
 			didDrawPage: function (data) {
 
 			},
@@ -2272,7 +1553,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -2281,6 +1562,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			// tslint:disable-next-line:max-line-length
 			head: [['Generated On: '
 				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			startY: doc.previousAutoTable.finalY + 0.1,
 			didDrawPage: function (data) {
 
 			},
@@ -2289,7 +1571,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -2297,6 +1579,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+			startY: doc.previousAutoTable.finalY + 0.1,
 			didDrawPage: function (data) {
 
 			},
@@ -2305,7 +1588,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
