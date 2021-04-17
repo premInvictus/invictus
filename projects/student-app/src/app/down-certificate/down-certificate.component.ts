@@ -18,7 +18,7 @@ export class DownCertificateComponent implements OnInit {
   ngOnInit() {
 
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
+    this.getGlobalSetting();
     this.getSlcTcTemplateSetting();
     this.getStudentDetails();
   }
@@ -85,12 +85,13 @@ export class DownCertificateComponent implements OnInit {
 
   }
   getStudentDetails() {
-    this.getGlobalSetting();
+   
     this.erp.getStudentInformation({ login_id: this.currentUser.login_id, enrollment_type: '4' }).subscribe((resutl1: any) => {
       if (resutl1 && resutl1.status === 'ok') {
         this.studentDetails = {};
         this.studentDetails = resutl1.data[0];
-console.log("in-studentDetails",this.studentDetails);
+        console.log("in-studentDetails",this.studentDetails);
+        console.log("in-this.settings",this.settings);
         this.gradeDetails = {};
           if (this.settings && this.settings.length > 0) {
             const findex = this.settings.findIndex(f => Number(f.class_id) === Number(this.studentDetails.class_id)
@@ -102,15 +103,13 @@ console.log("in-studentDetails",this.studentDetails);
                 if (findex2 !== -1) {
                   this.showGradeCardFlag = true;
                   this.gradeDetails = this.settings[findex];
-                  console.log("1",this.gradeDetails = this.settings[findex]);
                 }
               } else {
                 this.showGradeCardFlag = true;
-                this.gradeDetails = this.settings[findex];
-                console.log("2",this.gradeDetails = this.settings[findex]);
+                this.gradeDetails = this.settings[findex]; 
               }
             }
-            console.log("22");
+            
           }
       }
     });
@@ -119,7 +118,6 @@ console.log("in-studentDetails",this.studentDetails);
     this.erp.getGlobalSetting({ 'gs_alias': 'gradecard_report_settings_app' }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = (result.data[0] && result.data[0]['gs_value']) ? JSON.parse(result.data[0] && result.data[0]['gs_value']) : [];
-      console.log("fun",this.settings);
       }
     });
   }
