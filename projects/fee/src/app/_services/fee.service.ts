@@ -299,6 +299,11 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getPaymentSettlementReport', value);
 	}
+	getFeeSummaryPeriodWiseReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeSummaryPeriodWiseReport', value);
+
+	}
 
 	getFeeCollectionSummaryReport(value) {
 		this.service.startLoading();
