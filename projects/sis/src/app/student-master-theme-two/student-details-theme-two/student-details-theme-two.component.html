@@ -114,6 +114,9 @@
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
                     required [readonly]="viewOnly" [value]="studentdetailsform.get('au_full_name').value">
+                    <mat-error>
+                      This field is required
+                    </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
@@ -126,6 +129,9 @@
                       {{item.class_name}}
                     </mat-option>
                   </mat-select>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="!fieldEnableAtAdmission()">
@@ -138,6 +144,9 @@
                       {{item.class_name}}
                     </mat-option>
                   </mat-select>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
                 </mat-form-field>
               </div>
               
@@ -162,6 +171,9 @@
                       {{item.class_name}}
                     </mat-option>
                   </mat-select>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">

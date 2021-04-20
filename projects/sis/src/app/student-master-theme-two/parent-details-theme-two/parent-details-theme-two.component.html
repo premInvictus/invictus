@@ -58,7 +58,7 @@
                                     <mat-option value="9">Late</mat-option>
                                     <mat-option value="10">Md.</mat-option>
                                  </mat-select>
-                                 <mat-error>
+                                 <mat-error *ngIf="formGroupArray[i].formGroup.get('epd_parent_name').hasError('required')">
                                     This field is required
                                  </mat-error>
                               </mat-form-field>
@@ -70,7 +70,7 @@
                                     maxlength="50" formControlName="epd_parent_name"
                                     [errorStateMatcher]="confirmValidParentMatcher" required class="text-capitalize"
                                     [value]="formGroupArray[i].formGroup.get('epd_parent_name').value" />
-                                 <mat-error>
+                                 <mat-error *ngIf="formGroupArray[i].formGroup.get('epd_parent_name').hasError('required')">
                                     Please enter full name
                                  </mat-error>
                               </mat-form-field>

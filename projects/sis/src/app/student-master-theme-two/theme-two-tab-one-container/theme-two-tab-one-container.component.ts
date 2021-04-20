@@ -5,7 +5,7 @@ import { ChildDetailsThemeTwoComponent } from '../child-details-theme-two/child-
 import { ParentDetailsThemeTwoComponent } from '../parent-details-theme-two/parent-details-theme-two.component';
 import { MedicalInformationThemeTwoComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -30,6 +30,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	parentJson: any[] = [];
 	reqParamArray = [];
 	finalSibReqArray = [];
+	showOnlyOneMessage = true;
 	finalSibReqArray2 = [];
 	checkChangedFieldsArray: any = [];
 	finalArray: any = [];
@@ -170,11 +171,42 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				});
 			} else {
 				this.disabledApiCall = false;
-				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields2', 'error');
+				if(this.showOnlyOneMessage) {
+					this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+					this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+				}
+				if(this.context.studentdetails) {
+					this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+				}
+				this.markFormGroupTouched(this.childDetails.baseform)
+				this.markFormGroupTouched(this.childDetails.paddressform)
+				for (const item of this.parentDetails.formGroupArray) {
+					this.markFormGroupTouched(item.formGroup);
+				}
 			}
 		} else {
 			this.disabledApiCall = false;
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields1', 'error');
+			if(this.showOnlyOneMessage) {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+				this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+			}
+			console.log("----------------------------------------", this.context);
+			
+			if(this.context.studentdetails) {
+				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+			}
+			this.markFormGroupTouched(this.childDetails.baseform)
+			this.markFormGroupTouched(this.childDetails.paddressform)
+			for (const item of this.parentDetails.formGroupArray) {
+				this.markFormGroupTouched(item.formGroup);
+			}
+			
 		}
 	}
 	cancelForm() {
@@ -211,7 +243,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	}
 	updateForm(isview) {
 		this.validateParent();
-		
+
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
@@ -236,7 +268,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.taboneform.personalDetails.addressDetails = [this.childDetails.paddressform.value, this.childDetails.raddressform.value];
 			this.taboneform.personalDetails.siblingDetails = [];
 			this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
-				this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
+			this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
 			if (this.childDetails.siblingArray.length > 0) {
 				this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 			}
@@ -261,7 +293,22 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			});
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields4', 'error');
+			if(this.showOnlyOneMessage) {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+				this.showOnlyOneMessage = false;
+				setTimeout(() => {
+					this.showOnlyOneMessage = true;
+				}, 1000);
+			}
+			if(this.context.studentdetails) {
+				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+			}
+			this.markFormGroupTouched(this.childDetails.baseform)
+			this.markFormGroupTouched(this.childDetails.paddressform)
+			for (const item of this.parentDetails.formGroupArray) {
+				this.markFormGroupTouched(item.formGroup);
+			}
+			
 		}
 	}
 	resetForm() {
@@ -293,7 +340,13 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			}
 		}
 		if (ctr === 3) {
-			this.commonAPIService.showSuccessErrorMessage('Atleast there Should be one active parent selected', 'error');
+			if(this.showOnlyOneMessage) {
+				this.showOnlyOneMessage = false;
+				this.commonAPIService.showSuccessErrorMessage('Atleast there Should be one active parent selected', 'error');
+				setTimeout(() => {
+					this.showOnlyOneMessage = true
+				}, 1000);
+			}
 			this.parentDetails.finalFormParentStatus = false;
 		}
 		let checkRequiredFieldCounter = 0, checkAluminiFieldCounter = 0;
@@ -306,7 +359,13 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			}
 			if (checkRequiredFieldCounter > 0) {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill required fields in parent details', 'error');
+				if(this.showOnlyOneMessage) {
+					this.showOnlyOneMessage = false
+					this.commonAPIService.showSuccessErrorMessage('Please Fill required fields in parent details', 'error');
+						setTimeout(() => {
+							this.showOnlyOneMessage = true;
+						}, 1000);																										
+				}
 				this.parentDetails.finalFormParentStatus = false;
 			}
 			for (let i = 0; i < 2; i++) {
@@ -320,7 +379,13 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			}
 			if (checkAluminiFieldCounter > 0) {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill Alumini Details', 'error');
+				if(this.showOnlyOneMessage){
+					this.commonAPIService.showSuccessErrorMessage('Please Fill Alumini Details', 'error');
+					this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+				}
 				this.parentDetails.finalFormParentStatus = false;
 			}
 		}
@@ -334,7 +399,13 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			}
 			if (checkRequiredFieldCounter2 > 0) {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill required fields in parent details', 'error');
+				if(this.showOnlyOneMessage) {
+					this.commonAPIService.showSuccessErrorMessage('Please Fill required fields in parent details', 'error');
+					this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+				}
 				this.parentDetails.finalFormParentStatus = false;
 			}
 			for (let i = 0; i < 3; i++) {
@@ -348,11 +419,23 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			}
 			if (checkAluminiFieldCounter2 > 0) {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill Alumini Details', 'error');
+				if(this.showOnlyOneMessage){
+					this.commonAPIService.showSuccessErrorMessage('Please Fill Alumini Details', 'error');
+					this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+				}
 				this.parentDetails.finalFormParentStatus = false;
 			}
 			if (!this.parentDetails.formGroupArray[2].formGroup.value.epd_guard_child_rel) {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill Guardian Child Details', 'error');
+				if(this.showOnlyOneMessage){
+					this.commonAPIService.showSuccessErrorMessage('Please Fill Guardian Child Details', 'error');
+					this.showOnlyOneMessage = false;
+					setTimeout(() => {
+						this.showOnlyOneMessage = true;
+					}, 1000);
+				}
 				this.parentDetails.finalFormParentStatus = false;
 			}
 		}
@@ -477,7 +560,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				const tableKey = tablePrefix[0] + '_id';
 				const tableKeyValue = this.childDetails.baseform.value[tableKey];
 				// console.log("i am this", tableKeyValue, tableKey);
-				
+
 				const formControl = <FormControl>this.childDetails.baseform.controls[keys];
 				if (formControl.dirty && formControl.touched) {
 					if (keys === 'upd_dob' || 'upd_doj') {
@@ -799,4 +882,19 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	editConfirm() { }
+
+	markFormGroupTouched(formGroup: FormGroup) {
+		// console.log("i a here", formGroup);
+		
+		(<any>Object).values(formGroup.controls).forEach(control => {
+			control.markAsTouched();
+
+			if (control.controls) {
+				this.markFormGroupTouched(control);
+			}
+			
+		});
+	}
+
+	
 }
