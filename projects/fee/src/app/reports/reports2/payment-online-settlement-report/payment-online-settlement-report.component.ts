@@ -256,294 +256,305 @@ export class PaymentOnlineSettlementReportComponent implements OnInit {
 	}
 
 	getTransportReport(value: any) {
-		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
-		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
-		this.dataArr = [];
-		this.aggregatearray = [];
-		this.columnDefinitions = [];
-		this.dataset = [];
-		this.tableFlag = false;
-		this.gridOptions = {
-			enableDraggableGrouping: true,
-			createPreHeaderPanel: true,
-			showPreHeaderPanel: true,
-			enableHeaderMenu: true,
-			preHeaderPanelHeight: 40,
-			enableFiltering: true,
-			enableSorting: true,
-			enableColumnReorder: true,
-			createFooterRow: true,
-			showFooterRow: true,
-			footerRowHeight: 35,
-			enableExcelCopyBuffer: true,
-			fullWidthRows: true,
-			enableAutoTooltip: true,
-			enableCellNavigation: true,
-			rowHeight:65,
-			headerMenu: {
-				iconColumnHideCommand: 'fas fa-times',
-				iconSortAscCommand: 'fas fa-sort-up',
-				iconSortDescCommand: 'fas fa-sort-down',
-				title: 'Sort'
-			},
-			exportOptions: {
-				sanitizeDataExport: true,
-				exportWithFormatter: true
-			},
-			gridMenu: {
-				customItems: [{
-					title: 'pdf',
-					titleKey: 'Export as PDF',
-					command: 'exportAsPDF',
-					iconCssClass: 'fas fa-download'
+		if(value.from_date && value.to_date) {
+			value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+			value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
+			this.dataArr = [];
+			this.aggregatearray = [];
+			this.columnDefinitions = [];
+			this.dataset = [];
+			this.tableFlag = false;
+			this.gridOptions = {
+				enableDraggableGrouping: true,
+				createPreHeaderPanel: true,
+				showPreHeaderPanel: true,
+				enableHeaderMenu: true,
+				preHeaderPanelHeight: 40,
+				enableFiltering: true,
+				enableSorting: true,
+				enableColumnReorder: true,
+				createFooterRow: true,
+				showFooterRow: true,
+				footerRowHeight: 35,
+				enableExcelCopyBuffer: true,
+				fullWidthRows: true,
+				enableAutoTooltip: true,
+				enableCellNavigation: true,
+				rowHeight:65,
+				headerMenu: {
+					iconColumnHideCommand: 'fas fa-times',
+					iconSortAscCommand: 'fas fa-sort-up',
+					iconSortDescCommand: 'fas fa-sort-down',
+					title: 'Sort'
 				},
-				{
-					title: 'excel',
-					titleKey: 'Export Excel',
-					command: 'exportAsExcel',
-					iconCssClass: 'fas fa-download'
+				exportOptions: {
+					sanitizeDataExport: true,
+					exportWithFormatter: true
 				},
-				{
-					title: 'expand',
-					titleKey: 'Expand Groups',
-					command: 'expandGroup',
-					iconCssClass: 'fas fa-expand-arrows-alt'
-				},
-				{
-					title: 'collapse',
-					titleKey: 'Collapse Groups',
-					command: 'collapseGroup',
-					iconCssClass: 'fas fa-compress'
-				},
-				{
-					title: 'cleargroup',
-					titleKey: 'Clear Groups',
-					command: 'cleargroup',
-					iconCssClass: 'fas fa-eraser'
-				}
-				],
-				onCommand: (e, args) => {
-					if (args.command === 'toggle-preheader') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
+				gridMenu: {
+					customItems: [{
+						title: 'pdf',
+						titleKey: 'Export as PDF',
+						command: 'exportAsPDF',
+						iconCssClass: 'fas fa-download'
+					},
+					{
+						title: 'excel',
+						titleKey: 'Export Excel',
+						command: 'exportAsExcel',
+						iconCssClass: 'fas fa-download'
+					},
+					{
+						title: 'expand',
+						titleKey: 'Expand Groups',
+						command: 'expandGroup',
+						iconCssClass: 'fas fa-expand-arrows-alt'
+					},
+					{
+						title: 'collapse',
+						titleKey: 'Collapse Groups',
+						command: 'collapseGroup',
+						iconCssClass: 'fas fa-compress'
+					},
+					{
+						title: 'cleargroup',
+						titleKey: 'Clear Groups',
+						command: 'cleargroup',
+						iconCssClass: 'fas fa-eraser'
 					}
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
-					}
-					if (args.command === 'expandGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.expandAllGroups();
-					}
-					if (args.command === 'collapseGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.collapseAllGroups();
-					}
-					if (args.command === 'exportAsExcel') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
-					}
-					if (args.command === 'cleargroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
-					}
-					if (args.command === 'export-csv') {
-						this.exportToFile('csv');
-					}
-				},
-				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-					this.updateTotalRow(this.angularGrid.slickGrid);
-				},
-			},
-			draggableGrouping: {
-				dropPlaceHolderText: 'Drop a column header here to group by the column',
-				// groupIconCssClass: 'fa fa-outdent',
-				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => {
-					this.groupColumns = [];
-					this.groupColumns = args.groupColumns;
-					this.onGroupChanged(args && args.groupColumns);
-					setTimeout(() => {
+					],
+					onCommand: (e, args) => {
+						if (args.command === 'toggle-preheader') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.clearGrouping();
+						}
+						if (args.command === 'exportAsPDF') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.exportAsPDF(this.dataset);
+						}
+						if (args.command === 'expandGroup') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.expandAllGroups();
+						}
+						if (args.command === 'collapseGroup') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.collapseAllGroups();
+						}
+						if (args.command === 'exportAsExcel') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.exportToExcel(this.dataset);
+						}
+						if (args.command === 'cleargroup') {
+							// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+							this.clearGrouping();
+						}
+						if (args.command === 'export-csv') {
+							this.exportToFile('csv');
+						}
+					},
+					onColumnsChanged: (e, args) => {
+						console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 						this.updateTotalRow(this.angularGrid.slickGrid);
-					}, 100);
+					},
 				},
-				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-			}
-		};
-		let repoArray = [];
-		this.columnDefinitions = [{
-			id: 'id',
-			name: 'S. No',
-			field: 'id',
-			sortable: true,
-			filterSearchType: FieldType.string,
-			filter: { model: Filters.compoundInput },
-			filterable: true,
-		},
-			{
-				id: 'au_admission_no',
-				name: 'Enrollment No',
-				field: 'au_admission_no',
-				sortable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				filterable: true,
-			},
-			{
-				id: 'au_full_name',
-				name: 'Student Name',
-				field: 'au_full_name',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-			},
-			{
-				id: 'class_name',
-				name: 'Class',
-				field: 'class_name',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				
-			},
-			{
-				id: 'rpt_receipt_no',
-				name: 'Receipt No.',
-				field: 'rpt_receipt_no',
-				sortable: true,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInputNumber },
-				filterable: true,
-				width: 1,
-				cssClass: 'amount-report-fee',
-				
-			},
-			{
-				id: 'trans_txn_date',
-				name: 'Txn Date',
-				field: 'trans_txn_date',
-				sortable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				filterable: true,
-			},
-			{
-				id: 'stoppages_name',
-				name: 'Txn Time',
-				field: 'stoppages_name',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-			},
-			{
-				id: 'ftr_amount',
-				name: 'Amount',
-				field: 'ftr_amount',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				
-			},
-			{
-				id: 'trans_pay_mode',
-				name: 'Mode.',
-				field: 'trans_pay_mode',
-				sortable: true,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInputNumber },
-				filterable: true,
-				width: 1,
-				cssClass: 'amount-report-fee',
-				
-			},
-			{
-				id: 'bnk_alias',
-				name: 'Bank',
-				field: 'bnk_alias',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-			},
-			{
-				id: 'trans_status',
-				name: 'Transaction Status',
-				field: 'trans_status',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				
-			},
-			{
-				id: 'trans_resp_msg',
-				name: 'Reason.',
-				field: 'trans_resp_msg',
-				sortable: true,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInputNumber },
-				filterable: true,
-				width: 1,
-				cssClass: 'amount-report-fee',
-
-				
-			}
-		];
-		this.dataset = [];
-		console.log("ia m value", value.trans_status, value);
-		
-		const collectionJSON: any = {
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': value.pageSize,
-				'pageIndex': value.pageIndex,
-				'admission_no': value.admission_no,
-				'studentName': value.au_full_name,
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true,
-				'trans_status': value.trans_status
+				draggableGrouping: {
+					dropPlaceHolderText: 'Drop a column header here to group by the column',
+					// groupIconCssClass: 'fa fa-outdent',
+					deleteIconCssClass: 'fa fa-times',
+					onGroupChanged: (e, args) => {
+						this.groupColumns = [];
+						this.groupColumns = args.groupColumns;
+						this.onGroupChanged(args && args.groupColumns);
+						setTimeout(() => {
+							this.updateTotalRow(this.angularGrid.slickGrid);
+						}, 100);
+					},
+					onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+				}
 			};
-		this.feeService.getPaymentSettlementReport(collectionJSON).subscribe((result:any) => {
-			if(result) {
-				if(result.status == "ok") {
-					let pos=1;
-					result.data.forEach(element => {
-						let obj:any = {};
-						obj.id = pos;
-						obj.au_admission_no = element.au_admission_no;
-						obj.au_full_name = element.au_full_name;
-						obj.class_name = element.class_name + '-' + element.sec_name;
-						obj.rpt_receipt_no = element.rpt_receipt_no;
-						obj.trans_txn_date =  new DatePipe('en-in').transform(element.trans_txn_date, 'dd-MMM-yyyy');
-						obj.stoppages_name = new DatePipe('en-in').transform(element.trans_txn_date, 'hh:mm');
-						obj.ftr_amount = element.trans_txn_amt;
-						obj.trans_pay_mode = element.trans_pay_mode;
-						obj.trans_status = element.trans_status == 'TXN_SUCCESS' ? 'Success': element.trans_status == 'TXN_FAILURE' ? 'Failure':'Initiat';
-						obj.trans_resp_msg = element.trans_resp_msg;
-						obj.bnk_alias = element.bnk_alias ? element.bnk_alias : "-"
-						this.dataset.push(obj);
-	
-						pos++;
-					});
+			let repoArray = [];
+			this.columnDefinitions = [{
+				id: 'id',
+				name: 'S. No',
+				field: 'id',
+				sortable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				filterable: true,
+			},
+				{
+					id: 'au_admission_no',
+					name: 'Enrollment No',
+					field: 'au_admission_no',
+					sortable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					filterable: true,
+				},
+				{
+					id: 'au_full_name',
+					name: 'Student Name',
+					field: 'au_full_name',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'class_name',
+					name: 'Class',
+					field: 'class_name',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					
-					this.tableFlag = true;
+				},
+				{
+					id: 'rpt_receipt_no',
+					name: 'Receipt No.',
+					field: 'rpt_receipt_no',
+					sortable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
+					filterable: true,
+					cssClass: 'fee-ledger-no',
+					formatter: this.checkReceiptFormatter
+					
+				},
+				{
+					id: 'trans_bnk_txn_id',
+					name: 'Txn. No.',
+					field: 'trans_bnk_txn_id',
+					sortable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					filterable: true,
+				},
+				{
+					id: 'trans_txn_date',
+					name: 'Txn Date',
+					field: 'trans_txn_date',
+					sortable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					filterable: true,
+				},
+				{
+					id: 'stoppages_name',
+					name: 'Txn Time',
+					field: 'stoppages_name',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'ftr_amount',
+					name: 'Amount',
+					field: 'ftr_amount',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					
+				},
+				{
+					id: 'trans_pay_mode',
+					name: 'Mode.',
+					field: 'trans_pay_mode',
+					sortable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
+					filterable: true,
+					
+				},
+				{
+					id: 'bnk_alias',
+					name: 'Bank',
+					field: 'bnk_alias',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'trans_status',
+					name: 'Transaction Status',
+					field: 'trans_status',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					
+				},
+				{
+					id: 'trans_resp_msg',
+					name: 'Reason.',
+					field: 'trans_resp_msg',
+					sortable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
+					filterable: true,
+	
+					
+				}
+			];
+			this.dataset = [];
+			console.log("ia m value", value.trans_status, value);
+			
+			const collectionJSON: any = {
+					'from_date': value.from_date,
+					'to_date': value.to_date,
+					'pageSize': value.pageSize,
+					'pageIndex': value.pageIndex,
+					'admission_no': value.admission_no,
+					'studentName': value.au_full_name,
+					'login_id': value.login_id,
+					'orderBy': value.orderBy,
+					'downloadAll': true,
+					'trans_status': value.trans_status
+				};
+			this.feeService.getPaymentSettlementReport(collectionJSON).subscribe((result:any) => {
+				if(result) {
+					if(result.status == "ok") {
+						let pos=1;
+						result.data.forEach(element => {
+							let obj:any = {};
+							obj.id = pos;
+							obj.au_admission_no = element.au_admission_no;
+							obj.au_full_name = element.au_full_name;
+							obj.class_name = element.class_name + '-' + element.sec_name;
+							obj.rpt_receipt_no = element.rpt_receipt_no;
+							obj.rpt_receipt_id = element.rpt_id;
+							obj.trans_txn_date =  new DatePipe('en-in').transform(element.trans_created_date, 'dd-MMM-yyyy');
+							obj.stoppages_name = new DatePipe('en-in').transform(element.trans_created_date, 'hh:mm');
+							obj.ftr_amount = element.trans_txn_amt;
+							obj.trans_bnk_txn_id = element.trans_bnk_txn_id;
+							obj.trans_pay_mode = element.trans_pay_mode;
+							obj.trans_status = element.trans_status == 'TXN_SUCCESS' ? 'Success': element.trans_status == 'TXN_FAILURE' ? 'Failure':'Initiat';
+							obj.trans_resp_msg = element.trans_resp_msg;
+							obj.bnk_alias = element.bnk_alias ? element.bnk_alias : "-"
+							this.dataset.push(obj);
+		
+							pos++;
+						});
+						
+						this.tableFlag = true;
+					} else {
+						this.common.showSuccessErrorMessage("error", 'No Record Found');
+						this.tableFlag = true;
+					}
 				} else {
 					this.common.showSuccessErrorMessage("error", 'No Record Found');
 					this.tableFlag = true;
 				}
-			} else {
-				this.common.showSuccessErrorMessage("error", 'No Record Found');
-				this.tableFlag = true;
-			}
-			
-			
-		})
+				
+				
+			})
+		} else {
+			this.common.showSuccessErrorMessage("error", 'Please select start and and end date')
+		}
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
@@ -592,10 +603,12 @@ export class PaymentOnlineSettlementReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
-		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
+		if (args.cell === args.grid.getColumnIndex('rpt_receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
-			if (item['receipt_no'] !== '-') {
-				this.openDialogReceipt(item['receipt_id'], false);
+			console.log("i am item", item);
+			
+			if (item['rpt_receipt_no'] !== '-') {
+				this.openDialogReceipt(item['rpt_receipt_id'], false);
 			}
 		}
 		if (e.target.className === 'invoice-span-mfr') {
