@@ -68,14 +68,17 @@
     <div class="col-2">
         <mat-form-field appearance="outline" class="form-field">
            <mat-select placeholder="Status" formControlName="trans_status" >
-           <mat-option value="TXN_SUCCESS">
+            <mat-option value="">
+              All
+           </mat-option>
+            <mat-option value="TXN_SUCCESS">
               Success
            </mat-option>
            <mat-option value="TXN_FAILURE">
             Failure
          </mat-option>
          <mat-option value="TXN_INITIATED">
-            Initiat
+            Initiate
          </mat-option>
            </mat-select>
         </mat-form-field>

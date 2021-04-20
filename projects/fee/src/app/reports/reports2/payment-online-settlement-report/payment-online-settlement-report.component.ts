@@ -532,7 +532,7 @@ export class PaymentOnlineSettlementReportComponent implements OnInit {
 							obj.ftr_amount = element.trans_txn_amt;
 							obj.trans_bnk_txn_id = element.trans_bnk_txn_id;
 							obj.trans_pay_mode = element.trans_pay_mode;
-							obj.trans_status = element.trans_status == 'TXN_SUCCESS' ? 'Success': element.trans_status == 'TXN_FAILURE' ? 'Failure':'Initiat';
+							obj.trans_status = element.trans_status == 'TXN_SUCCESS' ? 'Success': element.trans_status == 'TXN_FAILURE' ? 'Failure':'Initiate';
 							obj.trans_resp_msg = element.trans_resp_msg;
 							obj.bnk_alias = element.bnk_alias ? element.bnk_alias : "-"
 							this.dataset.push(obj);
