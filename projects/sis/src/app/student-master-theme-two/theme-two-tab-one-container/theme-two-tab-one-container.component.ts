@@ -178,11 +178,14 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 						this.showOnlyOneMessage = true;
 					}, 1000);
 				}
-				if(this.context.studentDetails) {
-					this.markFormGroupTouched(this.context.studentDetails.studentdetailsform);
+				if(this.context.studentdetails) {
+					this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
 				}
 				this.markFormGroupTouched(this.childDetails.baseform)
 				this.markFormGroupTouched(this.childDetails.paddressform)
+				for (const item of this.parentDetails.formGroupArray) {
+					this.markFormGroupTouched(item.formGroup);
+				}
 			}
 		} else {
 			this.disabledApiCall = false;
@@ -193,11 +196,16 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 						this.showOnlyOneMessage = true;
 					}, 1000);
 			}
-			if(this.context.studentDetails) {
-				this.markFormGroupTouched(this.context.studentDetails.studentdetailsform);
+			console.log("----------------------------------------", this.context);
+			
+			if(this.context.studentdetails) {
+				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
 			}
 			this.markFormGroupTouched(this.childDetails.baseform)
 			this.markFormGroupTouched(this.childDetails.paddressform)
+			for (const item of this.parentDetails.formGroupArray) {
+				this.markFormGroupTouched(item.formGroup);
+			}
 			
 		}
 	}
@@ -292,11 +300,15 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					this.showOnlyOneMessage = true;
 				}, 1000);
 			}
-			if(this.context.studentDetails) {
-				this.markFormGroupTouched(this.context.studentDetails.studentdetailsform);
+			if(this.context.studentdetails) {
+				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
 			}
 			this.markFormGroupTouched(this.childDetails.baseform)
 			this.markFormGroupTouched(this.childDetails.paddressform)
+			for (const item of this.parentDetails.formGroupArray) {
+				this.markFormGroupTouched(item.formGroup);
+			}
+			
 		}
 	}
 	resetForm() {
@@ -872,13 +884,14 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	editConfirm() { }
 
 	markFormGroupTouched(formGroup: FormGroup) {
+		// console.log("i a here", formGroup);
+		
 		(<any>Object).values(formGroup.controls).forEach(control => {
 			control.markAsTouched();
 
 			if (control.controls) {
 				this.markFormGroupTouched(control);
 			}
-			// console.log("i am controlller", control.key);
 			
 		});
 	}
