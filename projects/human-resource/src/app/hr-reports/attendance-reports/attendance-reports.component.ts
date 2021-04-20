@@ -237,6 +237,7 @@ export class AttendanceReportsComponent implements OnInit {
     const inputJson: any = {};
     inputJson.datefrom = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-1';
     inputJson.dateto = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + no_of_days;
+    inputJson.sunday = 0;
     this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
       if (res) {
         this.holidayArray = res.data ? res.data : [];
@@ -263,10 +264,27 @@ export class AttendanceReportsComponent implements OnInit {
           }
         }
         for (let item of this.employeeArray) {
+          let tempdateArray = JSON.parse(JSON.stringify(dateArray));
+            tempdateArray.forEach(e => {
+              const tdate = new Date(e.date);
+              const dow = tdate.getDay();
+              if(item.weekly_off && item.weekly_off.length > 0) {
+                if(item.weekly_off.includes(dow))  {
+                  e.attendance = 'h';                    
+                }
+              } else {
+                if(dow == 0){
+                  e.attendance = 'h';
+                }
+              }
+            })
+            if(item.emp_code_no == 169) {
+              console.log('tempdateArray------',JSON.parse(JSON.stringify(tempdateArray)));
+            }
           this.employeeAttendanceArray.push({
             emp_id: item.emp_id,
             emp_name: item.emp_name,
-            attendance_array: dateArray
+            attendance_array: JSON.parse(JSON.stringify(tempdateArray))
           });
         }
         const checkifMonthEntry: any = [{
@@ -1093,4 +1111,4 @@ export class AttendanceReportsComponent implements OnInit {
   searchOk($event) {
     this.getAllEmployee($event);
   }
-}
+} 

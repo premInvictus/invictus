@@ -255,7 +255,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
         'month_id': this.acumulativeReport.value.month_id,
         'emp_status': 'all',
         from_attendance: true,
-        year:currSess
+        year:currSess,
+        fnf_status:false
       };      
     }
     this.dateArray=[];
@@ -266,7 +267,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     const inputJson1: any = {};
     inputJson1.datefrom = currSess + '-' + this.acumulativeReport.value.month_id + '-1';
     inputJson1.dateto = currSess + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
-
+    inputJson1.sunday = 0;
     await this.smartService.getHolidayOnly(inputJson1).toPromise().then((res: any) => {
       if (res) {
         this.holidayArray = res.data ? res.data : [];
@@ -321,7 +322,26 @@ export class ShiftAttendanceReportComponent implements OnInit {
             this.emp_shift_arr = result;
             let pos = 0;
             result1.forEach(employeeData => {
-              console.log('employeeData',employeeData);
+              // console.log('employeeData',employeeData);
+              let tempdateArray = JSON.parse(JSON.stringify(this.dateArray));
+              tempdateArray.forEach(e => {
+                const tdate = new Date(e.date);
+                const dow = tdate.getDay();
+                if(employeeData.weekly_off && employeeData.weekly_off.length > 0) {
+                  if(employeeData.weekly_off.includes(dow))  {
+                    e.data = 'H';
+                    e.attendance = 'H';                    
+                  }
+                } else {
+                  if(dow == 0){
+                    e.data = 'H';
+                    e.attendance = 'H';
+                  }
+                }
+              })
+              if(employeeData.emp_code_no == 169) {
+                console.log('tempdateArray------',JSON.parse(JSON.stringify(tempdateArray)));
+              }
               pos++;
               let shift_arr:any[] = [];
               if(employeeData && employeeData.emp_shift_details && employeeData.emp_shift_details.length > 0) {
@@ -337,7 +357,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
                   emp_name: employeeData.emp_name,
                   emp_shift: shift_arr,
                   parameters: para,
-                  dateArray:JSON.parse(JSON.stringify(this.dateArray)),
+                  dateArray:JSON.parse(JSON.stringify(tempdateArray)),
                   total_absent:0,
                   total_present:0
                 };

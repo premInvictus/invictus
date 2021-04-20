@@ -396,7 +396,8 @@ export class SalaryComputationComponent implements OnInit {
 			'month_id': this.searchForm.value.month_id,
 			'emp_status': 'all',
 			from_attendance: true,
-			year: this.currSess
+			year: this.currSess,
+			fnf_status:false
 		};
 		//console.log('this.salaryComputeEmployeeIds',this.salaryComputeEmployeeIds);
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {

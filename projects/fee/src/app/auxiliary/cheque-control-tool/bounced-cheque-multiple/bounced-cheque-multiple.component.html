@@ -22,7 +22,7 @@
             <mat-label>Deposited Bank</mat-label>
             <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required (selectionChange)="selectedValue($event)">
               <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid"><span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
+              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id"><span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
                 <span *ngIf="!(bank?.bnk_alias)">{{bank.bank_name}}</span>
               </mat-option>
             </mat-select>
@@ -50,7 +50,7 @@
             <mat-label>Deposited Bank</mat-label>
             <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
               <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">
+              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">
                 <span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
                 <span *ngIf="!(bank?.bnk_alias)">{{bank.bank_name}}</span>
               </mat-option>

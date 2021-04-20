@@ -168,6 +168,7 @@ export class StudentDashboardComponent implements OnInit {
 	setStudentDashboard() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		console.log('this.currentUser----',this.currentUser);
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.login_id = currentUser.login_id;
 		this.qelementService.getUser({ login_id: currentUser.login_id, role_id: '4' }).subscribe(
@@ -202,8 +203,8 @@ export class StudentDashboardComponent implements OnInit {
 					} else {
 						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 					}
-					this.defaultsrc = this.studentdetails.au_profileimage
-						? this.studentdetails.au_profileimage
+					this.defaultsrc = this.userDetail.au_profileimage
+						? this.userDetail.au_profileimage
 						: this.defaultsrc;
 						
 					this.getOverallPerformance();
@@ -242,35 +243,35 @@ export class StudentDashboardComponent implements OnInit {
 				}
 			}
 		);
-		for (let i = 0; i < this.currentUser.full_name.length; i++) {
-			if (this.currentUser.full_name[i] === ' ') {
-				break;
-			} else {
-				this.usernane = this.usernane + this.currentUser.full_name[i];
-			}
-			this.usernane = this.usernane.charAt(0).toUpperCase() + this.usernane.slice(1);
-		}
+		// for (let i = 0; i < this.currentUser.full_name.length; i++) {
+		// 	if (this.currentUser.full_name[i] === ' ') {
+		// 		break;
+		// 	} else {
+		// 		this.usernane = this.usernane + this.currentUser.full_name[i];
+		// 	}
+		// 	this.usernane = this.usernane.charAt(0).toUpperCase() + this.usernane.slice(1);
+		// }
 
-		let counter = this.currentUser.full_name.length;
-		for (let i = this.currentUser.full_name.length; i > 0; i--) {
-			if (this.currentUser.full_name.charAt(i) === ' ') {
-				break;
-			} else {
-				counter--;
-			}
-		}
-		let ctr = 0;
-		for (let i = 0; i < this.currentUser.full_name.length; i++) {
-			if (this.currentUser.full_name.charAt(i) === ' ') {
-				ctr++;
-			}
-		}
-		if (ctr >= 1) {
-			this.lastName = this.currentUser.full_name.substring(counter + 1);
-			this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1);
-		} else {
-			this.lastName = '';
-		}
+		// let counter = this.currentUser.full_name.length;
+		// for (let i = this.currentUser.full_name.length; i > 0; i--) {
+		// 	if (this.currentUser.full_name.charAt(i) === ' ') {
+		// 		break;
+		// 	} else {
+		// 		counter--;
+		// 	}
+		// }
+		// let ctr = 0;
+		// for (let i = 0; i < this.currentUser.full_name.length; i++) {
+		// 	if (this.currentUser.full_name.charAt(i) === ' ') {
+		// 		ctr++;
+		// 	}
+		// }
+		// if (ctr >= 1) {
+		// 	this.lastName = this.currentUser.full_name.substring(counter + 1);
+		// 	this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1);
+		// } else {
+		// 	this.lastName = '';
+		// }
 	}
 	formatDate() {
 		var d = new Date(),

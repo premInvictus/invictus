@@ -72,7 +72,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	deductiontypeTypeArray = [
 		{ id: "PF", name: 'PF' },
 		{ id: "ESI", name: 'ESI' },
-		{ id: "Security", name: 'Security' }
+		{ id: "Security", name: 'Security' },
+		{ id: "PTAX", name: 'PTAX' }
 	];
 	typeArray = [
 		{ id: "1", name: 'Wing Master' },

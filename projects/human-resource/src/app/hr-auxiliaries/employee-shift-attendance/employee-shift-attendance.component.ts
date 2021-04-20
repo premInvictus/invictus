@@ -144,19 +144,38 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	}
 	getHolidayOnly(){
 		if(this.searchForm.valid){
-			this.absent = false;
-			const inputJson: any = {};
-			inputJson.datefrom = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
-			inputJson.dateto = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
-			this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
-				if(res && res.status=='ok') {
-					this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
-				} else {
-					this.absent = true;
-					this.default = false;
-					// this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
+
+			let isWeekly_off = false;
+			const tdate = new Date(this.searchForm.value.entry_date);
+			const dow = tdate.getDay();
+			if(this.employeeData.weekly_off && this.employeeData.weekly_off.length > 0) {
+				if(this.employeeData.weekly_off.includes(dow))  {
+					isWeekly_off = true;
 				}
-			});
+			} else {
+				if(dow == 0){
+					isWeekly_off = true;
+				}
+			}
+			if(!isWeekly_off) {
+				this.absent = false;
+				const inputJson: any = {};
+				inputJson.datefrom = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
+				inputJson.dateto = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
+				inputJson.sunday = 0;
+				this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
+					if(res && res.status=='ok') {
+						this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
+					} else {
+						this.absent = true;
+						this.default = false;
+						// this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
+					}
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
+			}
+			
 		}
 	}
 
