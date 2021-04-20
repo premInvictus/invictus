@@ -584,7 +584,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_mode_of_payment: this.voucherForm.value.vc_mode_of_payment,
 						vc_bank_name : this.voucherForm.value.vc_bank_name
 					}
-
+					console.log('inputJson--',inputJson)
 					if (this.currentVoucherId) {
 						if (this.voucherForm.value.vc_narrations.trim() === "") {
 							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
@@ -615,10 +615,10 @@ export class VoucherEntryComponent implements OnInit {
 					this.commonAPIService.showSuccessErrorMessage('Total of Debit and Credit should be same for publish', 'error');
 				}
 			} else {
-				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields 1', 'error');
 			}
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields 2', 'error');
 		}
 
 	}

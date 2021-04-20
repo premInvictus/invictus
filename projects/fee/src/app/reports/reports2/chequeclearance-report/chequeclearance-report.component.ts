@@ -129,7 +129,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 	chequeType: any[] = [
 		{ name: 'Cheque Recieved', id: 'cp' },
 		{ name: 'Cheque Clearance', id: 'cr' },
-		{ name: 'Cheque Disonered', id: 'cd' }
+		{ name: 'Cheque Dishonour', id: 'cd' }
 	];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
@@ -492,14 +492,14 @@ export class ChequeclearanceReportComponent implements OnInit {
 			if(this.reportFilterForm.value.c_type === 'cr'){
 				this.columnDefinitions.push(
 					{
-						id: 'dishonor_date', name: 'Cleareance Date', field: 'dishonor_date', sortable: true,
+						id: 'dishonour_date', name: 'Cleareance Date', field: 'dishonour_date', sortable: true,
 						filterable: true,
 						width: 100,
 						filterSearchType: FieldType.dateIso,
 						filter: { model: Filters.compoundDate },
 						formatter: this.checkDateFormatter,
 						grouping: {
-							getter: 'dishonor_date',
+							getter: 'dishonour_date',
 							formatter: (g) => {
 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
@@ -512,14 +512,14 @@ export class ChequeclearanceReportComponent implements OnInit {
 			} else if(this.reportFilterForm.value.c_type === 'cd'){
 				this.columnDefinitions.push(
 					{
-						id: 'dishonor_date', name: 'Dishonour Date', field: 'dishonor_date', sortable: true,
+						id: 'dishonour_date', name: 'Dishonour Date', field: 'dishonour_date', sortable: true,
 						filterable: true,
 						width: 100,
 						filterSearchType: FieldType.dateIso,
 						filter: { model: Filters.compoundDate },
 						formatter: this.checkDateFormatter,
 						grouping: {
-							getter: 'dishonor_date',
+							getter: 'dishonour_date',
 							formatter: (g) => {
 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
@@ -620,11 +620,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 						repoArray[Number(index)]['fcc_deposite_date'] : '-';
 					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'] ? repoArray[Number(index)]['cheque_date'] : '-';
 					if (Number(repoArray[Number(index)]['status']) === 2) {
-						obj['dishonor_date'] = repoArray[Number(index)]['dishonor_date'] ? repoArray[Number(index)]['dishonor_date'] : '-';
+						obj['dishonour_date'] = repoArray[Number(index)]['dishonour_date'] ? repoArray[Number(index)]['dishonour_date'] : '-';
 					} else if (Number(repoArray[Number(index)]['status']) === 1) {
-						obj['dishonor_date'] = repoArray[Number(index)]['fcc_process_date'] ? repoArray[Number(index)]['fcc_process_date'] : '-';
+						obj['dishonour_date'] = repoArray[Number(index)]['fcc_process_date'] ? repoArray[Number(index)]['fcc_process_date'] : '-';
 					} else {
-						obj['dishonor_date'] = '-';
+						obj['dishonour_date'] = '-';
 					}
 					obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
 						repoArray[Number(index)]['receipt_no'] : '-';
@@ -664,7 +664,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				obj3['stu_class_name'] = '';
 				obj3['deposite_date'] = '';
 				obj3['cheque_date'] = '';
-				obj3['dishonor_date'] = '';
+				obj3['dishonour_date'] = '';
 				obj3['invoice_id'] = '';
 				obj3['invoice_no'] = '';
 				obj3['receipt_no'] = '';
@@ -1409,8 +1409,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
 		}
 		if (this.reportFilterForm.value.c_type === 'cd') {
-			reportType = new TitleCasePipe().transform('cheque_disonered_') + this.sessionName;
-			reportType2 = new TitleCasePipe().transform('cheque disonered report: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('cheque_dishonour_') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('cheque dishonour report: ') + this.sessionName;
 		}
 		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
@@ -1452,7 +1452,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				for (const item2 of this.exportColumnDefinitions) {
 					if ((item2.id === 'transaction_date' ||
 					item2.id === 'cheque_date' || item2.id === 'deposite_date'
-						|| item2.id === 'dishonor_date') && json[key][item2.id] !== '-') {
+						|| item2.id === 'dishonour_date') && json[key][item2.id] !== '-') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 					} else {
 						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
@@ -1684,7 +1684,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['deposite_date'] = '';
 					obj3['cheque_date'] = '';
-					obj3['dishonor_date'] = '';
+					obj3['dishonour_date'] = '';
 					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
 					obj3['receipt_no'] = '';
@@ -1744,7 +1744,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 						for (const item2 of this.exportColumnDefinitions) {
 							if ((item2.id === 'transaction_date' ||
 							item2.id === 'cheque_date' || item2.id === 'deposite_date'
-								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
+								|| item2.id === 'dishonour_date') && groupItem.rows[key][item2.id] !== '-') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
 								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -1761,7 +1761,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['deposite_date'] = '';
 					obj3['cheque_date'] = '';
-					obj3['dishonor_date'] = '';
+					obj3['dishonour_date'] = '';
 					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
 					obj3['receipt_no'] = '';
@@ -1835,7 +1835,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('cheque clearance report') + this.sessionName;
 		}
 		if (this.reportFilterForm.value.c_type === 'cd') {
-			reportType = new TitleCasePipe().transform('cheque disonered report') + this.sessionName;
+			reportType = new TitleCasePipe().transform('cheque dishonour report') + this.sessionName;
 		}
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
@@ -1878,7 +1878,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
-					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonour_date'
 					|| item2.id === 'transaction_date'
 						|| item2.id === 'deposite_date')) {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
@@ -2073,7 +2073,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['deposite_date'] = '';
 					obj3['cheque_date'] = '';
-					obj3['dishonor_date'] = '';
+					obj3['dishonour_date'] = '';
 					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
 					obj3['receipt_no'] = '';
@@ -2103,7 +2103,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
 						for (const item2 of this.columnDefinitions) {
-							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date' ||
+							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonour_date' ||
 							item2.id === 'transaction_date' 
 								|| item2.id === 'deposite_date')) {
 								arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
@@ -2123,7 +2123,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['deposite_date'] = '';
 					obj3['cheque_date'] = '';
-					obj3['dishonor_date'] = '';
+					obj3['dishonour_date'] = '';
 					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
 					obj3['receipt_no'] = '';

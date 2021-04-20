@@ -381,7 +381,7 @@ export class StoreAssignReportComponent implements OnInit {
             let obj: any = {};
             obj['id'] = ind;
             obj['srno'] = ind + 1;
-            obj['receipt_no'] = item.bill_id;
+            obj['receipt_no'] = item.bill_no;
             obj['receipt_date'] = item.created_date ? this.CommonService.dateConvertion(item.created_date, 'dd-MMM-y') : '-';
             if (item.buyer_details.au_role_id === 3) {
               obj['emp_id'] = 'Emp - ' + item.buyer_details.emp_id;
