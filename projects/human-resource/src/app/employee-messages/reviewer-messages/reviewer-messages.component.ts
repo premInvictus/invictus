@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
 import {SelectionModel} from '@angular/cdk/collections';
 import {Element} from './model';
+import { ForwardCommunicationComponent } from '../../hr-shared/forward-communication/forward-communication.component'
+
 @Component({
 	selector: 'app-reviewer-messages',
 	templateUrl: './reviewer-messages.component.html',
@@ -79,6 +81,26 @@ export class ReviewerMessagesComponent implements OnInit {
 			search: ''
 		});
 	}
+	openForwardDialog(element=null) {
+		if(!element) {
+			if(this.selection.selected.length == 1) {
+				element = this.selection.selected[0].action;
+			}
+		}
+		const diaogRef = this.dialog.open(ForwardCommunicationComponent, {
+			width: '80%',
+			height: '30%',
+			position: {
+			  top: '10%'
+			},
+			data: element
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result && result.emp_code_no) {
+				
+			}
+		});
+	  }
 
 
 	openDeleteDialog = (data) => {
@@ -189,7 +211,12 @@ export class ReviewerMessagesComponent implements OnInit {
 
 	deleteMessageFunc(element) {
 		console.log('element--',element);
-		this.updateMessage(element);
+		if(element) {
+			this.updateMessage('delete',element);
+		} else {
+			this.updateMessage('delete');
+		}
+		
 		// this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
 		// 	if (result) {
 		// 		this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
@@ -250,7 +277,7 @@ export class ReviewerMessagesComponent implements OnInit {
 		this.renderForm = {addMode:false, editMode:false, messageType: element.msg_type, formData:element, viewMode : false,};
 
 	}
-	updateMessage(action) {
+	updateMessage(action,element=null) {
 		console.log(this.selection.selected);
 		let msg_status;
 		if(action == 'approved') {
@@ -261,10 +288,25 @@ export class ReviewerMessagesComponent implements OnInit {
 			msg_status = { status_id: '5', status_name: 'delete' };
 		}		
 		let jsonData = [];
-		if(this.selection.selected.length > 0){
+		if(element) {
+			jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+		} else {
+			let isCommunication = true;
 			this.selection.selected.forEach(element => {
-				jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+				if(element.action.msg_type != 'C') {
+					isCommunication = false;
+				}
 			});
+			if(isCommunication){
+				this.selection.selected.forEach(element => {
+					jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please select communicaation message', 'error');
+			}
+			
+		}
+		if(jsonData.length > 0){			
 			this.commonAPIService.updateMessage(jsonData).subscribe((result: any) => {
 				if (result) {
 					this.getMessages();
