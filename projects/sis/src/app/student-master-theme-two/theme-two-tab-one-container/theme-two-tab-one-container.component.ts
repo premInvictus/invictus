@@ -114,6 +114,9 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 
 	saveForm() {
 		
+		this.parentDetails.finalFormParentStatus = true;
+		
+		
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
@@ -171,6 +174,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					}
 				});
 			} else {
+				console.log("hrere");
+				
 				this.disabledApiCall = false;
 				if(this.showOnlyOneMessage) {
 					this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
@@ -181,9 +186,18 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 				if(this.context.studentdetails) {
 					this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+					if(!this.context.studentdetails.studentdetailsform.valid) {
+						this.goToTop();
+					}
 				}
 				this.markFormGroupTouched(this.childDetails.baseform)
-				this.markFormGroupTouched(this.childDetails.paddressform)
+				if(!this.childDetails.baseform.valid) {
+					this.goToTop();
+				}
+				this.markFormGroupTouched(this.childDetails.paddressform);
+				if(!this.childDetails.paddressform.valid) {
+					this.goToTop();
+				}
 				for (const item of this.parentDetails.formGroupArray) {
 					this.markFormGroupTouched(item.formGroup);
 				}
@@ -201,9 +215,18 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			
 			if(this.context.studentdetails) {
 				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+				if(!this.context.studentdetails.studentdetailsform.valid) {
+					this.goToTop();
+				}
 			}
 			this.markFormGroupTouched(this.childDetails.baseform)
-			this.markFormGroupTouched(this.childDetails.paddressform)
+			if(!this.childDetails.baseform.valid) {
+				this.goToTop();
+			}
+			this.markFormGroupTouched(this.childDetails.paddressform);
+			if(!this.childDetails.paddressform.valid) {
+				this.goToTop();
+			}
 			for (const item of this.parentDetails.formGroupArray) {
 				this.markFormGroupTouched(item.formGroup);
 			}
@@ -304,15 +327,30 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			}
 			if(this.context.studentdetails) {
 				this.markFormGroupTouched(this.context.studentdetails.studentdetailsform);
+				if(!this.context.studentdetails.studentdetailsform.valid) {
+					this.goToTop();
+				}
 			}
 			this.markFormGroupTouched(this.childDetails.baseform)
-			this.markFormGroupTouched(this.childDetails.paddressform)
+			if(!this.childDetails.baseform.valid) {
+				this.goToTop();
+			}
+			this.markFormGroupTouched(this.childDetails.paddressform);
+			if(!this.childDetails.paddressform.valid) {
+				this.goToTop();
+			}
 			for (const item of this.parentDetails.formGroupArray) {
 				this.markFormGroupTouched(item.formGroup);
 			}
 			
 		}
 	}
+	goToTop() {
+		// console.log("here++++++++++++++++++++++++++");
+		
+		// window.scrollTo(0,0);
+	  }
+	  
 	resetForm() {
 		this.childDetails.resetForm();
 		this.resetParentForm();
@@ -325,7 +363,6 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	validateParent() {
-		this.parentDetails.finalFormParentStatus = true;
 		this.parentJson = [];
 		let ctr = 0;
 		for (const item of this.parentDetails.formGroupArray) {
@@ -885,11 +922,37 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	}
 	editConfirm() { }
 
+	checkIfFieldExist(value) {
+
+		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
+		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	markFormGroupTouched(formGroup: FormGroup) {
 		// console.log("i a here", formGroup);
 		
 		(<any>Object).values(formGroup.controls).forEach(control => {
-			control.markAsTouched();
+			// let name = this.getNameofcontrol(formGroup, control);
+			let nameofcontrol = '';
+			Object.keys(formGroup.controls).forEach(key => {
+				let childControl = formGroup.get(key);
+		  
+				if (childControl !== control) {
+				  return;
+				}
+		  
+				nameofcontrol =  key;
+			  });
+
+			//   console.log("i am here", nameofcontrol);
+			  
+			if(this.checkIfFieldExist(nameofcontrol)) {
+				control.markAsTouched();
+			}	
 
 			if (control.controls) {
 				this.markFormGroupTouched(control);
