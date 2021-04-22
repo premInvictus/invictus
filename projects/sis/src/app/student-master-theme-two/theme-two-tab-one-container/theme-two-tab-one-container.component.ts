@@ -113,7 +113,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	}
 
 	saveForm() {
-		this.validateParent();
+		
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
@@ -147,6 +147,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				// if (this.childDetails.siblingArray.length > 0) {
 				// 	this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 				// }
+				this.validateParent();
 				this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
 				this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
 				this.taboneform.parentDetails = this.parentDetails ? this.parentJson : this.parentJson;
@@ -242,7 +243,6 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	updateForm(isview) {
-		this.validateParent();
 
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
@@ -272,6 +272,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			if (this.childDetails.siblingArray.length > 0) {
 				this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 			}
+
+			this.validateParent();
 			this.taboneform.parentDetails = this.parentDetails ? this.parentJson : this.parentJson;
 			// this.medicalDetails.addMedicalInfo();
 			this.taboneform.medicalDetails = this.medicalDetails ? this.medicalDetails.medicalform.value : '';
