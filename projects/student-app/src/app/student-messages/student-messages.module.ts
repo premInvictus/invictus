@@ -6,6 +6,7 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MessagesComponent } from 'projects/student-app/src/app/student-messages/messages/messages.component';
 import { ViewMessageComponent } from 'projects/student-app/src/app/student-messages/view-message/view-message.component';
+import { OutboxComponent } from './outbox/outbox.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -14,6 +15,6 @@ import { ViewMessageComponent } from 'projects/student-app/src/app/student-messa
     ReactiveFormsModule,
     FormsModule,
   ],
-  declarations: [MessagesComponent, ViewMessageComponent]
+  declarations: [MessagesComponent, ViewMessageComponent, OutboxComponent]
 })
 export class StudentMessagesModule { }

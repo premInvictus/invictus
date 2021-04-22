@@ -383,23 +383,26 @@ export class ForwardCommunicationComponent implements OnInit {
 
 	submit() {
 		var msgToArr = [];
-    for (var i = 0; i < this.selectedUserArr.length; i++) {
-      var userJson = {
-        "login_id": this.selectedUserArr[i]['login_id'],
-        "au_full_name": this.selectedUserArr[i]['au_full_name'],
-        "class_id": this.selectedUserArr[i]['class_id'],
-        "class_name": this.selectedUserArr[i]['class_name'],
-        "sec_id": this.selectedUserArr[i]['sec_id'],
-        "sec_name": this.selectedUserArr[i]['sec_name'],
-        "email": this.selectedUserArr[i]['email'],
-        "mobile": this.selectedUserArr[i]['mobile'],
-        "role_id": this.selectedUserArr[i]['role_id'],
-        "msg_status": { "status_id": "1", "status_name": "pending" },
-        "msg_sent_date_time": ""
-      }
-      msgToArr.push(userJson);
-    }
-    console.log('msgToArr', msgToArr);
+		for (var i = 0; i < this.selectedUserArr.length; i++) {
+			var userJson = {
+				"login_id": this.selectedUserArr[i]['login_id'],
+				"au_full_name": this.selectedUserArr[i]['au_full_name'],
+				"class_id": this.selectedUserArr[i]['class_id'],
+				"class_name": this.selectedUserArr[i]['class_name'],
+				"sec_id": this.selectedUserArr[i]['sec_id'],
+				"sec_name": this.selectedUserArr[i]['sec_name'],
+				"email": this.selectedUserArr[i]['email'],
+				"mobile": this.selectedUserArr[i]['mobile'],
+				"role_id": this.selectedUserArr[i]['role_id'],
+				"msg_status": { "status_id": "1", "status_name": "pending" },
+				"msg_sent_date_time": ""
+			}
+			msgToArr.push(userJson);
+    	}
+		console.log('msgToArr', msgToArr);
+		this.data.msg_to = msgToArr;
+		console.log(this.data);
+		this.dialogRef.close({status:true,data:this.data});
 	}
 
 	checkValidation() {

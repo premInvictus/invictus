@@ -82,11 +82,13 @@ export class ReviewerMessagesComponent implements OnInit {
 		});
 	}
 	openForwardDialog(element=null) {
+		
 		if(!element) {
 			if(this.selection.selected.length == 1) {
 				element = this.selection.selected[0].action;
 			}
 		}
+		console.log('element--',element);
 		const diaogRef = this.dialog.open(ForwardCommunicationComponent, {
 			width: '80%',
 			height: '30%',
@@ -96,14 +98,16 @@ export class ReviewerMessagesComponent implements OnInit {
 			data: element
 		});
 		diaogRef.afterClosed().subscribe((result: any) => {
-			if (result && result.emp_code_no) {
-				
+			console.log('afterClosed',result);
+			if (result && result.status) {
+				this.updateMessage('approved',{action:result.data});
 			}
 		});
 	  }
 
 
 	openDeleteDialog = (data) => {
+		data['head'] = 'Delete';
 		this.deleteModal.openModal(data);
 	}
 
@@ -131,6 +135,7 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	prepareDataSource() {
+		this.selection.clear();
 		this.dataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
@@ -289,7 +294,11 @@ export class ReviewerMessagesComponent implements OnInit {
 		}		
 		let jsonData = [];
 		if(element) {
-			jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+			let tempele:any= {};
+			tempele['msg_id'] = element.action.msg_id;
+			tempele['msg_status'] = msg_status;
+			tempele['msg_to'] = element.action.msg_to;
+			jsonData.push(tempele);
 		} else {
 			let isCommunication = true;
 			this.selection.selected.forEach(element => {

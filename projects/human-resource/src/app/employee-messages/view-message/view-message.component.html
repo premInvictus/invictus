@@ -68,17 +68,17 @@
                                         
                                     </span> -->
                                     <span *ngIf="item?.msg_status && item?.msg_status?.status_name === 'unread'">
-                                        <b><span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span></b>
+                                        <b><span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject | titlecase}}</span></b>
                                     </span>
                                     <span *ngIf="item?.msg_status && item?.msg_status?.status_name !== 'unread'">
-                                        <span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span>
+                                        <span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject | titlecase}}</span>
                                     </span>
                                     
                                     <!-- 12458-Gaurav Kumar , X-A -->
                                 </div> <br>
                                 <div class="profile-to-detail">To:
                                     <span *ngFor="let titem of item?.msg_to" class="to-user-data">
-                                        {{titem?.au_full_name}} ,
+                                        {{titem?.au_full_name | titlecase}} ,
                                     </span>
                                 </div>
                             </div>

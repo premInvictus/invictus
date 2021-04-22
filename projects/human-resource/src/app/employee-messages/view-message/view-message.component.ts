@@ -233,6 +233,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 			this.userDataArr = [];
 			this.erpCommonService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
+					console.log('getMasterStudentDetail',result);
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
 							au_login_id: result.data[i]['au_login_id'],
