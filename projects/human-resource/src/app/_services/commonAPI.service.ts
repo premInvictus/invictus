@@ -458,6 +458,10 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/update', value);
 	}
+	updateMessageBulk(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/updateBulk', value);
+	}
 
 	getMessage(value) {
 		this.loader.startLoading();

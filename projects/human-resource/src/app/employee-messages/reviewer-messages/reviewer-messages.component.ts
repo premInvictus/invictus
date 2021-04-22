@@ -6,6 +6,10 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
+import {SelectionModel} from '@angular/cdk/collections';
+import {Element} from './model';
+import { ForwardCommunicationComponent } from '../../hr-shared/forward-communication/forward-communication.component'
+
 @Component({
 	selector: 'app-reviewer-messages',
 	templateUrl: './reviewer-messages.component.html',
@@ -24,11 +28,12 @@ export class ReviewerMessagesComponent implements OnInit {
 	USER_ELEMENT_DATA: any[] = [];
 	selectedUserArr: any[] = [];
 	allUserSelectFlag = false;
-	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+	dataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 	currentUser = {};
 	showViewMessage = false;
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
+	selection = new SelectionModel<Element>(true, []);
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -41,13 +46,34 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.scheduleMessageDataSource.sort = this.sort;
+		this.dataSource.sort = this.sort;
 		this.buildForm();
 		this.getMessages();
 	}
+	/** Whether the number of selected elements matches the total number of rows. */
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+	  }
+	
+	  /** Selects all rows if they are not all selected; otherwise clear selection. */
+	  masterToggle() {
+		this.isAllSelected() ?
+			this.selection.clear() :
+			this.dataSource.data.forEach(row => this.selection.select(row));
+	  }
+	
+	  /** The label for the checkbox on the passed row */
+	  checkboxLabel(row?: Element): string {
+		if (!row) {
+		  return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+		}
+		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.no + 1}`;
+	  }
 
 	ngAfterViewInit() {
-		this.scheduleMessageDataSource.sort = this.sort;
+		this.dataSource.sort = this.sort;
 	}
 
 	buildForm() {
@@ -55,10 +81,30 @@ export class ReviewerMessagesComponent implements OnInit {
 			search: ''
 		});
 	}
+	openForwardDialog(element=null) {
+		if(!element) {
+			if(this.selection.selected.length == 1) {
+				element = this.selection.selected[0].action;
+			}
+		}
+		const diaogRef = this.dialog.open(ForwardCommunicationComponent, {
+			width: '80%',
+			height: '30%',
+			position: {
+			  top: '10%'
+			},
+			data: element
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result && result.emp_code_no) {
+				
+			}
+		});
+	  }
 
 
 	openDeleteDialog = (data) => {
-		this.deleteModal.openDeleteModal(data);
+		this.deleteModal.openModal(data);
 	}
 
 
@@ -66,12 +112,14 @@ export class ReviewerMessagesComponent implements OnInit {
 		this.scheduleMessageData = [];
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
-			// 'no',		
+			// 'no',	
+			'select',
 			'schedule_date',
+			'user_type',	
 			'subject',
 			// 'attachment',
 			'send_by',
-			// 'action'
+			'action'
 		];
 		var inputJson = {};
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
@@ -83,7 +131,7 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	prepareDataSource() {
-		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+		this.dataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
 			const tempObj = {};
@@ -115,11 +163,11 @@ export class ReviewerMessagesComponent implements OnInit {
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
-		this.scheduleMessageDataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
-		this.scheduleMessageDataSource.paginator = this.paginator;
+		this.dataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
+		this.dataSource.paginator = this.paginator;
 		if (this.sort) {
 			this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-			this.scheduleMessageDataSource.sort = this.sort;
+			this.dataSource.sort = this.sort;
 		}
 	}
 
@@ -150,7 +198,7 @@ export class ReviewerMessagesComponent implements OnInit {
 
 
 	applyFilterUser(filterValue: string) {
-		this.scheduleMessageDataSource.filter = filterValue.trim().toLowerCase();
+		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 
 
@@ -162,14 +210,21 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	deleteMessageFunc(element) {
-		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
-			if (result) {
-				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
-				this.getMessages();
-			} else {
-				this.commonAPIService.showSuccessErrorMessage('Error while deleting message', 'error');
-			}
-		});
+		console.log('element--',element);
+		if(element) {
+			this.updateMessage('delete',element);
+		} else {
+			this.updateMessage('delete');
+		}
+		
+		// this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
+		// 	if (result) {
+		// 		this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
+		// 		this.getMessages();
+		// 	} else {
+		// 		this.commonAPIService.showSuccessErrorMessage('Error while deleting message', 'error');
+		// 	}
+		// });
 
 	} 
 
@@ -221,6 +276,48 @@ export class ReviewerMessagesComponent implements OnInit {
 		this.showViewMessage = !this.showViewMessage;
 		this.renderForm = {addMode:false, editMode:false, messageType: element.msg_type, formData:element, viewMode : false,};
 
+	}
+	updateMessage(action,element=null) {
+		console.log(this.selection.selected);
+		let msg_status;
+		if(action == 'approved') {
+			msg_status = { status_id: '2', status_name: 'approved' };
+		} else if(action == 'rejected') {
+			msg_status = { status_id: '4', status_name: 'rejected' };
+		} else if(action == 'delete') {
+			msg_status = { status_id: '5', status_name: 'delete' };
+		}		
+		let jsonData = [];
+		if(element) {
+			jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+		} else {
+			let isCommunication = true;
+			this.selection.selected.forEach(element => {
+				if(element.action.msg_type != 'C') {
+					isCommunication = false;
+				}
+			});
+			if(isCommunication){
+				this.selection.selected.forEach(element => {
+					jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please select communicaation message', 'error');
+			}
+			
+		}
+		if(jsonData.length > 0){			
+			this.commonAPIService.updateMessage(jsonData).subscribe((result: any) => {
+				if (result) {
+					this.getMessages();
+					this.commonAPIService.showSuccessErrorMessage('Message has been Updated Successfully', 'success');
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Approving Message', 'error');
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please select message', 'error');
+		}
 	}
 }
 

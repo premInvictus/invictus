@@ -48,6 +48,7 @@ import { SearchViaNameComponent } from './search-via-name/search-via-name.compon
 import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
 import { EmpCommonProfileComponent } from '../employee-master/emp-common-profile/emp-common-profile.component';
 import { SalarySlipModalComponent } from './salary-slip-modal/salary-slip-modal.component';
+import { ForwardCommunicationComponent } from './forward-communication/forward-communication.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -129,6 +130,7 @@ export const MY_FORMATS = {
 		IndianCurrency,
 		SearchViaNameComponent,
 		SalarySlipModalComponent,
+		ForwardCommunicationComponent,
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
@@ -147,7 +149,8 @@ export const MY_FORMATS = {
 		ComposeMessageComponent,
 		ProcessdateModalComponent,
 		MessagesAdvancedSearchModalComponent,
-		SearchViaNameComponent
+		SearchViaNameComponent,
+		ForwardCommunicationComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -198,7 +201,8 @@ export const MY_FORMATS = {
 		MessagesAdvancedSearchModalComponent,
 		CKEditorModule,
 		IndianCurrency,
-		SalarySlipModalComponent
+		SalarySlipModalComponent,
+		ForwardCommunicationComponent
 		//EmployeeDetailsComponent
 	],
 	providers: [
