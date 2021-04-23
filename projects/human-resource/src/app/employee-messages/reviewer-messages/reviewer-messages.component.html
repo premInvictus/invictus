@@ -191,9 +191,12 @@
                             </tr>
                         </table>
 
-                        <mat-paginator #paginator [pageSizeOptions]=[100,300,500] [pageSize]="100" showFirstLastButtons>
+                        <mat-paginator #paginator [pageSizeOptions]=[100,300,500] [pageSize]="100" showFirstLastButtons 
+                        (page)="pageEvent = fetchData($event)">
                         </mat-paginator>
-                    </div>
+                        <!-- <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions"
+                        showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator> -->
+                    </div> 
                     <!-- <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
                         <tr *ngIf="USER_ELEMENT_DATA.length == 0">
                             <td colspan="6">No Record Found</td>

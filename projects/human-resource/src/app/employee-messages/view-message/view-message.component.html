@@ -51,22 +51,15 @@
                     <mat-expansion-panel-header class="mat-row">
                         <div class="message-header">
                             <div class="circle-thumbnail">
-                                <label for="image" class="main-label-img">
-                                    <img class="student-pic--imgone student-pic__circle sis-student-pic__size"
-                                        src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/hr/auxilliary/profile/Syllabus%20Management.png">
-                                </label>
+                                    <label for="image" class="main-label-img">
+                                            <img style="border-radius:50%"
+                                            [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'"
+                                            onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'" />
+                                        </label>
                             </div>
                             <div class="profile-detail">
                                 <div class="profie-name-detail">
-                                    <!-- <span *ngIf="currentUser?.role_id === '3'">{{currentUser?.full_name}} {{item?.subject}}</span> -->
-                                    <!-- <span *ngIf="currentUser?.role_id === '4'">
-                                            <span *ngFor="let titem of item?.user_data" class="to-user-data">
-                                                    <span *ngIf="titem?.login_id === currentUser?.login_id" >
-                                                    {{titem?.admission_no}} - {{currentUser?.full_name}} , {{titem?.class_name}} <span *ngIf="titem?.sec_name"> - {{titem?.sec_name}} </span>   {{item?.subject}}
-                                                    </span>
-                                            </span>
-                                        
-                                    </span> -->
+                                   
                                     <span *ngIf="item?.msg_status && item?.msg_status?.status_name === 'unread'">
                                         <b><span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject | titlecase}}</span></b>
                                     </span>
@@ -74,7 +67,7 @@
                                         <span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject | titlecase}}</span>
                                     </span>
                                     
-                                    <!-- 12458-Gaurav Kumar , X-A -->
+                                    
                                 </div> <br>
                                 <div class="profile-to-detail">To:
                                     <span *ngFor="let titem of item?.msg_to" class="to-user-data">
@@ -95,9 +88,7 @@
                             </div>
                         </div>
 
-                        <!-- <span>{{item.vesselId}}</span>
-                        <span>{{item.vesselStatus}}</span>
-                        <span>{{item.ircs}}</span> -->
+                       
                     </mat-expansion-panel-header>
                     <div class="message-content">
                         <div class="message-description">
@@ -125,11 +116,8 @@
                                 <div class="message-container">
                                     <div class="row">
                                         <div class="col-12 border-bottom">
-                                            <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                             <div class="to-section">
                                                 <span class="to-abbr" style="float: left"><b>To</b>&nbsp;</span>
-                                                <!-- <input matInput placeholder="" type="input"
-                                                    formControlName="messageTo" style="width:90%; float:left"/> -->
                                                 <div class="user-chips">
                                                     <button *ngFor="let item of selectedUserArr; let i= index;"
                                                         mat-stroked-button class="custom-entry-button margin-left-10">
@@ -209,13 +197,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="row">
-                                        <div class="col-12 border-bottom">
-                                            <input matInput placeholder="Rep : " type="input"
-                                                formControlName="messageSubject" style="width: 90%;
-                                                    padding: 10px;" />
-                                        </div>
-                                    </div> -->
 
                                     <div class="row">
                                         <div class="col-12">

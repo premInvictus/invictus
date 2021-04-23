@@ -34,6 +34,9 @@ export class ReviewerMessagesComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
 	selection = new SelectionModel<Element>(true, []);
+	bookpagesize = 100;
+	bookpageindex = 0;
+	totalRecords = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -74,6 +77,7 @@ export class ReviewerMessagesComponent implements OnInit {
 
 	ngAfterViewInit() {
 		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.paginator;
 	}
 
 	buildForm() {
@@ -110,7 +114,12 @@ export class ReviewerMessagesComponent implements OnInit {
 		data['head'] = 'Delete';
 		this.deleteModal.openModal(data);
 	}
-
+	fetchData(event?: PageEvent) {
+		this.bookpageindex = event.pageIndex;
+		this.bookpagesize = event.pageSize;
+		this.getMessages();
+		return event;
+	}
 
 	getMessages() {
 		this.scheduleMessageData = [];
@@ -125,10 +134,13 @@ export class ReviewerMessagesComponent implements OnInit {
 			'send_by',
 			'action'
 		];
-		var inputJson = {};
+		var inputJson = {}; 
+		inputJson['pageIndex'] = this.bookpageindex;
+		inputJson['pageSize'] = this.bookpagesize;
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
+				this.totalRecords = result.totalRecord;
 				this.prepareDataSource();
 			}
 		});
@@ -169,11 +181,15 @@ export class ReviewerMessagesComponent implements OnInit {
 			counter++;
 		}
 		this.dataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
-		this.dataSource.paginator = this.paginator;
 		if (this.sort) {
 			this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 			this.dataSource.sort = this.sort;
 		}
+		if (this.dataSource.paginator) {
+			
+		}
+		this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+			this.dataSource.paginator = this.paginator;
 	}
 
 	checkAllUserList($event) {

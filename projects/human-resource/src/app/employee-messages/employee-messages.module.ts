@@ -7,6 +7,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MessagesComponent } from './messages/messages.component';
 import { ReviewerMessagesComponent } from './reviewer-messages/reviewer-messages.component';
 import { ViewMessageComponent } from './view-message/view-message.component';
+import { OutboxComponent } from './outbox/outbox.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +16,6 @@ import { ViewMessageComponent } from './view-message/view-message.component';
 		ReactiveFormsModule,
 		FormsModule,
   ],
-  declarations: [MessagesComponent,ReviewerMessagesComponent, ViewMessageComponent]
+  declarations: [MessagesComponent,ReviewerMessagesComponent, ViewMessageComponent, OutboxComponent]
 })
 export class EmployeeMessagesModule { }

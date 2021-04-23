@@ -46,6 +46,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	attachmentArray: any[] = [];
 	currentRowIndex = 0;
 	filterValue = '';
+	defaultsrc:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -72,8 +73,22 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 				this.messagesData.push(this.reRenderForm.formData.action.msg_thread[i]);
 			}
 		}
+		this.getMsgFromDetails();
 	}
-
+	getMsgFromDetails(){
+		let inputJson:any = {};
+		inputJson['login_id'] = this.reRenderForm.formData.action.msg_from;
+		this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]['au_login_id']) {
+				console.log('getMsgFromDetails--',result);
+				if (result.data[0].au_profile_pic) {
+					this.defaultsrc = result.data[0].au_profile_pic
+				  } else {
+					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+				  }
+			}
+		});
+	}
 
 	buildForm() {
 		this.ckeConfig = ckconfig;

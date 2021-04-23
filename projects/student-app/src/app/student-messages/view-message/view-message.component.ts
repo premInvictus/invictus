@@ -6,6 +6,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,
 import { MatDialog } from '@angular/material';
 import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
 import { ckconfig } from '../../shared-module/config/ckeditorconfig';
+import { TagInputAccessor } from 'ngx-chips/core/accessor';
 @Component({
 	selector: 'app-view-message',
 	templateUrl: './view-message.component.html',
@@ -46,6 +47,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	attachmentArray: any[] = [];
 	currentRowIndex = 0;
 	filterValue = '';
+	defaultsrc:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -66,12 +68,14 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.reRenderForm.formData.action['showReplyBox'] = false;
 		this.messagesData.push(this.reRenderForm.formData.action);
+		console.log('this.messagesData--',this.messagesData);
 		if (this.reRenderForm.formData.action.msg_thread && this.reRenderForm.formData.action.msg_thread.length > 0) {
 			for (var i = 0; i < this.reRenderForm.formData.action.msg_thread.length; i++) {
 				this.reRenderForm.formData.action.msg_thread[i]['showReplyBox'] = false;
 				this.messagesData.push(this.reRenderForm.formData.action.msg_thread[i]);
 			}
 		}
+		this.getMsgFromDetails();
 	}
 
 
@@ -125,6 +129,20 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	reset() {
 		this.editTemplateFlag = false;
 		this.messageForm.reset();
+	}
+	getMsgFromDetails(){
+		let inputJson:any = {};
+		inputJson['au_login_id'] = this.reRenderForm.formData.msg_from;
+		this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]['au_login_id']) {
+				console.log('getMsgFromDetails--',result);
+				if (result.data[0].au_profile_pic) {
+					this.defaultsrc = result.data[0].au_profile_pic
+				  } else {
+					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+				  }
+			}
+		});
 	}
 
 	getUser(role_id) {
