@@ -269,7 +269,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
-			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
+			this.childDetails.paddressform.valid ) {
 			this.taboneform = this.context.studentdetails.studentdetailsform.value;
 			this.childDetails.baseform.value.upd_doj =
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_doj, 'yyyy-MM-dd');
