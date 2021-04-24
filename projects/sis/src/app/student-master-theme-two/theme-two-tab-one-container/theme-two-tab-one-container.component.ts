@@ -266,19 +266,23 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	updateForm(isview) {
-
+		this.parentDetails.finalFormParentStatus = true;
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid ) {
+			this.validateParent();
 			this.taboneform = this.context.studentdetails.studentdetailsform.value;
 			this.childDetails.baseform.value.upd_doj =
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_doj, 'yyyy-MM-dd');
 			this.childDetails.baseform.value.upd_dob =
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 			this.taboneform.personalDetails = this.childDetails.baseform.value;
+			if(this.childDetails.cityId != 0 && this.childDetails.cityId != '0')
 			this.childDetails.paddressform.patchValue({
 				'ea_city': this.childDetails.cityId
 			});
+
+			if(this.childDetails.cityId2 != 0 && this.childDetails.cityId2 != '0')
 			this.childDetails.raddressform.patchValue({
 				'ea_city': this.childDetails.cityId2
 			});
@@ -296,7 +300,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 			}
 
-			this.validateParent();
+			
 			this.taboneform.parentDetails = this.parentDetails ? this.parentJson : this.parentJson;
 			// this.medicalDetails.addMedicalInfo();
 			this.taboneform.medicalDetails = this.medicalDetails ? this.medicalDetails.medicalform.value : '';
@@ -363,6 +367,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	validateParent() {
+		console.log("check and help");
+		
 		this.parentJson = [];
 		let ctr = 0;
 		for (const item of this.parentDetails.formGroupArray) {
@@ -478,8 +484,12 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				this.parentDetails.finalFormParentStatus = false;
 			}
 		}
+		console.log(" am hereeeee --------------------------");
+		
 		const datePipe = new DatePipe('en-in');
 		if (this.parentDetails.finalFormParentStatus === true) {
+			console.log("in here ++++++++++++++++++++++++++++++");
+			
 			for (const item of this.parentDetails.formGroupArray) {
 				this.parentJson.push({
 					epd_id: item.formGroup.value.epd_id,
