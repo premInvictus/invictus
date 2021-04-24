@@ -277,15 +277,20 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.childDetails.baseform.value.upd_dob =
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 			this.taboneform.personalDetails = this.childDetails.baseform.value;
-			if(this.childDetails.cityId != 0 && this.childDetails.cityId != '0')
-			this.childDetails.paddressform.patchValue({
-				'ea_city': this.childDetails.cityId
-			});
+			if(this.childDetails.cityId != 0 && this.childDetails.cityId != '0' && this.childDetails.paddressform.value.ea_city != '') {
+				this.childDetails.paddressform.patchValue({
+					'ea_city': this.childDetails.cityId
+				});
+			} 
+			
+		
 
-			if(this.childDetails.cityId2 != 0 && this.childDetails.cityId2 != '0')
-			this.childDetails.raddressform.patchValue({
-				'ea_city': this.childDetails.cityId2
-			});
+			if(this.childDetails.cityId2 != 0 && this.childDetails.cityId2 != '0' && this.childDetails.raddressform.value.ea_city != '') {
+				this.childDetails.raddressform.patchValue({
+					'ea_city': this.childDetails.cityId2
+				});
+			}
+			
 			this.childDetails.paddressform.patchValue({
 				'ea_same_residential_address': this.childDetails.paddressform.value.ea_same_residential_address ? 'Y' : 'N'
 			});
