@@ -1,5 +1,5 @@
-<div class="modal-custom-cotainer">
-  <div class="row remove-top-margin">
+<div>
+  <!-- <div class="row remove-top-margin">
     <div class="col-12 remove-col-padding">
       <div class="modal-title-box">
         <span class="font-size-20 font-white font-regular">{{data.title}}</span><span
@@ -7,13 +7,23 @@
             class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
       </div>
     </div>
+  </div> -->
+  <div class="row remove-modal-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="dialog-title-container ">
+        <span class="font-size-24 font-white">Forward</span>
+        <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+          cancel
+        </i>
+      </div>
+    </div>
   </div>
 
   <form [formGroup]="messageForm">
-  <div class="row" style="margin-top: 20px;">
+  <div class="row" style="margin-top: 50px;">
     <div class="col-12 border-bottom">
       <!-- <mat-form-field class="form-field" appearance="outline"> -->
-      <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
+      <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 85%;
         padding: 10px;" readonly />
       <div class="user-chips" *ngIf="selectedUserArr.length > 0">
         <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
@@ -23,12 +33,13 @@
         </button>
       </div>
       <span>
+        <span class="remove-all" *ngIf="selectedUserArr.length > 0"><i
+          class="fas fa-trash-alt" style="color:#ff0000" (click)="removeAll()"></i></span>&nbsp;
         <span class="three-dot" *ngIf="this.messageForm.value.messageType != ''">
           <i class="fa fa-ellipsis-v" aria-hidden="true" style="cursor: pointer; z-index: 99999;"
             (click)="showUserContextMenu =!showUserContextMenu "></i>
         </span>
-        <span class="remove-all" *ngIf="this.messageForm.value.messageType != '' && selectedUserArr.length > 0"><i
-            class="fas fa-trash-alt" style="color:#ff0000" (click)="removeAll()"></i></span>
+        
       </span>
       <div *ngIf="showUserContextMenu" class="user-context-menu">
         <ul class="user-type-menu" *ngIf="!showClass && !showUser">

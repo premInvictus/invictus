@@ -17,7 +17,7 @@
                             Search
                         </button>
                     </div> -->
-                    <div class="col-1">
+                    <div class="col-6 text-right">
                         <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
                             (click)="composeMessage()" style="height:48px;">Compose</button>
                     </div>
@@ -55,7 +55,7 @@
                                     <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
                                 </mat-form-field>
                     </div>
-                    <div class="col-9" *ngIf="selection.selected.length > 0">
+                    <div class="col-9 text-right" *ngIf="selection.selected.length > 0">
                             <button mat-raised-button class="btn-success btn-consolidate btn-spacer"
                             (click)="updateMessage('approved')">Approve</button>
                     <button mat-raised-button class="btn-danger btn-consolidate btn-spacer"
@@ -191,9 +191,12 @@
                             </tr>
                         </table>
 
-                        <mat-paginator #paginator [pageSizeOptions]=[100,300,500] [pageSize]="100" showFirstLastButtons>
+                        <mat-paginator #paginator [pageSizeOptions]=[100,300,500] [pageSize]="100" showFirstLastButtons 
+                        (page)="pageEvent = fetchData($event)">
                         </mat-paginator>
-                    </div>
+                        <!-- <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions"
+                        showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator> -->
+                    </div> 
                     <!-- <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
                         <tr *ngIf="USER_ELEMENT_DATA.length == 0">
                             <td colspan="6">No Record Found</td>

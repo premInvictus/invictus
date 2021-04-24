@@ -12,12 +12,13 @@ export class DeleteModalComponent implements OnInit {
 	@Output() deleteCancel = new EventEmitter<any>();
 	dialogRef: MatDialogRef<DeleteModalComponent>;
 	@ViewChild('deleteModal') deleteModal;
-	head: any = '';
+	head: any = 'Delete';
 	constructor(private dialog: MatDialog) { }
 
 	ngOnInit() {
 	}
 	openModal(data) {
+		console.log('data--',data);
 		this.inputData = data;
 
 		if (!(this.inputData && this.inputData.text)) {

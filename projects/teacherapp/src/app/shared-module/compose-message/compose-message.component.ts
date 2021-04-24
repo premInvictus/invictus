@@ -679,7 +679,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
-				"msg_status": { "status_id": 1, "status_name": "unread" },
+				"msg_status": { "status_id": 1, "status_name": "pending" },
 				// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 				"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },

@@ -34,6 +34,9 @@ export class ReviewerMessagesComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
 	selection = new SelectionModel<Element>(true, []);
+	bookpagesize = 100;
+	bookpageindex = 0;
+	totalRecords = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -74,6 +77,7 @@ export class ReviewerMessagesComponent implements OnInit {
 
 	ngAfterViewInit() {
 		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.paginator;
 	}
 
 	buildForm() {
@@ -82,11 +86,13 @@ export class ReviewerMessagesComponent implements OnInit {
 		});
 	}
 	openForwardDialog(element=null) {
+		
 		if(!element) {
 			if(this.selection.selected.length == 1) {
 				element = this.selection.selected[0].action;
 			}
 		}
+		console.log('element--',element);
 		const diaogRef = this.dialog.open(ForwardCommunicationComponent, {
 			width: '80%',
 			height: '30%',
@@ -96,17 +102,24 @@ export class ReviewerMessagesComponent implements OnInit {
 			data: element
 		});
 		diaogRef.afterClosed().subscribe((result: any) => {
-			if (result && result.emp_code_no) {
-				
+			console.log('afterClosed',result);
+			if (result && result.status) {
+				this.updateMessage('approved',{action:result.data});
 			}
 		});
 	  }
 
 
 	openDeleteDialog = (data) => {
+		data['head'] = 'Delete';
 		this.deleteModal.openModal(data);
 	}
-
+	fetchData(event?: PageEvent) {
+		this.bookpageindex = event.pageIndex;
+		this.bookpagesize = event.pageSize;
+		this.getMessages();
+		return event;
+	}
 
 	getMessages() {
 		this.scheduleMessageData = [];
@@ -121,16 +134,20 @@ export class ReviewerMessagesComponent implements OnInit {
 			'send_by',
 			'action'
 		];
-		var inputJson = {};
+		var inputJson = {}; 
+		inputJson['pageIndex'] = this.bookpageindex;
+		inputJson['pageSize'] = this.bookpagesize;
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
+				this.totalRecords = result.totalRecord;
 				this.prepareDataSource();
 			}
 		});
 	}
 
 	prepareDataSource() {
+		this.selection.clear();
 		this.dataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
@@ -164,11 +181,15 @@ export class ReviewerMessagesComponent implements OnInit {
 			counter++;
 		}
 		this.dataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
-		this.dataSource.paginator = this.paginator;
 		if (this.sort) {
 			this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 			this.dataSource.sort = this.sort;
 		}
+		if (this.dataSource.paginator) {
+			
+		}
+		this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+			this.dataSource.paginator = this.paginator;
 	}
 
 	checkAllUserList($event) {
@@ -289,7 +310,11 @@ export class ReviewerMessagesComponent implements OnInit {
 		}		
 		let jsonData = [];
 		if(element) {
-			jsonData.push({ 'msg_id': element.action.msg_id, 'msg_status' : msg_status});
+			let tempele:any= {};
+			tempele['msg_id'] = element.action.msg_id;
+			tempele['msg_status'] = msg_status;
+			tempele['msg_to'] = element.action.msg_to;
+			jsonData.push(tempele);
 		} else {
 			let isCommunication = true;
 			this.selection.selected.forEach(element => {

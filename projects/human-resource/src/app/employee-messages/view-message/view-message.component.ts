@@ -46,6 +46,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	attachmentArray: any[] = [];
 	currentRowIndex = 0;
 	filterValue = '';
+	defaultsrc:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -66,12 +67,14 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.reRenderForm.formData.action['showReplyBox'] = false;
 		this.messagesData.push(this.reRenderForm.formData.action);
+		console.log('this.messagesData',this.reRenderForm.formData.action);
 		if (this.reRenderForm.formData.action.msg_thread && this.reRenderForm.formData.action.msg_thread.length > 0) {
 			for (var i = 0; i < this.reRenderForm.formData.action.msg_thread.length; i++) {
 				this.reRenderForm.formData.action.msg_thread[i]['showReplyBox'] = false;
 				this.messagesData.push(this.reRenderForm.formData.action.msg_thread[i]);
 			}
 		}
+		this.getMsgFromDetails();
 	}
 
 
@@ -87,6 +90,21 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		});
 		this.searchForm = this.fbuild.group({
 			search: ''
+		});
+	}
+
+	getMsgFromDetails(){
+		let inputJson:any = {};
+		inputJson['login_id'] = this.reRenderForm.formData.action.msg_from;
+		this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]['au_login_id']) {
+				console.log('getMsgFromDetails--',result);
+				if (result.data[0].au_profile_pic) {
+					this.defaultsrc = result.data[0].au_profile_pic
+				  } else {
+					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+				  }
+			}
 		});
 	}
 
@@ -233,6 +251,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 			this.userDataArr = [];
 			this.erpCommonService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
+					console.log('getMasterStudentDetail',result);
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
 							au_login_id: result.data[i]['au_login_id'],
@@ -522,6 +541,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 
 	back() {
 		var filterValue = this.filterValue ?  this.filterValue : '';
+		console.log('filterValue at back',filterValue);
 		this.backToBroadcast.emit(filterValue);
 	}
 

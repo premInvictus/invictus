@@ -5,14 +5,16 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
+
 @Component({
-	selector: 'app-messages',
-	templateUrl: './messages.component.html',
-	styleUrls: ['./messages.component.scss']
+  selector: 'app-outbox',
+  templateUrl: './outbox.component.html',
+  styleUrls: ['./outbox.component.scss']
 })
-export class MessagesComponent implements OnInit {
-	@ViewChild('paginator') paginator: MatPaginator;
+export class OutboxComponent implements OnInit {
+
+  @ViewChild('paginator') paginator: MatPaginator;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('searchModal') searchModal;
@@ -70,7 +72,7 @@ export class MessagesComponent implements OnInit {
 			'schedule_date',
 			'subject',
 			// 'attachment',
-			'send_by',
+			// 'send_by',
 			// 'action',
 			'status',
 			// 'inout'
@@ -86,11 +88,10 @@ export class MessagesComponent implements OnInit {
 		// 	 ]
 		// 	};
 		var inputJson = {
-			'msg_status.status_name' : 'approved',
-			'$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] 
-		};
+      'msg_from' : this.currentUser['login_id']
+    };
 		console.log('inputJson--', inputJson);
-		this.erpCommonService.getMessage(inputJson).subscribe((result: any) => {
+		this.erpCommonService.getoutbox(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -251,7 +252,8 @@ export class MessagesComponent implements OnInit {
 			'subject',
 			// 'attachment',
 			'send_by',
-			// 'action'
+      // 'action',
+      'status'
 		];
 		if (event && event.target && event.target.value) {
 			filterValue = event.target.value;
@@ -260,7 +262,7 @@ export class MessagesComponent implements OnInit {
 		}
 		if (filterValue) {
 			var filterJson = { filter_value: filterValue };
-			this.erpCommonService.getMessage(filterJson).subscribe((result: any) => {
+			this.erpCommonService.getoutbox(filterJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]) {
 					this.showViewMessage = false;
 					this.scheduleMessageData = result.data;
@@ -274,4 +276,3 @@ export class MessagesComponent implements OnInit {
 
 	}
 }
-
