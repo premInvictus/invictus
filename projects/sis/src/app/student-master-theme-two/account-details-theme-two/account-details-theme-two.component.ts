@@ -666,7 +666,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		}
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
 			if (!this.accountsForm.value.accd_remark_id) {
-				this.validateFlag = false;
+				// this.validateFlag = false;
 			}
 		}
 		if (this.hostelFlag) {

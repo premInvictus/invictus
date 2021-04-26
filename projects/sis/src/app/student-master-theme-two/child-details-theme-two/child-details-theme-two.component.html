@@ -22,7 +22,7 @@
                             {{item.gen_name}}
                           </mat-option>
                         </mat-select>
-                        <mat-error>
+                        <mat-error *ngIf="baseform.get('upd_gender').hasError('required')">
                           This field is required
                         </mat-error>
                       </mat-form-field>
@@ -40,7 +40,7 @@
                                 {{item.cat_name}}
                               </mat-option>
                             </mat-select>
-                            <mat-error>
+                            <mat-error *ngIf="baseform.get('upd_category').hasError('required')">
                               This field is required
                             </mat-error>
                           </mat-form-field>
@@ -55,7 +55,7 @@
                                 {{item.tag_name | titlecase}}
                               </mat-option>
                             </mat-select>
-                            <mat-error>
+                            <mat-error *ngIf="baseform.get('upd_tag_id').hasError('required')">
                               This field is required
                             </mat-error>
                           </mat-form-field>
@@ -75,7 +75,7 @@
                                 {{item.rel_name}}
                               </mat-option>
                             </mat-select>
-                            <mat-error>
+                            <mat-error *ngIf="baseform.get('upd_religion_id').hasError('required')">
                               This field is required
                             </mat-error>
                           </mat-form-field>
@@ -90,7 +90,7 @@
                                 {{item.mt_name}}
                               </mat-option>
                             </mat-select>
-                            <mat-error>
+                            <mat-error *ngIf="baseform.get('upd_mt_id').hasError('required')">
                               This field is required
                             </mat-error>
                           </mat-form-field>
@@ -128,7 +128,7 @@
                           [errorStateMatcher]="confirmValidParentMatcher">
                         <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
-                        <mat-error>
+                        <mat-error *ngIf="baseform.get('upd_dob').hasError('required')">
                           This field is required
                         </mat-error>
                       </mat-form-field>
@@ -141,7 +141,7 @@
                           [errorStateMatcher]="confirmValidParentMatcher">
                         <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker tabindex="-1" #picker1 [disabled]="viewOnly"></mat-datepicker>
-                        <mat-error>
+                        <mat-error *ngIf="baseform.get('upd_doj').hasError('required')">
                           This field is required
                         </mat-error>
                       </mat-form-field>
@@ -156,7 +156,7 @@
                             {{item.nat_name}}
                           </mat-option>
                         </mat-select>
-                        <mat-error>
+                        <mat-error *ngIf="baseform.get('upd_nationality').hasError('required')">
                           This field is required
                         </mat-error>
                       </mat-form-field>
@@ -167,7 +167,7 @@
                         <input formControlName="upd_aadhaar_no" mask="0000 0000 0000" minlength="12" maxlength="14"
                           matInput placeholder="Aadhaar No." [readonly]="viewOnly"
                           [errorStateMatcher]="confirmValidParentMatcher">
-                        <mat-error>
+                        <mat-error *ngIf="baseform.get('upd_aadhaar_no').hasError('required')">
                           This field is required
                         </mat-error>
                       </mat-form-field>
@@ -219,8 +219,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
                     <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
-                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
-                    <mat-error>
+                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"  />
+                    <mat-error *ngIf="paddressform.get('ea_address1').hasError('required')">
                       This field is required
                     </mat-error>
                   </mat-form-field>
@@ -236,7 +236,7 @@
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
                         {{item.sta_name}} - {{item.dist_name}} - {{item.cou_name}}</mat-option>
                     </mat-autocomplete>
-                    <mat-error>
+                    <mat-error *ngIf="paddressform.get('ea_city').hasError('required')">
                       This field is required
                     </mat-error>
                   </mat-form-field>
@@ -294,7 +294,7 @@
                     <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                       placeholder="Zip/Pin Code" required [readonly]="viewOnly"
                       [errorStateMatcher]="confirmValidParentMatcher" />
-                    <mat-error>
+                    <mat-error *ngIf="paddressform.get('ea_pincode').hasError('required')">
                       This field is required
                     </mat-error>
                   </mat-form-field>
@@ -331,7 +331,7 @@
                     <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address"
                       [readonly]="viewOnly || (editOnly && !showAddressFlag)
                       || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher" />
-                    <mat-error>
+                    <mat-error *ngIf="raddressform.get('ea_address1').hasError('required')">
                       This field is required
                     </mat-error>
                   </mat-form-field>

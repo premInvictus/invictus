@@ -690,7 +690,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			au_full_name: this.studentdetails.au_full_name,
 			au_process_class: this.studentdetails.au_process_class != "0" ? this.studentdetails.au_process_class : this.studentdetails.au_class_id,
 			au_class_id: this.studentdetails.au_class_id,
-			au_mobile: this.studentdetails.au_mobile,
+			au_mobile: this.studentdetails.au_mobile != '0' ? this.studentdetails.au_mobile : '',
 			au_email: this.studentdetails.au_email,
 			au_hou_id: this.studentdetails.au_hou_id,
 			au_sec_id: this.studentdetails.au_sec_id,

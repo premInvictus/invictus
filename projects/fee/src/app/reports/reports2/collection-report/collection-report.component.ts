@@ -3773,21 +3773,21 @@ export class CollectionReportComponent implements OnInit {
 									collapsed: false
 								},
 							},
-							{
-								id: 'transaction_id', name: 'Transaction ID', field: 'transaction_id', sortable: true, filterable: true,
-								filterSearchType: FieldType.string,
-								filter: { model: Filters.compoundInputText },
-								width: 100,
-								grouping: {
-									getter: 'transaction_id',
-									formatter: (g) => {
-										return `${g.value}  <span style="color:green">(${g.count})</span>`;
-									},
-									aggregators: this.aggregatearray,
-									aggregateCollapsed: true,
-									collapsed: false
-								},
-							},
+							// {
+							// 	id: 'transaction_id', name: 'Transaction ID', field: 'transaction_id', sortable: true, filterable: true,
+							// 	filterSearchType: FieldType.string,
+							// 	filter: { model: Filters.compoundInputText },
+							// 	width: 100,
+							// 	grouping: {
+							// 		getter: 'transaction_id',
+							// 		formatter: (g) => {
+							// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							// 		},
+							// 		aggregators: this.aggregatearray,
+							// 		aggregateCollapsed: true,
+							// 		collapsed: false
+							// 	},
+							// },
 							{
 								id: 'created_by',
 								name: 'Created By',

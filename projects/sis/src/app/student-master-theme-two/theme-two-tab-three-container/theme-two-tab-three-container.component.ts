@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { saveAs } from 'file-saver';
+import { FormGroup } from '@angular/forms';
 @Component({
 	selector: 'app-theme-two-tab-three-container',
 	templateUrl: './theme-two-tab-three-container.component.html',
@@ -283,4 +284,16 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		return markSplitData;
 	}
 
+
+	markFormGroupTouched(formGroup: FormGroup) {
+		(<any>Object).values(formGroup.controls).forEach(control => {
+			control.markAsTouched();
+
+			if (control.controls) {
+				this.markFormGroupTouched(control);
+			}
+			// console.log("i am controlller", control.key);
+			
+		});
+	}
 }
