@@ -633,6 +633,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
 	}
 
+	getoutbox(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/getoutbox', value);
+	}
+
 	uploadDocuments(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
