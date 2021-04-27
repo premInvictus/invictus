@@ -3,13 +3,18 @@
         <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Report Type</mat-label>
-                <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="resetDataset()">
+                <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="setProcessArray();resetDataset()">
+                    <!-- <mat-option *ngIf="notif.isExistUserAccessMenu('815')" value="0" selected>Gender Wise</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('672')" value="1">Enrolment Type Wise</mat-option> -->
                     <mat-option *ngIf="notif.isExistUserAccessMenu('671')" value="0" selected>Gender Wise</mat-option>
-                    <mat-option *ngIf="notif.isExistUserAccessMenu('671')" value="1">Enrolment Type Wise</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('672')" value="1">Enrolment Type Wise</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('815')" value="2">Deleted Enrolment</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('816')" value="3">New Enrolment</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('817')" value="4">Dropout</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-2" *ngIf="admissionReportForm.value.reviewReport == '0'">
+        <div class="col-2" *ngIf="admissionReportForm.value.reviewReport == '0' || admissionReportForm.value.reviewReport == '2' || admissionReportForm.value.reviewReport == '3'">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Enrollment Type</mat-label>
                 <mat-select placeholder="Enrollment Type" formControlName="enrolment_type" required>

@@ -34,6 +34,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
+	notFormatedCellArray: any[] = [];
 	angularGrid: AngularGridInstance;
 	dataviewObj: any;
 	gridObj: any;
@@ -45,21 +46,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	showDateRange = false;
 	events: any;
 	@ViewChild('TABLE') table: ElementRef;
-	enrollMentTypeArray: any[] = [{
-		au_process_type: '1', au_process_name: 'Enquiry'
-	},
-	{
-		au_process_type: '2', au_process_name: 'Registration'
-	},
-	{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	},
-	{
-		au_process_type: '5', au_process_name: 'Alumini'
-	}];
+	enrollMentTypeArray: any[] = [];
 
 	admissionReportForm: FormGroup;
 	reportProcessWiseData: any[] = [];
@@ -363,6 +350,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 	exportToExcel(json: any[]) {
+		this.notFormatedCellArray = [];
 		console.log('excel json', json);
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
@@ -398,6 +386,111 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			worksheet.addRow(excelobj);
 		});
 		worksheet.addRow(this.totalRow);
+
+		// style grand total
+		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+			this.columnDefinitions.forEach(element => {
+				cell.font = {
+					color: { argb: 'ffffff' },
+					bold: true,
+					name: 'Arial',
+					size: 10
+				};
+				cell.alignment = { wrapText: true, horizontal: 'center' };
+				cell.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '439f47' },
+					bgColor: { argb: '439f47' }
+				};
+				cell.border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+			});
+		});
+		// style all row of excel
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			} else if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			} else if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+				if (cellIndex === -1) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+						};
+						cell.alignment = { wrapText: true, horizontal: 'center' };
+					});
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'dedede' },
+								bgColor: { argb: 'dedede' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
+
+				}
+			}
+		});
 		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
@@ -452,8 +545,19 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return this.admissionReportForm.value.reviewReport === '0' ? 'Enrollment Review' + ' Gender Wise' :
-			'Enrollment Review' + ' Enrollment Type Wise';
+		let reportheader='';
+		if(this.admissionReportForm.value.reviewReport === '0'){
+			reportheader = 'Enrollment Review' + ' Gender Wise';
+		} else if(this.admissionReportForm.value.reviewReport === '1'){
+			reportheader = 'Enrollment Review' + ' Enrollment Type Wise';
+		} else if(this.admissionReportForm.value.reviewReport === '2'){
+			reportheader = 'Enrollment Review' + ' Deleted Enrollment';
+		} else if(this.admissionReportForm.value.reviewReport === '3'){
+			reportheader = 'Enrollment Review' + ' New Enrollment';
+		} else if(this.admissionReportForm.value.reviewReport === '4'){
+			reportheader = 'Enrollment Review' + 'Dropout';
+		}
+		return reportheader;
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -478,6 +582,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			tdate: new Date(),
 			reviewReport: '0'
 		});
+		this.setProcessArray();
 	}
 
 	showDateToggle() {
@@ -491,13 +596,28 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		this.reportEnrolmentWiseData = [];
 		this.columnDefinitions = [];
 	}
+	setProcessArray(){
+		this.enrollMentTypeArray = [];
+		if(this.admissionReportForm.value.reviewReport === '0'){
+			this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
+			this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
+			this.enrollMentTypeArray.push({au_process_type: '3', au_process_name: 'Provisional Admission'});
+			this.enrollMentTypeArray.push({au_process_type: '4', au_process_name: 'Admission'});
+			this.enrollMentTypeArray.push({au_process_type: '5', au_process_name: 'Alumini'});
+		} else if(this.admissionReportForm.value.reviewReport === '2' || this.admissionReportForm.value.reviewReport === '3'){
+			this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
+			this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
+			// this.enrollMentTypeArray.push({au_process_type: '3', au_process_name: 'Provisional Admission'});
+			this.enrollMentTypeArray.push({au_process_type: '4', au_process_name: 'Admission'});
+		}
+	}
 
 	submit() {
 		this.resetGrid();
 		const inputJson = {};
 		inputJson['enrollment_type'] = this.admissionReportForm.value.enrolment_type;
 		if (this.showDate) {
-			inputJson['from_date'] = this.notif.dateConvertion(this.admissionReportForm.value.cdate, 'yyyy-MM-dd');
+			inputJson['to_date'] = this.notif.dateConvertion(this.admissionReportForm.value.cdate, 'yyyy-MM-dd');
 
 		} else {
 			inputJson['from_date'] = this.notif.dateConvertion(this.admissionReportForm.value.fdate, 'yyyy-MM-dd');
@@ -521,6 +641,46 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 				});
 			} else if (this.admissionReportForm.value.reviewReport === '1') {
 				this.sisService.generateReportClassWise(inputJson).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.reportEnrolmentWiseData = result.data;
+						this.prepareEnrolmentDataSource();
+						this.tableFlag = true;
+					} else {
+						this.notif.showSuccessErrorMessage(result.data, 'error');
+						this.resetGrid();
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.admissionReportForm.value.reviewReport === '2') {
+				inputJson['au_status'] = 6;
+				this.sisService.getEnrollmentDetialedReport(inputJson).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.reportEnrolmentWiseData = result.data;
+						this.prepareEnrolmentDataSource();
+						this.tableFlag = true;
+					} else {
+						this.notif.showSuccessErrorMessage(result.data, 'error');
+						this.resetGrid();
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.admissionReportForm.value.reviewReport === '3') {
+				inputJson['au_status'] = 1;
+				this.sisService.getEnrollmentDetialedReport(inputJson).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.reportEnrolmentWiseData = result.data;
+						this.prepareEnrolmentDataSource();
+						this.tableFlag = true;
+					} else {
+						this.notif.showSuccessErrorMessage(result.data, 'error');
+						this.resetGrid();
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.admissionReportForm.value.reviewReport === '4') {
+				// inputJson['au_status'] = 6;
+				inputJson['enrollment_type'] = '6';
+				this.sisService.getEnrollmentDetialedReport(inputJson).subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.reportEnrolmentWiseData = result.data;
 						this.prepareEnrolmentDataSource();
@@ -618,6 +778,13 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 400;
 		}
 	}
+	checkDateFormatter(row, cell, value, columnDef, dataContext) {
+		if (value && value !== '-') {
+			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return '-';
+		}
+	}
 
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -635,55 +802,114 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	}
 
 	prepareEnrolmentDataSource() {
-		this.columnDefinitions = [
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false },
-			{ id: 'Enquiry', name: 'Enquiry', field: 'Enquiry', sortable: true, filterable: true, resizable: false },
-			{ id: 'Registration', name: 'Registration', field: 'Registration', sortable: true, filterable: true, resizable: false },
-			{ id: 'Proadmission', name: 'Pro.Adm', field: 'Proadmission', sortable: true, filterable: true, resizable: false },
-			{ id: 'Admission', name: 'Admission', field: 'Admission', sortable: true, filterable: true, resizable: false },
-			{ id: 'Alumini', name: 'Alumini', field: 'Alumini', sortable: true, filterable: true, resizable: false },
-			{ id: 'Total', name: 'Total', field: 'Total', sortable: true, filterable: true }
-		];
-		let counter = 1;
-		let total = 0;
-		let enqTotal = 0;
-		let regTotal = 0;
-		let proTotal = 0;
-		let admTotal = 0;
-		let almTotal = 0;
-		for (let i = 0; i < this.reportEnrolmentWiseData.length; i++) {
-			const tempObj = {};
-			tempObj['id'] = counter;
-			tempObj['counter'] = counter;
-			tempObj['class_name'] = this.reportEnrolmentWiseData[i]['class_name'];
-			tempObj['Enquiry'] = this.reportEnrolmentWiseData[i]['Enquiry'];
-			tempObj['Registration'] = this.reportEnrolmentWiseData[i]['Registration'];
-			tempObj['Proadmission'] = this.reportEnrolmentWiseData[i]['Proadmission'];
-			tempObj['Admission'] = this.reportEnrolmentWiseData[i]['Admission'];
-			tempObj['Alumini'] = this.reportEnrolmentWiseData[i]['Alumini'];
-			tempObj['Total'] = this.reportEnrolmentWiseData[i]['Total'];
-			total = total + this.reportEnrolmentWiseData[i]['Total'];
-			enqTotal = enqTotal + parseInt(this.reportEnrolmentWiseData[i]['Enquiry'], 10);
-			regTotal = regTotal + parseInt(this.reportEnrolmentWiseData[i]['Registration'], 10);
-			proTotal = proTotal + parseInt(this.reportEnrolmentWiseData[i]['Proadmission'], 10);
-			admTotal = admTotal + parseInt(this.reportEnrolmentWiseData[i]['Admission'], 10);
-			almTotal = almTotal + parseInt(this.reportEnrolmentWiseData[i]['Alumini'], 10);
-			this.dataset.push(tempObj);
-			counter++;
+		if ( this.admissionReportForm.value.reviewReport === '1') {
+			this.columnDefinitions = [
+				{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false },
+				{ id: 'Enquiry', name: 'Enquiry', field: 'Enquiry', sortable: true, filterable: true, resizable: false },
+				{ id: 'Registration', name: 'Registration', field: 'Registration', sortable: true, filterable: true, resizable: false },
+				{ id: 'Proadmission', name: 'Pro.Adm', field: 'Proadmission', sortable: true, filterable: true, resizable: false },
+				{ id: 'Admission', name: 'Admission', field: 'Admission', sortable: true, filterable: true, resizable: false },
+				{ id: 'Alumini', name: 'Alumini', field: 'Alumini', sortable: true, filterable: true, resizable: false },
+				{ id: 'Total', name: 'Total', field: 'Total', sortable: true, filterable: true }
+			];
+			let counter = 1;
+			let total = 0;
+			let enqTotal = 0;
+			let regTotal = 0;
+			let proTotal = 0;
+			let admTotal = 0;
+			let almTotal = 0;
+			for (let i = 0; i < this.reportEnrolmentWiseData.length; i++) {
+				const tempObj = {};
+				tempObj['id'] = counter;
+				tempObj['counter'] = counter;
+				tempObj['class_name'] = this.reportEnrolmentWiseData[i]['class_name'];
+				tempObj['Enquiry'] = this.reportEnrolmentWiseData[i]['Enquiry'];
+				tempObj['Registration'] = this.reportEnrolmentWiseData[i]['Registration'];
+				tempObj['Proadmission'] = this.reportEnrolmentWiseData[i]['Proadmission'];
+				tempObj['Admission'] = this.reportEnrolmentWiseData[i]['Admission'];
+				tempObj['Alumini'] = this.reportEnrolmentWiseData[i]['Alumini'];
+				tempObj['Total'] = this.reportEnrolmentWiseData[i]['Total'];
+				total = total + this.reportEnrolmentWiseData[i]['Total'];
+				enqTotal = enqTotal + parseInt(this.reportEnrolmentWiseData[i]['Enquiry'], 10);
+				regTotal = regTotal + parseInt(this.reportEnrolmentWiseData[i]['Registration'], 10);
+				proTotal = proTotal + parseInt(this.reportEnrolmentWiseData[i]['Proadmission'], 10);
+				admTotal = admTotal + parseInt(this.reportEnrolmentWiseData[i]['Admission'], 10);
+				almTotal = almTotal + parseInt(this.reportEnrolmentWiseData[i]['Alumini'], 10);
+				this.dataset.push(tempObj);
+				counter++;
+			}
+	
+			const blankTempObj = {};
+			blankTempObj['counter'] = '';
+			blankTempObj['class_name'] = 'Grand Total';
+			blankTempObj['Enquiry'] = enqTotal;
+			blankTempObj['Registration'] = regTotal;
+			blankTempObj['Proadmission'] = proTotal;
+			blankTempObj['Admission'] = admTotal;
+			blankTempObj['Alumini'] = almTotal;
+			blankTempObj['Total'] = total;
+			// this.dataset.push(blankTempObj);
+			this.totalRow = blankTempObj;
+			console.log('dataset  ', this.dataset);
+		} else if (this.admissionReportForm.value.reviewReport === '2' || this.admissionReportForm.value.reviewReport === '3' || this.admissionReportForm.value.reviewReport === '4') {
+			let process_type_name='';
+			let process_type_field_no='';
+			let process_type_field_date='';
+			if (this.admissionReportForm.value.enrolment_type === '1'){
+				process_type_name = 'Enq. ';
+				process_type_field_no = 'em_enq_no';
+				process_type_field_date = 'em_enq_date';
+			} else if (this.admissionReportForm.value.enrolment_type === '2'){
+				process_type_name = 'Regn. ';
+				process_type_field_no = 'em_regd_no';
+				process_type_field_date = 'em_regd_date';
+			} else if (this.admissionReportForm.value.enrolment_type === '3'){
+				process_type_name = 'Pro Admn. ';
+				process_type_field_no = 'em_provisional_admission_no';
+				process_type_field_date = 'em_provisional_admission_date';
+			} else if (this.admissionReportForm.value.enrolment_type === '4'){
+				process_type_name = 'Admn. ';
+				process_type_field_no = 'em_admission_no';
+				process_type_field_date = 'em_admission_date';
+			} 
+			if (this.admissionReportForm.value.reviewReport === '4'){
+				process_type_name = 'Admn. ';
+				process_type_field_no = 'em_admission_no';
+				process_type_field_date = 'em_admission_date';
+			} 
+			this.columnDefinitions = [
+				{ id: 'pos', name: 'S. No', field: 'pos', sortable: true, filterable: true, resizable: true },
+				{ id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: true },
+				{ id: 'em_no', name: process_type_name+'No', field: 'em_no', sortable: true, filterable: true, resizable: true },
+				{ id: 'em_date', name: process_type_name+'Date', field: 'em_date', sortable: true, filterable: true, resizable: true,
+				formatter: this.checkDateFormatter },
+		 		{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true }	
+			];
+			let counter = 1;
+			for (let i = 0; i < this.reportEnrolmentWiseData.length; i++) {
+				const tempObj = {};
+		  		tempObj['id'] = counter;
+				tempObj['pos'] = counter;
+				tempObj['au_full_name'] = this.reportEnrolmentWiseData[i]['au_full_name'] ? this.reportEnrolmentWiseData[i]['au_full_name'] : '' ;
+				tempObj['em_no'] = this.reportEnrolmentWiseData[i][process_type_field_no]? this.reportEnrolmentWiseData[i][process_type_field_no]: '';
+				tempObj['em_date'] = this.reportEnrolmentWiseData[i][process_type_field_date] ? this.reportEnrolmentWiseData[i][process_type_field_date]: '';
+				tempObj['class_name'] = this.reportEnrolmentWiseData[i]['class_name'] ? this.reportEnrolmentWiseData[i]['class_name']: '';
+				this.dataset.push(tempObj);
+				counter++;
+			}
+	
+			const blankTempObj = {};
+			blankTempObj['id'] = 'footer';
+			blankTempObj['pos'] = 'Grand Total';
+			blankTempObj['au_full_name'] = this.dataset.length;
+			blankTempObj['em_no'] = '';
+			blankTempObj['em_date'] = '';
+			blankTempObj['class_name'] = '';
+			// this.dataset.push(blankTempObj);
+			this.totalRow = blankTempObj;
+			console.log('dataset  ', this.dataset);
 		}
-
-		const blankTempObj = {};
-		blankTempObj['counter'] = '';
-		blankTempObj['class_name'] = 'Grand Total';
-		blankTempObj['Enquiry'] = enqTotal;
-		blankTempObj['Registration'] = regTotal;
-		blankTempObj['Proadmission'] = proTotal;
-		blankTempObj['Admission'] = admTotal;
-		blankTempObj['Alumini'] = almTotal;
-		blankTempObj['Total'] = total;
-		// this.dataset.push(blankTempObj);
-		this.totalRow = blankTempObj;
-		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 750;
 		} else if (this.dataset.length > 10) {
