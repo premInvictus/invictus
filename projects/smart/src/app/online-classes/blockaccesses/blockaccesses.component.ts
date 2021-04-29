@@ -57,8 +57,8 @@ export class BlockaccessesComponent implements OnInit {
     this.paramForm = this.fbuild.group({
       class_id: '',
       sec_id: '',
-      enrollment_type: '',
-      certificate_type: ''
+      enrollment_type: '4',
+      certificate_type: 10
     });
   }
   getClass() {
@@ -114,15 +114,15 @@ export class BlockaccessesComponent implements OnInit {
           this.studentsArray = result.data;
           let counter = 1;
           let enrollment_fieldname = '';
-          if (this.paramForm.value.enrollment_type === '2') {
-            enrollment_fieldname = 'em_regd_no';
-          } else if (this.paramForm.value.enrollment_type === '3') {
-            enrollment_fieldname = 'em_provisional_admission_no';
-          } else if (this.paramForm.value.enrollment_type === '4') {
+          // if (this.paramForm.value.enrollment_type === '2') {
+          //   enrollment_fieldname = 'em_regd_no';
+          // } else if (this.paramForm.value.enrollment_type === '3') {
+          //   enrollment_fieldname = 'em_provisional_admission_no';
+          // } else if (this.paramForm.value.enrollment_type === '4') {
             enrollment_fieldname = 'em_admission_no';
-          } else if (this.paramForm.value.enrollment_type === '5') {
-            enrollment_fieldname = 'em_alumini_no';
-          }
+          // } else if (this.paramForm.value.enrollment_type === '5') {
+          //   enrollment_fieldname = 'em_alumini_no';
+          // }
           for (const item of this.studentsArray) {
             counter += 1;
             this.ELEMENT_DATA.push({
@@ -143,17 +143,24 @@ export class BlockaccessesComponent implements OnInit {
   }
   enableDis($event, value) {
     const param: any = {};
-    param.certificate_type = this.paramForm.value.certificate_type;
+    param.certificate_type =10;
     param.class_id = this.paramForm.value.class_id,
       param.sec_id = this.paramForm.value.sec_id,
       param.login_id = value.au_login_id;
     param.status = $event.checked ? '1' : '0'
-    if ($event.checked) {
-      this.delMsg = 'Do you want to enable download for this student ?'
-    } else {
-      this.delMsg = 'Do you want to disable download for this student ?';
+    // if ($event.checked) {
+    //   this.delMsg = 'Do you want to enable download for this student ?'
+    // } else {
+    //   this.delMsg = 'Do you want to disable download for this student ?';
+    // }
+    if (param) {
+      this.sisService.enableAcessCertificate(param).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+          this.getAllStudent();
+        }
+      });
     }
-    this.del.openModal(param);
   }
   confirmChange(data) {
     if (data) {

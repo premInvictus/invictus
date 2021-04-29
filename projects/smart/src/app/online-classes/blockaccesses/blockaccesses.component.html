@@ -20,7 +20,7 @@
           <div class="container-box__white card-height-830">
             <form [formGroup]="paramForm">
               <div class="row">
-                <div class="col-2">
+                <!-- <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
@@ -33,7 +33,7 @@
                       Please select enrollment type
                     </mat-error>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Class</mat-label>
@@ -136,7 +136,6 @@
                             <mat-slide-toggle (change)="enableDis($event, item.action)"
                               [checked]="item.action.cerf_status && item.action.cerf_status ==='1'"></mat-slide-toggle>
                             &nbsp;
-                            <i class="fas fa-print icon-skyblue" (click)="printcertificate(item.action)"></i>
                           </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
