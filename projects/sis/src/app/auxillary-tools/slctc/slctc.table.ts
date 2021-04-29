@@ -5,7 +5,7 @@ export const slctable = {
 				colunmHeader: ['Request No.', 'Request Date', 'Admission No.', 'Student name', 'Class - Section', 'Status', 'Action'],
 				data: [],
 				actions: [
-						{ actionname: 'Approve', actionclass: 'btn-success  btn-promote', actionfunction: 'pendingapprove', actionpermission: '263' },
+						{ actionname: 'Approve', actionclass: 'btn-success btn-promote', actionfunction: 'pendingapprove', actionpermission: '263' },
 						{
 								actionname: 'View', actionclass: 'btn-neutral btn-navspacer ', actionfunction: 'pendingaview',
 								actionpermission: ''
@@ -24,7 +24,7 @@ export const slctable = {
 				actions: [
 						{ actionname: 'Issue', actionclass: 'btn-brown btn-navspacer btn-promote', actionfunction: 'issuedissue', actionpermission: '' },
 						{
-								actionname: 'Reissue', actionclass: 'btn-setting btn-navspacer btn-promote', actionfunction: 'issuedreissue',
+								actionname: 'Reissue', actionclass: 'btn-brown btn-navspacer btn-promote', actionfunction: 'issuedreissue',
 								actionpermission: ''
 						},
 						{
