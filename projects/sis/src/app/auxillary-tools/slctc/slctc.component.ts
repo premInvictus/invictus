@@ -138,7 +138,7 @@ export class SlctcComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-	getSlcTc() {
+	getSlcTc() { 
 		this.ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<PendingSlc>(this.ELEMENT_DATA);
 		this.renderTable = slctable[this.srTable];
@@ -199,6 +199,7 @@ export class SlctcComponent implements OnInit, OnDestroy {
 						} else if (this.srTable === 'IssuedSlc') {
 							this.dataSource = new MatTableDataSource<IssuedSlc>(this.ELEMENT_DATA);
 						}
+						console.log('this.ELEMENT_DATA',this.ELEMENT_DATA);
 						this.tableDiv = true;
 					} else {
 						this.commonAPIService.showSuccessErrorMessage('No Records Found', 'error');

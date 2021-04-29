@@ -1,0 +1,119 @@
+<div class="padding-15">
+    <div class="row ">
+        <div class="col-12">
+            <span class="text-uppercase"><b>Followup remarks</b></span>
+        </div>
+    </div>
+  <form [formGroup]="followupRemarkForm" *ngIf="!viewOnly">
+      <div class="row">
+          <div *ngIf="checkIfFieldExist('era_doj')" class="col-2">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Date</mat-label>
+                  <input matInput [errorStateMatcher]="confirmValidParentMatcher" [matDatepicker]="picker"
+                      [max]="minDate" placeholder="Date" formControlName="era_doj"
+                      (dateChange)="addEvent('change', $event)" [readonly]="viewOnly" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error>
+                      This field is required*
+                  </mat-error>
+              </mat-form-field>
+          </div>
+          <!-- <div *ngIf="checkIfFieldExist('era_aut_id')" class="col-2">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Authority</mat-label>
+                  <mat-select placeholder="Authority" [errorStateMatcher]="confirmValidParentMatcher"
+                      formControlName="era_aut_id" required [disabled]="viewOnly">
+                      <mat-option>Please Select</mat-option>
+                      <mat-option *ngFor="let item of authorityArray" [value]="item.aut_id">{{item.aut_name}}
+                      </mat-option>
+                  </mat-select>
+                  <mat-error>
+                      This field is required*
+                  </mat-error>
+              </mat-form-field>
+          </div> -->
+          <div *ngIf="checkIfFieldExist('era_ar_id')" class="col-2">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Area</mat-label>
+                  <mat-select placeholder="Area" [errorStateMatcher]="confirmValidParentMatcher"
+                      formControlName="era_ar_id" required [disabled]="viewOnly">
+                      <mat-option>Please Select</mat-option>
+                      <mat-option *ngFor="let item of areaArray" [value]="item.ar_id">{{item.ar_name}}</mat-option>
+                  </mat-select>
+                  <mat-error>
+                      This field is required*
+                  </mat-error>
+              </mat-form-field>
+          </div>
+          <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Remarks</mat-label>
+                  <input   matInput placeholder="Remarks"
+                      [errorStateMatcher]="confirmValidParentMatcher" formControlName="era_teachers_remark"
+                      [readOnly]="viewOnly" required>
+                  <mat-error>
+                      This field is required*
+                  </mat-error>
+              </mat-form-field>
+          </div>
+          <div class="col-2 margin-top-10" *ngIf="checkIfFieldExist('era_teachers_remark')">
+              <button [disabled]="viewOnly" *ngIf="!generalAddToList" mat-raised-button class="btn-neutral"
+                  (click)="addGeneralRemarkList()">Add to list</button>
+              <button *ngIf="generalRemarkUpdateFlag && !viewOnly && generalAddToList" mat-raised-button
+                  class="btn-neutral" (click)="updateGeneralRemarkList()">Update List</button>
+              <button [disabled]="viewOnly" mat-raised-button class="btn-danger btn-spacer"
+                  (click)="resetGeneralRemarkList()">Reset</button>
+          </div>
+      </div>
+  </form>
+  <br>
+  <div class="row remove-top-margin">
+      <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+              <thead class="table-skill__head text-center">
+                  <tr class="custom-tr">
+                      <th class="custom-th">Sr. No.</th>
+                      <!-- <th class="custom-th" *ngIf="checkIfFieldExist('era_aut_id')">Authority</th> -->
+                      <th class="custom-th" *ngIf="checkIfFieldExist('era_doj')"> Date</th>
+                      <th class="custom-th" *ngIf="checkIfFieldExist('era_ar_id')">Area</th>
+                      <th class="custom-th table-remark-width" *ngIf="checkIfFieldExist('era_teachers_remark')">
+                          Remarks</th>
+                      <th class="custom-th" *ngIf="!viewOnly">Modify</th>
+                  </tr>
+              </thead>
+              <tbody class="table-skill__body text-center" *ngIf="finalGeneralRemarkArray?.length > 0 ">
+
+                  <ng-container *ngFor="let item of htmlFinalGeneralRemarkArray;let i=index;">
+                      <tr class="custom-tr" *ngFor="let rowItem of item; let j = index;">
+                          <td class="custom-td" *ngIf="j==0" [attr.rowspan]="item?.length">{{i+1}}</td>
+                          <!-- <td class="custom-td" *ngIf="j==0" [attr.rowspan]="item?.length">
+                              <span *ngIf="checkIfFieldExist('era_aut_id')">{{getAuthorityName(rowItem?.era_aut_id)}}
+                              </span>
+                          </td> -->
+                          <td class="custom-td">{{rowItem?.era_doj | date : 'd-MMM-y'}}</td>
+                          <td class="custom-td">{{getAreaName(rowItem?.era_ar_id)}}</td>
+                          <td class="custom-td">{{rowItem?.era_teachers_remark}}</td>
+                          <td class="custom-td" *ngIf="!viewOnly">
+
+                              <i class="far fa-edit modify-icon" style="cursor: pointer;"
+                                  (click)="editGeneralRemarkList(rowItem.era_id)" title="Edit"></i>&nbsp;
+                              <i class="far fa-trash-alt inline-form-table-icon-spacing delete-icon"
+                                  style="cursor: pointer;" (click)="deleteGeneralRemarkList(rowItem.era_id)"
+                                  title="Delete"></i>
+
+                          </td>
+                      </tr>
+                  </ng-container>
+
+
+              </tbody>
+              <tbody *ngIf="!(finalGeneralRemarkArray?.length > 0) ">
+                  <tr>
+                      <td colspan="6" class="text-center">No Record Found</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>

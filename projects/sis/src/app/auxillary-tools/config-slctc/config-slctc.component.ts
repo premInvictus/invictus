@@ -113,6 +113,7 @@ export class ConfigSlctcComponent implements OnInit {
 				let subName = '';
 				this.sisService.getSlcTcFormConfig({ tmap_usts_id: '1' }).subscribe((result2: any) => {
 					if (result2.status === 'ok') {
+						let customPrintSetting = this.printSettings['custom'] ? this.printSettings['custom'] : []
 						Object.keys(this.printSettings).forEach(key => {
 							for (const item of result2.data) {
 								if (item.sff_field_tag === key && item.sff_field_type === 'prefetch') {
@@ -136,17 +137,21 @@ export class ConfigSlctcComponent implements OnInit {
 						for (const item of result2.data) {
 							if (item.sff_field_type === 'custom') {
 								if (Number(item.sff_id) !== 16 && Number(item.sff_id) !== 18) {
+									const eachprintSetting = customPrintSetting.find(e => e.sff_field_tag == item.sff_field_tag);
 									this.customArray.push({
-										label: item.sff_label
+										label: item.sff_label,
+										controlname : item.sff_field_tag,
+										controlvalue : eachprintSetting  && eachprintSetting.usps_sff_value ? eachprintSetting.usps_sff_value : ''
 									});
 									this.ffIdArray.push({ usps_sff_id: item.sff_id });
 								}
 							}
 						}
+						console.log('this.customArray--',this.customArray)
 						let i = 0;
 						for (const item of this.customArray) {
 							this.formGroupArray[i] = this.fbuild.group({
-								cust_val: ''
+								cust_val: item.controlvalue
 							});
 							i++;
 						}

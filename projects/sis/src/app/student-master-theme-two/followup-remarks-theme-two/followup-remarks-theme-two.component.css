@@ -1,0 +1,12 @@
+
+.group-separator {
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+    margin: 15px 0;
+    width: 100%;
+}
+.group_row span:last-child div.group-separator{
+    border: none;
+    padding: 0 !important;
+    margin: 0 !important;
+}

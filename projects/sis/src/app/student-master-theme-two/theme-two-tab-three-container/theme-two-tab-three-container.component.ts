@@ -11,6 +11,7 @@ import { FormGroup } from '@angular/forms';
 export class ThemeTwoTabThreeContainerComponent extends DynamicComponent implements OnInit, OnChanges {
 
 	@ViewChild('general_remark') general_remark;
+	@ViewChild('followup_remark') followup_remark;
 	@ViewChild('management_remark') management_remark;
 	@ViewChild('admission_remark') admission_remark;
 
@@ -23,6 +24,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 	login_id;
 	parentId;
 	generalRemarkData: any[] = [];
+	followupRemarkData: any[] = [];
 	admissionRemarkData: any;
 	managementRemarkData: any;
 	settingsArray: any[] = [];
@@ -61,6 +63,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 				this.viewOnly = false;
 				this.addOnly = true;
 				this.generalRemarkData = [];
+				this.followupRemarkData = [];
 				this.managementRemarkData = [];
 				this.admissionRemarkData = [];
 			}
@@ -107,6 +110,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 
 	getRemarkData(login_id) {
 		this.generalRemarkData = [];
+		this.followupRemarkData = [];
 		this.managementRemarkData = [];
 		this.admissionRemarkData = [];
 		if (login_id) {
@@ -114,8 +118,10 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 				if (result.status === 'ok') {
 					const remarkData = result.data;
 					this.generalRemarkData = remarkData[0]['remarksGeneral'];
+					this.followupRemarkData = remarkData[0]['remarksFollowup'];
 					this.managementRemarkData = remarkData[0]['remarksManagement'];
 					this.admissionRemarkData = remarkData[0]['remarkAdmission'];
+					
 				}
 			});
 		}
@@ -123,6 +129,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 
 	saveForm() {
 		const generalRemarkFormData = this.getGeneralRemarkFormData();
+		const followupRemarkFormData = this.getFollowupRemarkFormData();
 		const managementRemarkFormData = this.getManagementRemarkFormData();
 		const admissionRemarkFormData = this.getAdmissionRemarkFormData();
 		const remarkQuestionData = [];
@@ -140,6 +147,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			'au_login_id': this.context.studentdetails.studentdetailsform.value.au_login_id ?
 				this.context.studentdetails.studentdetailsform.value.au_login_id : '',
 			'remarksGeneral': generalRemarkFormData ? generalRemarkFormData : [],
+			'remarksFollowup': followupRemarkFormData ? followupRemarkFormData : [],
 			'remarksManagement': {
 				'managementRemarks': managementRemarkFormData['concessionFormData'] ? managementRemarkFormData['concessionFormData'] : {},
 				'finalRemark': managementRemarkFormData['finalRemarkData'] ? managementRemarkFormData['finalRemarkData'] : {},
@@ -214,6 +222,18 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			finalGeneralRemarkArray = [];
 		}
 	}
+	getFollowupRemarkFormData() {
+		let finalGeneralRemarkArray = [];
+		if (this.followup_remark && this.followup_remark.finalGeneralRemarkArray && this.followup_remark.finalGeneralRemarkArray.length > 0) {
+			finalGeneralRemarkArray = this.followup_remark.finalGeneralRemarkArray;
+			for (const item of finalGeneralRemarkArray) {
+				item.era_doj = this.commonAPIService.dateConvertion(item.era_doj, 'yyyy-MM-dd');
+			}
+			return finalGeneralRemarkArray;
+		} else {
+			finalGeneralRemarkArray = [];
+		}
+	}
 
 	getManagementRemarkFormData() {
 		const admissionRemarkData = this.management_remark && this.management_remark.admissionremarkform ?
@@ -268,7 +288,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 	}
 
 	prepareMarkSplitData() {
-		const markSplitData = this.managementRemarkData['markSplit'];
+		const markSplitData = this.managementRemarkData['markSplit'] ? this.managementRemarkData['markSplit'] : [];
 		
 		const dynamicRemarkForm = this.management_remark && this.management_remark.dynamicMarksForm ? this.management_remark.dynamicMarksForm : [];
 		console.log('markSplitData',dynamicRemarkForm);
