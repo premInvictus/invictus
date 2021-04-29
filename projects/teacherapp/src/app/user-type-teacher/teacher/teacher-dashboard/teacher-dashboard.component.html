@@ -823,7 +823,7 @@
             <hr class="border-bottom-grey">
             <div class="row margin-top-15" *ngIf="timeTableFlag">
                 <div class="col-12">
-                    <ng-container *ngFor="let item of dayArray; let i=index">
+                    <ng-container *ngFor="let item of dayArray; let i=index" >
                         <div class="info-box info-box-margin" [ngStyle]="{'background-color':getSubColor(item.subject_id)}">
                             <div class="wave-container">
                                 <svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
@@ -831,7 +831,7 @@
                     style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
                 </svg>
                             </div>
-                            <div class="box-content-container">
+                            <div class="box-content-container" matTooltip="Join Now" (click)="openclass(item)">
                                 <span class="font-size-30">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
                                 <div class="margin-top-35">
                                     <span class="font-size-16" *ngIf="item.class_name != '-'">{{item.class_name}} - {{item.sec_name}}</span><br>

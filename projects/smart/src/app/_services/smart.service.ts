@@ -67,6 +67,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
 	}
+	getSessionPerClassSec(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSessionPerClassSec', value);
+	}
 	getSessionWithMonth(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSessionWithMonth', value);
@@ -169,6 +173,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/assignment/insert', value);
 	}
+	submitOnlineSession(value:any) {
+		this.service.startLoading();
+		return this.http.put(environment.apiSmartUrl + '/common/insertValueOfSession', value);
+	}
 	assignmentUpdate(value: any) {
 		this.service.startLoading();
 		return this.http.put(environment.apiSmartUrl + '/assignment/update', value);
@@ -180,6 +188,10 @@ export class SmartService {
 	getAssignment(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
+	}
+	getSessionPerClass(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSessionPerClass', value);
 	}
 	sendAssignment(value: any) {
 		this.service.startLoading();
@@ -467,6 +479,9 @@ export class SmartService {
 	getClassSectionWiseTimeTable(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getClassSectionWiseTimeTable', value);
+	}
+	getTeachers() {
+		return this.http.get(environment.apiSmartUrl + '/smttimetable/getTeachers');
 	}
 
 }

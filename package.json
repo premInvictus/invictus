@@ -71,6 +71,7 @@
     "ngx-infinite-scroll": "^6.0.0",
     "ngx-loading": "^1.0.14",
     "ngx-mask": "^7.3.6",
+    "ngx-material-timepicker": "^3.3.1",
     "ngx-socket-io": "^2.1.1",
     "ngx-tags-input": "^1.1.1",
     "ngx-treeview": "^6.0.2",
@@ -81,7 +82,8 @@
     "rxjs-compat": "^6.5.2",
     "sass": "^1.19.0",
     "xlsx": "^0.14.1",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "@zoomus/websdk": "^1.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.8.0",

@@ -77,6 +77,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/studentDetails/getStudentLastRecordPerProcessType/fee');
 	}
+	getMasterStudentDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
+	enableAcessCertificate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/enableAcessCertificate', value);
+	}
 	getUser(value) {
 		const param: any = {};
 		if (value.full_name) {

@@ -1062,6 +1062,10 @@ img.no-records-fond-partial-img {
     color: #716aca;
 }
 
+#zmmtg-root {
+    display: none;
+  }
+  
 .evaluate-test-icon {
     font-size: 16px;
     color: #716aca;
