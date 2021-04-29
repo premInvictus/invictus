@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { SelectionModel } from '@angular/cdk/collections';
 import { saveAs } from 'file-saver';
+import { AssignmentModel } from "./blockaccess-review.model";
 
 @Component({
   selector: 'app-blockaccesses',
@@ -28,9 +29,9 @@ export class BlockaccessesComponent implements OnInit {
   isBoard = false;
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   displayedColumns: any[] = ['select', 'no', 'name', 'class', 'action'];
-  ELEMENT_DATA: Element[] = [];
-  dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-  selection = new SelectionModel<Element>(true, []);
+  ELEMENT_DATA: AssignmentModel[] = [];
+  dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
+  selection = new SelectionModel<AssignmentModel>(true, []);
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('del') del;
   delMsg: any = 'Do you want to enable download for this student ?';
@@ -96,7 +97,7 @@ export class BlockaccessesComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: Element): string {
+  checkboxLabel(row?: AssignmentModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -107,7 +108,7 @@ export class BlockaccessesComponent implements OnInit {
   }
   getAllStudent() {
     this.ELEMENT_DATA = [];
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
     if (this.paramForm.valid) {
       this.sisService.getMasterStudentDetail(this.paramForm.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
@@ -124,7 +125,7 @@ export class BlockaccessesComponent implements OnInit {
           //   enrollment_fieldname = 'em_alumini_no';
           // }
           for (const item of this.studentsArray) {
-            counter += 1;
+            
             this.ELEMENT_DATA.push({
               select: counter,
               no: item.au_login_id,
@@ -133,8 +134,9 @@ export class BlockaccessesComponent implements OnInit {
               em_admission_no: item[enrollment_fieldname],
               action: item
             });
+            counter += 1;
           }
-          this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+          this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
           this.dataSource.sort = this.sort;
           this.tabledivflag = true;
         }
