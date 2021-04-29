@@ -11,6 +11,9 @@
                             </mat-expansion-panel-header>
                             <app-general-remarks-theme-two #general_remark [addOnly]="addOnly" [editOnly]="editOnly" 
                             [viewOnly]="viewOnly" [formData]="generalRemarkData" [configSetting]="settingsArray"></app-general-remarks-theme-two>
+                            
+                            <app-followup-remarks-theme-two #followup_remark [addOnly]="addOnly" [editOnly]="editOnly" 
+                            [viewOnly]="viewOnly" [formData]="followupRemarkData" [configSetting]="settingsArray"></app-followup-remarks-theme-two>
                         </mat-expansion-panel>
                         <mat-expansion-panel class="margin-top-10" [expanded]="'true'" *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId, 'Management Remarks')">
                             <mat-expansion-panel-header class="exp-header-new-stu-detail">

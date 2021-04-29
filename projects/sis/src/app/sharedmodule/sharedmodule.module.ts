@@ -73,6 +73,8 @@ import { SearchViaNameComponent } from './search-via-name/search-via-name.compon
 import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
 import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
+import { FollowupRemarksThemeTwoComponent } from '../student-master-theme-two/followup-remarks-theme-two/followup-remarks-theme-two.component';
+
 declare var CKEDITOR: any;
 const moment = _moment;
 const dateInput = 'DD.MM.YYYY' || 'DD-MM-YYYY' || 'DD/MM/YYYY' ;
@@ -135,7 +137,7 @@ export const MY_FORMATS = {
 		EditRequestModalComponent, ViewDocumentsComponent, PreviewDocumentComponent, DynamicContentThemeTwoComponent,
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
-		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
+		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,FollowupRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent,
 		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent,SearchViaStudentComponent,ReceiptDetailsModalComponent, ProcessdateModalComponent],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -174,7 +176,7 @@ export const MY_FORMATS = {
 		NgxMaskModule, ThemeTwoTabOneContainerComponent, ThemeTwoTabTwoContainerComponent, ThemeTwoTabThreeContainerComponent,
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
-		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
+		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,FollowupRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, CommonDynamicChartComponent,
 		AccountDetailsThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent,
 		ProcessdateModalComponent,
@@ -188,7 +190,7 @@ export const MY_FORMATS = {
 		ThemeTwoTabTwoContainerComponent, ThemeTwoTabThreeContainerComponent,
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
-		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
+		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,FollowupRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		AdmissionRemarksThemeTwoComponent, ImageViewerComponent,
 		SearchViaNameComponent, SearchViaStudentComponent,ReceiptDetailsModalComponent,ProcessdateModalComponent],
