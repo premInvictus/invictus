@@ -212,6 +212,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			documentDetails: this.doc ? this.doc.finalDocumentArray : [],
 			awardsDetails: this.skill ? this.skill.finalAwardArray : []
 		};
+		console.log("i am valif", this.context.studentdetails.studentdetailsform.valid);
+		
 		if (this.account.formValidation()) {
 			if (this.context.studentdetails.studentdetailsform.valid) {
 				this.sisService.addStudentInformation(this.context.studentdetails.studentdetailsform.value).subscribe((result1: any) => {

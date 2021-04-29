@@ -66,6 +66,7 @@
     "../projects/smart/src/app/smart-shared/smart-shared.module.ts",
     "../projects/smart/src/app/syllabus/syllabus.module.ts",
     "../projects/smart/src/app/logentry/logentry.module.ts",
+    "../projects/smart/src/app/online-classes/online-classes.module.ts",
     "../projects/smart/src/app/assignment/assignment.module.ts",
     "../projects/smart/src/app/auxillaries/auxillaries.module.ts",
     "../projects/smart/src/app/reports/reports.module.ts",

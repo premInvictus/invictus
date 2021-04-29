@@ -19,6 +19,11 @@
 td.changeTd p {
     word-break: break-word !important;
 }
+#zmmtg-root {
+    display: none;
+    z-index: 100;
+  }
+  
 
 .axiom-component-viewer-sidenav-content {
     overflow: auto;

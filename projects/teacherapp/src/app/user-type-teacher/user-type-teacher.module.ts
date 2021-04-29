@@ -14,6 +14,7 @@ import { LoadingModule } from 'ngx-loading';
 import { TabsModule } from 'ngx-bootstrap';
 import { TreeviewModule } from 'ngx-treeview';
 import { SharedModule } from '../shared-module/share-module.module';
+import { MatTooltipModule } from '@angular/material';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -30,6 +31,7 @@ import { SharedModule } from '../shared-module/share-module.module';
 		TabsModule.forRoot(),
 		TreeviewModule.forRoot(),
 		SharedModule,
+		MatTooltipModule
 	],
 	declarations: [
 		TeacherComponent,

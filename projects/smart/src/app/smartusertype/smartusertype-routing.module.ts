@@ -13,6 +13,7 @@ const routes: Routes = [
 			{ path: 'syllabus', loadChildren: '../syllabus/syllabus.module#SyllabusModule' },
 			{ path: 'logentry', loadChildren: '../logentry/logentry.module#LogentryModule' },
 			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
+			{ path: 'onlineclass', loadChildren: '../online-classes/online-classes.module#OnlineClassesModule' },
 			{ path: 'auxillaries', loadChildren: '../auxillaries/auxillaries.module#AuxillariesModule' },
 			{ path: 'reports', loadChildren: 'projects/smart/src/app/reports/reports.module#SmartReportsModule' },
 			{ path: 'smartconfiguration', loadChildren: '../smartconfiguration/smartconfiguration.module#SmartconfigurationModule' }
