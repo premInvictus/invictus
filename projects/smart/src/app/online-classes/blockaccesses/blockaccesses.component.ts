@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { SelectionModel } from '@angular/cdk/collections';
 import { saveAs } from 'file-saver';
+import { AssignmentModel } from "./blockaccess-review.model";
 
 @Component({
   selector: 'app-blockaccesses',
@@ -28,9 +29,9 @@ export class BlockaccessesComponent implements OnInit {
   isBoard = false;
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   displayedColumns: any[] = ['select', 'no', 'name', 'class', 'action'];
-  ELEMENT_DATA: Element[] = [];
-  dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-  selection = new SelectionModel<Element>(true, []);
+  ELEMENT_DATA: AssignmentModel[] = [];
+  dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
+  selection = new SelectionModel<AssignmentModel>(true, []);
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('del') del;
   delMsg: any = 'Do you want to enable download for this student ?';
@@ -57,8 +58,8 @@ export class BlockaccessesComponent implements OnInit {
     this.paramForm = this.fbuild.group({
       class_id: '',
       sec_id: '',
-      enrollment_type: '',
-      certificate_type: ''
+      enrollment_type: '4',
+      certificate_type: 10
     });
   }
   getClass() {
@@ -96,7 +97,7 @@ export class BlockaccessesComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: Element): string {
+  checkboxLabel(row?: AssignmentModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -107,24 +108,24 @@ export class BlockaccessesComponent implements OnInit {
   }
   getAllStudent() {
     this.ELEMENT_DATA = [];
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
     if (this.paramForm.valid) {
       this.sisService.getMasterStudentDetail(this.paramForm.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentsArray = result.data;
           let counter = 1;
           let enrollment_fieldname = '';
-          if (this.paramForm.value.enrollment_type === '2') {
-            enrollment_fieldname = 'em_regd_no';
-          } else if (this.paramForm.value.enrollment_type === '3') {
-            enrollment_fieldname = 'em_provisional_admission_no';
-          } else if (this.paramForm.value.enrollment_type === '4') {
+          // if (this.paramForm.value.enrollment_type === '2') {
+          //   enrollment_fieldname = 'em_regd_no';
+          // } else if (this.paramForm.value.enrollment_type === '3') {
+          //   enrollment_fieldname = 'em_provisional_admission_no';
+          // } else if (this.paramForm.value.enrollment_type === '4') {
             enrollment_fieldname = 'em_admission_no';
-          } else if (this.paramForm.value.enrollment_type === '5') {
-            enrollment_fieldname = 'em_alumini_no';
-          }
+          // } else if (this.paramForm.value.enrollment_type === '5') {
+          //   enrollment_fieldname = 'em_alumini_no';
+          // }
           for (const item of this.studentsArray) {
-            counter += 1;
+            
             this.ELEMENT_DATA.push({
               select: counter,
               no: item.au_login_id,
@@ -133,8 +134,9 @@ export class BlockaccessesComponent implements OnInit {
               em_admission_no: item[enrollment_fieldname],
               action: item
             });
+            counter += 1;
           }
-          this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+          this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
           this.dataSource.sort = this.sort;
           this.tabledivflag = true;
         }
@@ -143,17 +145,24 @@ export class BlockaccessesComponent implements OnInit {
   }
   enableDis($event, value) {
     const param: any = {};
-    param.certificate_type = this.paramForm.value.certificate_type;
+    param.certificate_type =10;
     param.class_id = this.paramForm.value.class_id,
       param.sec_id = this.paramForm.value.sec_id,
       param.login_id = value.au_login_id;
     param.status = $event.checked ? '1' : '0'
-    if ($event.checked) {
-      this.delMsg = 'Do you want to enable download for this student ?'
-    } else {
-      this.delMsg = 'Do you want to disable download for this student ?';
+    // if ($event.checked) {
+    //   this.delMsg = 'Do you want to enable download for this student ?'
+    // } else {
+    //   this.delMsg = 'Do you want to disable download for this student ?';
+    // }
+    if (param) {
+      this.sisService.enableAcessCertificate(param).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+          this.getAllStudent();
+        }
+      });
     }
-    this.del.openModal(param);
   }
   confirmChange(data) {
     if (data) {

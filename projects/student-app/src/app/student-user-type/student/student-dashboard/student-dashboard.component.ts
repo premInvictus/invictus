@@ -709,7 +709,7 @@ export class StudentDashboardComponent implements OnInit {
 		let spliturl = item.tsoc_url.split('/')[4];
 		let mId = spliturl.split('?')[0];
 		let pwd = spliturl.split("pwd=")[1];
-		let name = {};
+		let name:any = {};
 		this.access_key.forEach(element => {
 			if(element.name == 'zoom') {
 				name = element;

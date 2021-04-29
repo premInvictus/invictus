@@ -527,11 +527,10 @@ export class TeacherDashboardComponent implements OnInit {
 
 	}
 
-	openclass(item) {
-		console.log("i am item", item);
+	openclass(item:any) {
 		
 		if(item.tsoc_type == 'zoom') {
-			let name = {}
+			let name:any = {}
 			this.access_key.forEach(element => {
 				if(element.name == 'zoom') {
 					name = element;
@@ -550,9 +549,7 @@ export class TeacherDashboardComponent implements OnInit {
 				meetingNumber: mId,
 				apiKey: name.apiacess,
 				apiSecret:  name.apisecret,
-				role: 1,
-				userName: item.tsoc_admin_name,
-				userEmail: item.tsoc_admin_email
+				role: '1'
 			  });
 			  
 			  document.getElementById('zmmtg-root').style.display = 'block'
