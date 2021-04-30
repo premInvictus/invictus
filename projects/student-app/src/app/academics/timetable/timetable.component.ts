@@ -35,7 +35,7 @@ export class TimetableComponent implements OnInit {
 	week_day: any;
 	weekArr: any[];
 	week: any;
-	displayedColumns = ['snno', 'period', 'subject','start', 'end', 'action'];
+	displayedColumns = ['snno', 'subject','start', 'end', 'action'];
 	pageLength: any;
 	paginator: any;
 	access_key: any;

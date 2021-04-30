@@ -175,23 +175,23 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-left: 10px">
   <div clas="col-12" *ngIf="timeTableFlag" style="width:66%">
     <mat-card>
         <div class="row margin-top-10">
           <div class="col-12" >
               <table mat-table [dataSource]="dataSource" class="table table-borderd table-stripped custom-table" id="report_table">
                   <ng-container matColumnDef="snno">
-                    <th  mat-header-cell *matHeaderCellDef> S. NO </th>
-                    <td mat-cell *matCellDef="let element"> {{element.snno }} </td>
+                    <th  mat-header-cell *matHeaderCellDef> Period </th>
+                    <td mat-cell *matCellDef="let element"> {{element.snno }}<sup>{{periodSup[element.snno]}}</sup> </td>
                   </ng-container>
-                  <ng-container matColumnDef="period">
+                  <!-- <ng-container matColumnDef="period">
                       <th mat-header-cell *matHeaderCellDef> Period </th>
                       <td mat-cell *matCellDef="let element"> {{element.period }} </td>
-                  </ng-container>
+                  </ng-container> -->
                   <ng-container matColumnDef="subject">
                     <th mat-header-cell *matHeaderCellDef> Subject </th>
-                    <td mat-cell *matCellDef="let element"> {{element.subject | uppercase }} </td>
+                    <td mat-cell class="text-left" *matCellDef="let element"> {{element.subject | uppercase }} </td>
                 </ng-container>
                   <ng-container matColumnDef="start">
                       <th mat-header-cell *matHeaderCellDef> Start Time </th>
@@ -207,17 +207,16 @@
                       <th mat-header-cell *matHeaderCellDef> Action </th>
                       <td mat-cell *matCellDef="let element" class="tab-display-flex">
                           <i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer"
-                              *ngIf="!isTeacher" (click)="openclass(element.action)"></i><span
-                              class="margin-left-10 ver-line-divider"></span>
+                              *ngIf="!isTeacher" (click)="openclass(element.action)"></i>
                       </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                   </tr>
               </table>
-              <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
+              <!-- <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
                   [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
-              </mat-paginator>
+              </mat-paginator> -->
               
           </div>
       </div>
