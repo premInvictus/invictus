@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, AxiomService, SisService, SmartService } from '../../_services';
+import { ZoomMtg } from '@zoomus/websdk';
+
+ZoomMtg.preLoadWasm();
+ZoomMtg.prepareJssdk();
+
 @Component({
 	selector: 'app-teacher-timetable',
 	templateUrl: './teacher-timetable.component.html',
@@ -38,6 +43,7 @@ export class TeacherTimetableComponent implements OnInit {
 	sessionName: any;
 	length: any;
 	period = 0;
+	access_key: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -55,6 +61,9 @@ export class TeacherTimetableComponent implements OnInit {
 		this.getClassByTeacherId();
 		this.getSubjectByTeacherId();
 		this.getTeacherwiseTableDetails();
+		this.commonService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+			this.access_key = JSON.parse(res.data[0].gs_value);
+		})
 	}
 	buildForm() {
 		this.teacherwiseForm = this.fbuild.group({
@@ -63,6 +72,7 @@ export class TeacherTimetableComponent implements OnInit {
 			tt_subject_id: '',
 		});
 	}
+	
 	// get subject name from existing array
 	getSubjectName(value) {
 		const ctrIndex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(value));

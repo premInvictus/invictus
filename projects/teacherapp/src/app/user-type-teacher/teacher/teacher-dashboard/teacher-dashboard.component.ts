@@ -581,7 +581,7 @@ export class TeacherDashboardComponent implements OnInit {
 				}
 			  }) 
 			} else {
-				this.commonAPIService.showSuccessErrorMessage("info", "No class assigned")
+				this.commonAPIService.showSuccessErrorMessage( "No class assigned", 'error')
 			}
 		
 	}

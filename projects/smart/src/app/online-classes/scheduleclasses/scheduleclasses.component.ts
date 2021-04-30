@@ -11,6 +11,10 @@ import { AssignmentAttachmentDialogComponent } from '../../smart-shared/assignme
 import { PreviewDocumentComponent } from '../../smart-shared/preview-document/preview-document.component';
 import { AddSessionComponenetComponent } from '../../smart-shared/add-session-componenet/add-session-componenet.component';
 import { DatePipe } from '@angular/common';
+import { ZoomMtg } from '@zoomus/websdk';
+
+ZoomMtg.preLoadWasm();
+ZoomMtg.prepareJssdk();
 @Component({
   selector: 'app-scheduleclasses',
   templateUrl: './scheduleclasses.component.html',
@@ -42,6 +46,7 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 	disabledApiButton = false;
 	sectionArray: any[] = [];
 	isBoard = false;
+	access_key: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -58,6 +63,9 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.commonAPIService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+			this.access_key = JSON.parse(res.data[0].gs_value);
+		})
 		// if (this.currentUser.role_id === '3') {
 		// 	this.isTeacher = true;
 		// 	this.displayedColumns = ['class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'attachment', 'action'];
@@ -176,7 +184,7 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 							each.start = item.tsoc_start_time;
 							each.end = item.tsoc_end_time;
 							each.platform = item.tsoc_type == 'zoom' ? "Zoom" : item.tsoc_type == 'google' ? "Google Meet" : item.tsoc_type == 'team' ? "Microsoft Team" : "Other";
-							each.period = item.td_no_of_period;
+							each.period = item.ae_name;
 							this.ELEMENT_DATA.push(each);
 						});
 						this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -346,6 +354,62 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 			}
 		  }
 		});
+	  }
+	  joinclass(item) {
+		if(item.tsoc_type == 'zoom') {
+			let name:any = {}
+			this.access_key.forEach(element => {
+				if(element.name == 'zoom') {
+					name = element;
+				}
+			});
+			console.log("i am element", name);
+			
+			let spliturl = item.tsoc_url.split('/')[4];
+			let mId = spliturl.split('?')[0];
+			let pwd = spliturl.split("pwd=")[1];
+	
+			console.log("i am here", mId, pwd);
+			
+			
+			let signature = ZoomMtg.generateSignature({
+				meetingNumber: mId,
+				apiKey: name.apiacess,
+				apiSecret:  name.apisecret,
+				role: '5'
+			  });
+			  
+			  document.getElementById('zmmtg-root').style.display = 'block'
+	
+			  ZoomMtg.init({
+				leaveUrl: window.location.href,
+				isSupportAV: true,
+				success: (success) => {
+				  console.log(success, signature);
+		  
+				  ZoomMtg.join({
+					signature: signature,
+					meetingNumber: mId,
+					userName:item.tsoc_admin_name,
+					apiKey: name.apiacess,
+					userEmail: item.tsoc_admin_email,
+					passWord: pwd,
+					success: (success) => {
+					  console.log(success)
+					},
+					error: (error) => {
+					  console.log(error)
+					}
+				  })
+		  
+				},
+				error: (error) => {
+				  console.log(error)
+				}
+			  }) 
+			} else {
+				this.commonAPIService.showSuccessErrorMessage( "No class assigned", 'error')
+			}
 	  }
 	assignmentSend(valuel) {
 		const asIdArray = [];
