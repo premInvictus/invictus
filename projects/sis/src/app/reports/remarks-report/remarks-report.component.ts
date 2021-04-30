@@ -4,7 +4,7 @@ import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 
 import { saveAs } from 'file-saver';
@@ -23,13 +23,13 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-	selector: 'app-alumini-student-list',
-	templateUrl: './alumini-student-list.component.html',
-	styleUrls: ['./alumini-student-list.component.scss'],
-	encapsulation: ViewEncapsulation.None
+  selector: 'app-remarks-report',
+  templateUrl: './remarks-report.component.html',
+  styleUrls: ['./remarks-report.component.css']
 })
-export class AluminiStudentListComponent implements OnInit, AfterViewInit {
-	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+export class RemarksReportComponent implements OnInit {
+
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -86,24 +86,10 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	showDateRange = false;
 	events: any;
 	@ViewChild('TABLE') table: ElementRef;
-	enrollMentTypeArray: any[] = [{
-		au_process_type: '1', au_process_name: 'Enquiry'
-	},
-	{
-		au_process_type: '2', au_process_name: 'Registration'
-	},
-	{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	},
-	{
-		au_process_type: '5', au_process_name: 'Alumini'
-	}];
+	enrollMentTypeArray: any[] = [];
 
 
-	aluminiReportForm: FormGroup;
+	studentDetailReportForm: FormGroup;
 
 	reportProcessWiseData: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
@@ -115,7 +101,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
 		this.getSession();
-		this.buildForm(); 
+		this.buildForm();
 		this.gridOptions = {
 			enableDraggableGrouping: true,
 			enableGrouping: true,
@@ -190,45 +176,6 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
 		};
-		this.columnDefinitions = [
-			{
-				id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
-				grouping: {
-					getter: 'admission_no',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-				groupTotalsFormatter: this.srnTotalsFormatter
-			},
-			{ id: 'alumini_no', name: 'Alumini No.', field: 'alumini_no', sortable: true, filterable: true },
-			{
-				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-				groupTotalsFormatter: this.countTotalsFormatter
-			},
-			{
-				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-				grouping: {
-					getter: 'class_name',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				}
-			},
-			{
-				id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
-				formatter: this.checkDateFormatter
-			},
-			{ id: 'alumini_date', name: 'Left Date', field: 'alumini_date', sortable: true, filterable: true, formatter: this.checkDateFormatter },
-			{ id: 'mobile', name: 'Contact', field: 'mobile', sortable: true, filterable: true },
-			{ id: 'parent_name', name: 'Active Parent', field: 'parent_name', sortable: true, filterable: true },
-		];
 	}
 
 	ngAfterViewInit() {
@@ -311,7 +258,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		this.levelTotalFooter = [];
 		this.levelSubtotalFooter = [];
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
-		const doc = new jsPDF('p', 'mm', 'a0');
+		const doc = new jsPDF('l', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
@@ -533,10 +480,10 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'em_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push(groupItem.rows.length);
+						} else if (item2.id === 'au_full_name') {
+							levelArray.push( groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -562,10 +509,10 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					});
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'em_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push(groupItem.rows.length);
+						} else if (item2.id === 'au_full_name') {
+							levelArray.push( groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -591,7 +538,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -615,9 +562,9 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'em_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
+						} else if (element.id === 'au_full_name') {
 							blankTempObj[element.id] = groupItem.rows.length;
 						} else {
 							blankTempObj[element.id] = '';
@@ -676,9 +623,9 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					});
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'em_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
+						} else if (element.id === 'au_full_name') {
 							blankTempObj[element.id] = groupItem.rows.length;
 						} else {
 							blankTempObj[element.id] = '';
@@ -883,7 +830,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -922,7 +869,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 
 		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name);
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
 		worksheet.getCell('A' + worksheet._rows.length).font = {
 			name: 'Arial',
 			size: 10,
@@ -935,18 +882,21 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
+		if(this.studentDetailReportForm.value.enrolment_type) {
+			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
+		}
 		if (this.showDateRange) {
 			paramArr.push(
-				this.notif.dateConvertion(this.aluminiReportForm.value.fdate, 'd-MMM-y') + ' - ' +
-				this.notif.dateConvertion(this.aluminiReportForm.value.tdate, 'd-MMM-y'));
+				this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'd-MMM-y') + ' - ' +
+				this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'd-MMM-y'));
 		} else {
 			paramArr.push(
-				this.notif.dateConvertion(this.aluminiReportForm.value.cdate, 'd-MMM-y'));
+				this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'd-MMM-y'));
 		}
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Students Alumini List';
+		return 'Remarks Report Followup';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -960,7 +910,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')';
+			return 'Sub Total (level ' + level + ')' ;
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -973,8 +923,8 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		}
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		// console.log('totals ', totals);
-		// console.log('columnDef ', columnDef);
+		console.log('totals ', totals);
+		console.log('columnDef ', columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -985,21 +935,36 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		console.log('countTotalsFormatter ', totals);
 		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
 	}
+
+	buildForm() {
+		this.studentDetailReportForm = this.fbuild.group({
+			enrolment_type: '',
+			fdate: new Date(),
+			cdate: new Date(),
+      tdate: new Date(),
+      reviewReport: '3'
+    });
+    this.setProcessArray();
+  }
+  resetDataset() {
+		this.reportProcessWiseData = [];
+		this.dataset = [];
+		this.columnDefinitions = [];
+		this.tableFlag = false;
+	}
+  setProcessArray(){
+		this.enrollMentTypeArray = [];
+		if(this.studentDetailReportForm.value.reviewReport === '3'){
+			this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
+			this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
+		}
+	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
 		if (value && value !== '-') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
 			return '-';
 		}
-	}
-
-	buildForm() {
-		this.aluminiReportForm = this.fbuild.group({
-			enrolment_type: '',
-			fdate: new Date(),
-			cdate: new Date(),
-			tdate: new Date()
-		});
 	}
 
 	showDateToggle() {
@@ -1016,21 +981,21 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		this.resetGrid();
 		const inputJson = {};
 		if (this.showDate) {
-			inputJson['from_date'] = this.notif.dateConvertion(this.aluminiReportForm.value.cdate, 'yyyy-MM-dd');
+			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'yyyy-MM-dd');
 		} else {
-			inputJson['from_date'] = this.notif.dateConvertion(this.aluminiReportForm.value.fdate, 'yyyy-MM-dd');
-			inputJson['to_date'] = this.notif.dateConvertion(this.aluminiReportForm.value.tdate, 'yyyy-MM-dd');
+			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'yyyy-MM-dd');
+			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
 		}
-
+    inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
+    inputJson['era_type'] = 'followup';
+    inputJson['au_status'] = 1;
 		const validateFlag = this.checkValidation();
 		if (validateFlag) {
-			this.sisService.getAluminiStudentDetails(inputJson).subscribe((result: any) => {
+			this.sisService.getRemarks(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.reportProcessWiseData = result.data;
-					if (this.reportProcessWiseData.length > 0) {
-						this.prepareDataSource();
-						this.tableFlag = true;
-					}
+					this.prepareDataSource(inputJson['au_process_type']);
+					this.tableFlag = true;
 				} else {
 					this.notif.showSuccessErrorMessage(result.data, 'error');
 					this.resetGrid();
@@ -1044,13 +1009,13 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	checkValidation() {
 		let validateFlag = 0;
 		if (this.showDate) {
-			if (!this.aluminiReportForm.value.cdate) {
+			if (!this.studentDetailReportForm.value.cdate) {
 				this.notif.showSuccessErrorMessage('Please Choose Date', 'error');
 			} else {
 				validateFlag = 1;
 			}
 		} else {
-			if (!this.aluminiReportForm.value.fdate) {
+			if (!this.studentDetailReportForm.value.fdate) {
 				this.notif.showSuccessErrorMessage('Please Choose From Date', 'error');
 			} else {
 				validateFlag = 1;
@@ -1060,9 +1025,13 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		return validateFlag;
 	}
 
+	valueAndDash(value) {
+		return value && value !== '0' ? value : '-';
+	}
+
 	getParentHonorific(value) {
 
-		console.log('value', value);
+		// console.log('value', value);
 		let honorific = '';
 		if (value === '1') {
 			honorific = 'Mr.';
@@ -1080,7 +1049,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			honorific = 'Dr.';
 		} else if (value === '8') {
 			honorific = 'Lady';
-		} else if (value === '9') {
+		}  else if (value === '9') {
 			honorific = 'Late';
 		} else if (value === '10') {
 			honorific = 'Md.';
@@ -1089,43 +1058,88 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		return honorific;
 	}
 
-	valueAndDash(value) {
-		return value && value !== '0' ? value : '-';
-	}
-
-	prepareDataSource() {
-		let counter = 1;
-		const total = 0;
-		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
-			const tempObj = {};
-			const parentHonorific = this.getParentHonorific(this.reportProcessWiseData[i]['epd_parent_honorific']);
-
-			tempObj['id'] = this.reportProcessWiseData[i]['au_login_id'] + counter;
-			tempObj['counter'] = counter;
-			tempObj['class_name'] = this.reportProcessWiseData[i]['sec_name'] ?
-				this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] : '-';
-			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['em_admission_no']);
-			tempObj['alumini_no'] = this.valueAndDash(this.reportProcessWiseData[i]['em_alumini_no']);
-			tempObj['parent_name'] = this.valueAndDash(parentHonorific + this.reportProcessWiseData[i]['epd_parent_name']);
-			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['au_full_name']));
-			tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[i]['em_admission_date']);
-			tempObj['alumini_date'] = this.valueAndDash(this.reportProcessWiseData[i]['em_alumini_date']);
-			tempObj['mobile'] = this.valueAndDash(this.reportProcessWiseData[i]['au_mobile']);
-			this.dataset.push(tempObj);
-			counter++;
-		}
-		const blankTempObj = {};
-		this.columnDefinitions.forEach(element => {
-			if (element.id === 'admission_no') {
-				blankTempObj[element.id] = 'Grand Total';
-			} else if (element.id === 'full_name') {
-				blankTempObj[element.id] = this.dataset.length;
-			} else {
-				blankTempObj[element.id] = '';
+	prepareDataSource(process_type) {
+    if (this.studentDetailReportForm.value.reviewReport === '3') {
+      let process_type_name='';
+			let process_type_field_no='';
+			let process_type_field_date='';
+			if (this.studentDetailReportForm.value.enrolment_type === '1'){
+				process_type_name = 'Enq. ';
+				process_type_field_no = 'em_enq_no';
+				process_type_field_date = 'em_enq_date';
+			} else if (this.studentDetailReportForm.value.enrolment_type === '2'){
+				process_type_name = 'Regn. ';
+				process_type_field_no = 'em_regd_no';
+				process_type_field_date = 'em_regd_date';
+			} else if (this.studentDetailReportForm.value.enrolment_type === '3'){
+				process_type_name = 'Pro Admn. ';
+				process_type_field_no = 'em_provisional_admission_no';
+				process_type_field_date = 'em_provisional_admission_date';
+			} else if (this.studentDetailReportForm.value.enrolment_type === '4'){
+				process_type_name = 'Admn. ';
+				process_type_field_no = 'em_admission_no';
+				process_type_field_date = 'em_admission_date';
+			}  
+			this.columnDefinitions = [
+        { id: 'pos', name: 'S. No', field: 'pos', sortable: true, filterable: true, resizable: true },
+        { id: 'em_no', name: process_type_name+'No', field: 'em_no', sortable: true, filterable: true, resizable: true ,
+        grouping: {
+					getter: 'em_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+        groupTotalsFormatter: this.srnTotalsFormatter
+        },
+        { id: 'au_full_name', name: 'Student Name', field: 'au_full_name', sortable: true, filterable: true, resizable: true,
+        groupTotalsFormatter: this.countTotalsFormatter },
+        
+				{ id: 'em_date', name: process_type_name+'Date', field: 'em_date', sortable: true, filterable: true, resizable: true,
+				formatter: this.checkDateFormatter },
+         { id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true },
+         { id: 'epd_parent_name', name: 'Active Parent Name', field: 'epd_parent_name', sortable: true, filterable: true, resizable: true },
+         { id: 'epd_contac_no', name: 'Active Parent Contact No', field: 'epd_contac_no', sortable: true, filterable: true, resizable: true },
+         { id: 'era_doj', name: 'Date', field: 'era_doj', sortable: true, filterable: true, resizable: true,
+         formatter: this.checkDateFormatter }	,
+         { id: 'ar_name', name: 'Area', field: 'ar_name', sortable: true, filterable: true, resizable: true },
+         { id: 'era_teachers_remark', name: 'Remark', field: 'era_teachers_remark', sortable: true, filterable: true, resizable: true },
+			];
+			let counter = 1;
+			for (let i = 0; i < this.reportProcessWiseData.length; i++) {
+				const tempObj = {};
+		  		tempObj['id'] = counter;
+				tempObj['pos'] = counter;
+				tempObj['au_full_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['au_full_name'] ? this.reportProcessWiseData[i]['au_full_name'] : '' );
+				tempObj['em_no'] = this.reportProcessWiseData[i][process_type_field_no]? this.reportProcessWiseData[i][process_type_field_no]: '';
+				tempObj['em_date'] = this.reportProcessWiseData[i][process_type_field_date] ? this.reportProcessWiseData[i][process_type_field_date]: '';
+        tempObj['class_name'] = this.reportProcessWiseData[i]['class_name'] ? this.reportProcessWiseData[i]['class_name']: '';
+        tempObj['epd_parent_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['epd_parent_name'] ? this.reportProcessWiseData[i]['epd_parent_name']: '');
+        tempObj['epd_contac_no'] = this.reportProcessWiseData[i]['epd_contac_no'] ? this.reportProcessWiseData[i]['epd_contac_no']: '';
+        tempObj['era_doj'] = this.reportProcessWiseData[i]['era_doj'] ? this.reportProcessWiseData[i]['era_doj']: '';
+        tempObj['ar_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['ar_name'] ? this.reportProcessWiseData[i]['ar_name']: '');
+        tempObj['era_teachers_remark'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['era_teachers_remark'] ? this.reportProcessWiseData[i]['era_teachers_remark']: '');
+				this.dataset.push(tempObj);
+				counter++;
 			}
-		});
-		this.totalRow = blankTempObj;
-		console.log('dataset  ', this.dataset);
+	
+			const blankTempObj = {};
+			this.columnDefinitions.forEach(element => {
+        if (element.id === 'em_no') {
+          blankTempObj[element.id] = 'Grand Total';
+        } else if (element.id === 'au_full_name') {
+          blankTempObj[element.id] = '  ' + this.dataset.length;
+        } else {
+          blankTempObj[element.id] = '';
+        }
+      });
+			// this.dataset.push(blankTempObj);
+			this.totalRow = blankTempObj;
+      console.log('dataset  ', this.dataset);
+      this.aggregatearray.push(new Aggregators.Sum('em_no'));
+    }
 		if (this.dataset.length > 20) {
 			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
@@ -1135,29 +1149,28 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridHeight = 400;
 		}
-		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
 	}
-
 	exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'AluminiReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'StudentDetailReport_' + (new Date).getTime() + '.xlsx');
 
 	}
 
 	print() {
-		const printModal2 = document.getElementById('aluminiReportPrint');
+		const printModal2 = document.getElementById('studentDetailReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Alumini Report</h2></center></div>' +
-			printModal2.innerHTML + '</html>');
+		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Detail Report</h2></center></div>'
+			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
 	}
 
 
 }
+

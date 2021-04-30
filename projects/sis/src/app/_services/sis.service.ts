@@ -924,6 +924,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/getEnrollmentDetialedReport', value);
 	}
+	getRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/getRemarks', value);
+	}
 	sessionMappingReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/sessionMappingReport', value);
