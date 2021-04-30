@@ -202,4 +202,7 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
 	}
+	getGlobalSetting(value) {
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
 }
