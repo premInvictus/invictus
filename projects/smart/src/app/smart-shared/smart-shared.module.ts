@@ -14,6 +14,7 @@ import {
 	MatCardModule, MatListModule, MatStepperModule,
 	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule
 } from '@angular/material';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { CKEditorModule } from 'ng2-ckeditor';
@@ -38,6 +39,7 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
+import { AddSessionComponenetComponent } from './add-session-componenet/add-session-componenet.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -58,6 +60,7 @@ export const MY_FORMATS = {
 		ReactiveFormsModule,
 		MatSlideToggleModule,
 		DragDropModule,
+		NgxMaterialTimepickerModule,
 		MatButtonModule,
 		MatFormFieldModule,
 		MatInputModule,
@@ -108,7 +111,8 @@ export const MY_FORMATS = {
 		NoDataComponent,
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
-		AngularCalendarYearViewComponent
+		AngularCalendarYearViewComponent,
+		AddSessionComponenetComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -118,7 +122,8 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		UnpublishModalComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		AddSessionComponenetComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -159,7 +164,8 @@ export const MY_FORMATS = {
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,
-		AngularCalendarYearViewComponent
+		AngularCalendarYearViewComponent,
+		AddSessionComponenetComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

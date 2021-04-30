@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, AxiomService, SisService, SmartService } from '../../_services';
+import { ZoomMtg } from '@zoomus/websdk';
+import { MatTableDataSource } from '@angular/material';
+
+ZoomMtg.preLoadWasm();
+ZoomMtg.prepareJssdk();
+
 @Component({
 	selector: 'app-teacher-timetable',
 	templateUrl: './teacher-timetable.component.html',
@@ -13,6 +19,7 @@ export class TeacherTimetableComponent implements OnInit {
 	teacherArray: any[] = [];
 	subjectArray: any[] = [];
 	subArray: any[] = [];
+	today = new Date();
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	teacherwiseArray: any[] = [];
@@ -38,6 +45,16 @@ export class TeacherTimetableComponent implements OnInit {
 	sessionName: any;
 	length: any;
 	period = 0;
+	access_key: any;
+	week_day: any;
+	dayArray: any[];
+	timetableArray: any;
+	timeTableFlag: boolean;
+	ELEMENT_DATA:any= [];
+	dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+	displayedColumns = ['snno', 'subject','class','section','start', 'end',  'action'];
+	weekArr: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
+	week: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -55,6 +72,9 @@ export class TeacherTimetableComponent implements OnInit {
 		this.getClassByTeacherId();
 		this.getSubjectByTeacherId();
 		this.getTeacherwiseTableDetails();
+		this.commonService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+			this.access_key = JSON.parse(res.data[0].gs_value);
+		})
 	}
 	buildForm() {
 		this.teacherwiseForm = this.fbuild.group({
@@ -63,6 +83,7 @@ export class TeacherTimetableComponent implements OnInit {
 			tt_subject_id: '',
 		});
 	}
+	
 	// get subject name from existing array
 	getSubjectName(value) {
 		const ctrIndex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(value));
@@ -138,6 +159,21 @@ export class TeacherTimetableComponent implements OnInit {
 		this.smartService.getTeacherwiseTableDetails({ uc_login_id: this.teacherId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.teacherwiseArray = result.data.tabledata;
+				this.weekArr = [];
+				this.timetableArray = result.data.tabledata;
+				const no_of_day = this.timetableArray[0].length - 1;
+				console.log('timetableArray', result.data.tabledata);
+				for (let i = 0; i < no_of_day; i++) {
+					if (Number(result.data.today_day_of_week) - 1 === i) {
+						this.weekArr.push('Today');
+					} else {
+						this.weekArr.push(this.week[i]);
+					}
+				}
+				this.getTimetableOfDay(result.data.day_of_week);
+				this.timeTableFlag = true;
+				
+				
 				this.finalArr = [];
 				for (const item of this.teacherwiseArray) {
 					for (const dety of item) {
@@ -185,6 +221,37 @@ export class TeacherTimetableComponent implements OnInit {
 			}
 		});
 	}
+	getTimetableOfDay(cday) {
+		cday = Number(cday);
+		this.week_day = cday;
+		this.dayArray = [];
+		const tlen = this.timetableArray.length;
+		for (let i = 0; i < tlen; i++) {
+			if (this.timetableArray[i][cday - 1].subject_name === '-') {
+				this.timetableArray[i][cday - 1].subject_name = 'Leisure';
+			}
+			this.dayArray.push(this.timetableArray[i][cday - 1]);
+		}
+		let itemNO = 1;
+		console.log("i am --------------------", this.dayArray);
+		
+		this.dayArray.forEach((element:any) => {
+			
+			let obj:any = {
+				snno: itemNO,
+				class: element.class_name,
+				section: element.sec_name,
+				start:element.tsoc_start_time,
+				end: element.tsoc_end_time,
+				subject: element.subject_name,
+				action: element
+			}
+			this.ELEMENT_DATA.push(obj);
+			itemNO++;
+		})
+		this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+		
+	}
 	getSum(dety) {
 		this.sum = 0;
 		for (const titem of dety) {
@@ -193,5 +260,63 @@ export class TeacherTimetableComponent implements OnInit {
 			}
 		}
 		return this.sum;
+	}
+	openclass(item:any) {
+		
+		if(item.tsoc_type == 'zoom') {
+			let name:any = {}
+			this.access_key.forEach(element => {
+				if(element.name == 'zoom') {
+					name = element;
+				}
+			});
+			console.log("i am element", name);
+			
+			let spliturl = item.tsoc_url.split('/')[4];
+			let mId = spliturl.split('?')[0];
+			let pwd = spliturl.split("pwd=")[1];
+	
+			console.log("i am here", mId, pwd);
+			
+			
+			let signature = ZoomMtg.generateSignature({
+				meetingNumber: mId,
+				apiKey: name.apiacess,
+				apiSecret:  name.apisecret,
+				role: '1'
+			  });
+			  
+			  document.getElementById('zmmtg-root').style.display = 'block'
+	
+			  ZoomMtg.init({
+				leaveUrl: window.location.href,
+				isSupportAV: true,
+				success: (success) => {
+				  console.log(success, signature);
+		  
+				  ZoomMtg.join({
+					signature: signature,
+					meetingNumber: mId,
+					userName:item.tsoc_admin_name,
+					apiKey: name.apiacess,
+					userEmail: item.tsoc_admin_email,
+					passWord: pwd,
+					success: (success) => {
+					  console.log(success)
+					},
+					error: (error) => {
+					  console.log(error)
+					}
+				  })
+		  
+				},
+				error: (error) => {
+				  console.log(error)
+				}
+			  }) 
+			} else {
+				this.commonService.showSuccessErrorMessage( "No class assigned", 'error')
+			}
+		
 	}
 }

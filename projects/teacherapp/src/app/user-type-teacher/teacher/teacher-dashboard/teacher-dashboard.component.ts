@@ -10,6 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { BranchChangeService } from 'src/app/_services/branchChange.service';
 import { DatePipe } from '@angular/common';
+import { ZoomMtg } from '@zoomus/websdk';
+
+ZoomMtg.preLoadWasm();
+ZoomMtg.prepareJssdk();
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
@@ -159,6 +163,7 @@ export class TeacherDashboardComponent implements OnInit {
 	currentmsgIndex: number;
 	msgPre = true;
 	msgNext = true;
+	access_key: any;
 
 	constructor(
 		private qelementService: QelementService,
@@ -182,6 +187,10 @@ export class TeacherDashboardComponent implements OnInit {
 		});
 		this.getUserDetailsHr();
 		this.getMessages();
+		this.commonAPIService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+			this.access_key = JSON.parse(res.data[0].gs_value);
+		})
+		console.log("i am here", this.access_key);
 		// this.getAttendanceReport();
 	}
 
@@ -495,11 +504,6 @@ export class TeacherDashboardComponent implements OnInit {
 				workingDayParam.datefrom = formatDate(` ${this.sessionValue} 1 ${new Date().getMonth() < 4 ? new Date().getFullYear() - 1: new Date().getFullYear()}`);
 				workingDayParam.dateto = formatDate(new Date());
 				workingDayParam.class_id = 1;
-
-				console.log("i am vvvvvv ", workingDayParam);
-
-
-
 				this.commonAPIService.GetHolidayDays(workingDayParam).subscribe(
 					(res: any) => {
 						this.workingDay = res.data.workingDay
@@ -523,6 +527,64 @@ export class TeacherDashboardComponent implements OnInit {
 
 	}
 
+	openclass(item:any) {
+		
+		if(item.tsoc_type == 'zoom') {
+			let name:any = {}
+			this.access_key.forEach(element => {
+				if(element.name == 'zoom') {
+					name = element;
+				}
+			});
+			console.log("i am element", name);
+			
+			let spliturl = item.tsoc_url.split('/')[4];
+			let mId = spliturl.split('?')[0];
+			let pwd = spliturl.split("pwd=")[1];
+	
+			console.log("i am here", mId, pwd);
+			
+			
+			let signature = ZoomMtg.generateSignature({
+				meetingNumber: mId,
+				apiKey: name.apiacess,
+				apiSecret:  name.apisecret,
+				role: '1'
+			  });
+			  
+			  document.getElementById('zmmtg-root').style.display = 'block'
+	
+			  ZoomMtg.init({
+				leaveUrl: window.location.href,
+				isSupportAV: true,
+				success: (success) => {
+				  console.log(success, signature);
+		  
+				  ZoomMtg.join({
+					signature: signature,
+					meetingNumber: mId,
+					userName:item.tsoc_admin_name,
+					apiKey: name.apiacess,
+					userEmail: item.tsoc_admin_email,
+					passWord: pwd,
+					success: (success) => {
+					  console.log(success)
+					},
+					error: (error) => {
+					  console.log(error)
+					}
+				  })
+		  
+				},
+				error: (error) => {
+				  console.log(error)
+				}
+			  }) 
+			} else {
+				this.commonAPIService.showSuccessErrorMessage( "No class assigned", 'error')
+			}
+		
+	}
 	getDaySpace() {
 		var date = new Date();
 		var dayOne = new Date(date.getFullYear(), date.getMonth(), 1);

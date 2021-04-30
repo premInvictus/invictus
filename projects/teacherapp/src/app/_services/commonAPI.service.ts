@@ -134,6 +134,9 @@ export class CommonAPIService {
 	getEmployeeNavigationRecords(value) {
 		return this.http.post(environment.apiHRUrl + '/employee/getNavigationId', value);
 	}
+	getGlobalSetting(value) {
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
 
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {

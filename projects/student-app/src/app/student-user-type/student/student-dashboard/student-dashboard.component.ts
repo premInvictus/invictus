@@ -11,6 +11,14 @@ import { PreviewDocumentComponent } from '../../../shared-module/preview-documen
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BranchChangeService } from 'src/app/_services/branchChange.service';
+import { ZoomMtg } from '@zoomus/websdk';
+import { environment } from 'src/environments/environment';
+import { min } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
+
+ZoomMtg.preLoadWasm();
+ZoomMtg.prepareJssdk();
+
 @Component({
 	selector: 'app-student-dashboard',
 	templateUrl: './student-dashboard.component.html',
@@ -79,6 +87,7 @@ export class StudentDashboardComponent implements OnInit {
 	week_day: number;
 	todaysDate = new Date();
 	sub_id;
+	access_key : any[] = [];
 	assignmentArray: any[] = [];
 	currentAssignment: any;
 	currentAssignmentIndex: number;
@@ -158,7 +167,10 @@ export class StudentDashboardComponent implements OnInit {
 
 	ngOnInit() {
 		this.setStudentDashboard();
-
+		this.commonAPIService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+			this.access_key = JSON.parse(res.data[0].gs_value);
+		})
+		
 		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
 			if(data) {
 				this.setStudentDashboard();
@@ -654,6 +666,98 @@ export class StudentDashboardComponent implements OnInit {
 				this.msgNavigate(0);
 			}
 		});
+	}
+	openclass(item) {
+		const studentParam: any = {};
+		studentParam.au_class_id = this.userDetail.au_class_id;
+		studentParam.au_sec_id = this.userDetail.au_sec_id;
+		studentParam.au_event_id = parseInt(item.no_of_period) + 1;
+		studentParam.ma_created_date = new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd');
+		studentParam.au_role_id = '4';
+		studentParam.au_status = '1';
+		this.erpCommonService.getUserAttendance(studentParam).subscribe((res:any) => {
+			console.log("i am res",res.data);
+			let check = [];
+			res.data.forEach(element => {
+				if(element.au_login_id == this.userDetail.au_login_id && element.ma_attendance == '1') {
+					check.push(element);
+				}
+			});
+			if(check.length == 0) {
+				let sendd = [
+					{
+						class_id:this.userDetail.au_class_id,
+						sec_id:this.userDetail.au_sec_id,
+						ma_event:parseInt(item.no_of_period) + 1,
+						ma_created_date:new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd'),
+						login_id:this.userDetail.au_login_id,
+						roll_no: '',
+						attendance:1,
+						session_id:this.session.ses_id,
+						created_by:this.userDetail.au_login_id
+					}
+				]
+				
+				this.erpCommonService.insertAttendance(sendd).subscribe((res:any)=> {
+					console.log("i am res", res);
+					
+				})
+			}
+			
+		})
+		if(item.tsoc_type == 'zoom') {
+		let spliturl = item.tsoc_url.split('/')[4];
+		let mId = spliturl.split('?')[0];
+		let pwd = spliturl.split("pwd=")[1];
+		let name:any = {};
+		this.access_key.forEach(element => {
+			if(element.name == 'zoom') {
+				name = element;
+			}
+		});
+
+		
+		
+		
+		let signature = ZoomMtg.generateSignature({
+			meetingNumber: mId,
+			apiKey: name.apiacess,
+			apiSecret:  name.apisecret,
+			role: '0'
+		  });
+		  document.getElementById('zmmtg-root').style.display = 'block'
+
+		  ZoomMtg.init({
+			leaveUrl: window.location.href,
+			isSupportAV: true,
+			success: (success) => {
+			  console.log(success, signature);
+	  
+			  ZoomMtg.join({
+				signature: signature,
+				meetingNumber: mId,
+				userName:this.userDetail.au_full_name,
+				apiKey: name.apiacess,
+				userEmail: '',
+				passWord: pwd,
+				success: (success) => {
+				  console.log(success)
+				},
+				error: (error) => {
+				  console.log(error)
+				}
+			  })
+	  
+			},
+			error: (error) => {
+			  console.log(error)
+			}
+		  }) 
+		} else {
+			
+			this.commonAPIService.showSuccessErrorMessage("No class assigned", 'error')
+		}
+		
 	}
 	getSmartToAxiom() {
 		const param: any = {};

@@ -12,6 +12,7 @@ import { AuthGuard } from './_guards';
 import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from './_services';
 import { SmartusertypeService } from './smartusertype/smartusertype.service';
 
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 const providers = [NotificationsService,
 	AuthGuard,
@@ -30,6 +31,7 @@ const providers = [NotificationsService,
 		AppRoutingModule,
 		HttpClientModule,
 		RouterModule,
+		NgxMaterialTimepickerModule,
 		LoadingModule,
 		BrowserAnimationsModule,
 		CookieModule.forRoot(),
