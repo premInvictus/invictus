@@ -194,7 +194,7 @@ export class CollectionReportComponent implements OnInit {
 		if (this.common.isExistUserAccessMenu('655')) {
 			this.reportTypeArray.push({ report_type: 'dailyheadwise', report_name: 'Daily Collection Report' });
 		}
-		this.reportType = 'headwise';
+		// this.reportType = 'headwise';
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
 			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
@@ -4473,6 +4473,8 @@ export class CollectionReportComponent implements OnInit {
 		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {
+		console.log("i am here");
+		
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
@@ -4592,6 +4594,29 @@ export class CollectionReportComponent implements OnInit {
 						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_full_name'] = groupItem.rows.length;
 						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+					}
+					if (this.reportType === 'dailyheadwise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 					}
 					worksheet.addRow(obj3);
@@ -5212,6 +5237,8 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
 		} else if (this.reportType === 'cumulativeheadwise') {
 			reportType = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
+		} else if(this.reportType === "dailyheadwise"){
+			reportType = new TitleCasePipe().transform('daily head wise report: ') + this.sessionName;
 		}
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
@@ -5596,6 +5623,46 @@ export class CollectionReportComponent implements OnInit {
 							});
 						}
 					}
+					if (this.reportType === 'dailyheadwise') {
+						levelArray.push('','');
+						console.log("i am in");
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['bank_name'] = '';
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
+					console.log("i am reportypr", this.reportType, levelArray);
+					
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
@@ -5788,6 +5855,44 @@ export class CollectionReportComponent implements OnInit {
 								// console.log("i am here---------------------", key, col.id);
 								
 								
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
+					if (this.reportType === 'dailyheadwise') {
+						levelArray.push('','');
+						console.log("i am in");
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['bank_name'] = '';
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
 									levelArray.push(obj3[key]);
 								}
