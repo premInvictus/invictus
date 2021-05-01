@@ -22,7 +22,7 @@
   <div class="row remove-top-margin">
     <div class="col-12 remove-col-padding">
       <div class="container-box__white">
-        <div class="row" style="height:90px">
+        <div class="row" style="height:130px">
           <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img">
               <img class="student-pic--imgone student-pic__circle "
@@ -150,6 +150,13 @@
                     <mat-option value="{{item?.config_id}}" *ngFor="let item of wingArray">{{item?.name}}
                     </mat-option>
                   </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Reference Details</mat-label>
+                  <input class="text-capitalize" pattern="[a-zA-Z0-9\s]+" formControlName="emp_reference" matInput placeholder="Reference Details"
+                    [readonly]="viewOnly" [value]="employeeDetailsForm.get('emp_reference').value | capitalize">
                 </mat-form-field>
               </div>
             </div>
