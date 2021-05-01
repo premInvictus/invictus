@@ -35,7 +35,6 @@
               "src/styles.scss",
               "node_modules/ng2-image-viewer/imageviewer.scss",
               "node_modules/flatpickr/dist/flatpickr.css",
-              "node_modules/@zoomus/websdk/dist/css/bootstrap.css",
               "node_modules/@zoomus/websdk/dist/css/react-select.css"
             ],
             "scripts": [

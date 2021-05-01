@@ -383,14 +383,34 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 	
 			  ZoomMtg.init({
 				leaveUrl: window.location.href,
-				isSupportAV: true,
+				showMeetingHeader: false, //option
+				disableInvite: true, //optional
+				disableCallOut: false, //optional
+				disableRecord: false, //optional
+				disableJoinAudio: false, //optional
+				audioPanelAlwaysOpen: true, //optional
+				showPureSharingContent: false, //optional
+				isSupportAV: true, //optional,
+				isSupportChat: true, //optional,
+				isSupportQA: true, //optional,
+				isSupportPolling: true, //optional
+				isSupportBreakout: true, //optional
+				isSupportCC: true, //optional,
+				screenShare: true, //optional,
+				rwcBackup: '', //optional,
+				videoDrag: true, //optional,
+				sharingMode: 'both', //optional,
+				videoHeader: true, //optional,
+				isLockBottom: true, // optional,
+				isSupportNonverbal: true, // optional,
+				isShowJoiningErrorDialog: true, 
 				success: (success) => {
 				  console.log(success, signature);
 		  
 				  ZoomMtg.join({
 					signature: signature,
 					meetingNumber: mId,
-					userName:item.tsoc_admin_name,
+					userName:'Admin',
 					apiKey: name.apiacess,
 					userEmail: item.tsoc_admin_email,
 					passWord: pwd,

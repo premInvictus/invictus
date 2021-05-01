@@ -352,4 +352,7 @@ export class CommonAPIService {
 	getHolidayOnly(value) {
 		return this.http.post(environment.apiSmartUrl + '/common/getHolidayOnly', value);
 	}
+	checkAllowed(value) {
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getallowclass', value);
+	}
 }
