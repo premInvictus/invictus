@@ -45,11 +45,8 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
-                            <button mat-raised-button class="submit-button" (click)="getAssignment();">Generate</button>
+                            <button mat-raised-button class="submit-button" style="margin-left: 10px;top: -0.5rem;height:3rem" (click)="getAssignment();">Generate</button>
 
-                            <span *ngIf="!isTeacher" style="padding:10px 0 0 20px">
-                                <i class="material-icons reset_ass" tooltip="Reset" (click)="reserParam()">replay</i>
-                            </span>
                         </div>
                     </div>
 

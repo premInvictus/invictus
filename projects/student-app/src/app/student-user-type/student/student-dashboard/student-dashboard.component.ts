@@ -26,7 +26,7 @@ ZoomMtg.prepareJssdk();
 })
 export class StudentDashboardComponent implements OnInit {
 
-	reloadScheduler:any;
+	reloadScheduler: any;
 	today = Date.now();
 	currentUser: any = {};
 	getUserDetail: any[] = [];
@@ -66,6 +66,7 @@ export class StudentDashboardComponent implements OnInit {
 	totalTest: any;
 	latestMarks: any;
 	currentRank: any;
+	isAllowedToAttend = false;
 
 	currentExam: any;
 	currentExamIndex: number;
@@ -87,7 +88,7 @@ export class StudentDashboardComponent implements OnInit {
 	week_day: number;
 	todaysDate = new Date();
 	sub_id;
-	access_key : any[] = [];
+	access_key: any[] = [];
 	assignmentArray: any[] = [];
 	currentAssignment: any;
 	currentAssignmentIndex: number;
@@ -101,24 +102,24 @@ export class StudentDashboardComponent implements OnInit {
 	msgNext = true;
 
 	noData = false;
-	studentdetails:any;
-	defaultsrc='';
-	class_sec:any;
-	sessionArray:any[]=[];
-	session:any;
-	sessionName:string='';
-	sessionAttendance:any;
-	monthAttendance:any;
-	gaugeOptionsflag=false;
-	gaugeOptions:any;
-	sessionAttendancechartflag=false;
-	sessionAttendancechart:any={};
-	monthAttendancechartflag=false;
-	monthAttendancechart:any={};
-	studentAttenance:any[] = [];
-	attendanceFlag=false;
+	studentdetails: any;
+	defaultsrc = '';
+	class_sec: any;
+	sessionArray: any[] = [];
+	session: any;
+	sessionName: string = '';
+	sessionAttendance: any;
+	monthAttendance: any;
+	gaugeOptionsflag = false;
+	gaugeOptions: any;
+	sessionAttendancechartflag = false;
+	sessionAttendancechart: any = {};
+	monthAttendancechartflag = false;
+	monthAttendancechart: any = {};
+	studentAttenance: any[] = [];
+	attendanceFlag = false;
 
-	
+
 
 	constructor(
 		private reportService: ReportService,
@@ -129,8 +130,8 @@ export class StudentDashboardComponent implements OnInit {
 		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
 		private commonAPIService: CommonAPIService,
-		private router:Router,
-		private route:ActivatedRoute,
+		private router: Router,
+		private route: ActivatedRoute,
 		private branchChangeService: BranchChangeService
 
 	) { }
@@ -167,20 +168,28 @@ export class StudentDashboardComponent implements OnInit {
 
 	ngOnInit() {
 		this.setStudentDashboard();
-		this.commonAPIService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res:any) => {
+		this.commonAPIService.getGlobalSetting({ gs_alias: 'onlne_session_key' }).subscribe((res: any) => {
 			this.access_key = JSON.parse(res.data[0].gs_value);
 		})
-		
-		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
-			if(data) {
+
+		this.branchChangeService.branchSwitchSubject.subscribe((data: any) => {
+			if (data) {
 				this.setStudentDashboard();
 			}
 		});
+		this.checkAllowed();
+	}
+	checkAllowed() {
+		this.commonAPIService.checkAllowed({ au_login_id: this.login_id }).subscribe((res: any) => {
+			if (res.status == 'ok') {
+				this.isAllowedToAttend = true
+			}
+		})
 	}
 	setStudentDashboard() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		console.log('this.currentUser----',this.currentUser);
+		console.log('this.currentUser----', this.currentUser);
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.login_id = currentUser.login_id;
 		this.qelementService.getUser({ login_id: currentUser.login_id, role_id: '4' }).subscribe(
@@ -188,10 +197,10 @@ export class StudentDashboardComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
 					console.log('userDetail', this.userDetail);
-					this.erpCommonService.getStudentInformation({login_id: currentUser.login_id, enrollment_type: '4'}).subscribe((resutl1: any) => {
-						if(resutl1 && resutl1.status === 'ok') {
+					this.erpCommonService.getStudentInformation({ login_id: currentUser.login_id, enrollment_type: '4' }).subscribe((resutl1: any) => {
+						if (resutl1 && resutl1.status === 'ok') {
 							this.studentdetails = resutl1.data[0];
-							console.log('this.studentdetails',this.studentdetails);
+							console.log('this.studentdetails', this.studentdetails);
 							this.className = resutl1.data[0].class_name;
 							this.secName = resutl1.data[0].sec_name;
 							this.dob = resutl1.data[0].au_dob;
@@ -207,7 +216,7 @@ export class StudentDashboardComponent implements OnInit {
 							}
 						}
 					})
-					const gender =this.userDetail.personal_details ? this.userDetail.personal_details.upd_gender : '';
+					const gender = this.userDetail.personal_details ? this.userDetail.personal_details.upd_gender : '';
 					if (gender === 'M') {
 						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 					} else if (gender === 'F') {
@@ -218,7 +227,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.defaultsrc = this.userDetail.au_profileimage
 						? this.userDetail.au_profileimage
 						: this.defaultsrc;
-						
+
 					this.getOverallPerformance();
 					this.getSmartToAxiom();
 					// this.getPeriodDayByClass();
@@ -290,25 +299,25 @@ export class StudentDashboardComponent implements OnInit {
 			month = '' + (d.getMonth() + 1),
 			day = '' + d.getDate(),
 			year = d.getFullYear();
-	
-		if (month.length < 2) 
+
+		if (month.length < 2)
 			month = '0' + month;
-		if (day.length < 2) 
+		if (day.length < 2)
 			day = '0' + day;
-	
+
 		return [year, month, day].join('-');
 	}
 	startformatDate() {
 		var d = new Date(),
 			month = '' + (d.getMonth() + 1),
 			year = d.getFullYear();
-	
-		if (month.length < 2) 
+
+		if (month.length < 2)
 			month = '0' + month;
-	
+
 		return [year, month, '01'].join('-');
 	}
-	getSession(){
+	getSession() {
 		this.erpCommonService.getSession()
 			.subscribe(
 				(result: any) => {
@@ -318,37 +327,37 @@ export class StudentDashboardComponent implements OnInit {
 						}
 						if (this.session) {
 							this.sessionName = this.sessionArray[this.session.ses_id];
-							
+
 							this.getStudentDashboardAttendance();
 						}
 
 					}
 				});
 	}
-	async getStudentAttendence(){
+	async getStudentAttendence() {
 		const studentAttenance = [];
-		const param:any={};
+		const param: any = {};
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
 		param.fm_id = ("0" + (new Date().getMonth() + 1)).slice(-2)
 		param.year_id = new Date().getFullYear();
 		param.au_login_id = this.userDetail.au_login_id;
 		console.log("i am params ----------", param);
-		
+
 		this.reloadScheduler = param;
 		this.attendanceFlag = true;
 		await this.erpCommonService.getStudentAttendence(param).toPromise().then((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sessionAttendance = result.data;
 				console.log('i am session attendence', this.sessionAttendance);
-				
+
 			}
 		});
 	}
-	async getStudentDashboardAttendance(){
+	async getStudentDashboardAttendance() {
 		const sessionNameArr = this.sessionName.split('-');
-		const param:any={};
-		param.from = sessionNameArr[0]+'-04-01';
+		const param: any = {};
+		param.from = sessionNameArr[0] + '-04-01';
 		param.to = this.formatDate();
 		param.au_login_id = this.userDetail.au_login_id;
 		await this.erpCommonService.getStudentDashboardAttendance(param).toPromise().then((result: any) => {
@@ -356,7 +365,7 @@ export class StudentDashboardComponent implements OnInit {
 				this.sessionAttendance = result.data;
 			}
 		});
-		const param1:any={};
+		const param1: any = {};
 		param1.from = this.startformatDate();
 		param1.to = this.formatDate();
 		param1.au_login_id = this.userDetail.au_login_id;
@@ -368,9 +377,9 @@ export class StudentDashboardComponent implements OnInit {
 		//this.FeeReceiptReportCalculation(this.sessionAttendance);
 		// this.sessionChart(this.sessionAttendance);
 		// this.monthChart(this.monthAttendance);
-		this.HighChartOption(this.monthAttendance,this.sessionAttendance);
+		this.HighChartOption(this.monthAttendance, this.sessionAttendance);
 	}
-	HighChartOption(dataMonth,dataSession) {
+	HighChartOption(dataMonth, dataSession) {
 
 		// dataLabels: {
 		// 	format: '<div style="text-align:center"><span style="font-size:25px;color:' +
@@ -380,21 +389,21 @@ export class StudentDashboardComponent implements OnInit {
 		this.gaugeOptionsflag = true;
 		this.gaugeOptions = {
 			chart: {
-			  type: 'solidgauge',
-			  height: 280,
-			  width: 280,
-			  events: {
-				render: ''
-			  }
+				type: 'solidgauge',
+				height: 280,
+				width: 280,
+				events: {
+					render: ''
+				}
 			},
-		
+
 			title: {
-			  text: '',
-			  style: {
-				fontSize: '10px'
-			  }
+				text: '',
+				style: {
+					fontSize: '10px'
+				}
 			},
-		
+
 			// tooltip: {
 			//   borderWidth: 0,
 			//   backgroundColor: 'none',
@@ -410,79 +419,79 @@ export class StudentDashboardComponent implements OnInit {
 			// 	};
 			//   }
 			// },
-		
+
 			tooltip: {
 				borderWidth: 0,
 				backgroundColor: 'none',
 				shadow: false,
 				style: {
-				  fontSize: '14px'
+					fontSize: '14px'
 				},
 				valueSuffix: '%',
 				pointFormat: '<span style="font-size:1.5em; color: {point.color}; font-weight: bold">{point.y}</span><br>{series.name}',
 				positioner: function (labelWidth) {
-				  return {
-					x: (this.chart.chartWidth - labelWidth) / 2,
-					y: (this.chart.plotHeight / 2) - 10
-				  };
+					return {
+						x: (this.chart.chartWidth - labelWidth) / 2,
+						y: (this.chart.plotHeight / 2) - 10
+					};
 				}
-			  },
+			},
 
 			pane: {
-			  startAngle: 0,
-			  endAngle: 360,
-			  background: [{ // Track for Highest
-				outerRadius: '100%',
-				innerRadius: '80%',
-				backgroundColor: '#d6fed8',
-				borderWidth: 0
-			  },
-			  { // Track for Highest
-				outerRadius: '80%',
-				innerRadius: '60%',
-				backgroundColor: '#ede5ff',
-				borderWidth: 0
-			  }]
+				startAngle: 0,
+				endAngle: 360,
+				background: [{ // Track for Highest
+					outerRadius: '100%',
+					innerRadius: '80%',
+					backgroundColor: '#d6fed8',
+					borderWidth: 0
+				},
+				{ // Track for Highest
+					outerRadius: '80%',
+					innerRadius: '60%',
+					backgroundColor: '#ede5ff',
+					borderWidth: 0
+				}]
 			},
-		
+
 			yAxis: {
-			  min: 0,
-			  max: 100,
-			  lineWidth: 0,
-			  tickPositions: []
+				min: 0,
+				max: 100,
+				lineWidth: 0,
+				tickPositions: []
 			},
-		
+
 			// plotOptions: {
 			//   solidgauge: {
 			// 	cursor: 'pointer',
 			// 	dataLabels: {
-            //         y: 5,
-            //         borderWidth: 0,
-            //         useHTML: true
-            //     },
+			//         y: 5,
+			//         borderWidth: 0,
+			//         useHTML: true
+			//     },
 			// 	linecap: '',
 			// 	stickyTracking: false,
 			//   }
 			// },
 			plotOptions: {
 				solidgauge: {
-				  dataLabels: {
-					enabled: false
-				  },
-				  linecap: 'round',
-				  stickyTracking: false,
-				  rounded: true
+					dataLabels: {
+						enabled: false
+					},
+					linecap: 'round',
+					stickyTracking: false,
+					rounded: true
 				}
 			},
-		
+
 			series: [{
-			  name: 'Present',
-			  data: [{
-				color: '#14aae1',
-				radius: '100%',
-				innerRadius: '80%',
-				y: dataSession.attendenceInPercent
-			  }]
+				name: 'Present',
+				data: [{
+					color: '#14aae1',
+					radius: '100%',
+					innerRadius: '80%',
+					y: dataSession.attendenceInPercent
+				}]
 			},
 			{
 				name: 'Present',
@@ -491,40 +500,40 @@ export class StudentDashboardComponent implements OnInit {
 					radius: '80%',
 					innerRadius: '60%',
 					y: dataMonth.attendenceInPercent
-				  }]
-			  }]
-		  };
-	  }
-	monthChart(data){
-		this.monthAttendancechartflag=true;
-		this.monthAttendancechart={
+				}]
+			}]
+		};
+	}
+	monthChart(data) {
+		this.monthAttendancechartflag = true;
+		this.monthAttendancechart = {
 			title: {
 				text: '',
 				align: 'right',
 				margin: 0,
-			  },
-			  chart: {					
+			},
+			chart: {
 				renderTo: 'container',
 				type: 'bar',
 				height: 60,
-			  },
-			  credits: false,
-			  tooltip: false,
-			  legend: false,
-			  navigation: {
+			},
+			credits: false,
+			tooltip: false,
+			legend: false,
+			navigation: {
 				buttonOptions: {
-				  enabled: false
+					enabled: false
 				}
-			  },
-			  xAxis: {
+			},
+			xAxis: {
 				visible: false,
-			  },
-			  yAxis: {
+			},
+			yAxis: {
 				visible: false,
 				min: 0,
 				max: 100,
-			  },
-			  series: [{
+			},
+			series: [{
 				data: [100],
 				grouping: false,
 				animation: false,
@@ -538,16 +547,16 @@ export class StudentDashboardComponent implements OnInit {
 				borderRadiusBottomLeft: '50%',
 				borderRadiusBottomRight: '50%',
 				dataLabels: {
-				  className: 'highlight',
-				  format: '',
-				  enabled: true,
-				  align: 'right',
-				  style: {
-					color: 'white',
-					textOutline: false,
-				  }
+					className: 'highlight',
+					format: '',
+					enabled: true,
+					align: 'right',
+					style: {
+						color: 'white',
+						textOutline: false,
+					}
 				}
-			  }, {
+			}, {
 				enableMouseTracking: false,
 				data: [data.attendenceInPercent],
 				borderRadiusBottomLeft: '50%',
@@ -556,51 +565,51 @@ export class StudentDashboardComponent implements OnInit {
 				borderWidth: 0,
 				pointWidth: 25,
 				animation: {
-				  duration: 250,
+					duration: 250,
 				},
 				dataLabels: {
-				  enabled: true,
-				  inside: true,
-				  align: 'left',
-				  format: '{point.y}%',
-				  style: {
-					color: 'white',
-					textOutline: false,
-				  }
+					enabled: true,
+					inside: true,
+					align: 'left',
+					format: '{point.y}%',
+					style: {
+						color: 'white',
+						textOutline: false,
+					}
 				}
-			  }]
+			}]
 		};
 	}
-	sessionChart(data){
-		this.sessionAttendancechartflag=true;
-		this.sessionAttendancechart={
+	sessionChart(data) {
+		this.sessionAttendancechartflag = true;
+		this.sessionAttendancechart = {
 			title: {
 				text: '',
 				align: 'right',
 				margin: 0,
-			  },
-			  chart: {					
+			},
+			chart: {
 				renderTo: 'container',
 				type: 'bar',
 				height: 60,
-			  },
-			  credits: false,
-			  tooltip: false,
-			  legend: false,
-			  navigation: {
+			},
+			credits: false,
+			tooltip: false,
+			legend: false,
+			navigation: {
 				buttonOptions: {
-				  enabled: false
+					enabled: false
 				}
-			  },
-			  xAxis: {
+			},
+			xAxis: {
 				visible: false,
-			  },
-			  yAxis: {
+			},
+			yAxis: {
 				visible: false,
 				min: 0,
 				max: 100,
-			  },
-			  series: [{
+			},
+			series: [{
 				data: [100],
 				grouping: false,
 				animation: false,
@@ -614,16 +623,16 @@ export class StudentDashboardComponent implements OnInit {
 				borderRadiusBottomLeft: '50%',
 				borderRadiusBottomRight: '50%',
 				dataLabels: {
-				  className: 'highlight',
-				  format: '',
-				  enabled: true,
-				  align: 'right',
-				  style: {
-					color: 'white',
-					textOutline: false,
-				  }
+					className: 'highlight',
+					format: '',
+					enabled: true,
+					align: 'right',
+					style: {
+						color: 'white',
+						textOutline: false,
+					}
 				}
-			  }, {
+			}, {
 				enableMouseTracking: false,
 				data: [data.attendenceInPercent],
 				borderRadiusBottomLeft: '50%',
@@ -632,31 +641,31 @@ export class StudentDashboardComponent implements OnInit {
 				borderWidth: 0,
 				pointWidth: 25,
 				animation: {
-				  duration: 250,
+					duration: 250,
 				},
 				dataLabels: {
-				  enabled: true,
-				  inside: true,
-				  align: 'left',
-				  format: '{point.y}%',
-				  style: {
-					color: 'white',
-					textOutline: false,
-				  }
+					enabled: true,
+					inside: true,
+					align: 'left',
+					format: '{point.y}%',
+					style: {
+						color: 'white',
+						textOutline: false,
+					}
 				}
-			  }]
+			}]
 		};
 	}
 	getMessages() {
 		this.msgArray = [];
 		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
-		var inputJson = { 'status.status_name' : 'approved','$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
+		var inputJson = { 'status.status_name': 'approved', '$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
 		console.log('inputJson--', inputJson);
 		// this.erpCommonService.getMessage(inputJson);
 		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				//this.msgArray = result.data;
-				let i =0;
+				let i = 0;
 				for (const item of result.data) {
 					if (i < 10) {
 						this.msgArray.push(item);
@@ -668,96 +677,100 @@ export class StudentDashboardComponent implements OnInit {
 		});
 	}
 	openclass(item) {
-		const studentParam: any = {};
-		studentParam.au_class_id = this.userDetail.au_class_id;
-		studentParam.au_sec_id = this.userDetail.au_sec_id;
-		studentParam.au_event_id = parseInt(item.no_of_period) + 1;
-		studentParam.ma_created_date = new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd');
-		studentParam.au_role_id = '4';
-		studentParam.au_status = '1';
-		this.erpCommonService.getUserAttendance(studentParam).subscribe((res:any) => {
-			console.log("i am res",res.data);
-			let check = [];
-			res.data.forEach(element => {
-				if(element.au_login_id == this.userDetail.au_login_id && element.ma_attendance == '1') {
-					check.push(element);
-				}
-			});
-			if(check.length == 0) {
-				let sendd = [
-					{
-						class_id:this.userDetail.au_class_id,
-						sec_id:this.userDetail.au_sec_id,
-						ma_event:parseInt(item.no_of_period) + 1,
-						ma_created_date:new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd'),
-						login_id:this.userDetail.au_login_id,
-						roll_no: '',
-						attendance:1,
-						session_id:this.session.ses_id,
-						created_by:this.userDetail.au_login_id
+		if (this.isAllowedToAttend) {
+			const studentParam: any = {};
+			studentParam.au_class_id = this.userDetail.au_class_id;
+			studentParam.au_sec_id = this.userDetail.au_sec_id;
+			studentParam.au_event_id = parseInt(item.no_of_period) + 1;
+			studentParam.ma_created_date = new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd');
+			studentParam.au_role_id = '4';
+			studentParam.au_status = '1';
+			this.erpCommonService.getUserAttendance(studentParam).subscribe((res: any) => {
+				console.log("i am res", res.data);
+				let check = [];
+				res.data.forEach(element => {
+					if (element.au_login_id == this.userDetail.au_login_id && element.ma_attendance == '1') {
+						check.push(element);
 					}
-				]
-				
-				this.erpCommonService.insertAttendance(sendd).subscribe((res:any)=> {
-					console.log("i am res", res);
-					
-				})
-			}
-			
-		})
-		if(item.tsoc_type == 'zoom') {
-		let spliturl = item.tsoc_url.split('/')[4];
-		let mId = spliturl.split('?')[0];
-		let pwd = spliturl.split("pwd=")[1];
-		let name:any = {};
-		this.access_key.forEach(element => {
-			if(element.name == 'zoom') {
-				name = element;
-			}
-		});
+				});
+				if (check.length == 0) {
+					let sendd = [
+						{
+							class_id: this.userDetail.au_class_id,
+							sec_id: this.userDetail.au_sec_id,
+							ma_event: parseInt(item.no_of_period) + 1,
+							ma_created_date: new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd'),
+							login_id: this.userDetail.au_login_id,
+							roll_no: '',
+							attendance: 1,
+							session_id: this.session.ses_id,
+							created_by: this.userDetail.au_login_id
+						}
+					]
 
-		
-		
-		
-		let signature = ZoomMtg.generateSignature({
-			meetingNumber: mId,
-			apiKey: name.apiacess,
-			apiSecret:  name.apisecret,
-			role: '0'
-		  });
-		  document.getElementById('zmmtg-root').style.display = 'block'
+					this.erpCommonService.insertAttendance(sendd).subscribe((res: any) => {
+						console.log("i am res", res);
 
-		  ZoomMtg.init({
-			leaveUrl: window.location.href,
-			isSupportAV: true,
-			success: (success) => {
-			  console.log(success, signature);
-	  
-			  ZoomMtg.join({
-				signature: signature,
-				meetingNumber: mId,
-				userName:this.userDetail.au_full_name,
-				apiKey: name.apiacess,
-				userEmail: '',
-				passWord: pwd,
-				success: (success) => {
-				  console.log(success)
-				},
-				error: (error) => {
-				  console.log(error)
+					})
 				}
-			  })
-	  
-			},
-			error: (error) => {
-			  console.log(error)
+
+			})
+			if (item.tsoc_type == 'zoom') {
+				let spliturl = item.tsoc_url.split('/')[4];
+				let mId = spliturl.split('?')[0];
+				let pwd = spliturl.split("pwd=")[1];
+				let name: any = {};
+				this.access_key.forEach(element => {
+					if (element.name == 'zoom') {
+						name = element;
+					}
+				});
+
+
+
+
+				let signature = ZoomMtg.generateSignature({
+					meetingNumber: mId,
+					apiKey: name.apiacess,
+					apiSecret: name.apisecret,
+					role: '0'
+				});
+				document.getElementById('zmmtg-root').style.display = 'block'
+
+				ZoomMtg.init({
+					leaveUrl: window.location.href,
+					isSupportAV: true,
+					success: (success) => {
+						console.log(success, signature);
+
+						ZoomMtg.join({
+							signature: signature,
+							meetingNumber: mId,
+							userName: this.userDetail.au_full_name,
+							apiKey: name.apiacess,
+							userEmail: '',
+							passWord: pwd,
+							success: (success) => {
+								console.log(success)
+							},
+							error: (error) => {
+								console.log(error)
+							}
+						})
+
+					},
+					error: (error) => {
+						console.log(error)
+					}
+				})
+			} else {
+
+				this.commonAPIService.showSuccessErrorMessage("No class assigned", 'error')
 			}
-		  }) 
 		} else {
-			
-			this.commonAPIService.showSuccessErrorMessage("No class assigned", 'error')
+			this.commonAPIService.showSuccessErrorMessage("Your Access to attend class is denied", 'error')
 		}
-		
+
 	}
 	getSmartToAxiom() {
 		const param: any = {};
@@ -1274,10 +1287,10 @@ export class StudentDashboardComponent implements OnInit {
 		else if (currentHour <= 19) return "Good Afternon"
 		else return "Good Evening"
 	}
-	viewmore(linkktype){
-		if(linkktype=='communication'){
+	viewmore(linkktype) {
+		if (linkktype == 'communication') {
 			this.router.navigate(['./notice/notice-board'], { relativeTo: this.route });
-		} else if(linkktype=='assignment'){
+		} else if (linkktype == 'assignment') {
 			this.router.navigate(['./academics/assignment'], { relativeTo: this.route });
 		}
 	}
