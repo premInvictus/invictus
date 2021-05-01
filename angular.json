@@ -22,12 +22,21 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.json",
-              "src/firebase-messaging-sw.js"
+              "src/firebase-messaging-sw.js",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@zoomus/websdk/dist/lib/",
+                "output": "./node_modules/@zoomus/websdk/dist/lib/"
+              }
+              
             ],
             "styles": [
               "src/styles.scss",
               "node_modules/ng2-image-viewer/imageviewer.scss",
-              "node_modules/flatpickr/dist/flatpickr.css"
+              "node_modules/flatpickr/dist/flatpickr.css",
+              "node_modules/@zoomus/websdk/dist/css/bootstrap.css",
+              "node_modules/@zoomus/websdk/dist/css/react-select.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.js",
@@ -52,10 +61,10 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": true,
               "vendorChunk": true,
-              "buildOptimizer": true
+              "buildOptimizer": false
             },
             "dev": {
               "fileReplacements": [
@@ -69,10 +78,10 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": true,
               "vendorChunk": true,
-              "buildOptimizer": true
+              "buildOptimizer": false
             },
             "uat": {
               "fileReplacements": [
