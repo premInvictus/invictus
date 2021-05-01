@@ -1105,7 +1105,7 @@ export class RemarksReportComponent implements OnInit {
          { id: 'era_doj', name: 'Date', field: 'era_doj', sortable: true, filterable: true, resizable: true,
          formatter: this.checkDateFormatter }	,
          { id: 'ar_name', name: 'Area', field: 'ar_name', sortable: true, filterable: true, resizable: true },
-         { id: 'era_teachers_remark', name: 'Remark', field: 'era_teachers_remark', sortable: true, filterable: true, resizable: true },
+         { id: 'era_teachers_remark', name: 'Remark', field: 'era_teachers_remark', width:200, sortable: true, filterable: true, resizable: true },
 			];
 			let counter = 1;
 			for (let i = 0; i < this.reportProcessWiseData.length; i++) {
