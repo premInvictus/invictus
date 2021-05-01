@@ -385,6 +385,12 @@ export class EmpDetailsReportComponent implements OnInit {
         },
       },
       {
+        id: 'emp_reference', name: 'Reference Details', field: 'emp_reference', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80
+      },
+      {
         id: 'pri_mobile', name: 'Primary Mobile No.', field: 'pri_mobile', sortable: true,
         filterable: true,
         width: 80,
@@ -539,6 +545,7 @@ export class EmpDetailsReportComponent implements OnInit {
           obj['srno'] = (index + 1);
           obj['emp_code_no'] = item.emp_code_no;
           obj['full_name'] = item.emp_name ? new CapitalizePipe().transform(item.emp_name) : '-';
+          obj['emp_reference'] = item.emp_reference ? new CapitalizePipe().transform(item.emp_reference) : '-';
           obj['designation'] = item.emp_designation_detail ? new CapitalizePipe().transform(item.emp_designation_detail.name) : '-';
           obj['employee_type'] = item.emp_category_detail ? new CapitalizePipe().transform(item.emp_category_detail.cat_name) : '-';
           obj['department'] = item.emp_department_detail ? new CapitalizePipe().transform(item.emp_department_detail.dpt_name) : '-';

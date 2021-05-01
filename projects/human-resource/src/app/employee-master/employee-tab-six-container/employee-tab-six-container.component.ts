@@ -346,6 +346,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_reference = this.employeeCommonDetails.employeeDetailsForm.value.emp_reference;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
 			this.employeedetails.emp_department_detail = {
 				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
@@ -390,6 +391,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_reference = this.employeeCommonDetails.employeeDetailsForm.value.emp_reference;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
 			this.employeedetails.emp_department_detail = {
 				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
