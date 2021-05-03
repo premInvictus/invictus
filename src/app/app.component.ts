@@ -16,7 +16,7 @@ import { CookieService } from 'ngx-cookie';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 import { UserIdleService } from 'angular-user-idle';
 import { MessagingService } from './_services';
-import { mergeMap } from 'rxjs/operators';
+import { delay, mergeMap } from 'rxjs/operators';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 @Component({
 	selector: 'app-root',
@@ -43,6 +43,9 @@ export class AppComponent implements OnInit {
 	message: any;
 	currentUser: any = {};
 	access_key = 300;
+	last= (new Date()).getTime();
+	ouch = true;
+	
 	constructor(private router: Router, private loaderService: CommonAPIService,
 		private angularFireMessaging: AngularFireMessaging,
 		private messagingService: MessagingService,
@@ -81,6 +84,9 @@ export class AppComponent implements OnInit {
 					this.idle.resetTimer();
 					this.idle.startWatching();
 					this.showLoadingFlag = false;
+					if(this.currentUser){
+						this.getglobalstat();
+					}
 					break;
 				}
 				default: {
@@ -97,12 +103,7 @@ export class AppComponent implements OnInit {
 			);
 	}
 	ngOnInit() {
-		this.loaderService.getGlobalSetting({ gs_alias: 'logout_time_management' }).subscribe((res: any) => {
-			this.access_key = parseInt(JSON.parse(res.data[0].gs_value));
-			console.log("-----------------------", this.access_key);
-			this.sessionTimeout();
-			
-		});
+		
 		console.log("i am ceesss", this.access_key);
 		
 		this.messagingService.receiveMessage();
@@ -135,13 +136,32 @@ export class AppComponent implements OnInit {
 		} else {
 			load.setUserPrefix((JSON.parse(localStorage.getItem('Prefix')).pre));
 		}
+		
+	}
+	getglobalstat() {
+		if(!window.location.href.includes("login"))
+		this.loaderService.getGlobalSetting({ gs_alias: 'logout_time_management' }).subscribe((res: any) => {
+			if(res.status == "error") {
+				
+				this.getglobalstat();
+				
+			
+			} else {
+				this.access_key = parseInt(JSON.parse(res.data[0].gs_value));
+					this.sessionTimeout();
+			}
+			
+		});
 	}
 	getCurrentUrl() {
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
 				this.currenturl = event.url;
+
 			}
 		});
+		
+		
 	}
 
 	startWindowOpen() {
@@ -176,8 +196,24 @@ export class AppComponent implements OnInit {
 			}
 		}, 1);
 		this.loaderService.counterTimer = 4;
+		console.log("i amouch", this.ouch, this.last);
+		
+		if(this.ouch) {
+			this.ouch = false;
+			this.last = (new Date()).getTime();
+		}
+		 
+		// let onch = true;
 		this.idle.onTimerStart().subscribe((count: any) => {
-			console.log("i am count", count);
+			let current = (new Date()).getTime(); 
+			console.log("i am count", count, current - this.last);			
+			
+			if(current - this.last > 10000 || current - this.last < 0) {
+				this.logout();
+			};
+			this.last= current;
+			
+
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
 			const routeUrl: String = routeData._routerState.url;
