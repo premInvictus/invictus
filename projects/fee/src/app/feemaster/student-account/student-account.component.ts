@@ -162,21 +162,31 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		})
 	}
 	getConcessionByIdInTable(id) {
-		return this.conGroupArray.filter((element) => {
+		let na = this.conGroupArray.filter((element) => {
 			if(id == element.fcg_id) {
 				return true
 			}
-		})[0].fcg_name;
+		});
+		if(na.length > 0) {
+			return na[0].fcg_name
+		} else {
+			return '-'
+		}
 		
 		
 	}
 
 	getConcessionDescByIdInTable(id) {
-		return this.conGroupArray.filter((element) => {
+		let na =  this.conGroupArray.filter((element) => {
 			if(id == element.fcg_id) {
 				return true
 			}
-		})[0].fcg_description;
+		});
+		if(na.length > 0) {
+			return  na[0].fcg_description
+		}else {
+			return '-';
+		}
 		
 		
 	}
