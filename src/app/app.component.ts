@@ -208,7 +208,7 @@ export class AppComponent implements OnInit {
 			let current = (new Date()).getTime(); 
 			console.log("i am count", count, current - this.last);			
 			
-			if(current - this.last > 10000 || current - this.last < 0) {
+			if(current - this.last > 10000 ) {
 				this.logout();
 			};
 			this.last= current;
