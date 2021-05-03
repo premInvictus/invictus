@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
 	x: NodeJS.Timer;
 	message: any;
 	currentUser: any = {};
+	access_key = 300;
 	constructor(private router: Router, private loaderService: CommonAPIService,
 		private angularFireMessaging: AngularFireMessaging,
 		private messagingService: MessagingService,
@@ -96,6 +97,14 @@ export class AppComponent implements OnInit {
 			);
 	}
 	ngOnInit() {
+		this.loaderService.getGlobalSetting({ gs_alias: 'logout_time_management' }).subscribe((res: any) => {
+			this.access_key = parseInt(JSON.parse(res.data[0].gs_value));
+			console.log("-----------------------", this.access_key);
+			this.sessionTimeout();
+			
+		});
+		console.log("i am ceesss", this.access_key);
+		
 		this.messagingService.receiveMessage();
 		this.message = this.messagingService.currentMessage;
 		console.log(this.message);
@@ -103,7 +112,7 @@ export class AppComponent implements OnInit {
 			this.idle.resetTimer();
 		});
 		this.getCurrentUrl();
-		this.sessionTimeout();
+		// this.sessionTimeout();
 		let prefix: any = '';
 
 		const xhr = new XMLHttpRequest();
@@ -158,7 +167,7 @@ export class AppComponent implements OnInit {
 				expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;
 				this.idle.stopWatching();
 				this.idle.setConfigValues(
-					{ idle: 1, timeout: 599, ping: 30 }
+					{ idle: 1, timeout: this.access_key, ping: 30 }
 				);
 				console.log("dhdhdhd", this.idle.getConfigValue());
 				//this.idle.stopWatching();
@@ -168,7 +177,7 @@ export class AppComponent implements OnInit {
 		}, 1);
 		this.loaderService.counterTimer = 4;
 		this.idle.onTimerStart().subscribe((count: any) => {
-			// console.log("i am count", count);
+			console.log("i am count", count);
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
 			const routeUrl: String = routeData._routerState.url;
