@@ -928,6 +928,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/getRemarks', value);
 	}
+	getUtilizationReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/getUtilizationReport', value);
+	}
+	getUtilizationReportLogin(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/getUtilizationReportLogin', value);
+	}
 	sessionMappingReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/sessionMappingReport', value);
