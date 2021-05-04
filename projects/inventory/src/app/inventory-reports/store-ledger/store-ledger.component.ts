@@ -355,7 +355,7 @@ export class StoreLedgerComponent implements OnInit {
             obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
           }
           this.dataset.push(obj);
-          ind++;
+          ind++; 
         }
         const sortedArr: any[] = this.dataset.sort((a, b) => {
           const isAsc = false;

@@ -19,7 +19,7 @@ export class PhysicalVerificationComponent implements OnInit {
   location_data: '';
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('deleteModalRef') deleteModalRef;
+  @ViewChild('deleteModalRef') deleteModalRef; 
   @ViewChild('approveModalRef') approveModalRef;
   vendorListData: any = [];
   currentItemCode = 0;
