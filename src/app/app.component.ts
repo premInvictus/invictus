@@ -207,7 +207,7 @@ export class AppComponent implements OnInit {
 		this.idle.onTimerStart().subscribe((count: any) => {
 			let current = (new Date()).getTime(); 			
 			
-			if((current - this.last) > 3000000 ) {
+			if((current - this.last) > 300000 ) {
 				
 				this.logout();
 			};
