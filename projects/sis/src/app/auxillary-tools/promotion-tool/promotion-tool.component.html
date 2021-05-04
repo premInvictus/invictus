@@ -63,7 +63,8 @@
                 <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>New Class</mat-label>
-                    <mat-select placeholder="New Class" required formControlName="new_class_id"
+                    <mat-select placeholder="New Class" required #promoNewClass_id formControlName="new_class_id"
+                    (selectionChange)="getSectionByClassForPromotionNew(promoNewClass_id.value)"
                       [errorStateMatcher]="confirmValidParentMatcher" required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
@@ -81,7 +82,7 @@
                     <mat-label>New Section</mat-label>
                     <mat-select placeholder="Section" formControlName="new_sec_id">
                       <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      <mat-option *ngFor="let item of promotionNewSectionArray" [value]="item.sec_id">{{item.sec_name}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

@@ -31,7 +31,6 @@ export class StoreAssignListComponent implements OnInit {
           item['emp_name'] = [];
           if(item.employees) {
             const emp = item.employees.map(e => e.emp_name);
-            console.log('emp',emp);
             item['emp_name'] = emp;
           }  
           this.assignListArray.push(item);         

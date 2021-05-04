@@ -47,7 +47,7 @@ export class BulkUploadComponent implements OnInit {
 	bulkDocumentUpdate(event) {
 		const files = event.target.files;
 		const formData = new FormData();
-		const component = this.uploadComponent;
+		const component = this.uploadComponent; 
 		console.log('file--', files);
 		if (files.length > 1) {
 			for (let i = 0; i < files.length; i++) {

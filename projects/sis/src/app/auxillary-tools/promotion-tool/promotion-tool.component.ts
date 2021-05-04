@@ -26,6 +26,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	promotionSectionArray: any[] = [];
+	promotionNewSectionArray: any[] = [];
 	demotionSectionArray: any[] = [];
 	promoteForm: FormGroup;
 	disableApiCall = false;
@@ -112,6 +113,14 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.sisService.getSectionsByClass({ class_id: class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.promotionSectionArray = result.data;
+			}
+		});
+	}
+	getSectionByClassForPromotionNew(class_id) {
+		this.promotionNewSectionArray = [];
+		this.sisService.getSectionsByClass({ class_id: class_id }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.promotionNewSectionArray = result.data;
 			}
 		});
 	}
@@ -234,7 +243,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			this.sisService.getStudentsPromotionTool({
 				class_id: this.demoteForm.value.class_id,
 				ses_id: this.demoteSessionId,
-				sec_id: '',
+				sec_id: this.demoteForm.value.sec_id,
 				enrollment_type: this.demoteForm.value.enrollment_type,
 			}).subscribe((result: any) => {
 				if (result.status === 'ok') {
