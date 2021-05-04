@@ -66,7 +66,7 @@ export class TimetableComponent implements OnInit {
 		this.checkAllowed();
 	}
 	checkAllowed() {
-		this.commonAPIService.checkAllowed({ au_login_id: this.userDetail.au_login_id }).subscribe((res: any) => {
+		this.commonAPIService.checkAllowed({ au_login_id: this.currentUser.login_id }).subscribe((res: any) => {
 			if (res.status == 'ok') {
 				this.isAllowedToAttend = true
 			}
