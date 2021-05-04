@@ -205,11 +205,9 @@ export class AppComponent implements OnInit {
 		 
 		// let onch = true;
 		this.idle.onTimerStart().subscribe((count: any) => {
-			let current = (new Date()).getTime(); 
-			console.log("i am count", count, current - this.last);			
+			let current = (new Date()).getTime(); 			
 			
-			if((current - this.last) > 10000 ) {
-				console.log("in here", );
+			if((current - this.last) > 3000000 ) {
 				
 				this.logout();
 			};
