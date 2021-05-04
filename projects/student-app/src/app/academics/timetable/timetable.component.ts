@@ -87,7 +87,14 @@ export class TimetableComponent implements OnInit {
 		this.erpCommonService.getClassSectionWiseTimeTable(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.weekArr = [];
-				this.dayArray = result.data.data;
+				if (result.data.data.length) {
+					this.dayArray = result.data.data;
+				} else {
+					let check1 = Object.keys(result.data.data);
+					check1.forEach(e => {
+						this.dayArray.push(result.data.data[e])
+					})
+				}
 				if (!(result.data.data)) {
 					this.noData = true;
 				}
