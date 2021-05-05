@@ -580,6 +580,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 			i++;
 		}
+		console.log('this.formGroupArray2---',this.formGroupArray2)
 		this.getNetSalary();
 	}
 	checkscoptValue(sc_id) {
