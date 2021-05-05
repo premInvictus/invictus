@@ -406,7 +406,7 @@
                                                         </mat-form-field>
                                                         <br>
                                                         <mat-checkbox (change)="checkValS(i, $event)"
-                                                            [checked]="item.sc_opt" [formControlName]="'sc_opt'+i">
+                                                            [checked]="item.sc_opt" [formControlName]="'sc_opt'">{{item.sc_opt}}
                                                             <span *ngIf="formGroupArray2[i].formGroup['value']['sc_opt']">Opted</span>
                                                             <span *ngIf="!(formGroupArray2[i].formGroup['value']['sc_opt'])">Opt</span>
                                                         </mat-checkbox>

@@ -679,7 +679,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 				});
 			} else if (this.admissionReportForm.value.reviewReport === '4') {
 				// inputJson['au_status'] = 6;
-				inputJson['enrollment_type'] = '6';
+				inputJson['au_enrollment_status'] = 'left';
 				this.sisService.getEnrollmentDetialedReport(inputJson).subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.reportEnrolmentWiseData = result.data;
