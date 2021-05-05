@@ -40,6 +40,7 @@ import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/a
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import { AddSessionComponenetComponent } from './add-session-componenet/add-session-componenet.component';
+import { EditOnlineSessionComponent } from './edit-online-session/edit-online-session.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -112,7 +113,8 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		AddSessionComponenetComponent
+		AddSessionComponenetComponent,
+		EditOnlineSessionComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -123,7 +125,8 @@ export const MY_FORMATS = {
 		PublishModalComponent,
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
-		AddSessionComponenetComponent
+		AddSessionComponenetComponent,
+		EditOnlineSessionComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -165,7 +168,8 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		AddSessionComponenetComponent
+		AddSessionComponenetComponent,
+		EditOnlineSessionComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

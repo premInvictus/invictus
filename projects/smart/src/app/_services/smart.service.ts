@@ -55,6 +55,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubtopicByTopicId', value);
 	}
+	getTeacherByClassSectionAndSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getTeacherByClassSectionAndSubject', value);
+	}
 	getSchedulerEventCategory() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
@@ -176,6 +180,14 @@ export class SmartService {
 	submitOnlineSession(value:any) {
 		this.service.startLoading();
 		return this.http.put(environment.apiSmartUrl + '/common/insertValueOfSession', value);
+	}
+	editOnlineSession(value:any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/editValueOfSession', value);
+	}
+	deleteOnlineClass(value:any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/deleteValueOfSession', value);
 	}
 	assignmentUpdate(value: any) {
 		this.service.startLoading();

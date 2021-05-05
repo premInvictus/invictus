@@ -69,6 +69,31 @@ export class BlockaccessesComponent implements OnInit {
       }
     });
   }
+  allowAccess() {
+    console.log("i am access", this.selection.selected);
+    this.selection.selected.forEach((element: any) => {
+      const param: any = {};
+      param.certificate_type = 10;
+      param.class_id = this.paramForm.value.class_id,
+        param.sec_id = this.paramForm.value.sec_id,
+        param.login_id = element.em_admission_no;
+      param.status = '1'
+      // if ($event.checked) {
+      //   this.delMsg = 'Do you want to enable download for this student ?'
+      // } else {
+      //   this.delMsg = 'Do you want to disable download for this student ?';
+      // }
+      if (param) {
+        this.sisService.enableAcessCertificate(param).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+            this.getAllStudent();
+          }
+        });
+      }
+    })
+
+  }
   getSectionsByClass() {
     this.sectionArray = [];
     this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
@@ -82,7 +107,7 @@ export class BlockaccessesComponent implements OnInit {
       }
     });
   }
- 
+
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -120,12 +145,12 @@ export class BlockaccessesComponent implements OnInit {
           // } else if (this.paramForm.value.enrollment_type === '3') {
           //   enrollment_fieldname = 'em_provisional_admission_no';
           // } else if (this.paramForm.value.enrollment_type === '4') {
-            enrollment_fieldname = 'em_admission_no';
+          enrollment_fieldname = 'em_admission_no';
           // } else if (this.paramForm.value.enrollment_type === '5') {
           //   enrollment_fieldname = 'em_alumini_no';
           // }
           for (const item of this.studentsArray) {
-            
+
             this.ELEMENT_DATA.push({
               select: counter,
               no: item.au_login_id,
@@ -145,7 +170,7 @@ export class BlockaccessesComponent implements OnInit {
   }
   enableDis($event, value) {
     const param: any = {};
-    param.certificate_type =10;
+    param.certificate_type = 10;
     param.class_id = this.paramForm.value.class_id,
       param.sec_id = this.paramForm.value.sec_id,
       param.login_id = value.au_login_id;
