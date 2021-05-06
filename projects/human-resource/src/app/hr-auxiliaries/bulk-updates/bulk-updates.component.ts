@@ -37,17 +37,32 @@ export class BulkUpdatesComponent implements OnInit {
 				formData.append('year', (new Date().getFullYear()).toString());
 				formData.append('currentUser', JSON.stringify(this.currentUser));
 			}
-			console.log(formData);
-			const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
-			this.commonAPIService.uploadEmployeeExcel(formData).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
-					this.myInputVariable.nativeElement.value = '';
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
-					this.myInputVariable.nativeElement.value = '';
-				}
-			});
+			if (Number(component) === 6) {
+				formData.append('component_user', 'emp');
+				console.log(formData);
+				this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+						this.myInputVariable.nativeElement.value = '';
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+						this.myInputVariable.nativeElement.value = '';
+					}
+				});
+			} else {
+				console.log(formData);
+				const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
+				this.commonAPIService.uploadEmployeeExcel(formData).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+						this.myInputVariable.nativeElement.value = '';
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+						this.myInputVariable.nativeElement.value = '';
+					}
+				});
+			}
+			
 		}
 	}
 

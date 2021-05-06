@@ -102,7 +102,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.getFeeAccount(this.feeLoginId);
 			this.getConcessionPerUser(this.feeLoginId);
 		} else {
-			this.accountsForm.reset();
+			if(this.accountsForm) {
+				this.accountsForm.reset()
+			}
 			this.transportFlag = false;
 			this.hostelFlag = false;
 			this.modeFlag = false;
