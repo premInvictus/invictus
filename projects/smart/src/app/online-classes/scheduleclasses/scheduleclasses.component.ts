@@ -12,6 +12,7 @@ import { PreviewDocumentComponent } from '../../smart-shared/preview-document/pr
 import { AddSessionComponenetComponent } from '../../smart-shared/add-session-componenet/add-session-componenet.component';
 import { DatePipe } from '@angular/common';
 import { ZoomMtg } from '@zoomus/websdk';
+import { EditOnlineSessionComponent } from '../../smart-shared/edit-online-session/edit-online-session.component';
 
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
@@ -221,12 +222,14 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.srno + 1}`;
 	}
 	attachmentDialog(currentAttachment) {
-		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
+		console.log("-----------------------", currentAttachment);
+		
+		const dialogRef = this.dialog.open(EditOnlineSessionComponent, {
 			width: '950px',
 			height: '500px',
 			data: {
 				page: 'assignment',
-				title: 'Edit Assignment',
+				title: 'Edit Session',
 				edit: false,
 				multiple : true,
 				attachments: currentAttachment.as_attachment ? currentAttachment.as_attachment : [],
@@ -234,28 +237,30 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 				sec_id: currentAttachment.sec_id,
 				sub_id: currentAttachment.sub_id,
 				topic_id: currentAttachment.topic_id,
-				assignment_desc: currentAttachment.as_assignment_desc
+				assignment_desc: currentAttachment.as_assignment_desc,
+				currentAttachment:currentAttachment
 			} 
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
 			// console.log('clossing dialog');
 			// console.log(dresult);
-			if (dresult && dresult.assignment_desc) {
-				this.disabledApiButton = true;
-				const param: any = {};
-				param.as_id = currentAttachment.as_id;
-				param.as_assignment_desc = dresult.assignment_desc;
-				param.as_attachment = dresult.attachments;
-				this.smartService.assignmentUpdate(param).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					if (result && result.status === 'ok') {
-						this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-						this.getAssignment();
-					} else {
-						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-					}
-				});
-			}
+			this.getAssignment();
+			// if (dresult && dresult.assignment_desc) {
+			// 	this.disabledApiButton = true;
+			// 	const param: any = {};
+			// 	param.as_id = currentAttachment.as_id;
+			// 	param.as_assignment_desc = dresult.assignment_desc;
+			// 	param.as_attachment = dresult.attachments;
+			// 	this.smartService.assignmentUpdate(param).subscribe((result: any) => {
+			// 		this.disabledApiButton = false;
+			// 		if (result && result.status === 'ok') {
+			// 			this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+			// 			this.getAssignment();
+			// 		} else {
+			// 			this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			// 		}
+			// 	});
+			// }
 		});
 	}
 	openAddAttachmentDialog() {
@@ -295,10 +300,11 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 		this.nodataFlag = true;
 		this.getSubject();
 	}
+	
 	deleteAssignment(value) {
 		//console.log('deleteAssignment', value);
-		if (value.as_id) {
-			this.smartService.assignmentDelete({ as_id: value.as_id }).subscribe((result: any) => {
+		if (value.tsoc_id) {
+			this.smartService.deleteOnlineClass({ tsoc_id: value.tsoc_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.getAssignment();
@@ -432,21 +438,7 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 			}
 	  }
 	assignmentSend(valuel) {
-		const asIdArray = [];
-		if (valuel.as_id) {
-			asIdArray.push(valuel.as_id);
-		} else {
-			if (this.selection.selected.length > 0) {
-				this.selection.selected.forEach(item => {
-					asIdArray.push(item.as_id);
-				});
-			} else {
-				this.commonAPIService.showSuccessErrorMessage('Please select assignment', 'error');
-			}
-		}
-		if (asIdArray.length > 0) {
-			this.sendAssignment(asIdArray);
-		}
+		
 	}
 	doAssignmentFilter(value: string) {
 		this.dataSource.filter = value.trim();

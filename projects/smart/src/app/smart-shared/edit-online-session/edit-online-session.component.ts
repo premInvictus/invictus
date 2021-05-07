@@ -1,14 +1,15 @@
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SisService, AxiomService, CommonAPIService, SmartService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-	selector: 'app-add-session-componenet',
-  templateUrl: './add-session-componenet.component.html',
-  styleUrls: ['./add-session-componenet.component.css']
+  selector: 'app-edit-online-session',
+  templateUrl: './edit-online-session.component.html',
+  styleUrls: ['./edit-online-session.component.css']
 })
-export class AddSessionComponenetComponent implements OnInit {
+export class EditOnlineSessionComponent implements OnInit {
 
 	editFlag = false;
 	multipleFileArray: any[] = [];
@@ -37,7 +38,7 @@ export class AddSessionComponenetComponent implements OnInit {
 	disabledApiButton = false;
 	sessionArray: any[] = [];
 	constructor(
-		public dialogRef: MatDialogRef<AddSessionComponenetComponent>,
+		public dialogRef: MatDialogRef<EditOnlineSessionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private sisService: SisService,
 		private fbuild: FormBuilder,
@@ -62,8 +63,8 @@ export class AddSessionComponenetComponent implements OnInit {
 			session_platform: '',
 			class_type: '',
 			session_end_date: '',
-			session_admin_name: ''
-
+			session_admin_name: '',
+      id: ''
 		});
 	}
 	ngOnInit() {
@@ -75,7 +76,7 @@ export class AddSessionComponenetComponent implements OnInit {
 		this.getClass();
 		this.buildForm();
 		this.getTeacher();
-		this.editFlag = this.data.edit;
+		this.editFlag = true;
 		this.imageArray = this.data.attachments;
 		this.class_id = this.data.class_id;
 		this.sec_id = this.data.sec_id;
@@ -83,20 +84,27 @@ export class AddSessionComponenetComponent implements OnInit {
 		this.topic_id = this.data.topic_id;
 		this.assignment_desc = this.data.assignment_desc;
 		this.assignmentForm.patchValue({
-			class_id: this.class_id,
-			sec_id:this.sec_id,
+			class_id: this.data.currentAttachment.tsoc_class,
+			sec_id:this.data.currentAttachment.tsoc_sec.split(", "),
 			sub_id: this.sub_id,
-			teacher_id: '',
-			session_start_time: '',
-			session_end_time: '',
-			session_no: '',
-			session_url: '',
-			session_meeting_id: '',
-			session_password: '',
-			session_status: '',
-			session_platform : '',
-			session_admin_name : ''
+			teacher_id: this.data.currentAttachment.tsoc_teacher,
+			session_start_time: this.data.currentAttachment.tsoc_start_time,
+			session_end_time: this.data.currentAttachment.tsoc_end_time,
+			session_no: this.data.currentAttachment.tsoc_session,
+			session_url: this.data.currentAttachment.tsoc_url,
+			session_meeting_id: this.data.currentAttachment.tsoc_admin_email,
+			session_password: this.data.currentAttachment.tsoc_password,
+			session_status: this.data.currentAttachment.tsoc_status,
+			session_platform : this.data.currentAttachment.tsoc_type,
+      session_date: this.data.currentAttachment.tsoc_class_date,
+      session_end_date: this.data.currentAttachment.tsoc_class_end_date,
+			session_admin_name : this.data.currentAttachment.tsoc_admin_name,
+      id: this.data.currentAttachment.tsoc_id,
+
 		});
+    if(this.data.currentAttachment.tsoc_class_type == "regular") {
+      this.checked = true;
+    }
 		this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
@@ -115,13 +123,6 @@ export class AddSessionComponenetComponent implements OnInit {
 		};
 		this.ckeConfig.font_defaultLabel = 'Arial';
 		this.ckeConfig.fontSize_defaultLabel = '20';
-	}
-	getteacher() {
-		this.smartService.getTeacherByClassSectionAndSubject({class_id: this.assignmentForm.value.class_id, sec_id: this.assignmentForm.value.sec_id, sub_id: this.assignmentForm.value.sub_id }).subscribe((result:any) => {
-			if(result && result.status === 'ok') {
-				this.teacherArray =result.data
-			}
-		})
 	}
 	getClass() {
 		this.classArray = [];
@@ -262,10 +263,8 @@ export class AddSessionComponenetComponent implements OnInit {
 		if (this.assignmentForm.valid) {
 			this.disabledApiButton = true;
 			const param: any = {};
-			this.assignmentForm.patchValue({
-				sec_id: this.assignmentForm.value.sec_id.sort()
-			})
-			this.smartService.submitOnlineSession(this.assignmentForm.value).subscribe((res:any) => {
+			
+			this.smartService.editOnlineSession(this.assignmentForm.value).subscribe((res:any) => {
 				if(res.status == 'ok') {
 					this.commonAPIService.showSuccessErrorMessage("Date inserted Successfully", 'success');
 					this.dialogRef.close();
@@ -284,6 +283,13 @@ export class AddSessionComponenetComponent implements OnInit {
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please enter all required fields', 'error');
 		}
+	}
+  getteacher() {
+		this.smartService.getTeacherByClassSectionAndSubject({class_id: this.assignmentForm.value.class_id, sec_id: this.assignmentForm.value.sec_id, sub_id: this.assignmentForm.value.sub_id }).subscribe((result:any) => {
+			if(result && result.status === 'ok') {
+				this.teacherArray =result.data
+			}
+		})
 	}
 	resetAddAttachment() {
 		console.log('resetAddAttachment');

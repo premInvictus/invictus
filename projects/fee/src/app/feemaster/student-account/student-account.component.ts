@@ -164,21 +164,31 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		})
 	}
 	getConcessionByIdInTable(id) {
-		return this.conGroupArray.filter((element) => {
+		let na = this.conGroupArray.filter((element) => {
 			if(id == element.fcg_id) {
 				return true
 			}
-		})[0].fcg_name;
+		});
+		if(na.length > 0) {
+			return na[0].fcg_name
+		} else {
+			return '-'
+		}
 		
 		
 	}
 
 	getConcessionDescByIdInTable(id) {
-		return this.conGroupArray.filter((element) => {
+		let na =  this.conGroupArray.filter((element) => {
 			if(id == element.fcg_id) {
 				return true
 			}
-		})[0].fcg_description;
+		});
+		if(na.length > 0) {
+			return  na[0].fcg_description
+		}else {
+			return '-';
+		}
 		
 		
 	}
@@ -194,6 +204,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 
 	addUserConcessionGrouptoUser() {
+		console.log("i am here", this.userConcessionForm.valid);
+		
 		if (this.userConcessionForm.valid) {
 			this.userConcessionForm.patchValue({
 				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
@@ -207,7 +219,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		}
 	}
 	getConcessionPerUser(feeLoginId) {
-		console.log("i am here ---------------------------------");
 		
 		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
 			if(res.data) {
@@ -355,6 +366,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
+				console.log("just check me",   this.accountDetails.accd_remark_id);
+				
 				this.accountsForm.patchValue({
 					accd_id: this.accountDetails.accd_id,
 					accd_login_id: this.accountDetails.accd_login_id,
@@ -636,7 +649,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id ? this.accountsForm.value.accd_remark_id :'',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -727,11 +740,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
+		console.log('shsashsh', this.userConcessionArray, this.feeLoginId);
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approved') {
-			console.log('shsashsh');
-			if (!this.accountsForm.value.accd_remark_id.trim()) {
-				validateFlag = false;
-			}
+			
+			this.accountsForm.value.accd_remark_id = '';
 		}
 		if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
@@ -744,7 +756,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id ?  this.accountsForm.value.accd_remark_id: '',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -842,7 +854,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id ?  this.accountsForm.value.accd_remark_id : '',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
