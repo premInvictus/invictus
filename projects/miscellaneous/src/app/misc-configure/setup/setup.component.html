@@ -453,6 +453,46 @@
                                         </ng-container>
                                       </ng-container>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'onlne_session_key'">
+                                      <ng-container [formArrayName]="control.gs_alias">
+                                        <ng-container
+                                          *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;"
+                                          [formGroupName]="i">
+                                          <div class="row">
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Platform</mat-label>
+                                                <input type="text" matInput formControlName="name">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Sdk Access Key</mat-label>
+                                                <input type="text" matInput formControlName="mapiacess">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Sdk Secret Key</mat-label>
+                                                <input type="text" matInput formControlName="mapisecret">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Token Access Key</mat-label>
+                                                <input type="text" matInput formControlName="apiacess">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Token Secret Key</mat-label>
+                                                <input type="text" matInput formControlName="apisecret">
+                                              </mat-form-field>
+                                            </div>
+                                          </div>
+                                        </ng-container>
+                                      </ng-container>
+                                    </ng-container>
                                     <ng-container *ngIf="control.gs_alias == 'mis_report_setting_data'">
                                       <ng-container [formArrayName]="control.gs_alias">
                                         <ng-container
