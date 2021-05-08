@@ -415,6 +415,8 @@ export class SetupComponent implements OnInit {
     }
     getGs_value(element) {
         if (element.gs_type == 'json') {
+            console.log("i am hete", element.gs_type, element.gs_alias);
+            
             if (element.gs_alias === 'library_user_setting') {
                 const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
                 return this.fbuild.array([this.fbuild.group(jsontemp)]);
@@ -510,7 +512,54 @@ export class SetupComponent implements OnInit {
             } else if (element.gs_alias === 'mis_report_setting_data') {
                 const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
                 return this.fbuild.array([this.fbuild.group(jsontemp)]);
-            }
+            } else if (element.gs_alias === 'onlne_session_key') {
+                const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
+                const jsontemp = [];
+                temp.forEach(element => {
+                    const tempPermission: any[] = [];
+                    const tempReport: any [] = [];
+                    // if (element.permission.length > 0) {
+                    //     element.permission.forEach(element1 => {
+                    //         tempPermission.push(this.fbuild.group({
+                    //             section_name: element1.section_name,
+                    //             status: element1.status
+                    //         }));
+                    //     });
+                    // }
+                    // if (element.report_assigned.length > 0) {
+                    //     element.report_assigned.forEach(element1 => {
+                    //         let normaldata: any[] = [];
+                    //         element1.permission.forEach(element => {
+                    //             normaldata.push(this.fbuild.group({
+                    //                 section_name: element.section_name,
+                    //                 status: element.status
+                    //             }));
+                    //         });
+                            
+                    //         tempReport.push(this.fbuild.group({
+                    //             report_name: element1.report_name,
+                    //             status: element1.status,
+                    //             permission: this.fbuild.array(normaldata)
+                    //         }));
+                    //     });
+                    // }
+
+                    jsontemp.push(this.fbuild.group({
+                     
+                        name: element.name,
+                        mapiacess: element.mapiacess,
+                        apiacess: element.apiacess,
+                        mapisecret: element.mapisecret,
+                        apisecret: element.apisecret,
+                        // permission: this.fbuild.array(tempPermission),
+                    }));
+
+
+                });
+                console.log("i am form build ", jsontemp);
+                
+                return this.fbuild.array(jsontemp);
+            } 
         }
         if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez' || element.gs_alias === 'fa_monthwise_freez') {
             if(element.gs_alias === 'fa_session_freez') {
@@ -1348,6 +1397,13 @@ export class SetupComponent implements OnInit {
             'signature': '',
             'order': ''
         });
+        let gradecardsignfrm2 = this.fbuild.group({
+            'name': '',
+            'mapiacess': '',
+            'apiacess': '',
+            'mapisecret': '',
+            'apisecret': ''
+        });
         this.gradecardsignatureForm.push(gradecardsignfrm);
     }
     checkIfSelectedSMS(i, j, value) {
@@ -1432,6 +1488,10 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.mis_report_admin) {
             this.settingForm.value.mis_report_admin = JSON.stringify(this.settingForm.value.mis_report_admin);
         }
+        if (this.settingForm.value && this.settingForm.value.onlne_session_key) {
+            this.settingForm.value.onlne_session_key = JSON.stringify(this.settingForm.value.onlne_session_key);
+        }
+
         if (this.settingForm.value && this.settingForm.value.mis_report_setting_data) {
             this.settingForm.value.mis_report_setting_data = JSON.stringify(this.settingForm.value.mis_report_setting_data[0]);
         }
