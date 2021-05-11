@@ -20,7 +20,7 @@ import * as Excel from 'exceljs/dist/exceljs';
 })
 export class WalletsLedgerComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
-	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
+	@ViewChild('deleteWithReasonModal') deleteWithReasonModal; 
 	@ViewChild('billDetailsModal') billDetailsModal;
   	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
   displayedColumns: string[] = ['w_rpt_no', 'w_transaction_date','particulars', 'w_amount','action'

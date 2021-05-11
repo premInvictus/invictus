@@ -19,6 +19,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
+	uploadBulkDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/bulkUpdate/uploadBulkDocuments', value);
+	}
 	/* updated in smart with getClassData
 	getClass(value) {
 		const param: any = {};

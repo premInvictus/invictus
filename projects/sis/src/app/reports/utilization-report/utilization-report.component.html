@@ -4,19 +4,31 @@
           <mat-form-field class="form-field" appearance="outline">
               <mat-label>Report Type</mat-label>
               <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="setProcessArray();resetDataset()">
-                  <mat-option value="3">Followup</mat-option>
+                  <mat-option value="1">Basic</mat-option>
+                  <mat-option value="2">Login</mat-option>
               </mat-select>
           </mat-form-field>
-      </div> 
+      </div>
       <div class="col-2">
           <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Enrollment Type</mat-label>
-              <mat-select placeholder="Enrollment Type" formControlName="enrolment_type" required>
+              <mat-label>User Type</mat-label>
+              <mat-select placeholder="User Type" formControlName="enrolment_type" required>
+                    
                   <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">
                       {{item?.au_process_name}}</mat-option>
               </mat-select>
           </mat-form-field>
       </div>
+      <div class="col-2" *ngIf="studentDetailReportForm.value.reviewReport === '1'">
+        <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Plateform</mat-label>
+            <mat-select placeholder="Plateform" formControlName="session_platform">
+                    <mat-option value="">Please select </mat-option>
+                <mat-option *ngFor="let item of plateforms" value="{{item?.id}}">
+                    {{item?.name | titlecase}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
       <div class="col-2" *ngIf="showDate">
           <mat-form-field class="form-field" appearance="outline">
               <mat-label>Date</mat-label>

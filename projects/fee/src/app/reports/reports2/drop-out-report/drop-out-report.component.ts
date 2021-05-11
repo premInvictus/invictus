@@ -26,6 +26,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./drop-out-report.component.css']
 })
 export class DropoutReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	totalRow: any;
 	gridHeight: any;
 	showLoadingFlag= false;
@@ -110,11 +111,17 @@ export class DropoutReportComponent implements OnInit {
 	activeReport = 1;
 	notFormatedCellArray: any[];
 	exportColumnDefinitions: any[];
-	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	session: any;
 	sessionName: any;
 	sessionArray: any;
 	currentUser: any;
+	groupColumns: any[] = [];
+	groupLength: any;
+	currentSession;
+	pdfrowdata: any[] = [];
+	levelHeading: any[] = [];
+	levelTotalFooter: any[] = [];
+	levelSubtotalFooter: any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -123,9 +130,9 @@ export class DropoutReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
-
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
+		this.getSession2();
 		this.getClassData();
 		this.buildForm();
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -317,7 +324,7 @@ export class DropoutReportComponent implements OnInit {
 					}
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
+						this.exportAsPDF(this.dataset);
 					}
 					if (args.command === 'expandGroup') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -517,6 +524,7 @@ export class DropoutReportComponent implements OnInit {
 				obj3['refund_status'] = '';
 				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
 				this.totalRow = obj3;
+				this.aggregatearray.push(new Aggregators.Sum('fh_amount'));
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
 				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -788,7 +796,7 @@ export class DropoutReportComponent implements OnInit {
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
-		let reportType: any = '';
+		let reportType: any = 'Dropout_report';
 		const columns: any[] = [];
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
@@ -802,7 +810,7 @@ export class DropoutReportComponent implements OnInit {
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		
-		let reportType2: any = '';
+		let reportType2: any = 'Dropout Report';
 		// this.sessionName = this.getSessionName(this.session.ses_id);
 		// if (this.reportType === 'routewisecoll') {
 		
@@ -993,145 +1001,304 @@ export class DropoutReportComponent implements OnInit {
 			return 'Sub Total (' + groupItem.value + ')';
 		}
 	}
-	exportAsPDF() {
+	getReportHeader() {
+		return 'Dropout Report';
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
+				}
+			}
+		}
+		return grName.substring(0, grName.length - 1);
+	}
+	exportAsPDF(json: any[]) {
 		const headerData: any[] = [];
-		let rowData: any[] = [];
+		this.pdfrowdata = [];
+		this.levelHeading = [];
+		this.levelTotalFooter = [];
+		this.levelSubtotalFooter = [];
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const doc = new jsPDF('l', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		console.log(this.dataviewObj);
-		console.log(this.dataviewObj.getGrouping());
 		if (this.dataviewObj.getGroups().length === 0) {
-			Object.keys(this.dataset).forEach(key => {
+			json.forEach(element => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-						arr.push(this.dataset[key][key2]);
-					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-						arr.push(this.dataset[key][key2][0]);
-					}
+				this.columnDefinitions.forEach(element1 => {
+					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
+				this.pdfrowdata.push(arr);
 			});
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 40,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 25,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [headerData],
-				body: rowData,
-				startY: 60,
-				margin: { top: 40 },
-				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
-					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
-				},
-				alternateRowStyles: {
-					fillColor: '#f3f3f3'
-				},
-				useCss: true,
-				styles: {
-					fontSize: 22,
-					cellWidth: 'auto',
-				},
-				theme: 'striped'
-			});
-			doc.save('table.pdf');
 		} else {
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				head: [headerData],
-				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
+			// iterate all groups
+			this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+		}
+		if (this.totalRow) {
+			const arr: any[] = [];
+			for (const item of this.columnDefinitions) {
+				arr.push(this.totalRow[item.id]);
+			}
+			rowData.push(arr);
+			this.pdfrowdata.push(arr);
+		}
+		doc.levelHeading = this.levelHeading;
+		doc.levelTotalFooter = this.levelTotalFooter;
+		doc.levelSubtotalFooter = this.levelSubtotalFooter;
+		doc.autoTable({
+			head: [headerData],
+			body: this.pdfrowdata,
+			startY: doc.previousAutoTable.finalY + 0.5,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
+				doc.setFontStyle('bold');
+
+			},
+			willDrawCell: function (data) {
+				const doc = data.doc;
+				const rows = data.table.body;
+
+				// level 0
+				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(0, 62, 120);
+				}
+
+				// level more than 0
+				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+				if (lsfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(229, 136, 67);
+				}
+
+				// group heading
+				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+				if (lhIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#5e666d');
+					doc.setFillColor('#c8d6e5');
+				}
+
+				// grand total
+				if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(67, 160, 71);
+				}
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 18,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 18,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89a8c8',
+			},
+			theme: 'grid'
+		});
+		if (this.groupColumns.length > 0) {
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
+				didDrawPage: function (data) {
+
 				},
-				headerStyles: {
+				headStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
+					fillColor: '#ffffff',
 					textColor: 'black',
-				},
-				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					halign: 'left',
+					fontSize: 20,
 				},
 				useCss: true,
-				styles: {
-					fontSize: 22,
-					cellWidth: 'auto',
-				},
 				theme: 'striped'
 			});
-			for (const item of this.dataviewObj.getGroups()) {
-				rowData = [];
-				Object.keys(item.rows).forEach(key => {
-					const arr: any[] = [];
-					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
-							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
-							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
-							arr.push(item.rows[key][key2][0]);
+		}
+		// doc.autoTable({
+		// 	// tslint:disable-next-line:max-line-length
+		// 	head: [['Report Filtered as:  ' + this.getParamValue()]],
+		// 	didDrawPage: function (data) {
+
+		// 	},
+		// 	headStyles: {
+		// 		fontStyle: 'bold',
+		// 		fillColor: '#ffffff',
+		// 		textColor: 'black',
+		// 		halign: 'left',
+		// 		fontSize: 20,
+		// 	},
+		// 	useCss: true,
+		// 	theme: 'striped'
+		// });
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + json.length]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
+	}
+	getLevelFooter2(level) {
+		if (level === 0) {
+			return 'Total';
+		} else if (level > 0) {
+			return 'Sub Total (level ' + level + ')';
+		}
+	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				// add and style for groupeditem level heading
+				this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+				this.levelHeading.push(this.pdfrowdata.length - 1);
+				if (groupItem.groups) {
+					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'srno') {
+							levelArray.push(this.getLevelFooter2(groupItem.level));
+						} else if (item2.id === 'fh_amount') {
+							levelArray.push(groupItem.rows.map(t => t[item2.id]).reduce((acc, val) => acc + val, 0));
+						} else {
+							levelArray.push('');
 						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
+
+				} else {
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const earr: any[] = [];
+						for (const item2 of this.columnDefinitions) {
+							earr.push(groupItem.rows[key][item2.id]);
+						}
+						rowData.push(earr);
+						this.pdfrowdata.push(earr);
 					});
-					rowData.push(arr);
-				});
-				doc.autoTable({
-					head: [[this.common.htmlToText(item.title)]],
-					body: rowData,
-					headerStyles: {
-						fontStyle: 'bold',
-						fillColor: '#bebebe',
-						textColor: 'black',
-						halign: 'left',
-					},
-					alternateRowStyles: {
-						fillColor: '#f3f3f3'
-					},
-					useCss: true,
-					styles: {
-						fontSize: 22,
-						cellWidth: 4,
-					},
-					theme: 'striped'
-				});
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'srno') {
+							levelArray.push(this.getLevelFooter2(groupItem.level));
+						} else if (item2.id === 'fh_amount') {
+							levelArray.push(groupItem.rows.map(t => t[item2.id]).reduce((acc, val) => acc + val, 0));
+						} else {
+							levelArray.push('');
+						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
+				}
 			}
-			doc.save('table.pdf');
-			console.log(rowData);
 		}
 	}
 	getSchool() {
@@ -1139,6 +1306,19 @@ export class DropoutReportComponent implements OnInit {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
 				console.log(this.schoolInfo);
+			}
+		});
+	}
+	getSession2() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				const sessionArray = result2.data;
+				const ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
+				sessionArray.forEach(element => {
+					if (element.ses_id === ses_id) {
+						this.currentSession = element;
+					}
+				});
 			}
 		});
 	}

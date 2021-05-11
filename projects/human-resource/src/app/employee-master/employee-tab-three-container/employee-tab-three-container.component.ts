@@ -268,7 +268,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	getSecurityAmountIfAny() {
 		if(this.employeedetails && this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
-			this.security_deposit_till = this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0);
+			this.security_deposit_till = this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0);
 			console.log("i am here", this.security_deposit_till);
 			
 		}
@@ -580,6 +580,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 			i++;
 		}
+		console.log('this.formGroupArray2---',this.formGroupArray2)
 		this.getNetSalary();
 	}
 	checkscoptValue(sc_id) {
@@ -730,7 +731,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.securityDetails.push(this.fbuild.group({
 							security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
 							security_month_amount: sam,
-							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0): '',
 							starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
 							// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
 						}));
@@ -738,7 +739,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.securityDetails.push(this.fbuild.group({
 							security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
 							security_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_month_amount : '',
-							remaining_security:this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							remaining_security:this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0): '',
 							starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
 							// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
 						}));
@@ -749,7 +750,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						security: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security : '',
 						security_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_month_amount : '',
 						starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.starting_month : '',
-						remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+						remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0): '',
 						// security_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_details.security_start_date : '',
 					}));
 				}
@@ -771,7 +772,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 								security_month_amount: sam,
 								starting_month: t.starting_month ? t.starting_month : '',
 								// security_start_date: t.security_start_date ? t.security_start_date : '',
-								remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ?b['deposite_amount']  : 0), 0): '',
+								remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount']  : 0), 0): '',
 								freezed: t.freezed ? t.freezed : false
 							}))
 						}
@@ -795,7 +796,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							security_month_amount: t.security_month_amount ? t.security_month_amount : '',
 							starting_month: t.starting_month ? t.starting_month : '',
 							// security_start_date: t.security_start_date ? t.security_start_date : '',
-							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b['deposite_amount'] || 0), 0): '',
+							remaining_security: this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise ? this.employeedetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b ? b['deposite_amount'] : 0), 0): '',
 							freezed: t.freezed ? t.freezed : false
 						}))
 					}

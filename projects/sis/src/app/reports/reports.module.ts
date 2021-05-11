@@ -28,6 +28,7 @@ import { PrevSchoolReportComponent } from './prev-school-report/prev-school-repo
 import { StudentEnqAdmnRegReportComponent } from './student_enq_admn_reg_report/student-enq-admn-reg-report/student-enq-admn-reg-report.component';
 import { SlctcReportComponent } from './slctc-report/slctc-report.component';
 import { RemarksReportComponent } from './remarks-report/remarks-report.component';
+import { UtilizationReportComponent } from './utilization-report/utilization-report.component';
 
 @NgModule({
 	imports: [
@@ -60,7 +61,8 @@ import { RemarksReportComponent } from './remarks-report/remarks-report.componen
 		PrevSchoolReportComponent,
 		StudentEnqAdmnRegReportComponent,
 		SlctcReportComponent,
-		RemarksReportComponent
+		RemarksReportComponent,
+		UtilizationReportComponent
 	],
 	providers: [TranslateService],
 })
