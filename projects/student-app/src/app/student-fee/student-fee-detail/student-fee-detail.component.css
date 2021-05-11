@@ -60,3 +60,10 @@ th.mat-header-cell {
 .close-btn {
     cursor: pointer!important;
 }
+.pay-btn{
+    background: #448440;
+    color: #fff;
+    width: 155px;
+    position: relative;
+    top: 15px;
+}

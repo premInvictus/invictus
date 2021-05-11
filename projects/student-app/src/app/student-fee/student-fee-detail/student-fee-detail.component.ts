@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild, ElementRef, Renderer2, HostLis
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatPaginatorI18n } from '../../shared-module/customPaginatorClass';
 import { InvoiceElement } from './invoice-element.model';
+import {FormBuilder,FormGroup, FormControl}  from '@angular/forms';
 import { FeeLedgerElement } from './fee-ledger.model';
 import { MatDialog } from '@angular/material';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { ErpCommonService, CommonAPIService } from '../../../../../../src/app/_services/index';
-import { FormBuilder } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
@@ -44,6 +44,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	responseHtml = '';
 	paytmResult: any = {};
 	postURL = '';
+	advanceFeepayForm: FormGroup;
+	advance_fee_type=false;
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -82,10 +84,12 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		public qelementService: QelementService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private renderer: Renderer2
+		private renderer: Renderer2,
+		private fbuild:FormBuilder
 	) { }
 
 	ngOnInit() {
+		this.buildForm();
 		this.getGlobalSetting();
 		this.invoiceArray = [];
 		this.INVOICE_ELEMENT = [];
@@ -100,6 +104,11 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		this.processType = this.currentUser.au_process_type;
 		this.getStudentInvoiceDetail();
 	}
+	buildForm() {
+		this.advanceFeepayForm = this.fbuild.group({
+		  amount: ''
+		})
+	  }
 
 	ngAfterViewInit() {
 
@@ -289,9 +298,14 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 	}
 
-	orderPayment(element) {
-		// this.commonAPIService.showSuccessErrorMessage('Sorry ! This service is not Available', 'error');
-		this.outStandingAmt = element.feedue;
+	orderPayment(element,advance_fee_type=false) {
+		if(advance_fee_type){
+			this.outStandingAmt = element.amount;
+			this.advance_fee_type = advance_fee_type;
+		} else {
+			this.outStandingAmt = element.feedue;
+		}
+		
 		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
 		this.makePayment(element);
 	}
@@ -365,13 +379,15 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		}
 	}
 	exceutePayment($event) {
+		console.log('$event',$event);
 		if ($event && $event.bank) {
 			const bank: any = $event.bank;
 			const inputJson = {
 				inv_login_id: this.loginId,
 				inv_process_type: this.processType,
 				out_standing_amt: this.outStandingAmt,
-				bank: bank
+				bank: bank,
+				advance_fee_type:this.advance_fee_type
 			};
 			if (bank === 'payu') {
 				inputJson['name'] = this.currentUser.full_name.split(' ')[0];
