@@ -4604,21 +4604,45 @@ export class CollectionReportComponent implements OnInit {
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
+							obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
 									Object.keys(groupItem.rows[key3]).forEach(key4 => {
 										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
+											if(key2 == "fh_name1") {
+												obj3[key2] = 0;
+											} else {
+												obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+												if(obj3[key2] == "undefined" || obj3[key2] == undefined) {
+													obj3[key2] = 0
+												}
+											}
+										} 
 									});
 								});
 							});
 						});
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
+						Object.keys(obj3).forEach(key => {	
+							if(!obj3['fh_name1']) {
+								obj3['fh_name1'] = 0
+							}
+							
+						});
 					}
+					// for (key in obj3) {
+					// 	// console.log(obj,obj[key]);
+					// 	if ((key.toString()).includes('fh_name')) {
+					// 		if (obj[key] == "undefined") {
+					// 			obj[key] = 0;
+					// 		}
+					// 	}
+					// }
+					
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					// style row having total
@@ -4686,6 +4710,16 @@ export class CollectionReportComponent implements OnInit {
 								}
 							}
 						}
+						Object.keys(obj).forEach(key => {
+							console.log(" i  am obj", key, obj[key]);
+							if(obj[key] == "undefined") {
+								obj[key] = 0;
+							}
+							// if(!obj3['fh_name1']) {
+							// 	obj3['fh_name1'] = 0
+							// }
+							
+						});
 						worksheet.addRow(obj);
 					});
 					const obj3: any = {};
@@ -4774,6 +4808,46 @@ export class CollectionReportComponent implements OnInit {
 						obj3['stu_full_name'] = groupItem.rows.length;
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
+					}
+					if (this.reportType === 'dailyheadwise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
+
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											if(key2 == "fh_name1") {
+												obj3[key2] = 0;
+											} else {
+												obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+												if(obj3[key2] == "undefined" || obj3[key2] == undefined) {
+													obj3[key2] = 0
+												}
+											}
+											
+											
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+						Object.keys(obj3).forEach(key => {	
+							if(!obj3['fh_name1']) {
+								obj3['fh_name1'] = 0
+							}
+							
+						});
 					}
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
@@ -4928,6 +5002,7 @@ export class CollectionReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
 		} else if (this.reportType === 'dailyheadwise') {
 			for (const item of this.exportColumnDefinitions) {
+				
 				columns.push({
 					key: item.id,
 					width: 8
@@ -4992,7 +5067,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 				}
 				for (key in obj) {
-					// console.log(obj,obj[key]);
+					console.log(obj,obj[key]);
 					if ((key.toString()).includes('fh_name')) {
 						if (obj[key] == "undefined") {
 							obj[key] = 0;

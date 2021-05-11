@@ -5,6 +5,8 @@ import {
 	Filters,
 	Formatters
 } from 'angular-slickgrid';
+import { saveAs } from 'file-saver';
+import * as Excel from 'exceljs/dist/exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
@@ -30,6 +32,52 @@ export class DropoutReportComponent implements OnInit {
 	showLoadingFlag= false;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR'
+	};
 	gridOptions1: GridOption;
 	gridOptions2: GridOption;
 	tableFlag = false;
@@ -61,11 +109,15 @@ export class DropoutReportComponent implements OnInit {
 	sectionArray: any[] = [];
 	schoolInfo: any;
 	activeReport = 1;
+	notFormatedCellArray: any[];
+	exportColumnDefinitions: any[];
+	session: any;
+	sessionName: any;
+	sessionArray: any;
+	currentUser: any;
 	groupColumns: any[] = [];
 	groupLength: any;
-	notFormatedCellArray: any[] = [];
 	currentSession;
-	currentUser;
 	pdfrowdata: any[] = [];
 	levelHeading: any[] = [];
 	levelTotalFooter: any[] = [];
@@ -80,14 +132,30 @@ export class DropoutReportComponent implements OnInit {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
-		this.getSession();
+		this.getSession2();
 		this.getClassData();
 		this.buildForm();
+		this.session = JSON.parse(localStorage.getItem('session'));
 		
+		this.getSession();
 		
 		this.filterFlag = true;
 		// this.generate();
 		// ;
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
+			}
+		});
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -221,6 +289,12 @@ export class DropoutReportComponent implements OnInit {
 					iconCssClass: 'fas fa-download'
 				},
 				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
 					title: 'expand',
 					titleKey: 'Expand Groups',
 					command: 'expandGroup',
@@ -240,7 +314,10 @@ export class DropoutReportComponent implements OnInit {
 				}
 				],
 				onCommand: (e, args) => {
-					
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
@@ -701,6 +778,229 @@ export class DropoutReportComponent implements OnInit {
 			hasBackdrop: true
 		});
 	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getParamValue() {
+		const filterArr = [];
+		// Object.keys(this.filteredAs).forEach(key => {
+		// 	filterArr.push(this.filteredAs[key]);
+		// });
+		filterArr.push(
+			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
+			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+		return filterArr;
+	}
+	exportToExcel(json: any[]) {
+		this.notFormatedCellArray = [];
+		let reportType: any = 'Dropout_report';
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
+			columns.push({
+				key: item.id,
+				width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);
+		}
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		
+		let reportType2: any = 'Dropout Report';
+		// this.sessionName = this.getSessionName(this.session.ses_id);
+		// if (this.reportType === 'routewisecoll') {
+		
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = reportType2;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.getRow(4).values = columValue;
+		worksheet.columns = columns;
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(json).forEach(key => {
+				const obj: any = {};
+				for (const item2 of this.exportColumnDefinitions) {
+
+					
+					obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+				}
+				worksheet.addRow(obj);
+			});
+		}
+		// } else {
+		// 	// iterate all groups
+		// 	this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
+		// }
+		if (this.totalRow) {
+			worksheet.addRow(this.totalRow);
+		}
+		// style grand total
+		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+			this.columnDefinitions.forEach(element => {
+				cell.font = {
+					color: { argb: 'ffffff' },
+					bold: true,
+					name: 'Arial',
+					size: 10
+				};
+				cell.alignment = { wrapText: true, horizontal: 'center' };
+				cell.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '439f47' },
+					bgColor: { argb: '439f47' }
+				};
+				cell.border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+			});
+		});
+		// style all row of excel
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			} else if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+			} else if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+				if (cellIndex === -1) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+						};
+						cell.alignment = { wrapText: true, horizontal: 'center' };
+					});
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
+
+				}
+			}
+		});
+
+		worksheet.addRow({});
+		
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+	}
+	getLevelFooter(level, groupItem) {
+		if (level === 0) {
+			return 'Total';
+		}
+		if (level > 0) {
+			return 'Sub Total (' + groupItem.value + ')';
+		}
+	}
 	getReportHeader() {
 		return 'Dropout Report';
 	}
@@ -935,7 +1235,7 @@ export class DropoutReportComponent implements OnInit {
 		});
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
-	getLevelFooter(level) {
+	getLevelFooter2(level) {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
@@ -953,7 +1253,7 @@ export class DropoutReportComponent implements OnInit {
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
 						if (item2.id === 'srno') {
-							levelArray.push(this.getLevelFooter(groupItem.level));
+							levelArray.push(this.getLevelFooter2(groupItem.level));
 						} else if (item2.id === 'fh_amount') {
 							levelArray.push(groupItem.rows.map(t => t[item2.id]).reduce((acc, val) => acc + val, 0));
 						} else {
@@ -982,7 +1282,7 @@ export class DropoutReportComponent implements OnInit {
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
 						if (item2.id === 'srno') {
-							levelArray.push(this.getLevelFooter(groupItem.level));
+							levelArray.push(this.getLevelFooter2(groupItem.level));
 						} else if (item2.id === 'fh_amount') {
 							levelArray.push(groupItem.rows.map(t => t[item2.id]).reduce((acc, val) => acc + val, 0));
 						} else {
@@ -1009,7 +1309,7 @@ export class DropoutReportComponent implements OnInit {
 			}
 		});
 	}
-	getSession() {
+	getSession2() {
 		this.sisService.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
 				const sessionArray = result2.data;
