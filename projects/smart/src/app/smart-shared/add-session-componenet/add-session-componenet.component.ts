@@ -270,7 +270,7 @@ export class AddSessionComponenetComponent implements OnInit {
 					this.commonAPIService.showSuccessErrorMessage("Date inserted Successfully", 'success');
 					this.dialogRef.close();
 				} else {
-					this.commonAPIService.showSuccessErrorMessage("Error in inserting data", 'error')
+					this.commonAPIService.showSuccessErrorMessage(res.message, 'error')
 				}
 			})
 			
