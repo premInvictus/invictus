@@ -237,7 +237,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		console.log("i am here ---------------------------------");
 		this.userConcessionArray = [];
 		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
-			if(res.data && res.data != '') {
+			if(res.data && res.data != "") {
 				this.userConcessionArray = res.data;
 				
 			} else {
