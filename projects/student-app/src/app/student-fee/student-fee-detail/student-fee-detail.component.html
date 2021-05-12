@@ -97,6 +97,12 @@
                   <input matInput formControlName="amount" required type="number" placeholder="Amount">
                 </mat-form-field>
               </div>
+              <div class="col-3">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Remarks</mat-label>
+                  <input matInput formControlName="remarks" required placeholder="Remarks">
+                </mat-form-field>
+              </div>
               <div class="col-6">
                 <button mat-raised-button class="pay-btn" (click)="orderPayment(advanceFeepayForm.value,true)"
                   [disabled]="!advanceFeepayForm.valid">
