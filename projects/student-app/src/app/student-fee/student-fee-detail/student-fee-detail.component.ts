@@ -106,7 +106,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	}
 	buildForm() {
 		this.advanceFeepayForm = this.fbuild.group({
-		  amount: ''
+		  amount: '',
+		  remarks:''
 		})
 	  }
 
@@ -382,6 +383,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		console.log('$event',$event);
 		if ($event && $event.bank) {
 			const bank: any = $event.bank;
+			
 			const inputJson = {
 				inv_login_id: this.loginId,
 				inv_process_type: this.processType,
@@ -389,6 +391,9 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				bank: bank,
 				advance_fee_type:this.advance_fee_type
 			};
+			if(this.advanceFeepayForm.value.remarks){
+				inputJson['remarks'] = this.advanceFeepayForm.value.remarks;
+			}
 			if (bank === 'payu') {
 				inputJson['name'] = this.currentUser.full_name.split(' ')[0];
 				inputJson['udf5'] = '';
