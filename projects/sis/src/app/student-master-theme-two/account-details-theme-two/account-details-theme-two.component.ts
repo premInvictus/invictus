@@ -76,6 +76,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
+		// this.userConcessionArray = [];
 		this.terminateStatus = 'Terminate Transport Facility';
 		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
@@ -89,6 +90,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getTransportMode();
 		this.getRoutes();
 		this.getConcessionPerUser(this.feeLoginId);
+		
 	}
 	ngOnChanges() {
 		if (this.feeDet && this.feeDet.class_id) {
@@ -97,6 +99,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.additionalFeeComponent();
 		this.renderData();
 		console.log(this.feeDet, 'dfghfgh');
+		// this.userConcessionArray = [];
+		this.getConcessionPerUser(this.feeLoginId);
 	}
 	buildForm() {
 		this.accountsForm = this.fbuild.group({
@@ -231,12 +235,13 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 	getConcessionPerUser(feeLoginId) {
 		console.log("i am here ---------------------------------");
-		
+		this.userConcessionArray = [];
 		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
-			if(res.data) {
-				this.userConcessionArray = res.data
-				console.log("i am res.data", this.userConcessionArray);
+			if(res.data && res.data != '') {
+				this.userConcessionArray = res.data;
 				
+			} else {
+				this.userConcessionArray = [];
 			}
 		})
 	}
