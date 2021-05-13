@@ -4870,7 +4870,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						Object.keys(obj3).forEach(key => {	
-							if(!obj3['fh_name1']) {
+							if(!obj3['fh_name1'] || obj3['fh_name1'] == NaN) {
 								obj3['fh_name1'] = 0
 							}
 							
