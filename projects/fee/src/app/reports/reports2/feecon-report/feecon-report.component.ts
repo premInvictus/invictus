@@ -693,6 +693,8 @@ export class FeeconReportComponent implements OnInit {
 					let i = 0;
 					let j = 0;
 					const feeHead: any[] = [];
+					console.log("i am repor array", repoArray);
+					
 					Object.keys(repoArray).forEach((keys: any) => {
 						const obj: any = {};
 						if (Number(keys) === 0) {
@@ -789,6 +791,7 @@ export class FeeconReportComponent implements OnInit {
 						if (repoArray[Number(keys)]['stu_concession_arr']) {
 							let k = 0;
 							let tot = 0;
+							
 							for (const titem of repoArray[Number(keys)]['stu_concession_arr']) {
 								Object.keys(titem).forEach((key2: any) => {
 									obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys
@@ -808,8 +811,8 @@ export class FeeconReportComponent implements OnInit {
 									obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
 									tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
 									obj['total'] = tot;
-									obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
-									obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
+									obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? (repoArray[Number(keys)]['approved_by']).substring(1) : '-';
+									obj['mod_review_date'] = repoArray[Number(keys)]['adjustment_date'] ? repoArray[Number(keys)]['adjustment_date'] : '-';
 									obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
 									obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
 									k++;
@@ -819,6 +822,8 @@ export class FeeconReportComponent implements OnInit {
 						i++;
 						this.dataset.push(obj);
 					});
+					console.log("i am data, ", this.dataset);
+					
 					this.columnDefinitions.push(
 						{
 							id: 'total', name: 'Total', field: 'total',
@@ -1037,6 +1042,13 @@ export class FeeconReportComponent implements OnInit {
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
 		if (value !== '-') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return value;
+		}
+	}
+	checkDateFormatter2(row, cell, value, columnDef, dataContext) {
+		if (value !== '-') {
+			return new DatePipe('en-in').transform(value.split(",", "")[0], 'd-MMM-y');
 		} else {
 			return value;
 		}
