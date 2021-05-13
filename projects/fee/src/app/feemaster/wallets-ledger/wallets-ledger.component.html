@@ -17,7 +17,7 @@
            (processTypeEmit)="checkEmit($event)" [feeRenderId]="feeRenderId"></app-common-student-profile>
      </div>
   </div>
-  <div class="row ">
+  <div class="row " *ngIf="ELEMENT_DATA.length > 0 ">
       <div class="col-2"></div>
       <div class="col-8 padding-8">
          <mat-card class="card-top-title__container">
@@ -117,17 +117,21 @@
                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
                   </table>
-                  <table class="table-100 text-center" style="margin-top:5px;">
-                     <tr *ngIf="ELEMENT_DATA.length == 0">
-                     <td colspan="8">No Record Found</td>
-                     </tr>
-                  </table>
+                  
                </div>
+               
             </div>
          </mat-card>
       </div>
       <div class="col-2"></div>
  </div>
+ <div *ngIf="ELEMENT_DATA.length == 0 " class="row margin-top-10" style="margin-left: 0.7%; width: 98.5%;">
+   <div class="col-12 remove-col-padding">
+      <mat-card class="card-top-title__container ">
+        <div class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
+      </mat-card>
+    </div>
+</div>
  <app-bill-details-modal #billDetailsModal></app-bill-details-modal>
  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>
  <app-delete-with-reason #deleteWithReasonModal

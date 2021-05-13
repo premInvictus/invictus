@@ -6,6 +6,9 @@ import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs'; 
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
@@ -13,11 +16,11 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
-import { IndianCurrency } from '../../_pipes';
+import { CapitalizePipe, IndianCurrency } from '../../_pipes';
 @Component({
 	selector: 'app-missing-invoice',
 	templateUrl: './missing-invoice.component.html',
-	styleUrls: ['./missing-invoice.component.css']
+	styleUrls: ['./missing-invoice.component.scss']
 })
 export class MissingInvoiceComponent implements OnInit {
 	feeRenderId: any = '';
@@ -39,9 +42,12 @@ export class MissingInvoiceComponent implements OnInit {
 	recordArray: any[] = [];
 	lastRecordId: any;
 	loginId: any;
+	notFormatedCellArray: any[] = [];
 	process_type = '';
+	header: any;
 	checkallstatus = false;
 	datasource: any = [];
+	settings: any[] = [];
 	resultdataArray = [];
 	footerRecord: any = {
 		feeduetotal: 0,
@@ -68,6 +74,7 @@ export class MissingInvoiceComponent implements OnInit {
 	session: any;
 	sessionName: any;
 	sessionArray: any[] = [];
+	bankArray: any[] = [];
 	currentUser: any;
 	showMissingInvoice = true;
 	session_id: any;
@@ -134,14 +141,17 @@ export class MissingInvoiceComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		// this.checkEmit(1);
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.getSchool();
+		this.getSession();
+		this.getbanks();
 		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
 			this.process_type = this.studentRouteMoveStoreService.getProcesRouteType();
 		} else {
 			this.process_type = '4';
 		}
 		this.processtypeService.setProcesstype(this.process_type);
-		this.getSchool();
-		this.getSession();
 		this.recordArray = [];
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -170,6 +180,35 @@ export class MissingInvoiceComponent implements OnInit {
 
 		});
 	}
+
+	getbanks() {
+		this.feeService.getBanks({}).subscribe((res: any) => {
+			console.log(res);
+			this.bankArray = res.data;
+
+		})
+	}
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['gradecard_scholastic_abbreviation','gradecard_show_scholastic_gradescale','gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+		  'gradecard_health_status', 'gradecard_date', 'school_achievement'];
+		this.feeService.getGlobalSettingReplace(param).subscribe((result: any) => {
+		  if (result && result.status === 'ok') {
+			this.settings = result.data;
+			this.settings.forEach(element => {
+			  
+			  if (element.gs_alias === 'gradecard_header') {
+				this.header = element.gs_value;
+				this.header = this.header.replace('@','data:image/png;base64,');
+				// var regex = /<img.*?src="(.*?)"/;
+				// var src = regex.exec(this.header)[1];
+				// console.log(src);
+			  } 
+			});
+		  }
+		})
+	  }
+
 	checkEmit(process_type) {
 		this.process_type = process_type;
 		if (process_type) {
@@ -181,10 +220,819 @@ export class MissingInvoiceComponent implements OnInit {
 					this.FEE_LEDGER_ELEMENT = [];
 					this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 					this.getFeeLedger(this.loginId);
-					this.getDataofMissingInvoice();
 				}
 			});
 		}
+	}
+	async downloadPdf() {
+
+		let headName = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Ch. No/Txn. No', 'Drawn on Bank'];
+		// let columnWidth_arr:any = {
+		// 	'Rpt. No':15
+		// }
+
+		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
+			console.log("i am result data", result.data);
+			
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
+			result.data[1].map((element) => {
+				// console.log("i am element", element);
+				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
+					headName.push(element.fh_name+'')
+				}
+
+			});
+			headName.push('Fine');
+			headName.push('Total');
+			let pdfrowdata = [];
+
+			let alast = []
+			for (let i = 0; i < headName.length; i++) {
+				if (i < 7) {
+					alast.push('');
+				}
+				else {
+					alast.push(0);
+				}
+
+			}
+			let arr = [];
+			let continuev = false;
+			
+			result.data[0].map(element => {
+				console.log((element.rpt_receipt_no));
+				if(element.rpt_receipt_no) {
+					continuev = true;
+				}
+				
+			});
+			result.data[0].map((element) => {
+				let bank_name_1 = '';
+				let bank_name = this.bankArray.filter((e) => {
+
+					if (e.bnk_gid == element.ftr_deposit_bnk_id)
+						return true
+				})
+				if (bank_name && bank_name.length > 0) {
+					bank_name_1 = bank_name[0].bank_name;
+				}
+				let a = [];
+				let amt = [];
+				let at_val = false;
+				let main = false;
+				arr.filter((e) => {
+					if (e.rpt_receipt_no == element.rpt_receipt_no) {
+						main = true;
+					}
+				})
+				if (!main) {
+					a.push(element.rpt_receipt_no);
+					a.push(new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
+					a.push(element.fp_months[0]);
+					a.push(element.pay_name);
+					a.push(element.bank_name_1);
+					a.push(element.ftr_cheque_no);
+					a.push(element.ftr_bnk_name);
+					for (let i = 0; i < headName.length - 9; i++) {
+						let da = element.invoice_bifurcation.filter((e) => {
+							if (parseInt(result.data[1][i].fh_id) == parseInt(e.invg_fh_id))
+								return true;
+						});
+
+
+						if (da && da.length > 0) {
+							amt = arr.filter((e) => {
+								if (e.inv_id == element.inv_id) {
+									return true
+								}
+							});
+							amt.filter((e) => {
+								e.invoice_bifurcation.filter((ch) => {
+									if (ch.invg_fh_id == da[0].invg_fh_id) {
+										at_val = true
+									}
+								})
+							})
+							a.push(!at_val ? new IndianCurrency().transform(da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-')
+							if (element.rpt_receipt_no)
+								alast[i + 7] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : 0;
+						} else {
+							a.push('-');
+							alast[i + 7] += 0;
+						}
+					}
+					a.push(new IndianCurrency().transform(element.late_fine_amt ? element.late_fine_amt : 0));
+					a.push(new IndianCurrency().transform(element.rpt_net_amount ? (element.rpt_net_amount) : 0));
+
+
+					if (element.rpt_receipt_no) {
+						alast[alast.length - 2] += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
+						alast[alast.length - 1] += parseInt(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+						pdfrowdata.push(a);
+					}
+
+
+					arr.push(element);
+				}
+
+			})
+			// console.log(alast);
+			alast[5] = 'Total';
+			for (let i = 7; i < headName.length; i++) {
+				alast[i] = new IndianCurrency().transform(alast[i]);
+			}
+			pdfrowdata.push(alast);
+			let objct: any = {};
+			for (let i = 0; i < headName.length; i++) {
+				objct.i = { 'cellWidth': 400 / headName.length }
+			}
+
+			const doc = new jsPDF('l', 'mm', 'a4');
+			doc.levelHeading = [];
+			doc.levelTotalFooter = [];
+			doc.levelSubtotalFooter = [];
+			
+			async function getBase64ImageFromUrl(imageUrl) {
+				var res = await fetch(imageUrl);
+				var blob = await res.blob();
+			  
+				return new Promise((resolve, reject) => {
+				  var reader  = new FileReader();
+				  reader.addEventListener("load", function () {
+					  resolve(reader.result);
+				  }, false);
+			  
+				  reader.onerror = () => {
+					return reject(this);
+				  };
+				  reader.readAsDataURL(blob);
+				})
+			  }
+
+			var imageurl = await getBase64ImageFromUrl(this.schoolInfo.school_logo);
+			
+			
+			doc.autoTable({
+				// startY: doc.previousAutoTable.finalY + 0.2,
+				
+				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 12,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			
+			doc.autoTable({
+				head: [[this.schoolInfo.school_address + ',' +this.schoolInfo.school_city]],
+				startY: doc.previousAutoTable.finalY - 2,
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 11,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [['Website: '+this.schoolInfo.school_website + ', Affiliation No: ' +this.schoolInfo.school_afflication_no]],
+				startY: doc.previousAutoTable.finalY - 2,
+				didDrawPage: function (data) {
+					// doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 7,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			// doc.addImage(imageurl, 'jpg', 20, 10, 40, 30);
+			doc.autoTable({
+				head: [[new TitleCasePipe().transform('Receipt Ledger ' + this.sessionName)]],
+				startY: doc.previousAutoTable.finalY - 2,
+				didDrawPage: function (data) {
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 11,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			let pdfdetaileddata = [];
+			let details = [];
+			details.push('Admission Number');
+			details.push(':');
+			details.push(result.data[0][0].au_admission_no);
+			details.push('Active Parent');
+			details.push(':');
+			details.push( new CapitalizePipe().transform(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name));
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
+			details = [];
+			details.push('Class');
+			details.push(':');
+			details.push(result.data[0][0].class_name +'-'+ result.data[0][0].sec_name);
+			details.push('Active Parent No');
+			details.push(':');
+			details.push(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no);
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
+			details = [];
+			details.push('Student Name');
+			details.push(':');
+			details.push(new TitleCasePipe().transform(result.data[0][0].au_full_name));
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			details.push('');
+			pdfdetaileddata.push(details);
+			doc.autoTable({
+				head: [],
+				body: pdfdetaileddata,
+				startY: doc.previousAutoTable.finalY -2,
+				didDrawPage: function (data) {
+					doc.setFontStyle('bold');
+				},
+				willDrawCell: function (data) {
+					// tslint:disable-next-line:no-shadowed-variable
+					const doc = data.doc;
+					const rows = data.table.body;
+					doc.setFillColor(255, 255, 255);
+				},
+				drawRow: function (row, data) {
+					row.height = 80
+				},
+			  
+				useCss: true,
+
+				styles: {
+					fontSize: 8,
+					fontStyle: 'bold',
+					cellWidth: 'auto',
+					textColor: 'black',
+					valign: 'middle',
+					halign: 'left',
+					// columnWidth: 'wrap',
+					fillColor: false,
+					rowHeight: 5, 
+                	cellPadding: 0,
+				},
+				columnStyles: {
+					0: {cellWidth: 15},
+					1: {cellWidth: 2},
+					2: {cellWidth: 15},
+					3: {cellWidth: 15},
+					4: {cellWidth: 2},
+					5: {cellWidth: 15},
+					6: {cellWidth: 15},
+					7: {cellWidth: 2},
+					8: {cellWidth: 15},
+					// etc
+				},
+				
+			});
+			doc.autoTable({
+				head: [headName],
+				body: pdfrowdata,
+				startY: doc.previousAutoTable.finalY + 0.5,
+				tableLineColor: 'black',
+				didDrawPage: function (data) {
+					doc.setFontStyle('bold');
+				},
+				willDrawCell: function (data) {
+					// tslint:disable-next-line:no-shadowed-variable
+					const doc = data.doc;
+					const rows = data.table.body;
+
+					// level 0
+					const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+					if (lfIndex !== -1) {
+						doc.setFontStyle('bold');
+						doc.setFontSize('8');
+						doc.setTextColor('#ffffff');
+						doc.setFillColor(0, 62, 120);
+					}
+
+					// level more than 0
+					const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+					if (lsfIndex !== -1) {
+						doc.setFontStyle('bold');
+						doc.setFontSize('8');
+						doc.setTextColor('#ffffff');
+						doc.setFillColor(229, 136, 67);
+					}
+
+					// group heading
+					const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+					if (lhIndex !== -1) {
+						doc.setFontStyle('bold');
+						doc.setFontSize('8');
+						doc.setTextColor('#5e666d');
+						doc.setFillColor('#c8d6e5');
+					}
+
+					// grand total
+					if (data.row.index === rows.length - 1) {
+						doc.setFontStyle('bold');
+						doc.setFontSize('8');
+						doc.setTextColor('#ffffff');
+						doc.setFillColor(67, 160, 71);
+					}
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
+					fontSize: 8,
+					halign: 'center',
+					lineWidth: 0.1,
+					lineColor: [0, 0, 0],
+					cellPadding: 0.7,
+				},
+				alternateRowStyles: {
+					fillColor: '#f1f4f7'
+				},
+				useCss: true,
+
+				styles: {
+					rowHeight: 7,
+					fontSize: 7,
+					cellWidth: 'auto',
+					textColor: 'black',
+					// lineColor: '#89a8c8',
+					lineWidth: 0.1,
+        			lineColor: [0, 0, 0],
+					valign: 'middle',
+					halign: 'center',
+					columnWidth: 'wrap'
+				},
+				columnStyles: objct,
+
+				// etc
+				theme: 'grid'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				// startY: doc.previousAutoTable.finalY -2,
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 8,
+					
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				startY: doc.previousAutoTable.finalY -2,
+				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+				didDrawPage: function (data) {
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 8,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			if(continuev) {
+				doc.save('Receipt_Ledger_' + this.loginId + ".pdf");
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			if(result.data[0].length == 0) {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			
+		})
+	}
+
+	downloadExcel() {
+
+		let reportType: any = '';
+		const columns: any = [];
+		const columValue: any = ['Rpt. No', 'Rpt. Date', 'Period', 'Mode', 'Bank Name', 'Ch. No/ Txn. No.', 'Drawn on Bank']
+		columns.push({
+			key: 'rpt_receipt_no',
+			width: this.checkWidth('rpt_receipt_no', 'Rpt. No')
+		});
+		columns.push({
+			key: 'rpt_receipt_date',
+			width: this.checkWidth('rpt_receipt_date', 'Rpt. Date')
+		});
+		columns.push({
+			key: 'fp_months',
+			width: this.checkWidth('fp_months', 'Period')
+		});
+		columns.push({
+			key: 'pay_name',
+			width: this.checkWidth('pay_name', 'Mode')
+		});
+		columns.push({
+			key: 'bank_name_1',
+			width: this.checkWidth('bank_name_1', 'Bank Name')
+		});
+		columns.push({
+			key: 'ftr_cheque_no',
+			width: this.checkWidth('ftr_cheque_no', 'Ch. No/ Txn. No.')
+		});
+		columns.push({
+			key: 'ftr_bnk_name',
+			width: this.checkWidth('ftr_bnk_name', 'Drawn on Bank')
+		});
+		let columndefinition = [
+			{
+				id: 'rpt_receipt_no',
+				name: 'Rpt. No'
+			},
+			{
+				id: 'rpt_receipt_date',
+				name: 'Rpt. Date'
+			},
+			{
+				id: 'fp_months',
+				name: 'Period'
+			},
+			{
+				id: 'pay_name',
+				name: 'Mode'
+			},
+			{
+				id: 'bank_name_1',
+				name: 'Bank Name'
+			},
+			{
+				id: 'ftr_cheque_no',
+				name: 'Ch. No/ Txn. No.'
+			},
+			{
+				id: 'ftr_bnk_name',
+				name: 'Drawn on Bank'
+			}
+		];
+
+
+		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
+			if(result.data == "") {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
+				return;
+			}
+			result.data[1].map((element) => {
+				// console.log("i am element", element);
+				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
+					// columns.push(element.fh_name)
+					columns.push({
+						key: element.fh_id,
+						width: this.checkWidth(element.fh_id, element.fh_name)
+					});
+					columndefinition.push({
+						id: element.fh_id,
+						name: element.fh_name
+					});
+					columValue.push(element.fh_name)
+				}
+
+			});
+
+			columns.push({
+				key: 'late_fine_amt',
+				width: this.checkWidth('late_fine_amt', 'Fine')
+			});
+			// columns.push({
+			// 	key: 'short_access',
+			// 	width: this.checkWidth('short_access', 'Short in Access')
+			// });
+			columns.push({
+				key: 'rpt_net_amount',
+				width: this.checkWidth('rpt_net_amount', 'Total')
+			});
+			columndefinition.push(
+				{
+					id: 'late_fine_amt',
+					name: 'Fine'
+				}
+			);
+			// columndefinition.push({
+			// 	id: 'short_access',
+			// 	name: 'Short in Access'
+			// });
+			columndefinition.push({
+				id: 'rpt_net_amount',
+				name: 'Total'
+			});
+			columValue.push('Fine',);
+			columValue.push('Total');
+
+			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );
+			const fileName = new TitleCasePipe().transform('Receipt ledger_: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no) + '.xlsx';
+			const workbook = new Excel.Workbook();
+			console.log("i am column ", columns.length, Math.floor(columns.length / 2), this.alphabetJSON[Math.floor(columns.length / 2) + 1]);
+
+			const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+				{ pageSetup: { fitToWidth: 7 } });
+			worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
+			worksheet.getCell('A1').value =
+				new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+
+			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+			worksheet.getCell('A2').value = reportType;
+			worksheet.mergeCells('A3:' + this.alphabetJSON[4] + '3');
+			worksheet.getCell('A3').value = `Admission Number:  ${result.data[0][0].au_admission_no}`;
+			worksheet.mergeCells(`${this.alphabetJSON[5]}3:` + this.alphabetJSON[columns.length] + '3');
+			worksheet.getCell(`${this.alphabetJSON[5]}3`).value = `Active Parent: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name}`;
+			worksheet.mergeCells('A4:' + this.alphabetJSON[4] + '4');
+			worksheet.getCell('A4').value = `Class: ${result.data[0][0].class_name} - ${result.data[0][0].sec_name}`;
+			worksheet.mergeCells(`${this.alphabetJSON[5]}4:` + this.alphabetJSON[columns.length] + '4');
+			worksheet.getCell(`${this.alphabetJSON[5]}4`).value = `Active Parent no: ${this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no}`;
+			worksheet.mergeCells('A5:' + this.alphabetJSON[Math.floor(columns.length)] + '5');
+			worksheet.getCell('A5').value = `Student Name: ${result.data[0][0].au_full_name}`;
+
+			worksheet.getRow(6).values = columValue;
+			worksheet.columns = columns;
+			// for(let i = 0; i < columValue.length; i++) {
+			// 	if(i < 7) {
+			// 		alast.push('');
+			// 	}
+			// 	else{
+			// 		alast.push(0);
+			// 	}
+
+			// }
+			
+			console.log("i am col def", columndefinition);
+
+			let arr = [];
+			let obj2: any = {};
+			for(let i = 0; i < columndefinition.length; i++) {
+				obj2[`${columndefinition[i].id}`] = ''
+			}
+
+			obj2.ftr_bnk_name = 'Grand Total';
+			let continuev = false;
+			result.data[0].map(element => {
+				if(element.rpt_receipt_no) {
+					continuev = true;
+				}
+				
+			})
+			result.data[0].map((element) => {
+				let obj: any = {}
+				let bank_name_1 = '';
+				let bank_name = this.bankArray.filter((e) => {
+
+					if (e.bnk_gid == element.ftr_deposit_bnk_id)
+						return true
+				})
+				if (bank_name && bank_name.length > 0) {
+					bank_name_1 = bank_name[0].bank_name;
+				}
+				let a = [];
+				let amt = [];
+				let at_val = false;
+				let main = false;
+				arr.filter((e) => {
+					if (e.rpt_receipt_no == element.rpt_receipt_no) {
+						main = true;
+					}
+				})
+				if (!main) {
+					obj.rpt_receipt_no = element.rpt_receipt_no;
+					obj.rpt_receipt_date = (new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
+					obj.fp_months = (element.fp_months[0]) ? element.fp_months[0]: '-';
+					obj.pay_name = (element.pay_name);
+					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1: '-';
+					obj.ftr_cheque_no = (element.ftr_cheque_no) ? element.ftr_cheque_no : '-';
+					obj.late_fine_amt = (element.late_fine_amt ? element.late_fine_amt: 0);	
+					obj.rpt_net_amount = (element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+
+					obj.ftr_bnk_name = (element.ftr_bnk_name);
+					for (let i = 0; i < columValue.length - 9; i++) {
+						let da = element.invoice_bifurcation.filter((e) => {
+							if (parseInt(result.data[1][i].fh_id) == parseInt(e.invg_fh_id))
+								return true;
+						});
+
+
+						if (da && da.length > 0) {
+							amt = arr.filter((e) => {
+								if (e.inv_id == element.inv_id) {
+									return true
+								}
+							});
+							amt.filter((e) => {
+								e.invoice_bifurcation.filter((ch) => {
+									if (ch.invg_fh_id == da[0].invg_fh_id) {
+										at_val = true
+									}
+								})
+							})
+							obj[`${da[0].invg_fh_id}`] = (!at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
+
+							if (element.rpt_receipt_no)
+							{
+								if(!obj2[`${da[0].invg_fh_id}`] || obj2[`${da[0].invg_fh_id}`] == '') {
+									obj2[`${da[0].invg_fh_id}`] = 0
+								}
+								obj2[`${da[0].invg_fh_id}`] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : 0;
+							}
+								
+						}
+
+
+					}
+					
+
+
+					if (element.rpt_receipt_no) {
+						if(!obj2.late_fine_amt || obj2.late_fine_amt == '') {
+							obj2.late_fine_amt = 0
+						}
+						if(!obj2.rpt_net_amount || obj2.rpt_net_amount == '') {
+							obj2.rpt_net_amount = 0
+						}
+						obj2.late_fine_amt += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
+						obj2.rpt_net_amount += parseInt(element.rpt_net_amount ? (element.rpt_net_amount) : 0);
+						console.log(obj, ' -----------------------------------------------', element.late_fine_amt, element.rpt_net_amount);
+
+						worksheet.addRow(obj);
+					}
+
+
+					arr.push(element);
+				}
+
+			})
+
+
+			worksheet.addRow(obj2);
+
+			worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+				columndefinition.forEach(element => {
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.alignment = { wrapText: true, horizontal: 'center' };
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '439f47' },
+						bgColor: { argb: '439f47' }
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+				});
+			});
+			// style all row of excel
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+					row.eachCell((cell) => {
+						cell.alignment = { horizontal: 'center', wrapText: true };
+					})
+				} else if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+					row.eachCell((cell) => {
+						cell.alignment = { horizontal: 'center', wrapText: true };
+					})
+				} else if (rowNum === 4 || rowNum === 3 || rowNum === 5) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'left', wrapText: true };
+					});
+				} else if (rowNum > 5 && rowNum < worksheet._rows.length) {
+					// const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+					if (1 == 1) {
+						row.eachCell((cell) => {
+							cell.font = {
+								name: 'Arial',
+								size: 10,
+							};
+							cell.alignment = { wrapText: true, horizontal: 'center' };
+						});
+						if (rowNum % 2 === 0) {
+							row.eachCell((cell) => {
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						} else {
+							row.eachCell((cell) => {
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						}
+
+					}
+				}
+				row.defaultRowHeight = 24;
+			});
+			worksheet.columns.forEach(column => {
+				column.width = 15
+			  })
+			console.log(continuev);
+			
+			if(continuev) {
+				workbook.xlsx.writeBuffer().then(data => {
+					const blob = new Blob([data], { type: 'application/octet-stream' });
+					saveAs(blob, fileName);
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
+			}
+			
+		});
+
 	}
 	// get session year of the selected session
 	getSession() {
@@ -283,51 +1131,51 @@ export class MissingInvoiceComponent implements OnInit {
 						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
 						colorCode: item.color_code ? item.color_code : '',
 						// bank: item.tb_name ? item.tb_name : '-',
-						netpayableamount: item.flgr_particulars === 'Ad-Hoc Payment' ? '0' : ( item.net_payable_amount ? item.net_payable_amount : '0'),
+						netpayableamount: item.flgr_particulars === 'Ad-Hoc Payment' ? '0' : (item.net_payable_amount ? item.net_payable_amount : '0'),
 						eachActionFlag: tempactionFlag,
 						action: item,
 						flgr_payment_mode: item.flgr_payment_mode ? item.flgr_payment_mode : ''
 					};
-					
+
 					console.log('element--', element);
 					// console.log('dupInvoiceArr--',dupInvoiceArr);
 					// console.log('element.invoiceno--',element.invoiceno);
 					// console.log('dupInvoiceArr.indexOf(element.invoiceno)-',dupInvoiceArr.indexOf(element.invoiceno));
-					
-					
-					if(element.flgr_payment_mode === 'partial') {
+
+
+					if (element.flgr_payment_mode === 'partial') {
 						element['balance'] = this.getPartialInvoiceLastBalance(dupInvoiceArr, element.invoiceno);
-						console.log("element['flgr_balance']",element['balance']);
+						console.log("element['flgr_balance']", element['balance']);
 					}
 
-					if((dupInvoiceArr.indexOf(element.invoiceno) < 0) || item.flgr_inv_id === "0" ){
-						dupInvoiceArr.push(element.invoiceno);												
+					if ((dupInvoiceArr.indexOf(element.invoiceno) < 0) || item.flgr_inv_id === "0") {
+						dupInvoiceArr.push(element.invoiceno);
 						this.footerRecord.feeduetotal += Number(element.amount);
 						this.footerRecord.concessiontotal += Number(element.concession);
-						this.footerRecord.adjustmenttotal += Number(element.adjustment);					
+						this.footerRecord.adjustmenttotal += Number(element.adjustment);
 						this.footerRecord.netpayabletotal += Number(element.netpayableamount);
 						this.footerRecord.finetotal += Number(element.fine);
 						this.footerRecord.balancetotal += Number(element.balance);
-					} 
+					}
 
-					
-					
-					
+
+
+
 					if (item.ftr_status !== "2") {
 						this.footerRecord.receipttotal += Number(element.reciept);
 					}
-					
+
 
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
-					
-					
+
+
 					//console.log(this.FEE_LEDGER_ELEMENT);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				//this.feeRenderId = '';
-				console.log('this.FEE_LEDGER_ELEMENT',this.FEE_LEDGER_ELEMENT);
-				
+				console.log('this.FEE_LEDGER_ELEMENT', this.FEE_LEDGER_ELEMENT);
+
 				this.cacheSpan('select', d => d.select);
 				this.cacheSpan('feeperiod', d => d.feeperiod[0]);
 				this.cacheSpan('invoiceno', d => d.invoiceno);
@@ -340,8 +1188,8 @@ export class MissingInvoiceComponent implements OnInit {
 				this.cacheSpan('fine', d => d.fine);
 				this.cacheSpan('netpayableamount', d => d.netpayableamount);
 				this.cacheSpan('balance', d => d.balance);
-				
-				
+
+
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -350,26 +1198,26 @@ export class MissingInvoiceComponent implements OnInit {
 
 	getPartialInvoiceLastBalance(dupInvoiceArr, invoice_no) {
 		var tempArr = [];
-		var pgStatus =0;
-		
+		var pgStatus = 0;
+
 		//this.recordArray.sort( function ( a, b ) { return b.flgr_id - a.flgr_id; } );
-		console.log('recordArray--',this.recordArray);
+		console.log('recordArray--', this.recordArray);
 		var partialLedgerArr = [];
-		for (let i=0; i<this.recordArray.length;i++) {
-			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
+		for (let i = 0; i < this.recordArray.length; i++) {
+			if (this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
 				partialLedgerArr.push(this.recordArray[i]);
 
 				tempArr.push(this.recordArray[i]['flgr_balance']);
 				//console.log('this.recordArray[i]', this.recordArray[i]);
-				if(this.recordArray[i]['ftr_pay_id'] === "6") {
+				if (this.recordArray[i]['ftr_pay_id'] === "6") {
 					pgStatus = 1;
-				} 
+				}
 			}
-			
+
 		}
-		partialLedgerArr.sort( function ( a, b ) { return b.flgr_id - a.flgr_id; } );
-		 console.log('tempArr--',tempArr.reverse(),pgStatus, partialLedgerArr);
-		return pgStatus ?  tempArr[0] : partialLedgerArr[0]['flgr_balance'];
+		partialLedgerArr.sort(function (a, b) { return b.flgr_id - a.flgr_id; });
+		console.log('tempArr--', tempArr.reverse(), pgStatus, partialLedgerArr);
+		return pgStatus ? tempArr[0] : partialLedgerArr[0]['flgr_balance'];
 	}
 
 	getRowSpan(col, index) {
@@ -472,7 +1320,7 @@ export class MissingInvoiceComponent implements OnInit {
 			key: 'remarks',
 			width: this.checkWidth('remarks', 'Remarks')
 		});
-		reportType = new TitleCasePipe().transform('Fee_ledger_report: ' + this.sessionName+'_'+this.commonStudentProfileComponent.studentdetails.au_full_name+'_'+this.commonStudentProfileComponent.studentdetails.em_admission_no);
+		reportType = new TitleCasePipe().transform('Fee_ledger_report: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no);
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -763,7 +1611,7 @@ export class MissingInvoiceComponent implements OnInit {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: item.flgr_inv_id,
+				invoiceNo: item.flgr_inv_id ? item.flgr_inv_id : item.inv_id,
 				edit: edit,
 				paidStatus: item.inv_paid_status,
 				fromModel: true
@@ -791,6 +1639,7 @@ export class MissingInvoiceComponent implements OnInit {
 			dialogRef.afterClosed().subscribe(result => {
 				if (result.status === '1') {
 					this.getFeeLedger(this.loginId);
+					this.getDataofMissingInvoice();
 				}
 			});
 		}
@@ -862,7 +1711,7 @@ export class MissingInvoiceComponent implements OnInit {
 				receiptmodification: true
 			};
 		}
-		
+
 		if (this.selection.selected.length > 0) {
 			this.selection.selected.forEach(item => {
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
@@ -879,12 +1728,12 @@ export class MissingInvoiceComponent implements OnInit {
 					tempactionFlag.edit = false;
 				} else {
 					tempactionFlag.edit = tempactionFlag.edit && item.eachActionFlag.edit && this.selection.selected.length === 1;
-				}					
+				}
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.recalculate = false;
 				} else {
-					tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0 ;
-				}	
+					tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0;
+				}
 				if (this.selection.selected.length > 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.attach = false;
 				} else {
@@ -909,14 +1758,14 @@ export class MissingInvoiceComponent implements OnInit {
 					tempactionFlag.receiptmodification = false;
 				} else {
 					tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
-				}			
-					
-				
-				
-				
-				
+				}
+
+
+
+
+
 				// tslint:disable-next-line:max-line-length
-				
+
 
 			});
 			this.actionFlag = tempactionFlag;
@@ -1021,7 +1870,7 @@ export class MissingInvoiceComponent implements OnInit {
 		this.feeService.recalculateInvoice(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.feeRenderId = '';				
+				this.feeRenderId = '';
 				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 				this.getFeeLedger(this.loginId);
 			} else {
@@ -1115,8 +1964,8 @@ export class MissingInvoiceComponent implements OnInit {
 	}
 
 	getShowMore(i) {
-		console.log(i,this.FEE_LEDGER_ELEMENT);
-		console.log('this.dataSource[i]',this.FEE_LEDGER_ELEMENT[i]);
+		console.log(i, this.FEE_LEDGER_ELEMENT);
+		console.log('this.dataSource[i]', this.FEE_LEDGER_ELEMENT[i]);
 		this.FEE_LEDGER_ELEMENT[i]['showMore'] = true;
 	}
 
@@ -1133,10 +1982,16 @@ export class MissingInvoiceComponent implements OnInit {
 		this.datasource = [];
 		this.feeService.getMissingInvoiceDetails({ au_login_id: this.loginId, process_type: this.process_type }).subscribe(
 			(res: any) => {
-				if (res) {
+				// console.log("i am res", res);
+
+				if (res.status == 'error') {
+					this.datasource = [];
+				}
+				else if (res) {
 					this.datasource = res
 				}
 				else {
+					this.datasource = [];
 					// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
 				}
 			}
@@ -1206,7 +2061,8 @@ export class MissingInvoiceComponent implements OnInit {
 				this.feeService.getMissingInvoiceDetails({ au_login_id: this.loginId, process_type: this.process_type }).subscribe(
 					(res: any) => {
 						if (res) {
-							this.datasource = res
+							this.datasource = res;
+							this.getFeeLedger(this.loginId);
 						}
 						else {
 							// this.commonAPIService.showSuccessErrorMessage('No Data Fetchecd', 'error');
