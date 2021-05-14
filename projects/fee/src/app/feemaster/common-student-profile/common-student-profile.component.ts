@@ -226,6 +226,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
+							this.concess_new = "";
+							this.concess_extra = [];
 							this.userConcessionArray = this.studentdetails.concession;
 							if(this.userConcessionArray && this.userConcessionArray.length > 0) {
 								this.userConcessionArray.forEach(element => {
