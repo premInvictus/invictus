@@ -811,12 +811,13 @@ export class FeeconReportComponent implements OnInit {
 									obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
 									tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
 									obj['total'] = tot;
-									obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? (repoArray[Number(keys)]['approved_by']).substring(1) : '-';
+									obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? ((repoArray[Number(keys)]['approved_by']).charAt(0) == "," ? (repoArray[Number(keys)]['approved_by']).substring(1) : (repoArray[Number(keys)]['approved_by'])) : '-';
 									obj['mod_review_date'] = repoArray[Number(keys)]['adjustment_date'] ? repoArray[Number(keys)]['adjustment_date'] : '-';
 									obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
 									obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
 									k++;
 								});
+								
 							}
 						}
 						i++;

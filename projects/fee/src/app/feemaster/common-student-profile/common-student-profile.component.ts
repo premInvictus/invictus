@@ -134,7 +134,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.getConGroup();
 		console.log("i am this ", this.feeRenderId);
 		
-		this.getConcessionPerUser(this.loginId);
 		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
 			this.processType = this.studentRouteMoveStoreService.getProcesRouteType();
 		} else {
@@ -174,7 +173,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		let floginID = this.loginId ? this.loginId : (this.feeRenderId ? this.feeRenderId : '');
 		this.getStudentInformation(floginID);
 
-		this.getConcessionPerUser(floginID );
 		// document.getElementById('blur_id').focus();
 		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
 		fe.focus();
@@ -186,48 +184,11 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			if (result && result.status === 'ok') {
 				this.conGroupArray = result.data;
 
-				this.getConcessionPerUser(this.loginId);
+				
 			}
 		});
 	}
-	getConcessionPerUser(feeRenderId) {
-		console.log("i am feeRenderId", feeRenderId);
-		
-		
-		this.sisService.getConcessionPerUser({au_login_id: feeRenderId}).subscribe((res:any) => {
-			if(res) {
-				if(res.data.length > 0) {
-					this.userConcessionArray = res.data;
-				}
-				
-				this.userConcessionArray.forEach(element => {
-					if(this.concess_new == "") {
-						console.log("----------------------------", element.tucc_fcg_id);
-						
-						let name = this.conGroupArray.filter(e => {
-							if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
-								this.concess_new = e.fcg_name
-							}
-						});
-						console.log("i am name here", name);
-						
-						
-						
-					} else {
-						
-							this.conGroupArray.filter(e => {
-								if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
-									this.concess_extra.push(e.fcg_name)
-								}
-							}) 
-						
-					}
-					
-				});
-				
-			}
-		})
-	}
+	
 
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
@@ -265,7 +226,26 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
-							this.getConcessionPerUser(this.studentdetails.au_login_id)
+							this.userConcessionArray = this.studentdetails.concession;
+							if(this.userConcessionArray && this.userConcessionArray.length > 0) {
+								this.userConcessionArray.forEach(element => {
+									if(this.concess_new == "") {
+										let name = this.conGroupArray.filter(e => {
+											if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
+												this.concess_new = e.fcg_name
+											}
+										});
+									} else {
+										this.conGroupArray.filter(e => {
+											if(parseInt(element.tucc_fcg_id) === parseInt(e.fcg_id)) {
+												this.concess_extra.push(e.fcg_name)
+											}
+										}) 
+										
+									}
+									
+								});
+							}
 							this.gender = this.studentdetails.au_gender;
 							if (this.gender === 'M') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
