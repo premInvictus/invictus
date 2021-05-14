@@ -59,6 +59,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	enrolmentPlaceholder = 'Enrollment Id';
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
+	checkimageonce = "";
 	lastRecordId;
 	classPlaceHolder: any;
 	gender: any;
@@ -591,6 +592,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 						} else {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 						}
+						this.checkimageonce = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=100&w=100';
 					}
 					if (result && result.data && result.data[0].navigation[0]) {
 						this.navigation_record = result.data[0].navigation[0];
@@ -639,6 +641,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 							this.previousB = false;
 						}
 					}
+					this.checkimageonce = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=100&w=100';
 					const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 					inputElem.select();
 
@@ -679,7 +682,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		}
 		this.studentdetailsform.patchValue({
 			au_profileimage: this.defaultsrc
-		})
+		});
+		this.checkimageonce = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=100&w=100'
 	}
 
 	patchStudentDetails() {
@@ -726,6 +730,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 							}
 						});
 					}
+					this.checkimageonce = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=100&w=100';
 				}
 			});
 	}
