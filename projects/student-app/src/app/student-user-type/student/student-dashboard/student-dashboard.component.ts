@@ -740,6 +740,10 @@ export class StudentDashboardComponent implements OnInit {
 				ZoomMtg.init({
 					leaveUrl: window.location.href,
 					isSupportAV: true,
+					meetingInfo: [
+						'topic',
+						'host',
+					  ],
 					success: (success) => {
 						console.log(success, signature);
 

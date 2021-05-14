@@ -311,6 +311,10 @@ export class TeacherTimetableComponent implements OnInit {
 				isLockBottom: true, // optional,
 				isSupportNonverbal: true, // optional,
 				isShowJoiningErrorDialog: true, 
+				meetingInfo: [
+					'topic',
+					'host',
+				  ],
 				success: (success) => {
 				  console.log(success, signature);
 		  
