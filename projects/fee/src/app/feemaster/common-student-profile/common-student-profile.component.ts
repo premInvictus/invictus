@@ -105,6 +105,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	class_sec: any;
 	gender: any;
 	concess_new = '';
+	createonlyfly="";
 	concess_extra:any[] = [];
 	userConcessionArray:any[] = [];
 	showWalletLedger=true;
@@ -256,6 +257,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 							} else {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 							}
+							this.createonlyfly = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=80&w=80';
 							this.class_name = this.studentdetails.class_name;
 							this.section_name = this.studentdetails.sec_name;
 							if (this.section_name !== ' ') {
@@ -458,6 +460,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 							this.studentdetails.au_profileimage !== ''
 								? this.studentdetails.au_profileimage
 								: this.defaultsrc;
+						this.createonlyfly = 'https://apisis.invictusdigisoft.com/createonfly.php?src=' + this.defaultsrc + '&h=80&w=80';
+
 						if (this.navigation_record) {
 							this.viewOnly = true;
 							if (
