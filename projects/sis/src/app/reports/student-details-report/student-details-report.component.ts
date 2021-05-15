@@ -1145,15 +1145,16 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	prepareDataSource(process_type) {
 		let counter = 1;
 		const total = 0;
-		if(process_type == '1'|| process_type == '2' || process_type == '4')
+		if((process_type == '1'|| process_type == '2' || process_type == '4') && this.columnDefinitions.length < 34)
 		{
 			this.columnDefinitions.push(
 				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true },
 				{ id: 'au_status', name: 'Status', field: 'au_status', sortable: true, filterable: true }
 			)
-		} else {
-			this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
 		}
+		// } else {
+		// 	this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
+		// }
 		for (let i = 0; i < Object.keys(this.reportProcessWiseData).length; i++) {
 			const tempObj = {};
 			const key = Object.keys(this.reportProcessWiseData)[i];

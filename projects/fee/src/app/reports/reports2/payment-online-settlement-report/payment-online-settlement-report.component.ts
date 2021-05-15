@@ -233,11 +233,13 @@ export class PaymentOnlineSettlementReportComponent implements OnInit {
 		}
 	}
 	buildForm() {
+		let date = new Date();
+		let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
 			'fee_value': '',
-			'from_date': '',
-			'to_date': '',
+			'from_date': firstDay,
+			'to_date': date,
 			'downloadAll': '',
 			'hidden_value': '',
 			'hidden_value2': '',
