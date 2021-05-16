@@ -655,7 +655,7 @@ export class FeestrucReportComponent implements OnInit {
 							Object.keys(this.dataset).forEach(key3 => {
 								Object.keys(this.dataset[key3]).forEach(key4 => {
 									if (key4 === key2) {
-										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2] ? t[key2]: 0).reduce((acc, val) => acc + val, 0));
 									}
 								});
 							});
