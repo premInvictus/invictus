@@ -15,6 +15,8 @@ import { PreviewDocumentComponent } from '../../smart-shared/preview-document/pr
 })
 export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 
+	page = 'assignment';
+	currentAssignment={};
 	paramForm: FormGroup;
 	classArray: any[] = [];
 	subjectArray: any[] = [];
@@ -337,6 +339,17 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	changePage(pageEvent: PageEvent) {
 		//console.log(pageEvent);
 		// this.paginator.length = 100;
+	}
+	viewAssignment(item){
+		console.log('item',item);
+		item.param_sec_id = item.sec_id[0];
+		item.param_class_id = this.paramForm.value.class_id;
+		this.page = 'view assignment';
+		this.currentAssignment = item;
+	}
+	loadPage($event){
+		console.log('$event',$event);
+		this.page = $event.page
 	}
 
 }

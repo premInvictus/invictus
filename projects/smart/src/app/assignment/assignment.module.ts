@@ -6,6 +6,7 @@ import { LoadingModule } from 'ngx-loading';
 import { SmartSharedModule } from '../smart-shared/smart-shared.module';
 import { AssignmentReviewComponent } from './assignment-review/assignment-review.component';
 import { PastAssignmentsComponent } from './past-assignments/past-assignments.component';
+import { ViewAsssignmentComponent } from './view-asssignment/view-asssignment.component';
 
 @NgModule({
 	imports: [
@@ -14,7 +15,7 @@ import { PastAssignmentsComponent } from './past-assignments/past-assignments.co
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [AssignmentReviewComponent, PastAssignmentsComponent],
+	declarations: [AssignmentReviewComponent, PastAssignmentsComponent, ViewAsssignmentComponent],
 	entryComponents: []
 })
 export class AssignmentModule { }

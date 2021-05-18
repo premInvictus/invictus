@@ -837,6 +837,14 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getUserAttendance', value);
 	}
+	insertAssignmentSubmit(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/insertAssignmentSubmit', value);
+	}
+	getAssignmentSubmit(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignmentSubmit', value);
+	}
 
 }
 
