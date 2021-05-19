@@ -44,7 +44,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="reportType !== 'feedue'" class="col-2">
+        <div *ngIf="reportType !== 'feedue' && reportType !== 'headwise' && reportType !== 'headwisedetail' &&  reportType !== 'aging' &&  reportType !== 'aging_detail' " class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>
                     <span *ngIf="reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' &&  reportType !== 'aging' &&  reportType !== 'aging_detail'">From Date</span>
@@ -74,9 +74,10 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && (reportType !== 'feedue' && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
+        <div *ngIf="filterFlag && (reportType !== 'feedue' && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' )" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
-                <mat-label>To Date</mat-label>
+                <mat-label *ngIf="reportType !== 'aging' &&  reportType !== 'aging_detail'">To Date</mat-label>
+                <mat-label *ngIf="reportType == 'aging' ||  reportType == 'aging_detail'">Current Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
                     (blur)="getToDate($event.target.value)" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
