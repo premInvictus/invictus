@@ -3044,7 +3044,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['ltm'] = Number(item.resultData.ltm.total_fee_amount);
 							obj['m13'] = Number(item.resultData.m13.total_fee_amount);
 							obj['m3'] = Number(item.resultData.m3.total_fee_amount);
-							obj['total'] = Number(item.resultData.ltm.total_fee_amount) + Number(item.resultData.m13.total_fee_amount) + Number(item.resultData.m3.total_fee_amount);
+							obj['total'] = total;
+							//Number(item.resultData.ltm.total_fee_amount) + Number(item.resultData.m13.total_fee_amount) + Number(item.resultData.m3.total_fee_amount);
 							this.dataset.push(obj);
 							index++;
 						}
