@@ -6,7 +6,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { Element,AssignmentModel } from './assignment-review.model';
-import { PreviewDocumentComponent } from '../../smart-shared/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
 import * as XLSX from 'xlsx';
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
@@ -35,7 +35,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	ELEMENT_DATA: Element[] = [];
 	dataArr: any[] = [];
 	sessionArray: any[] = [];
-	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'assignedby', 'publishedby', 'attachment','entrydate'];
+	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'attachment', 'entrydate'];
 	dataSource1 = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA1);
 	displayedColumns = ['srno', 'admission_no', 'name', 'entrydate', 'attachment', 'sas_obtained_marks'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -181,24 +181,23 @@ export class ViewAsssignmentComponent implements OnInit {
 			sec_id: this.currentAssignment.param_sec_id,
 		});
 		this.classArray = [];
-		this.smartService.getClassData({ class_status: '1' }).subscribe((result: any) => {
+		this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 				this.getSectionsByClass();
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
 
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.smartService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSectionByTeacherIdClassId({
+			teacher_id: this.currentUser.login_id,
+			class_id: this.paramForm.value.class_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
 				this.getMasterStudentDetail();
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
