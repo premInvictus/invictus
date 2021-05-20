@@ -57,15 +57,15 @@
                             <th mat-header-cell *matHeaderCellDef width="25%"> Topic </th>
                             <td mat-cell *matCellDef="let element"> {{element.topic | capitalize}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="assignment" width="25%">
-                            <th mat-header-cell *matHeaderCellDef> Assignment </th>
+                        <ng-container matColumnDef="assignment" >
+                            <th mat-header-cell *matHeaderCellDef width="25%"> Assignment </th>
                             <td mat-cell *matCellDef="let element">
                                 <div [innerHtml]="element.assignment | capitalize | truncatetext:100"></div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="entrydate">
-                            <th mat-header-cell *matHeaderCellDef> Assigned On</th>
-                            <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
+                            <th mat-header-cell *matHeaderCellDef width="8%"> Assigned On</th>
+                            <td mat-cell *matCellDef="let element" > {{element.entryDate | date: 'd-MMM-y'}} </td>
                         </ng-container>
                         <ng-container matColumnDef="assignedby">
                             <th mat-header-cell *matHeaderCellDef> Assigned By </th>
@@ -128,8 +128,8 @@
                           <td mat-cell *matCellDef="let element"> {{element.class | uppercase}} </td>
                       </ng-container>
                       <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef width="25%"> Name </th>
-                          <td mat-cell *matCellDef="let element"> {{element.name | capitalize}} </td>
+                          <th mat-header-cell *matHeaderCellDef width="25%" > Name </th>
+                          <td mat-cell *matCellDef="let element" class="text-left"> {{element.name | capitalize}} </td>
                       </ng-container>
                       <ng-container matColumnDef="admission_no">
                           <th mat-header-cell *matHeaderCellDef width="10%"> Adm No</th>
@@ -140,7 +140,7 @@
                           <td mat-cell *matCellDef="let element"> {{element.entrydate | date: 'd-MMM-y'}} </td>
                       </ng-container>
                       <ng-container matColumnDef="attachment">
-                        <th mat-header-cell *matHeaderCellDef width="10%" class="text-center"> Attachment </th>
+                        <th mat-header-cell *matHeaderCellDef width="10%"> Attachment </th>
                         <td mat-cell *matCellDef="let element"> <button *ngIf="element.attachment?.length > 0" mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.attachment)"><span
                         class="font-white font-size-16">{{element.attachment.length | zerodash}}</span></button></td>
                       </ng-container>

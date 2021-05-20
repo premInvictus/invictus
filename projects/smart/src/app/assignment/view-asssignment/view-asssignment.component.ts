@@ -37,7 +37,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	sessionArray: any[] = [];
 	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'assignedby', 'publishedby', 'attachment','entrydate'];
 	dataSource1 = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA1);
-	displayedColumns = ['srno', 'admission_no', 'name', 'entrydate', 'attachment', 'sas_obtained_marks'];
+	displayedColumns = ['srno', 'admission_no', 'name', 'attachment', 'sas_obtained_marks','entrydate'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild(MatPaginator) paginator: MatPaginator;

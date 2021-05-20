@@ -40,7 +40,7 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
     position: relative;
     top: 10px;
 }
-td:nth-child(1) {
+/* td:nth-child(1) {
     width: 25px;
 }
 td:nth-child(3) {
@@ -52,9 +52,9 @@ td:nth-child(4) {
     padding-left: 10px !important;
 }
 td:nth-child(5) {
-    /* text-align: left !important; */
+    text-align: left !important;
     padding-left: 10px !important;
-}
+} */
 .no-records {
     border-bottom: 1px solid #89A8C9;
     border-left: 1px solid #89A8C9;
@@ -70,4 +70,8 @@ td:nth-child(5) {
 .total_count{
     font-size: 18px;
     color: #333;
+}
+.text-left{
+   text-align: left !important;
+   padding-left: 10px;
 }
