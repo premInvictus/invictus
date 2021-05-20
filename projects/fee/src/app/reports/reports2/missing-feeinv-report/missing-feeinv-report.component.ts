@@ -806,8 +806,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 			filterArr.push(this.filteredAs[key]);
 		});
 		filterArr.push(
-			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
-			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+			(this.reportFilterForm.value.from_date ? this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') : '') + ' - ' +
+			(this.reportFilterForm.value.to_date ? this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'): ''));
 		return filterArr;
 	}
 	exportToExcel(json: any[]) {
@@ -1256,6 +1256,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 						|| item2.id === 'rpt_receipt_date') {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else if (item2.id === 'fp_name') {
+						arr.push(this.getFeePeriodFormat(this.dataset[key][item2.id]));
 					} else {
 						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}

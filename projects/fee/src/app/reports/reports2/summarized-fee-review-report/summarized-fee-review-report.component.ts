@@ -357,6 +357,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			// 		aggregateCollapsed: true,
 			// 		collapsed: false,
 			// 	},
+			// 'au_enrollment_status':'',
 			// },
 			{
 				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
@@ -394,6 +395,18 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				sortable: true,
 				filterable: true,
 				
+			},
+			{
+				id: 'au_enrollment_status', name: 'Enrollment Status', field: 'au_enrollment_status', filterable: true, width: 6,
+				grouping: {
+					getter: 'au_enrollment_status',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
 			},
 			{
 				id: 'opening_advances',
@@ -493,7 +506,8 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 					}
-					
+					obj['au_enrollment_status'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_enrollment_status']);
+
 					this.dataset.push(obj);
 					index++;
 				}
@@ -803,6 +817,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				arr.push(key['stu_full_name']);
 				arr.push(key['stu_class_name']);
 				arr.push(key['opening_outstanding']);
+				arr.push(key['au_enrollment_status']);
 				arr.push(key['opening_advances']);
 				arr.push(key['due_for_period']);
 				arr.push(key['total_receivables']);
@@ -817,9 +832,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			let arr = [];
 			arr.push(this.totalRow['srno']);
 			arr.push(this.totalRow['stu_admission_no']);
+			// arr.push(key['au_enrollment_status']);
 			arr.push(this.totalRow['stu_full_name']);
 			arr.push(this.totalRow['stu_class_name']);
 			arr.push(this.totalRow['opening_outstanding']);
+
+			arr.push('');
 			arr.push(this.totalRow['opening_advances']);
 			arr.push(this.totalRow['due_for_period']);
 			arr.push(this.totalRow['total_receivables']);

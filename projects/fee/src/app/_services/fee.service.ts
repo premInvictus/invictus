@@ -547,9 +547,12 @@ export class FeeService {
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addMultipleCheckControlTool', value);
 	}
 	getClassWiseMonthWiseSeperation(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperation', value);
 	}
 	getClassWiseMonthWiseSeperationDetail(value) {
+
+		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperationDetail', value);
 	}
 	insertHostelConfig(value) {
