@@ -495,6 +495,14 @@ export class SmartService {
 	getTeachers() {
 		return this.http.get(environment.apiSmartUrl + '/smttimetable/getTeachers');
 	}
+	getAssignmentSubmit(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignmentSubmit', value);
+	}
+	updateAssignmentSubmitMarks(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/updateAssignmentSubmitMarks', value);
+	}
 
 }
 

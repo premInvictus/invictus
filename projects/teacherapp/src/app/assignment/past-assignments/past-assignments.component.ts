@@ -22,6 +22,8 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 })
 export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 
+	page = 'assignment';
+	currentAssignment={};
 	paramForm: FormGroup;
 	classArray: any[] = [];
 	subjectArray: any[] = [];
@@ -31,7 +33,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	ELEMENT_DATA: AssignmentModel[] = [];
 	dataArr: any[] = [];
 	sessionArray: any[] = [];
-	displayedColumns = ['srno', 'class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'publishedby', 'attachment'];
+	displayedColumns = ['srno', 'class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'publishedby', 'attachment','action'];
 	dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild('deleteModalRef') deleteModalRef;
@@ -496,6 +498,21 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 			theme: 'grid'
 		});
 		doc.save('table.pdf');
+	}
+	viewAssignment(item){
+		console.log('item',item);
+		if(this.paramForm.value.sec_id){
+			item.param_sec_id = this.paramForm.value.sec_id;
+		} else {
+			item.param_sec_id = item.sec_id[0];
+		}
+		item.param_class_id = this.paramForm.value.class_id;
+		this.page = 'view assignment';
+		this.currentAssignment = item;
+	}
+	loadPage($event){
+		console.log('$event',$event);
+		this.page = $event.page
 	}
 
 
