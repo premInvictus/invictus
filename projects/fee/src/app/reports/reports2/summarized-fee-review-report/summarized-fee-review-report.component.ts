@@ -392,15 +392,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'opening_outstanding',
-				name: 'Opening Outstanding',
-				field: 'opening_outstanding',
-				sortable: true,
-				filterable: true,
-				
-			},
-			{
-				id: 'au_enrollment_status', name: 'Enrollment Status', field: 'au_enrollment_status', filterable: true, width: 6,
+				id: 'au_enrollment_status', 
+				name: 'Enrollment Status', 
+				field: 'au_enrollment_status',
+				 filterable: true, 
+				 width: 6,
+				 sortable: true,
 				grouping: {
 					getter: 'au_enrollment_status',
 					formatter: (g) => {
@@ -408,8 +405,16 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false
+					collapsed: false,
 				},
+			},
+			{
+				id: 'opening_outstanding',
+				name: 'Opening Outstanding',
+				field: 'opening_outstanding',
+				sortable: true,
+				filterable: true,
+				
 			},
 			{
 				id: 'opening_advances',
@@ -488,7 +493,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					if (repoArray[Number(index)]['inv_opening_balance'] > 0)
 						obj['opening_outstanding'] = Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
 					else 
-						obj['opening_advances'] = -Number(repoArray[Number(index)]['opening_advances'] ? repoArray[Number(index)]['opening_advances'] : 0);
+						obj['opening_advances'] = -Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
 					
 					obj['due_for_period'] = Number(repoArray[Number(index)]['defaulter_inv_group_amount']);
 					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0 );

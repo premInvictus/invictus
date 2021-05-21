@@ -135,12 +135,12 @@ export class OutstandingReportComponent implements OnInit {
 	notFormatedCellArray: any[] = [];
 	monthArray = [];
 	rowChosenData: any[] = [];
-	schoolBranchArray:any[] = [];
-	showMultiSchool=0;
-	multiBranchClass:any[] = [];
-	multiBranchFeeHeads:any[] = [];
-	multiBranchRoutes:any[] = [];
-	multiValueArray:any[] = [];
+	schoolBranchArray: any[] = [];
+	showMultiSchool = 0;
+	multiBranchClass: any[] = [];
+	multiBranchFeeHeads: any[] = [];
+	multiBranchRoutes: any[] = [];
+	multiValueArray: any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -184,23 +184,23 @@ export class OutstandingReportComponent implements OnInit {
 		if(this.common.isExistUserAccessMenu('657')) {
 			this.reportTypeArray.push({report_type: 'headwisedetail', report_name: 'Head Wise Detail'});
 		}
-		if(this.common.isExistUserAccessMenu('658')) {
-			this.reportTypeArray.push({report_type: 'routewise', report_name: 'Route Wise'});
+		if (this.common.isExistUserAccessMenu('658')) {
+			this.reportTypeArray.push({ report_type: 'routewise', report_name: 'Route Wise' });
 		}
-		if(this.common.isExistUserAccessMenu('659')) {
-			this.reportTypeArray.push({report_type: 'defaulter', report_name: 'Defaulter\'s List'});
+		if (this.common.isExistUserAccessMenu('659')) {
+			this.reportTypeArray.push({ report_type: 'defaulter', report_name: 'Defaulter\'s List' });
 		}
-		if(this.common.isExistUserAccessMenu('659')) {
-			this.reportTypeArray.push({report_type: 'defaulter_month_wise', report_name: 'Defaulter\'s List Month Wise'});
+		if (this.common.isExistUserAccessMenu('659')) {
+			this.reportTypeArray.push({ report_type: 'defaulter_month_wise', report_name: 'Defaulter\'s List Month Wise' });
 		}
-		if(this.common.isExistUserAccessMenu('660')) {
-			this.reportTypeArray.push({report_type: 'feedue', report_name: 'Fee dues'});
+		if (this.common.isExistUserAccessMenu('660')) {
+			this.reportTypeArray.push({ report_type: 'feedue', report_name: 'Fee dues' });
 		}
-		if(this.common.isExistUserAccessMenu('661')) {
-			this.reportTypeArray.push({report_type: 'aging', report_name: 'Aging'});
+		if (this.common.isExistUserAccessMenu('661')) {
+			this.reportTypeArray.push({ report_type: 'aging', report_name: 'Aging' });
 		}
-		if(this.common.isExistUserAccessMenu('661')) {
-			this.reportTypeArray.push({report_type: 'aging_detail', report_name: 'Aging Detail'});
+		if (this.common.isExistUserAccessMenu('661')) {
+			this.reportTypeArray.push({ report_type: 'aging_detail', report_name: 'Aging Detail' });
 		}
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
@@ -217,12 +217,13 @@ export class OutstandingReportComponent implements OnInit {
 		let param: any = {};
 		param.gs_name = ['show_branch_on_reports'];
 		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
-		if (result && result.status === 'ok' && result.data) {
-			this.showMultiSchool = result.data[0]['gs_value'] == '1'? 1 : 0;
-		
-		} else {
-			this.showMultiSchool = 0;
-		}}
+			if (result && result.status === 'ok' && result.data) {
+				this.showMultiSchool = result.data[0]['gs_value'] == '1' ? 1 : 0;
+
+			} else {
+				this.showMultiSchool = 0;
+			}
+		}
 		);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -243,68 +244,68 @@ export class OutstandingReportComponent implements OnInit {
 
 		}
 	}
-	
+
 	parseRoman(s) {
-        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
-        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
-            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
-        }, 0);
+		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+		return s.toUpperCase().split('').reduce((r, a, i, aa) => {
+			return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+		}, 0);
 	}
 	isRoman(s) {
-        // http://stackoverflow.com/a/267405/1447675
-        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+		// http://stackoverflow.com/a/267405/1447675
+		return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
 	}
 	getClassOrder(cName) {
 		var order = '';
-		for (var i=0; i<this.classDataArray.length;i++) {
-			if(this.classDataArray[i]['class_name'] === cName) {
+		for (var i = 0; i < this.classDataArray.length; i++) {
+			if (this.classDataArray[i]['class_name'] === cName) {
 				order = this.classDataArray[i]['class_order'];
 				break;
 			}
 		}
 		return order;
 	}
-	updateClassSort(grid:any,dataView:any) {
+	updateClassSort(grid: any, dataView: any) {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
-				grid.onSort.subscribe((e, args)=> {
+				grid.onSort.subscribe((e, args) => {
 					console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
-				  
+
 					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
-					var comparer = (a, b) =>{
+					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-							
-							
+
+
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-						
-						
+
+
 						} else {
-							
+
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-					
+
 					}
-				  
+
 					// Delegate the sorting to DataView.
 					// This will fire the change events and update the grid.
 					dataView.sort(comparer, args.sortAsc);
-				  });
+				});
 			}
 		}
 	}
 	buildForm() {
 		let tempArray = [];
-		console.log('this.currentUser',this.currentUser)
+		console.log('this.currentUser', this.currentUser)
 		tempArray.push(this.currentUser.Prefix);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
@@ -325,10 +326,10 @@ export class OutstandingReportComponent implements OnInit {
 			'pageIndex': '0',
 			'login_id': '',
 			'orderBy': '',
-			'school_branch' : tempArray
+			'school_branch': tempArray
 		});
 		this.reportFilterForm.patchValue({
-			school_branch:tempArray
+			school_branch: tempArray
 		})
 	}
 
@@ -368,8 +369,8 @@ export class OutstandingReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			
-			enableCheckboxSelector: this.reportType === 'aging' || this.reportType=== 'defaulter_month_wise' ? false : true,
+
+			enableCheckboxSelector: this.reportType === 'aging' || this.reportType === 'defaulter_month_wise' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
 			},
@@ -473,7 +474,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.dataset = [];
 		if (this.reportFilterForm.value.report_type) {
 			if (this.reportType === 'headwise') {
-				this.gridOptions.rowHeight=65;
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -495,33 +496,33 @@ export class OutstandingReportComponent implements OnInit {
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-						
+
 						var branchArray = this.reportFilterForm.value.school_branch;
 						let i = 0;
 						let j = 0;
 						let stuFeeHeadArray = [];
 						const feeHead: any[] = [];
-						var tempHeadArray= [];
+						var tempHeadArray = [];
 						var schoolArray = [];
 						var commonHeadsArray = [];
 						var tempCommonHeadsArray = [];
-						
-						for (var bi=0; bi<repoArray.length;bi++) {
-							
-							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
-								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
-								
+
+						for (var bi = 0; bi < repoArray.length; bi++) {
+
+							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1
+								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix'])) == -1)) {
+
 								schoolArray.push(repoArray[bi]['school_prefix']);
-								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+								for (var ji = 0; ji < repoArray[bi]['fee_head_data'].length; ji++) {
 									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
 									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
 								}
-								
+
 							}
 						}
 
-						for(var ti=0; ti<tempHeadArray.length;ti++) {
-							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+						for (var ti = 0; ti < tempHeadArray.length; ti++) {
+							if (tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
 								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
 								commonHeadsArray.push(tempHeadArray[ti]);
 							}
@@ -603,7 +604,7 @@ export class OutstandingReportComponent implements OnInit {
 										sortable: true,
 										width: 180,
 										filterSearchType: FieldType.string,
-										filter: { model: Filters.compoundInputText }										
+										filter: { model: Filters.compoundInputText }
 									},
 									{
 										id: 'stu_class_name',
@@ -674,44 +675,47 @@ export class OutstandingReportComponent implements OnInit {
 									// 	groupTotalsFormatter: this.sumTotalsFormatter
 									// }
 								];
-									if(this.reportFilterForm.value.school_branch.length > 1) {
-										let aColumn = {
-											id: 'school_prefix',
-											name: 'School',
-											field: 'school_prefix',
-											filterable: true,
-											filterSearchType: FieldType.string,
-											filter: { model: Filters.compoundInputText },
-											sortable: true,
-											width: 90,
-											grouping: {
-												getter: 'school_prefix',
-												formatter: (g) => {
-													return `${g.value} <span style="color:green"> (${g.count})</span>`;
-												},
-												aggregators: this.aggregatearray,
-												aggregateCollapsed: true,
-												collapsed: false
+								if (this.reportFilterForm.value.school_branch.length > 1) {
+									let aColumn = {
+										id: 'school_prefix',
+										name: 'School',
+										field: 'school_prefix',
+										filterable: true,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										sortable: true,
+										width: 90,
+										grouping: {
+											getter: 'school_prefix',
+											formatter: (g) => {
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
-										};
-										this.columnDefinitions.splice(1, 0, aColumn);
-										
-									}
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									};
+									this.columnDefinitions.splice(1, 0, aColumn);
+
+								}
 							}
-							
+
 							if (repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
 								stuFeeHeadArray = [];
-								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
+								for (let fij = 0; fij < repoArray[Number(keys)]['fee_head_data'].length; fij++) {
 									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
-									
+
 								}
+								console.log('----------', commonHeadsArray);
+
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
-											
+											console.log("sshshs ", titem[key2], 'fh_name' + j);
+
 											const feeObj: any = {};
 											this.columnDefinitions.push({
 												id: 'fh_name' + j,
@@ -723,7 +727,7 @@ export class OutstandingReportComponent implements OnInit {
 												filterSearchType: FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
-												type:FieldType.number,
+												type: FieldType.number,
 												groupTotalsFormatter: this.sumTotalsFormatter
 											});
 											feeObj['fh_name' + j] = '';
@@ -762,26 +766,32 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
-												console.log('student record',repoArray[Number(keys)], key2,stuFeeHeadArray);
-											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {	
+											console.log('student record', repoArray[Number(keys)], key2, stuFeeHeadArray);
+											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 
-												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
+														console.log("herecheck", stuFeeHeadArray[fi]);
+
 														obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
-														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 														tot = tot + repoArray[Number(keys)]['inv_opening_balance']
-														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-														
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+														if (obj[key2 + k] == 0) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+
+														}
 														break;
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-														console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
 													}
-													
-													
-												} 
+
+
+												}
 											}
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
@@ -796,50 +806,50 @@ export class OutstandingReportComponent implements OnInit {
 									});
 								}
 							} else {
-								let tot=0;
+								let tot = 0;
 								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
-												repoArray[Number(keys)]['rpt_id'];
-											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-												(Number(keys) + 1);
-											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-												repoArray[Number(keys)]['stu_admission_no'] : '-';
-											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
-												repoArray[Number(keys)]['school_prefix'] : '-';
-											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
-												repoArray[Number(keys)]['login_id'] : '-';
-											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
-											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
-												repoArray[Number(keys)]['epd_contact_no'] : '-';
+									repoArray[Number(keys)]['rpt_id'];
+								obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+									(Number(keys) + 1);
+								obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+									repoArray[Number(keys)]['stu_admission_no'] : '-';
+								obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+									repoArray[Number(keys)]['school_prefix'] : '-';
+								obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+									repoArray[Number(keys)]['login_id'] : '-';
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+								obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+								obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+									repoArray[Number(keys)]['epd_contact_no'] : '-';
 
-											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
-											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-													repoArray[Number(keys)]['stu_sec_name'];
-											} else {
-												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-											}
-											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
-												repoArray[Number(keys)]['invoice_id'] : '-';
-											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
-											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-												repoArray[Number(keys)]['fp_name'] : '-';
-											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
-												repoArray[Number(keys)]['invoice_no'] : '-';
-											
-											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
-												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-											obj['total'] = repoArray[Number(keys)]['invoice_amount']
-												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+								if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+										repoArray[Number(keys)]['stu_sec_name'];
+								} else {
+									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+								}
+								obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+									repoArray[Number(keys)]['invoice_id'] : '-';
+								obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+								obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+									repoArray[Number(keys)]['fp_name'] : '-';
+								obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+									repoArray[Number(keys)]['invoice_no'] : '-';
+
+								obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+									? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+								obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+									? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+								obj['total'] = repoArray[Number(keys)]['invoice_amount']
+									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
 							i++;
-							console.log('obj--',obj);
+							console.log('obj--', obj);
 							if (Object.keys(obj).length > 0) {
 								this.dataset.push(obj);
 							}
-							
+
 						});
 						this.columnDefinitions.push(
 							{
@@ -848,7 +858,7 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
-								type:FieldType.number,
+								type: FieldType.number,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
@@ -858,24 +868,24 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
-								type:FieldType.number,
+								type: FieldType.number,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
 						if (this.columnDefinitions.length > 18) {
-							this.gridOptions.defaultColumnWidth =100;
-							this.gridOptions.forceFitColumns=false;
-							this.gridOptions.enableAutoResize=false;
-							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+							this.gridOptions.defaultColumnWidth = 100;
+							this.gridOptions.forceFitColumns = false;
+							this.gridOptions.enableAutoResize = false;
+							this.gridOptions.autoFitColumnsOnFirstLoad = false;
 						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('total'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						console.log(this.columnDefinitions);
+						console.log('ssssssssssssssssssssssssssssss', this.columnDefinitions);
 						console.log(this.dataset);
 						this.totalRow = {};
 						const obj3: any = {};
@@ -918,7 +928,7 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'headwisedetail') {
-				this.gridOptions.rowHeight=65;
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -940,28 +950,28 @@ export class OutstandingReportComponent implements OnInit {
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						var branchArray = this.reportFilterForm.value.school_branch;
-						let stuFeeHeadArray = [];						
-						var tempHeadArray= [];
+						let stuFeeHeadArray = [];
+						var tempHeadArray = [];
 						var schoolArray = [];
 						var commonHeadsArray = [];
 						var tempCommonHeadsArray = [];
-						
-						for (var bi=0; bi<repoArray.length;bi++) {
-							
-							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
-								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
-								
+
+						for (var bi = 0; bi < repoArray.length; bi++) {
+
+							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1
+								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix'])) == -1)) {
+
 								schoolArray.push(repoArray[bi]['school_prefix']);
-								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+								for (var ji = 0; ji < repoArray[bi]['fee_head_data'].length; ji++) {
 									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
 									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
 								}
-								
+
 							}
 						}
 
-						for(var ti=0; ti<tempHeadArray.length;ti++) {
-							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+						for (var ti = 0; ti < tempHeadArray.length; ti++) {
+							if (tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
 								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
 								commonHeadsArray.push(tempHeadArray[ti]);
 							}
@@ -1046,7 +1056,7 @@ export class OutstandingReportComponent implements OnInit {
 										sortable: true,
 										width: 180,
 										filterSearchType: FieldType.string,
-										filter: { model: Filters.compoundInputText }										
+										filter: { model: Filters.compoundInputText }
 									},
 									{
 										id: 'stu_class_name',
@@ -1152,38 +1162,38 @@ export class OutstandingReportComponent implements OnInit {
 									// 	groupTotalsFormatter: this.sumTotalsFormatter
 									// }
 								];
-									if(this.reportFilterForm.value.school_branch.length > 1) {
-										let aColumn = {
-											id: 'school_prefix',
-											name: 'School',
-											field: 'school_prefix',
-											filterable: true,
-											filterSearchType: FieldType.string,
-											filter: { model: Filters.compoundInputText },
-											sortable: true,
-											width: 90,
-											grouping: {
-												getter: 'school_prefix',
-												formatter: (g) => {
-													return `${g.value} <span style="color:green"> (${g.count})</span>`;
-												},
-												aggregators: this.aggregatearray,
-												aggregateCollapsed: true,
-												collapsed: false
+								if (this.reportFilterForm.value.school_branch.length > 1) {
+									let aColumn = {
+										id: 'school_prefix',
+										name: 'School',
+										field: 'school_prefix',
+										filterable: true,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										sortable: true,
+										width: 90,
+										grouping: {
+											getter: 'school_prefix',
+											formatter: (g) => {
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
-										};
-										this.columnDefinitions.splice(1, 0, aColumn);
-										
-									}
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									};
+									this.columnDefinitions.splice(1, 0, aColumn);
+
+								}
 							}
 							if (repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
 								stuFeeHeadArray = [];
-								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
+								for (let fij = 0; fij < repoArray[Number(keys)]['fee_head_data'].length; fij++) {
 									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
-									
+
 								}
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
@@ -1197,7 +1207,7 @@ export class OutstandingReportComponent implements OnInit {
 												sortable: true,
 												filterable: true,
 												filterSearchType: FieldType.number,
-												type:FieldType.number,
+												type: FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
 												groupTotalsFormatter: this.sumTotalsFormatter
@@ -1238,23 +1248,23 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['invoice_no'] : '-';
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
-											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
-												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
+												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
 														obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
-														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 														tot = tot + repoArray[Number(keys)]['inv_opening_balance']
-														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-														
+															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+
 														break;
 													} else {
-													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
-													break;
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														break;
 													}
-													
-												} 
+
+												}
 											}
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
@@ -1268,47 +1278,47 @@ export class OutstandingReportComponent implements OnInit {
 								}
 							} else {
 								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
-												repoArray[Number(keys)]['rpt_id'];
-											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-												(Number(keys) + 1);
-											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-												repoArray[Number(keys)]['stu_admission_no'] : '-';
-											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
-												repoArray[Number(keys)]['school_prefix'] : '-';
-											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
-												repoArray[Number(keys)]['login_id'] : '-';
-											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
-											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
-												repoArray[Number(keys)]['epd_contact_no'] : '-';
-											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
-											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-													repoArray[Number(keys)]['stu_sec_name'];
-											} else {
-												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-											}
-											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
-												repoArray[Number(keys)]['invoice_id'] : '-';
-											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
-											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-												repoArray[Number(keys)]['fp_name'] : '-';
-											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
-												repoArray[Number(keys)]['invoice_no'] : '-';
-											
-											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
-												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-											obj['total'] = repoArray[Number(keys)]['invoice_amount']
-												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+									repoArray[Number(keys)]['rpt_id'];
+								obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+									(Number(keys) + 1);
+								obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+									repoArray[Number(keys)]['stu_admission_no'] : '-';
+								obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+									repoArray[Number(keys)]['school_prefix'] : '-';
+								obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+									repoArray[Number(keys)]['login_id'] : '-';
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+								obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+								obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+									repoArray[Number(keys)]['epd_contact_no'] : '-';
+								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+								if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+										repoArray[Number(keys)]['stu_sec_name'];
+								} else {
+									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+								}
+								obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+									repoArray[Number(keys)]['invoice_id'] : '-';
+								obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+								obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+									repoArray[Number(keys)]['fp_name'] : '-';
+								obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+									repoArray[Number(keys)]['invoice_no'] : '-';
+
+								obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+									? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+								obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+									? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+								obj['total'] = repoArray[Number(keys)]['invoice_amount']
+									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
-							
+
 							i++;
-							if (Object.keys(obj).length >0 ) {
+							if (Object.keys(obj).length > 0) {
 								this.dataset.push(obj);
 							}
-							
+
 						});
 						this.columnDefinitions.push(
 							{
@@ -1317,7 +1327,7 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
-								type:FieldType.number,
+								type: FieldType.number,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
@@ -1327,17 +1337,17 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
-								type:FieldType.number,
+								type: FieldType.number,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
 						if (this.columnDefinitions.length > 18) {
-							this.gridOptions.defaultColumnWidth =100;
-							this.gridOptions.forceFitColumns=false;
-							this.gridOptions.enableAutoResize=false;
-							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+							this.gridOptions.defaultColumnWidth = 100;
+							this.gridOptions.forceFitColumns = false;
+							this.gridOptions.enableAutoResize = false;
+							this.gridOptions.autoFitColumnsOnFirstLoad = false;
 						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
@@ -1474,7 +1484,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						width: 180,
 						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInputText }										
+						filter: { model: Filters.compoundInputText }
 					},
 
 					{
@@ -1572,33 +1582,33 @@ export class OutstandingReportComponent implements OnInit {
 						filterable: true,
 						filterSearchType: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
-						type:FieldType.number,
+						type: FieldType.number,
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					}];
-					if(this.reportFilterForm.value.school_branch.length > 1) {
-						let aColumn = {
-							id: 'school_prefix',
-							name: 'School',
-							field: 'school_prefix',
-							filterable: true,
-							filterSearchType: FieldType.string,
-							filter: { model: Filters.compoundInputText },
-							sortable: true,
-							width: 90,
-							grouping: {
-								getter: 'school_prefix',
-								formatter: (g) => {
-									return `${g.value} <span style="color:green"> (${g.count})</span>`;
-								},
-								aggregators: this.aggregatearray,
-								aggregateCollapsed: true,
-								collapsed: false
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
-						};
-						this.columnDefinitions.splice(1, 0, aColumn);
-						
-					}
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+
+				}
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -1753,7 +1763,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						width: 180,
 						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInputText }										
+						filter: { model: Filters.compoundInputText }
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
@@ -1812,7 +1822,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						filterable: true,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
+						type: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
@@ -1873,8 +1883,8 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
-				}];
-				if(this.reportFilterForm.value.school_branch.length > 1) {
+					}];
+				if (this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
 						id: 'school_prefix',
 						name: 'School',
@@ -1895,7 +1905,7 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					};
 					this.columnDefinitions.splice(1, 0, aColumn);
-					
+
 				}
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -1980,7 +1990,7 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'defaulter') {
-				this.gridOptions.rowHeight=65;
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -2063,7 +2073,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						width: 180,
 						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInputText }										
+						filter: { model: Filters.compoundInputText }
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
@@ -2115,7 +2125,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterable: true,
 						cssClass: 'amount-report-fee',
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
+						type: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						sortable: true,
 						formatter: this.checkFeeFormatter,
@@ -2139,8 +2149,8 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
-				}];
-				if(this.reportFilterForm.value.school_branch.length > 1) {
+					}];
+				if (this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
 						id: 'school_prefix',
 						name: 'School',
@@ -2161,7 +2171,7 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					};
 					this.columnDefinitions.splice(1, 0, aColumn);
-					
+
 				}
 				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -2182,7 +2192,7 @@ export class OutstandingReportComponent implements OnInit {
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
-												repoArray[Number(index)]['school_prefix'] : '-';
+								repoArray[Number(index)]['school_prefix'] : '-';
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
 							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ? repoArray[Number(index)]['epd_contact_no'] : '-';
@@ -2228,7 +2238,7 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'defaulter_month_wise') {
-				this.gridOptions.rowHeight=65;
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -2242,7 +2252,7 @@ export class OutstandingReportComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch,
-					'fee_month':this.reportFilterForm.value.month_id
+					'fee_month': this.reportFilterForm.value.month_id
 				};
 				this.columnDefinitions = [
 					{
@@ -2312,7 +2322,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						width: 180,
 						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInputText }										
+						filter: { model: Filters.compoundInputText }
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
@@ -2364,7 +2374,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterable: true,
 						cssClass: 'amount-report-fee',
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
+						type: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						sortable: true,
 						formatter: this.checkFeeFormatter,
@@ -2388,8 +2398,8 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
-				}];
-				if(this.reportFilterForm.value.school_branch.length > 1) {
+					}];
+				if (this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
 						id: 'school_prefix',
 						name: 'School',
@@ -2410,7 +2420,7 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					};
 					this.columnDefinitions.splice(1, 0, aColumn);
-					
+
 				}
 				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -2431,7 +2441,7 @@ export class OutstandingReportComponent implements OnInit {
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
-												repoArray[Number(index)]['school_prefix'] : '-';
+								repoArray[Number(index)]['school_prefix'] : '-';
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
 							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ? repoArray[Number(index)]['epd_contact_no'] : '-';
@@ -2509,35 +2519,36 @@ export class OutstandingReportComponent implements OnInit {
 							let j = 0;
 							const feeHead: any[] = [];
 							var branchArray = this.reportFilterForm.value.school_branch;
-							let stuFeeHeadArray = [];						
-							var tempHeadArray= [];
+							let stuFeeHeadArray = [];
+							var tempHeadArray = [];
 							var schoolArray = [];
 							var commonHeadsArray = [];
 							var tempCommonHeadsArray = [];
-						
-						for (var bi=0; bi<repoArray.length;bi++) {
-							
-							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
-								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
-								
-								schoolArray.push(repoArray[bi]['school_prefix']);
-								if (repoArray[bi]['fee_head_data']) {
-								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
-									if (typeof repoArray[bi]['fee_head_data'][ji] == 'object') {
-									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
-									}
-									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
-								}}
-								
-							}
-						}
 
-						for(var ti=0; ti<tempHeadArray.length;ti++) {
-							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
-								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
-								commonHeadsArray.push(tempHeadArray[ti]);
+							for (var bi = 0; bi < repoArray.length; bi++) {
+
+								if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1
+									&& ((schoolArray.indexOf(repoArray[bi]['school_prefix'])) == -1)) {
+
+									schoolArray.push(repoArray[bi]['school_prefix']);
+									if (repoArray[bi]['fee_head_data']) {
+										for (var ji = 0; ji < repoArray[bi]['fee_head_data'].length; ji++) {
+											if (typeof repoArray[bi]['fee_head_data'][ji] == 'object') {
+												repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+											}
+											tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
+										}
+									}
+
+								}
 							}
-						}
+
+							for (var ti = 0; ti < tempHeadArray.length; ti++) {
+								if (tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+									tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
+									commonHeadsArray.push(tempHeadArray[ti]);
+								}
+							}
 							Object.keys(repoArray).forEach((keys: any) => {
 								const obj: any = {};
 								if (Number(keys) === 0) {
@@ -2614,7 +2625,7 @@ export class OutstandingReportComponent implements OnInit {
 											sortable: true,
 											width: 180,
 											filterSearchType: FieldType.string,
-											filter: { model: Filters.compoundInputText }										
+											filter: { model: Filters.compoundInputText }
 										},
 										{
 											id: 'stu_class_name',
@@ -2730,7 +2741,7 @@ export class OutstandingReportComponent implements OnInit {
 										// 	groupTotalsFormatter: this.sumTotalsFormatter
 										// }
 									];
-									if(this.reportFilterForm.value.school_branch.length > 1) {
+									if (this.reportFilterForm.value.school_branch.length > 1) {
 										let aColumn = {
 											id: 'school_prefix',
 											name: 'School',
@@ -2751,20 +2762,20 @@ export class OutstandingReportComponent implements OnInit {
 											},
 										};
 										this.columnDefinitions.splice(1, 0, aColumn);
-										
+
 									}
 								}
 								if (repoArray[Number(keys)] && repoArray[Number(keys)]['fee_head_data']) {
 									let k = 0;
 									let tot = 0;
 									stuFeeHeadArray = [];
-								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
-									if (typeof repoArray[Number(keys)]['fee_head_data'][fij] == 'object') {
-										repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									for (let fij = 0; fij < repoArray[Number(keys)]['fee_head_data'].length; fij++) {
+										if (typeof repoArray[Number(keys)]['fee_head_data'][fij] == 'object') {
+											repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+										}
+										stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
+
 									}
-									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
-									
-								}
 									for (const titem of commonHeadsArray) {
 										Object.keys(titem).forEach((key2: any) => {
 											if (key2 === 'fh_name' && Number(keys) === 0) {
@@ -2777,7 +2788,7 @@ export class OutstandingReportComponent implements OnInit {
 													sortable: true,
 													filterable: true,
 													filterSearchType: FieldType.number,
-													type:FieldType.number,
+													type: FieldType.number,
 													filter: { model: Filters.compoundInput },
 													formatter: this.checkFeeFormatter,
 													groupTotalsFormatter: this.sumTotalsFormatter
@@ -2794,11 +2805,11 @@ export class OutstandingReportComponent implements OnInit {
 													(Number(keys) + 1);
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
-													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
 													repoArray[Number(keys)]['school_prefix'] : '-';
 												if (repoArray[Number(keys)]['login_id'] == 3932) {
-													console.log('repoArray[Number(keys)]=>',repoArray[Number(keys)]);
-													console.log('stuFeeHeadArray-->',stuFeeHeadArray)
+													console.log('repoArray[Number(keys)]=>', repoArray[Number(keys)]);
+													console.log('stuFeeHeadArray-->', stuFeeHeadArray)
 												}
 												obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 													repoArray[Number(keys)]['login_id'] : '-';
@@ -2822,13 +2833,13 @@ export class OutstandingReportComponent implements OnInit {
 
 												// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 												// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
-												for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
-													if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-														if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+												for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
+													if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
 															obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
-															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+																? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 															tot = tot + repoArray[Number(keys)]['inv_opening_balance']
-															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+																? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 															break;
 														} else {
 															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -2836,16 +2847,16 @@ export class OutstandingReportComponent implements OnInit {
 															//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 															break;
 														}
-														
-													} 
 
-													if( ( stuFeeHeadArray[fi]['fh_id'] == '0') &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													}
+
+													if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 														//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														break;
-														
-													} 
+
+													}
 												}
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
@@ -2853,20 +2864,20 @@ export class OutstandingReportComponent implements OnInit {
 													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 												obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
 													? Number(repoArray[Number(keys)]['inv_due_total_amt']) + (repoArray[Number(keys)]['inv_fine_amount']
-													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : (repoArray[Number(keys)]['inv_fine_amount']
-													? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0);
+														? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : (repoArray[Number(keys)]['inv_fine_amount']
+															? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0);
 												obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
 												obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
-														repoArray[Number(keys)]['epd_contact_no'] : '-';
+													repoArray[Number(keys)]['epd_contact_no'] : '-';
 												k++;
 											}
 										});
 									}
 								}
 								i++;
-								if(Object.keys(obj).length > 0) {
-									if(obj['login_id'] == 3932) {
-										console.log('obj 3932-->',obj)
+								if (Object.keys(obj).length > 0) {
+									if (obj['login_id'] == 3932) {
+										console.log('obj 3932-->', obj)
 									}
 									this.dataset.push(obj);
 								}
@@ -2886,7 +2897,7 @@ export class OutstandingReportComponent implements OnInit {
 									filterable: true,
 									filterSearchType: FieldType.number,
 									filter: { model: Filters.compoundInputNumber },
-									type:FieldType.number,
+									type: FieldType.number,
 									sortable: true,
 									formatter: this.checkTotalFormatter,
 									cssClass: 'amount-report-fee',
@@ -2894,10 +2905,10 @@ export class OutstandingReportComponent implements OnInit {
 								},
 							);
 							if (this.columnDefinitions.length > 18) {
-								this.gridOptions.defaultColumnWidth =100;
-								this.gridOptions.forceFitColumns=false;
-								this.gridOptions.enableAutoResize=false;
-								this.gridOptions.autoFitColumnsOnFirstLoad=false;
+								this.gridOptions.defaultColumnWidth = 100;
+								this.gridOptions.forceFitColumns = false;
+								this.gridOptions.enableAutoResize = false;
+								this.gridOptions.autoFitColumnsOnFirstLoad = false;
 							}
 							this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 							this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
@@ -2971,8 +2982,8 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'ltm', name: 'Less Than Month', field: 'ltm', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
@@ -2980,8 +2991,8 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
@@ -2989,8 +3000,8 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
@@ -2998,13 +3009,13 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'total', name: 'Total', field: 'total', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					}
 				];
-				if(this.reportFilterForm.value.school_branch.length > 1) {
+				if (this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
 						id: 'school_prefix',
 						name: 'School',
@@ -3025,9 +3036,9 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					};
 					this.columnDefinitions.splice(1, 0, aColumn);
-					
+
 				}
-				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly','school_branch': this.reportFilterForm.value.school_branch  }).subscribe((result: any) => {
+				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly', 'school_branch': this.reportFilterForm.value.school_branch }).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data;
@@ -3086,7 +3097,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
-						
+
 					},
 					{
 						id: 'user_name', name: 'Student Name', field: 'user_name', filterable: true,
@@ -3094,7 +3105,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
-						
+
 					},
 					{
 						id: 'stu_class_name', name: 'Class Name', field: 'stu_class_name', filterable: true,
@@ -3118,15 +3129,15 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
-						
+
 					},
 
 					{
 						id: 'ltm', name: 'Less Than Month', field: 'ltm', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter,
 						grouping: {
@@ -3144,8 +3155,8 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter,
 						grouping: {
@@ -3163,8 +3174,8 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter,
 						grouping: {
@@ -3182,14 +3193,14 @@ export class OutstandingReportComponent implements OnInit {
 						id: 'total', name: 'Total', field: 'total', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
-						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						type: FieldType.number,
+						filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					}
 				];
-				if(this.reportFilterForm.value.school_branch.length > 1) {
+				if (this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
 						id: 'school_prefix',
 						name: 'School',
@@ -3210,9 +3221,9 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					};
 					this.columnDefinitions.splice(1, 0, aColumn);
-					
+
 				}
-				this.feeService.getClassWiseMonthWiseSeperationDetail({ projectionType: 'yearly','school_branch': this.reportFilterForm.value.school_branch  }).subscribe((result: any) => {
+				this.feeService.getClassWiseMonthWiseSeperationDetail({ projectionType: 'yearly', 'school_branch': this.reportFilterForm.value.school_branch }).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data;
@@ -3238,12 +3249,12 @@ export class OutstandingReportComponent implements OnInit {
 							index++;
 						}
 						this.aggregatearray.push(new Aggregators.Sum('ltm'));
-							this.aggregatearray.push(new Aggregators.Sum('m13'));
-							this.aggregatearray.push(new Aggregators.Sum('m3'));
-							this.aggregatearray.push(new Aggregators.Sum('total'));
-							this.aggregatearray.push(new Aggregators.Sum('srno'));
+						this.aggregatearray.push(new Aggregators.Sum('m13'));
+						this.aggregatearray.push(new Aggregators.Sum('m3'));
+						this.aggregatearray.push(new Aggregators.Sum('total'));
+						this.aggregatearray.push(new Aggregators.Sum('srno'));
 
-						
+
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
@@ -3263,7 +3274,7 @@ export class OutstandingReportComponent implements OnInit {
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
 						}
-						
+
 						this.tableFlag = true;
 						setTimeout(() => this.groupByClass(), 2);
 					} else {
@@ -3377,7 +3388,7 @@ export class OutstandingReportComponent implements OnInit {
 			} else {
 				return '';
 			}
-			
+
 		}
 		return '';
 	}
@@ -3385,21 +3396,21 @@ export class OutstandingReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
-			
+
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
 		}
@@ -3408,12 +3419,12 @@ export class OutstandingReportComponent implements OnInit {
 		if (value === '-') {
 			return '-';
 		} else {
-			if (value){
+			if (value) {
 				return '<a>' + value + '</a>';
 			} else {
 				return '-';
 			}
-			
+
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -3460,7 +3471,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 	getClass() {
 		this.valueArray = [];
-		
+
 		for (const item of this.classDataArray) {
 			this.valueArray.push({
 				id: item.class_id,
@@ -3474,7 +3485,7 @@ export class OutstandingReportComponent implements OnInit {
 				this.classDataArray = result.data;
 			}
 		});
-		console.log('this.classDataArray',this.classDataArray)
+		console.log('this.classDataArray', this.classDataArray)
 	}
 	getModes() {
 		this.valueArray = [];
@@ -3548,12 +3559,20 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
-				let param:any= {};
+				let param: any = {};
 				param.gs_name = ['show_grouped_head_on_report'];
 				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
-				if (result && result.status === 'ok' && result.data) {
-					if (result.data[0]['gs_value'] == '1') {
-						this.getGroupedFeeHeads();
+					if (result && result.status === 'ok' && result.data) {
+						if (result.data[0]['gs_value'] == '1') {
+							this.getGroupedFeeHeads();
+						} else {
+							if (this.reportFilterForm.value.school_branch.length > 1) {
+								this.getMultiBranchFeeHeads();
+							} else {
+								this.getFeeHeads();
+							}
+						}
+
 					} else {
 						if (this.reportFilterForm.value.school_branch.length > 1) {
 							this.getMultiBranchFeeHeads();
@@ -3561,24 +3580,24 @@ export class OutstandingReportComponent implements OnInit {
 							this.getFeeHeads();
 						}
 					}
-				
-				} else {
-					if (this.reportFilterForm.value.school_branch.length > 1) {
-						this.getMultiBranchFeeHeads();
-					} else {
-						this.getFeeHeads();
-					}
-				}
 				});
-				
+
 			} else if ($event.value === 'headwisedetail') {
 				this.valueLabel = 'Fee Heads';
-				let param:any= {};
+				let param: any = {};
 				param.gs_name = ['show_grouped_head_on_report'];
 				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
-				if (result && result.status === 'ok' && result.data) {
-					if (result.data[0]['gs_value'] == '1') {
-						this.getGroupedFeeHeads();
+					if (result && result.status === 'ok' && result.data) {
+						if (result.data[0]['gs_value'] == '1') {
+							this.getGroupedFeeHeads();
+						} else {
+							if (this.reportFilterForm.value.school_branch.length > 1) {
+								this.getMultiBranchFeeHeads();
+							} else {
+								this.getFeeHeads();
+							}
+						}
+
 					} else {
 						if (this.reportFilterForm.value.school_branch.length > 1) {
 							this.getMultiBranchFeeHeads();
@@ -3586,14 +3605,6 @@ export class OutstandingReportComponent implements OnInit {
 							this.getFeeHeads();
 						}
 					}
-				
-				} else {
-					if (this.reportFilterForm.value.school_branch.length > 1) {
-						this.getMultiBranchFeeHeads();
-					} else {
-						this.getFeeHeads();
-					}
-				}
 				});
 			} else if ($event.value === 'classwise') {
 				this.valueLabel = 'Class';
@@ -3618,12 +3629,20 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			} else if ($event.value === 'feedue') {
 				this.valueLabel = 'Fee Dues';
-				let param:any= {};
+				let param: any = {};
 				param.gs_name = ['show_grouped_head_on_report'];
 				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
-				if (result && result.status === 'ok' && result.data) {
-					if (result.data[0]['gs_value'] == '1') {
-						this.getGroupedFeeHeads();
+					if (result && result.status === 'ok' && result.data) {
+						if (result.data[0]['gs_value'] == '1') {
+							this.getGroupedFeeHeads();
+						} else {
+							if (this.reportFilterForm.value.school_branch.length > 1) {
+								this.getMultiBranchFeeHeads();
+							} else {
+								this.getFeeHeads();
+							}
+						}
+
 					} else {
 						if (this.reportFilterForm.value.school_branch.length > 1) {
 							this.getMultiBranchFeeHeads();
@@ -3631,14 +3650,6 @@ export class OutstandingReportComponent implements OnInit {
 							this.getFeeHeads();
 						}
 					}
-				
-				} else {
-					if (this.reportFilterForm.value.school_branch.length > 1) {
-						this.getMultiBranchFeeHeads();
-					} else {
-						this.getFeeHeads();
-					}
-				}
 				});
 			} else if ($event.value === 'aging') {
 				this.valueLabel = '';
@@ -3650,26 +3661,26 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	getGroupedFeeHeads() {
-		this.multiValueArray=[];
-		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
-		console.log('inputJson--',inputJson)
-		this.feeService.getGroupFeeHeads(inputJson).subscribe((result:any)=>{
-			if(result && result.data) {
+		this.multiValueArray = [];
+		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
+		console.log('inputJson--', inputJson)
+		this.feeService.getGroupFeeHeads(inputJson).subscribe((result: any) => {
+			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
-				let  groupJson = {};
-				let temp_array=[];
+				let groupJson = {};
+				let temp_array = [];
 				for (const item of result.data) {
-					temp_array=[{
+					temp_array = [{
 						id: '0',
 						name: 'Transport'
 					}];
 					groupJson = {};
 					for (const it of item.items) {
-						if(it.fs_classification == 'group') {
+						if (it.fs_classification == 'group') {
 							temp_array.push({
-								id: 'g-'+(it.fs_id),
+								id: 'g-' + (it.fs_id),
 								name: new CapitalizePipe().transform(it.fs_name),
-								fs_classification : 'group'
+								fs_classification: 'group'
 							});
 						} else {
 							temp_array.push({
@@ -3678,106 +3689,106 @@ export class OutstandingReportComponent implements OnInit {
 								fs_classification: 'head'
 							});
 						}
-						
+
 					}
-					
-					groupJson = {name: item.name, items : temp_array };
+
+					groupJson = { name: item.name, items: temp_array };
 					this.multiValueArray.push(groupJson);
-					
+
 				}
-				
+
 			} else {
 				this.multiBranchFeeHeads = [];
-			}			
+			}
 		});
 	}
 	getMultiBranchFeeHeads() {
-		this.multiValueArray=[];
-		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
-		console.log('inputJson--',inputJson)
-		this.feeService.getMultiBranchFeeHeads(inputJson).subscribe((result:any)=>{
-			if(result && result.data) {
+		this.multiValueArray = [];
+		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
+		console.log('inputJson--', inputJson)
+		this.feeService.getMultiBranchFeeHeads(inputJson).subscribe((result: any) => {
+			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
-				let  groupJson = {};
-				let temp_array=[];
+				let groupJson = {};
+				let temp_array = [];
 				for (const item of result.data) {
-					temp_array=[{
+					temp_array = [{
 						id: '0',
 						name: 'Transport'
 					}];
 					groupJson = {};
-					for (const it of item.items) {						
+					for (const it of item.items) {
 						temp_array.push({
 							id: it.fh_id,
 							name: new CapitalizePipe().transform(it.fh_name)
 						});
 					}
-					
-					groupJson = {name: item.name, items : temp_array };
+
+					groupJson = { name: item.name, items: temp_array };
 					this.multiValueArray.push(groupJson);
-					
+
 				}
-				
+
 			} else {
 				this.multiBranchFeeHeads = [];
-			}			
+			}
 		});
 
 	}
 
 	getMultiBranchRoutes() {
 		this.multiValueArray = [];
-		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
+		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
 		console.log('multi branch route json', inputJson)
-		this.feeService.getMultiBranchRoutes(inputJson).subscribe((result:any)=>{
-			if(result && result.data) {
+		this.feeService.getMultiBranchRoutes(inputJson).subscribe((result: any) => {
+			if (result && result.data) {
 				this.multiBranchRoutes = result.data;
-				
-				let  groupJson = {};
-				let temp_array=[];
+
+				let groupJson = {};
+				let temp_array = [];
 				for (const item of result.data) {
-					temp_array=[];
+					temp_array = [];
 					groupJson = {};
-					for (const it of item.items) {						
+					for (const it of item.items) {
 						temp_array.push({
 							id: it.tr_id,
 							name: new CapitalizePipe().transform(it.tr_route_name)
 						});
 					}
-					
-					groupJson = {name: item.name, items : temp_array };
+
+					groupJson = { name: item.name, items: temp_array };
 					this.multiValueArray.push(groupJson);
-					
+
 				}
 			} else {
 				this.multiBranchRoutes = [];
-			}			
+			}
 		});
 	}
 	getMultiBranchClass() {
-		this.feeService.getMultiBranchClass({school_branch:this.reportFilterForm.value.school_branch}).subscribe((result:any)=>{
-			if(result && result.data) {
+		this.feeService.getMultiBranchClass({ school_branch: this.reportFilterForm.value.school_branch }).subscribe((result: any) => {
+			if (result && result.data) {
 				this.multiBranchClass = result.data;
-				let  groupJson = {};
-				let temp_array=[];
+				let groupJson = {};
+				let temp_array = [];
 				for (const item of result.data) {
-					temp_array=[];
+					temp_array = [];
 					groupJson = {};
-					for (const it of item.items) {						
+					for (const it of item.items) {
 						temp_array.push({
 							id: it.class_id,
 							name: new CapitalizePipe().transform(it.class_name)
 						});
 					}
-					
-					groupJson = {name: item.name, items : temp_array };
+
+					groupJson = { name: item.name, items: temp_array };
 					this.multiValueArray.push(groupJson);
-					
+
 				}
-				
+
 			} else {
 				this.multiBranchClass = [];
-			}			
+			}
 		});
 	}
 	resetValues() {
@@ -3853,35 +3864,35 @@ export class OutstandingReportComponent implements OnInit {
 				this.schoolInfo['disable'] = true;
 				this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
 				this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
-				this.schoolBranchArray  = [];
+				this.schoolBranchArray = [];
 				this.schoolBranchArray.push(this.schoolInfo);
 				this.getSchoolBranch();
 			}
 		});
 	}
 	getSchoolBranch() {
-		
-		
-		this.feeService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+
+
+		this.feeService.getAllSchoolGroups({ si_group: this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix }).subscribe((data: any) => {
 			if (data && data.status == 'ok') {
 				//this.schoolGroupData = data.data;
-				
+
 				console.log('this.schoolGroupData--', data.data);
-				this.feeService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+				this.feeService.getMappedSchoolWithUser({ prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id }).subscribe((result: any) => {
 					if (result && result.data && result.data.length > 0) {
-						
+
 						var userSchoolMappedData = [];
-						console.log('result.data--', result.data	)
-						for (var j=0; j< result.data.length; j++) {
+						console.log('result.data--', result.data)
+						for (var j = 0; j < result.data.length; j++) {
 
 
 							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
 								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
 							}
 						}
-						
+
 						console.log('userSchoolMappedData', userSchoolMappedData)
-						for (var i=0; i<data.data.length;i++) {
+						for (var i = 0; i < data.data.length; i++) {
 							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
 								this.schoolBranchArray.push(data.data[i]);
 							}
@@ -3891,8 +3902,8 @@ export class OutstandingReportComponent implements OnInit {
 				})
 			}
 		})
-	
-}
+
+	}
 	getSessionName(id) {
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
 		if (findex !== -1) {
@@ -3916,7 +3927,7 @@ export class OutstandingReportComponent implements OnInit {
 			comparer: (a, b) => {
 				// (optional) comparer is helpful to sort the grouped data
 				// code below will sort the grouped value in ascending order
-				if(this.reportType == 'defaulter_month_wise') {
+				if (this.reportType == 'defaulter_month_wise') {
 					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
 				} else {
 					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
@@ -3959,7 +3970,7 @@ export class OutstandingReportComponent implements OnInit {
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
-		console.log('this.exportColumnDefinitions-->',this.exportColumnDefinitions)
+		console.log('this.exportColumnDefinitions-->', this.exportColumnDefinitions)
 		// for (const item of this.exportColumnDefinitions) {
 		// 	if(!(item.id.includes('checkbox_select'))) {
 		// 	columns.push({
@@ -3986,86 +3997,93 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
 		if (this.reportType === 'headwise') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: 8
-					//width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: 8
+						//width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
-			worksheet.properties.defaultRowHeight =40;
+			worksheet.properties.defaultRowHeight = 40;
 			reportType2 = new TitleCasePipe().transform('head wise_') + this.sessionName;
 		} else if (this.reportType === 'headwisedetail') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: 8
-					//width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: 8
+						//width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
-			worksheet.properties.defaultRowHeight =40;
+			worksheet.properties.defaultRowHeight = 40;
 			reportType2 = new TitleCasePipe().transform('head wise detail_') + this.sessionName;
 		} else if (this.reportType === 'routewise') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: 8
-					//width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: 8
+						//width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
-			worksheet.properties.defaultRowHeight =40;
-			
+			worksheet.properties.defaultRowHeight = 40;
+
 			reportType2 = new TitleCasePipe().transform('route wise_') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
 			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
 		} else if (this.reportType === 'defaulter_month_wise') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
 			reportType2 = new TitleCasePipe().transform('defaulter month wise list_') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
 			reportType2 = new TitleCasePipe().transform('fee dues detail_') + this.sessionName;
 		} else if (this.reportType === 'aging') {
 			for (const item of this.exportColumnDefinitions) {
-				if(!(item.id.includes('checkbox_select'))) {
-				columns.push({
-					key: item.id,
-					width: this.checkWidth(item.id, item.name)
-				});
-				columValue.push(item.name);}
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
 			}
 			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
 		}
@@ -4078,9 +4096,9 @@ export class OutstandingReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
-		for(var i=1; i<=columns.length;i++) {
-			if (this.reportType === 'headwise' || this.reportType === 'headwisedetail' || this.reportType === 'routewise')  {
-			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
+		for (var i = 1; i <= columns.length; i++) {
+			if (this.reportType === 'headwise' || this.reportType === 'headwisedetail' || this.reportType === 'routewise') {
+				worksheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
 			}
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
@@ -4176,7 +4194,7 @@ export class OutstandingReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center',wrapText:true };
+					cell.alignment = { horizontal: 'center', wrapText: true };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
@@ -4652,7 +4670,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
-		console.log('this.reportFilterForm-->',this.reportFilterForm);
+		console.log('this.reportFilterForm-->', this.reportFilterForm);
 	}
 	getToDate(value) {
 		this.reportFilterForm.patchValue({
@@ -4715,7 +4733,7 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter_month_wise') {
 			reportType = new TitleCasePipe().transform('defaulter month wise list: ') + this.sessionName;
-		} 
+		}
 		else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues Detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'aging') {
@@ -4757,42 +4775,42 @@ export class OutstandingReportComponent implements OnInit {
 		const rowData: any[] = [];
 		for (const item of this.exportColumnDefinitions) {
 			console.log()
-			if(!(item.id.includes('checkbox_select'))) {
+			if (!(item.id.includes('checkbox_select'))) {
 				headerData.push(item.name);
 			}
-			
+
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ?this.dataset[key][item2.id]: '0' ));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ? this.dataset[key][item2.id] : '0'));
 
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
 						// console.log("i am here", (this.dataset[key]) );
-						
+
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
 						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						
-						
+
+
 					}
 					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ?this.dataset[key][item2.id]: '0' ));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined ? this.dataset[key][item2.id] : '0'));
 					}
-					
-					
+
+
 				}
 				// if(key == 1 ) {
 				// 	console.log("i am here", (this.dataset[1]), this.dataset.length);
-					
+
 				// }
-				
+
 				arr.shift();
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);
@@ -4805,20 +4823,20 @@ export class OutstandingReportComponent implements OnInit {
 			const arr: any[] = [];
 			let prev = false;
 			for (const item of this.exportColumnDefinitions) {
-				if(!prev ) {
+				if (!prev) {
 					arr.push(this.totalRow[item.id]);
 				} else {
 					prev = false;
 				}
-				if(this.totalRow[item.id] == "Grand Total") {
+				if (this.totalRow[item.id] == "Grand Total") {
 					prev = true
-					
-				} 
-				
+
+				}
+
 				console.log(this.totalRow[item.id], ' ----------------------------------');
-				
-				
-				
+
+
+
 			}
 			rowData.push(arr);
 			this.pdfrowdata.push(arr);
@@ -4981,7 +4999,7 @@ export class OutstandingReportComponent implements OnInit {
 	checkGroupLevelPDF(item, doc, headerData) {
 		let exportColumnDefinitionsTemp = [];
 		for (const item2 of this.exportColumnDefinitions) {
-			if(!(item2.id.includes('checkbox_select'))) {
+			if (!(item2.id.includes('checkbox_select'))) {
 				exportColumnDefinitionsTemp.push(item2);
 			}
 		}
