@@ -178,9 +178,9 @@ export class OutstandingReportComponent implements OnInit {
 		// 		report_type: 'aging', report_name: 'Aging'
 		// 	}
 		// );
-		if(this.common.isExistUserAccessMenu('656')) {
-			this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
-		}
+		// if(this.common.isExistUserAccessMenu('656')) {
+		// 	this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
+		// }
 		if(this.common.isExistUserAccessMenu('657')) {
 			this.reportTypeArray.push({report_type: 'headwisedetail', report_name: 'Head Wise Detail'});
 		}
