@@ -216,6 +216,9 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			'login_id': '',
 			'order_by': ''
 		});
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd')
+		});
 	}
 
 	getSummarizedFeeReviewReport(value: any) {
@@ -744,6 +747,22 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				}
 			}
 		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'fee_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	openFilterDialog() {
 		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {
