@@ -71,27 +71,44 @@ export class BlockaccessesComponent implements OnInit {
   }
   allowAccess() {
     console.log("i am access", this.selection.selected);
-    this.selection.selected.forEach((element: any) => {
-      const param: any = {};
+    const param: any = {};
       param.certificate_type = 10;
       param.class_id = this.paramForm.value.class_id,
         param.sec_id = this.paramForm.value.sec_id,
-        param.login_id = element.em_admission_no;
+        param.login_id = []; 
       param.status = '1'
-      // if ($event.checked) {
-      //   this.delMsg = 'Do you want to enable download for this student ?'
-      // } else {
-      //   this.delMsg = 'Do you want to disable download for this student ?';
-      // }
-      if (param) {
-        this.sisService.enableAcessCertificate(param).subscribe((res: any) => {
-          if (res && res.status === 'ok') {
-            this.commonApiService.showSuccessErrorMessage(res.data, 'success');
-            this.getAllStudent();
-          }
-        });
-      }
-    })
+      this.selection.selected.forEach((element: any) => {
+        param.login_id.push(element.no);
+      })
+    if (param) {
+      this.sisService.enableAcessCertificateBulk(param).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+          this.getAllStudent();
+        }
+      });
+    }
+
+  }
+  removeaccess() {
+    console.log("i am access", this.selection.selected);
+    const param: any = {};
+      param.certificate_type = 10;
+      param.class_id = this.paramForm.value.class_id,
+        param.sec_id = this.paramForm.value.sec_id,
+        param.login_id = []; 
+      param.status = '0';
+      this.selection.selected.forEach((element: any) => {
+        param.login_id.push(element.no);
+      })
+    if (param) {
+      this.sisService.enableAcessCertificateBulk(param).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+          this.getAllStudent();
+        }
+      });
+    }
 
   }
   getSectionsByClass() {
