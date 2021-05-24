@@ -211,6 +211,7 @@ export class OutstandingReportComponent implements OnInit {
 				'month_id': ''
 			});
 		}
+
 		this.filterFlag = true;
 	}
 	checkForMultiBranch() {
@@ -1996,7 +1997,7 @@ export class OutstandingReportComponent implements OnInit {
 					'studentName': '',
 					'report_type': this.reportType,
 					'classId': value.fee_value,
-					'to_date': new DatePipe('en-in').transform((this.reportFilterForm.value.from_date), 'yyyy-MM-dd'),
+					'to_date': new DatePipe('en-in').transform((this.reportFilterForm.value.to_date), 'yyyy-MM-dd'),
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -2244,7 +2245,7 @@ export class OutstandingReportComponent implements OnInit {
 					'studentName': '',
 					'report_type': 'defaulter',
 					'classId': value.fee_value,
-					'to_date': value.from_date,
+					'to_date': value.to_date,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
