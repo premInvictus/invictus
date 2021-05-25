@@ -3227,6 +3227,9 @@ export class OutstandingReportComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data;
+						
+						repoArray =	 result.data.filter((v,i,a)=>a.findIndex(t=>(t.resultData.ltm.au_admission_no === v.resultData.ltm.au_admission_no))===i)
+						
 						let index = 0;
 						var total = 0;
 						for (const item of repoArray) {
