@@ -550,6 +550,25 @@ export class FeestrucReportComponent implements OnInit {
 										aggregateCollapsed: true,
 										collapsed: false,
 									},
+								},
+								{
+									id: 'fo_name',
+									name: 'Category',
+									field: 'fo_name',
+									filterable: true,
+									sortable: true,
+									width: 180,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInputText },
+									grouping: {
+										getter: 'fo_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count})</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false
+									},
 								}];
 						}
 						if (repoArray[Number(keys)]['fee_structure_head_group']['fs_structure']) {
@@ -588,6 +607,8 @@ export class FeestrucReportComponent implements OnInit {
 										obj['feestructureName'] = repoArray[Number(keys)]['feestructureName'] ?
 											repoArray[Number(keys)]['feestructureName'] : '-';
 										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['au_full_name']);
+										
+										obj['fo_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['fo_name']);
 										if (repoArray[Number(keys)]['au_sec_id'] !== '0') {
 											obj['stu_class_name'] = repoArray[Number(keys)]['class_name'] + '-' +
 												repoArray[Number(keys)]['sec_name'];
@@ -609,6 +630,7 @@ export class FeestrucReportComponent implements OnInit {
 							obj['stu_admission_no'] = repoArray[Number(keys)]['au_admission_no'] ?
 								repoArray[Number(keys)]['au_admission_no'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['au_full_name']);
+							obj['fo_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['fo_name']);
 							obj['feestructureName'] = new CapitalizePipe().transform(repoArray[Number(keys)]['feestructureName']);
 							if (repoArray[Number(keys)]['au_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(keys)]['class_name'] + '-' +
@@ -650,6 +672,7 @@ export class FeestrucReportComponent implements OnInit {
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
 					obj3['feestructureName'] = '';
+					obj3['fo_name'] = '';
 					Object.keys(feeHead).forEach((key: any) => {
 						Object.keys(feeHead[key]).forEach(key2 => {
 							Object.keys(this.dataset).forEach(key3 => {
@@ -1397,6 +1420,8 @@ export class FeestrucReportComponent implements OnInit {
 					obj3['stu_admission_no'] = '';
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['feestructureName'] = '';
+					obj3['fo_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
 						Object.keys(this.feeHeadJson[key]).forEach(key2 => {
 							Object.keys(groupItem.rows).forEach(key3 => {
@@ -1447,6 +1472,8 @@ export class FeestrucReportComponent implements OnInit {
 					obj3['stu_admission_no'] = '';
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['feestructureName'] = '';
+					obj3['fo_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
 						Object.keys(this.feeHeadJson[key]).forEach(key2 => {
 							Object.keys(groupItem.rows).forEach(key3 => {
