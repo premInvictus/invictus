@@ -37,12 +37,12 @@
                           <div>
                               <div style="float:right;">
                                   <button  mat-button class="upload-document-delete-btn"
-                                      (click)="deleteFile(i)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>
+                                      (click)="deleteFile(i)"><mat-icon class="btn-upload-icon">close</mat-icon></button>
                               </div>
                               <div class="inline-flex ">
                                       <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
                                       <img  class="btn-doc-upload-preview margin-left-10"
-                                      [src]="img.file_url">{{img.file_ulr}}<br>
+                                      [src]="getuploadurl(img.file_url)">{{img.file_ulr}}<br>
                               </div>
                               <br>
                           </div>

@@ -13,6 +13,7 @@ import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService
 import { SmartusertypeService } from './smartusertype/smartusertype.service';
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { TooltipDirective } from './_directives/tooltip.directive';
 
 const providers = [NotificationsService,
 	AuthGuard,
@@ -25,6 +26,7 @@ const providers = [NotificationsService,
 @NgModule({
 	declarations: [
 		AppComponent,
+		TooltipDirective,
 	],
 	imports: [
 		BrowserModule,

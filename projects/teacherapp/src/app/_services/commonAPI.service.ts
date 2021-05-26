@@ -137,6 +137,10 @@ export class CommonAPIService {
 	getGlobalSetting(value) {
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
+	getRollNoUser(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getRollNoUser', value);
+	}
 
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {

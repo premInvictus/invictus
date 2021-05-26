@@ -1,43 +1,46 @@
 <div class="row margin-top-0">
-  <div class="col-12 ">
-      <mat-card class="remove-card-padding">
-          <form [formGroup]="paramForm" novalidate>
-              <div class="row">
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-                      <div class="mt-4 ml-2">
-                          <span class="font-size-24 font-medium">View Assignment</span>
-                      </div>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9  text-right">
-                      <div class="row justify-content-end">
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
-                              <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
-                                  <mat-label>Class</mat-label>
-                                  <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass();getMasterStudentDetail();">
-                                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
-                                  </mat-select>
-                              </mat-form-field>
-                          </div>
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
-                              <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Section</mat-label>
-                                  <mat-select formControlName="sec_id" (selectionChange)="getMasterStudentDetail()">
-                                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
-                                  </mat-select>
-                              </mat-form-field>
-                          </div>
-                          <span *ngIf="!isTeacher" style="padding:0px 0 0 20px">
-                            <i class="material-icons reset_ass" tooltip="Reset" (click)="resetParam()">replay</i>
-                          </span>
-                          <span *ngIf="!isTeacher" style="padding:0px 0 0 20px">
-                              <i class="material-icons reset_ass" tooltip="Reset" (click)="back()">arrow_back</i>
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <form [formGroup]="paramForm" novalidate>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                        <div class="mt-4 ml-2">
+                            <span class="font-size-24 font-medium">View Assignment</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9  text-right">
+                        <div class="row justify-content-end">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
+                                    <mat-label>Class</mat-label>
+                                    <mat-select formControlName="class_id"
+                                        (selectionChange)="getSectionsByClass();getMasterStudentDetail();">
+                                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                            {{item.class_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Section</mat-label>
+                                    <mat-select formControlName="sec_id" (selectionChange)="getMasterStudentDetail()">
+                                        <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                            {{item.sec_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!isTeacher" style="padding:0px 0 0 20px">
+                                <i class="material-icons reset_ass" tooltip="Reset" (click)="resetParam()">replay</i>
                             </span>
-                      </div>
-                  </div>
-              </div>
-          </form>
-      </mat-card>
-  </div>
+                            <span *ngIf="!isTeacher" style="padding:0px 0 0 20px">
+                                <i class="material-icons reset_ass" tooltip="Reset" (click)="back()">arrow_back</i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
+    </div>
 </div>
 <div class="row ">
     <div class="col-12">
@@ -57,7 +60,7 @@
                             <th mat-header-cell *matHeaderCellDef width="25%"> Topic </th>
                             <td mat-cell *matCellDef="let element"> {{element.topic | capitalize}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="assignment" >
+                        <ng-container matColumnDef="assignment">
                             <th mat-header-cell *matHeaderCellDef width="25%"> Assignment </th>
                             <td mat-cell *matCellDef="let element">
                                 <div [innerHtml]="element.assignment | capitalize | truncatetext:100"></div>
@@ -65,7 +68,7 @@
                         </ng-container>
                         <ng-container matColumnDef="entrydate">
                             <th mat-header-cell *matHeaderCellDef width="8%"> Assigned On</th>
-                            <td mat-cell *matCellDef="let element" > {{element.entryDate | date: 'd-MMM-y'}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
                         </ng-container>
                         <ng-container matColumnDef="assignedby">
                             <th mat-header-cell *matHeaderCellDef> Assigned By </th>
@@ -77,8 +80,10 @@
                         </ng-container>
                         <ng-container matColumnDef="attachment">
                             <th mat-header-cell *matHeaderCellDef> Attachment </th>
-                            <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.action.as_attachment)"><span
-                    class="font-white font-size-16">{{element.attachment | zerodash}}</span></button></td>
+                            <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10"
+                                    (click)="previewDocuments(element.action.as_attachment)"><span
+                                        class="font-white font-size-16">{{element.attachment | zerodash}}</span></button>
+                            </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns1;">
@@ -90,8 +95,8 @@
     </div>
 </div>
 <div class="row ">
-  <div class="col-12">
-      <mat-card>
+    <div class="col-12">
+        <mat-card>
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
                     <div>
@@ -100,79 +105,105 @@
                 </div>
             </div>
             <div class="row">
-              <div class="col-4">
-                  <mat-form-field appearance="a">
-                      <input class="margin-left-10" matInput placeholder="Filter" (keyup)="doAssignmentFilter($event.target.value)">
-                      <mat-icon matPrefix>filter_list</mat-icon>
-                  </mat-form-field>
-              </div>
-              <div class="col-8 text-right">
-                  <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
-                      <span class="submited_count">Submited : {{submited_count}}</span>
-                  </div>
-                  <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
+                <div class="col-4">
+                    <mat-form-field appearance="a">
+                        <input class="margin-left-10" matInput placeholder="Filter"
+                            (keyup)="doAssignmentFilter($event.target.value)">
+                        <mat-icon matPrefix>filter_list</mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="col-8 text-right">
+                    <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
+                        <span class="submited_count">Submited : {{submited_count}} / {{total_count}}</span>
+                    </div>
+                    <!-- <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
                     <span class="total_count">Total : {{total_count}}</span>
-                  </div>
-              </div>
-          </div>
+                  </div> -->
+                </div>
+            </div>
 
-          <div class="row margin-top-10">
-              <div class="col-12">
-                  <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
-                      <ng-container matColumnDef="srno">
-                          <th mat-header-cell *matHeaderCellDef width="5%"> S.No </th>
-                          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="class">
-                          <th mat-header-cell *matHeaderCellDef> Class </th>
-                          <td mat-cell *matCellDef="let element"> {{element.class | uppercase}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef width="25%" > Name </th>
-                          <td mat-cell *matCellDef="let element" class="text-left"> {{element.name | capitalize}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="admission_no">
-                          <th mat-header-cell *matHeaderCellDef width="10%"> Adm No</th>
-                          <td mat-cell *matCellDef="let element"> {{element.admission_no | capitalize}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="entrydate">
-                          <th mat-header-cell *matHeaderCellDef width="10%"> Submitted On</th>
-                          <td mat-cell *matCellDef="let element"> {{element.entrydate | date: 'd-MMM-y'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="attachment">
-                        <th mat-header-cell *matHeaderCellDef width="10%"> Attachment </th>
-                        <td mat-cell *matCellDef="let element"> <button *ngIf="element.attachment?.length > 0" mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.attachment)"><span
-                        class="font-white font-size-16">{{element.attachment.length | zerodash}}</span></button></td>
-                      </ng-container>
-                      <ng-container matColumnDef="sas_obtained_marks">
-                          <th mat-header-cell *matHeaderCellDef>Marks</th>
-                          <td mat-cell *matCellDef="let element;let i = index"> 
-                            <form [formGroup]="obtained_marks_arr[i].eachform">
-                                <input type="number" matInput formControlName="sas_obtained_marks">
-                            </form>
-                              
-                          </td>
-                      </ng-container>
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                      </tr>
-                  </table>
-                  <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
-                  </mat-paginator>
-                  <div class="row margin-top-20" [hidden]="nodataFlag">
-                      <div class="col-12 text-center">
-                          <button mat-raised-button class="btn-success-green" (click)="submitMarks()">Submit</button>
-                          <!-- <button mat-raised-button class="btn-reset margin-left-10">cancel</button> -->
-                      </div>
-                  </div>
-                  <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
-                      <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
-                  </div>
-                  <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
-                      <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]=""></app-no-data>
-                  </div>
-              </div>
-          </div>
-      </mat-card>
-  </div>
+            <div class="row margin-top-10">
+                <div class="col-12">
+                    <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
+                        <ng-container matColumnDef="srno">
+                            <th mat-header-cell *matHeaderCellDef width="5%"> S.No </th>
+                            <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="class">
+                            <th mat-header-cell *matHeaderCellDef> Class </th>
+                            <td mat-cell *matCellDef="let element"> {{element.class | uppercase}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef width="15%"> Name </th>
+                            <td mat-cell *matCellDef="let element" class="text-left"> {{element.name | capitalize}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="admission_no">
+                            <th mat-header-cell *matHeaderCellDef width="6%"> Adm No</th>
+                            <td mat-cell *matCellDef="let element"> {{element.admission_no | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rollno">
+                            <th mat-header-cell *matHeaderCellDef width="5%"> Roll No</th>
+                            <td mat-cell *matCellDef="let element"> {{element.rollno | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assignment_desc">
+                            <th mat-header-cell *matHeaderCellDef width="20%"> Desc</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span>{{element.assignment_desc | truncatetext : 35}} </span>
+                                <mat-icon matPrefix [matTooltip]="element.assignment_desc">info</mat-icon>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="entrydate">
+                            <th mat-header-cell *matHeaderCellDef width="8%"> Submitted On</th>
+                            <td mat-cell *matCellDef="let element"> {{element.entrydate | date: 'd-MMM-y'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action_status">
+                            <th mat-header-cell *matHeaderCellDef width="6%"> Status </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                {{element.action_status | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="attachment">
+                            <th mat-header-cell *matHeaderCellDef width="6%"> Attachment </th>
+                            <td mat-cell *matCellDef="let element"> <button *ngIf="element.attachment?.length > 0"
+                                    mat-mini-fab class="btn-blue margin-left-10"
+                                    (click)="previewDocuments(element.attachment)"><span
+                                        class="font-white font-size-16">{{element.attachment.length | zerodash}}</span></button>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sas_remarks">
+                            <th mat-header-cell *matHeaderCellDef>Remarks</th>
+                            <td mat-cell *matCellDef="let element;let i = index">
+                                <form [formGroup]="remarks_arr[i].eachform">
+                                    <input type="text" matInput formControlName="sas_remarks">
+                                </form>
+
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
+                        [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
+                    </mat-paginator>
+                    <div class="row margin-top-20" [hidden]="nodataFlag">
+                        <div class="col-12 text-center">
+                            <button mat-raised-button class="btn-success-green" (click)="submitMarks()">Submit</button>
+                            <!-- <button mat-raised-button class="btn-reset margin-left-10">cancel</button> -->
+                        </div>
+                    </div>
+                    <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
+                    </div>
+                    <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]=""></app-no-data>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>

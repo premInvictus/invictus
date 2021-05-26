@@ -141,6 +141,8 @@ export class AssignmentComponent implements OnInit {
 						const findex = assignmentSubmit_arr.findIndex(e => e.as_id == element.as_id);
 						if(findex != -1){
 							element['sas_attachment'] = assignmentSubmit_arr[findex].as_attachment;
+							element['sas_remarks'] = assignmentSubmit_arr[findex].sas_remarks;
+							element['sas_action_status'] = assignmentSubmit_arr[findex].sas_action_status;
 						} else {
 							element['sas_attachment']=[];
 						}
@@ -202,6 +204,7 @@ export class AssignmentComponent implements OnInit {
 		});
 	}
 	submit(item) {
+		console.log('item',item);
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
 			width: '950px',
 			height: '500px',

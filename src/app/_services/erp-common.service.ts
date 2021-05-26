@@ -642,6 +642,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
+	uploadDocumentsAndMerge(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocumentsAndMerge', value);
+	}
 
 	getMasterStudentDetail(value) {
 		this.service.startLoading();

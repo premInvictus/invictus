@@ -100,71 +100,96 @@
               </div>
               <div class="col-8 text-right">
                   <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
-                      <span class="submited_count">Submited : {{submited_count}}</span>
+                      <span class="submited_count">Submited : {{submited_count}} / {{total_count}}</span>
                   </div>
-                  <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
-                    <span class="total_count">Total : {{total_count}}</span>
-                  </div>
+                  <!-- <div class="inline-flex btn-spacer text-right" *ngIf="ELEMENT_DATA.length > 0 ">
+                    <span class="total_count">Total : </span>
+                  </div> -->
               </div>
           </div>
 
           <div class="row margin-top-10">
-              <div class="col-12">
-                  <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
-                      <ng-container matColumnDef="srno">
-                          <th mat-header-cell *matHeaderCellDef width="5%"> S.No </th>
-                          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="class">
-                          <th mat-header-cell *matHeaderCellDef> Class </th>
-                          <td mat-cell *matCellDef="let element"> {{element.class | uppercase}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef width="25%" > Name </th>
-                          <td mat-cell *matCellDef="let element" class="text-left"> {{element.name | capitalize}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="admission_no">
-                          <th mat-header-cell *matHeaderCellDef width="10%"> Adm No</th>
-                          <td mat-cell *matCellDef="let element"> {{element.admission_no | capitalize}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="entrydate">
-                          <th mat-header-cell *matHeaderCellDef width="10%"> Submitted On</th>
-                          <td mat-cell *matCellDef="let element"> {{element.entrydate | date: 'd-MMM-y'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="attachment">
-                        <th mat-header-cell *matHeaderCellDef width="10%"> Attachment </th>
-                        <td mat-cell *matCellDef="let element"> <button *ngIf="element.attachment?.length > 0" mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.attachment)"><span
-                        class="font-white font-size-16">{{element.attachment.length | zerodash}}</span></button></td>
-                      </ng-container>
-                      <ng-container matColumnDef="sas_obtained_marks">
-                          <th mat-header-cell *matHeaderCellDef>Marks</th>
-                          <td mat-cell *matCellDef="let element;let i = index"> 
-                            <form [formGroup]="obtained_marks_arr[i].eachform">
-                                <input type="number" matInput formControlName="sas_obtained_marks">
-                            </form>
-                              
-                          </td>
-                      </ng-container>
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                      </tr>
-                  </table>
-                  <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
-                  </mat-paginator>
-                  <div class="row margin-top-20" [hidden]="nodataFlag">
-                      <div class="col-12 text-center">
-                          <button mat-raised-button class="btn-success-green" (click)="submitMarks()">Submit</button>
-                          <!-- <button mat-raised-button class="btn-reset margin-left-10">cancel</button> -->
-                      </div>
-                  </div>
-                  <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
-                      <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
-                  </div>
-                  <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
-                      <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]=""></app-no-data>
-                  </div>
-              </div>
-          </div>
+                <div class="col-12">
+                    <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
+                        <ng-container matColumnDef="srno">
+                            <th mat-header-cell *matHeaderCellDef width="5%"> S.No </th>
+                            <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="class">
+                            <th mat-header-cell *matHeaderCellDef> Class </th>
+                            <td mat-cell *matCellDef="let element"> {{element.class | uppercase}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef width="25%"> Name </th>
+                            <td mat-cell *matCellDef="let element" class="text-left"> {{element.name | capitalize}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="admission_no">
+                            <th mat-header-cell *matHeaderCellDef width="6%"> Adm No</th>
+                            <td mat-cell *matCellDef="let element"> {{element.admission_no | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rollno">
+                            <th mat-header-cell *matHeaderCellDef width="5%"> Roll No</th>
+                            <td mat-cell *matCellDef="let element"> {{element.rollno | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assignment_desc">
+                            <th mat-header-cell *matHeaderCellDef width="10%"> Desc</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span>{{element.assignment_desc | truncatetext : 25}} </span>
+                                <mat-icon matPrefix [matTooltip]="element.assignment_desc">info</mat-icon>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="entrydate">
+                            <th mat-header-cell *matHeaderCellDef width="8%"> Submitted On</th>
+                            <td mat-cell *matCellDef="let element"> {{element.entrydate | date: 'd-MMM-y'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action_status">
+                            <th mat-header-cell *matHeaderCellDef width="6%"> Status </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                {{element.action_status | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="attachment">
+                            <th mat-header-cell *matHeaderCellDef width="8%"> Attachment </th>
+                            <td mat-cell *matCellDef="let element"> <button *ngIf="element.attachment?.length > 0"
+                                    mat-mini-fab class="btn-blue margin-left-10"
+                                    (click)="previewDocuments(element.attachment)"><span
+                                        class="font-white font-size-16">{{element.attachment.length | zerodash}}</span></button>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sas_remarks">
+                            <th mat-header-cell *matHeaderCellDef>Remarks</th>
+                            <td mat-cell *matCellDef="let element;let i = index">
+                                <form [formGroup]="remarks_arr[i].eachform">
+                                    <input type="text" matInput formControlName="sas_remarks">
+                                </form>
+
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
+                        [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
+                    </mat-paginator>
+                    <div class="row margin-top-20" [hidden]="nodataFlag">
+                        <div class="col-12 text-center">
+                            <button mat-raised-button class="btn-success-green" (click)="submitMarks()">Submit</button>
+                            <!-- <button mat-raised-button class="btn-reset margin-left-10">cancel</button> -->
+                        </div>
+                    </div>
+                    <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
+                    </div>
+                    <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]=""></app-no-data>
+                    </div>
+                </div>
+            </div>
       </mat-card>
   </div>
 </div>

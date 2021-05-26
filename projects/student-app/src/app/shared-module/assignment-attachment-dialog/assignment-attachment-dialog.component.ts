@@ -59,6 +59,9 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		};
 		this.ckeConfig.font_defaultLabel = 'Arial';
 		this.ckeConfig.fontSize_defaultLabel = '20';
+		// this.erpCommonService.uploadDocumentsAndMerge({}).subscribe((result: any) => {
+			
+		// });
 	}
 	fileChangeEvent(fileInput) {
 		this.multipleFileArray = [];
@@ -66,6 +69,18 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		const files = fileInput.target.files;
 		for (let i = 0; i < files.length; i++) {
 			this.IterateFileLoop(files[i]);
+		}
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else if (filetype === 'xls' || filetype === 'xlxs') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-excel.png';
+		} else {
+			return fileurl;
 		}
 	}
 
@@ -80,7 +95,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			};
 			this.multipleFileArray.push(fileJson);
 			if (this.multipleFileArray.length === this.currentFileChangeEvent.target.files.length) {
-				this.erpCommonService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				this.erpCommonService.uploadDocumentsAndMerge(this.multipleFileArray).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						for (const item of result.data) {
 							console.log('item', item);
@@ -113,7 +128,8 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	addAttachment() {
 		console.log('addAttachment');
-		if (this.data.as_id && this.assignment_desc && this.imageArray.length > 0) {
+		console.log('this.data',this.data);
+		if (this.data.as_id && this.assignment_desc) {
 			const param: any = {};
 			param.sas_as_id = this.data.as_id;
 			param.sas_login_id = this.data.login_id;
