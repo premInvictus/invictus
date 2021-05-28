@@ -121,7 +121,7 @@
           <div class="row">
             <div class="col-10">
               <span class="font-size-20 font-bold font-skyblue">{{item2.sub_name | titlecase}}</span><br>
-              <span class="font-size-18 font-bold">{{item2.topic_name | titlecase}}</span><br>
+              <span class="font-size-18 font-bold" [innerHTML]="item2.topic_name"></span><br>
               <p><span>Assigned By : </span><span class="font-bold">{{item2.au_full_name | titlecase}}</span></p>
               <div class="margin-top-10" [innerHTML]="item2.as_assignment_desc | titlecase"></div><br>
               <p><span>Status : </span><span class="font-bold">{{item2.sas_action_status | titlecase}}</span></p>
