@@ -426,7 +426,7 @@
 						</div>
 						<div class="row">
 							<div class="col-12">
-								<span class="font-size-16 font-medium">{{currentAssignment?.topic_name}}</span>
+								<span class="font-size-16 font-medium" [innerHTML]="currentAssignment?.topic_name"></span>
 								<div class="font-size-15 margin-top-10"
 									[innerHTML]="currentAssignment?.as_assignment_desc"></div>
 							</div>

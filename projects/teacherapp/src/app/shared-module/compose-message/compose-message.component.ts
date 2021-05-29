@@ -325,6 +325,12 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.sisService.getAllStudentsByClassSection(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
+						let tempau_admission_no = '';
+						if(result.data[i]['au_process_type'] == '3') {
+							tempau_admission_no = 'P.A.'+result.data[i]['em_provisional_admission_no'];
+						} else if(result.data[i]['au_process_type'] == '4'){
+							tempau_admission_no = 'A.'+result.data[i]['em_admission_no'];
+						}
 						var inputJson = {
 							au_login_id: result.data[i]['au_login_id'],
 							au_full_name: result.data[i]['au_full_name'],
@@ -333,7 +339,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
-							au_admission_no: result.data[i]['em_admission_no'],
+							au_admission_no: tempau_admission_no,
 							au_role_id: '4',
 							checked: false,
 						}

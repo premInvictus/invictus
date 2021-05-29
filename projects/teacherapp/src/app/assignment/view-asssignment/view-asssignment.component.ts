@@ -25,7 +25,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	@Input() currentAssignment;
 	@Output() backEvent = new EventEmitter<any>();
 	paramForm: FormGroup;
-	obtained_marks_arr = [];
+	remarks_arr = [];
 	classArray: any[] = [];
 	subjectArray: any[] = [];
 	sectionArray: any[] = [];
@@ -37,7 +37,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	sessionArray: any[] = [];
 	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'attachment', 'entrydate'];
 	dataSource1 = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA1);
-	displayedColumns = ['srno', 'admission_no', 'name', 'attachment', 'sas_obtained_marks','entrydate'];
+	displayedColumns = ['srno', 'admission_no', 'name', 'rollno', 'attachment','assignment_desc', 'sas_remarks','entrydate','action_status'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -204,6 +204,11 @@ export class ViewAsssignmentComponent implements OnInit {
 	setMinTo(event) {
 		this.toMin = event.value;
 	}
+	removeHTML(str){ 
+		var tmp = document.createElement("DIV");
+		tmp.innerHTML = str;
+		return tmp.textContent || tmp.innerText || "";
+	}
 	getMasterStudentDetail() {
 		if (this.paramForm.value.class_id && this.paramForm.value.sec_id) {
 			this.assignmentArray = [];
@@ -211,7 +216,13 @@ export class ViewAsssignmentComponent implements OnInit {
 			this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 			let param = this.paramForm.value;
 			param['enrollment_type'] = '4';
-			this.sisService.getMasterStudentDetail(param).subscribe(async (result: any) => {
+
+			let param2:any = {};
+			param2.au_class_id = this.paramForm.value.class_id;
+			param2.au_sec_id = this.paramForm.value.sec_id;
+			param2.au_role_id = '4';
+			param2.au_status = '1';
+			this.commonAPIService.getRollNoUser(param2).subscribe(async (result: any) => {
 				if (result && result.status === 'ok') {
 					let assignmentSubmit_arr = [];
 					let param1: any = {};
@@ -232,24 +243,29 @@ export class ViewAsssignmentComponent implements OnInit {
 
 							const each: any = {};
 							each.srno = ++i;
-							each.admission_no = item.em_admission_no;
+							each.admission_no = item.au_admission_no;
 							each.name = item.au_full_name;
+							each.rollno = item.r_rollno ? item.r_rollno : '';
+							
 							each.class = item.class_name + ' - ' + item.sec_name;
 							each.entrydate = '';
 							each.attachment = [];
-							let sas_obtained_marks = '';
+							let sas_remarks = '';
 							const findex = assignmentSubmit_arr.findIndex(e => e.sas_login_id == item.au_login_id);
 							if (findex != -1) {
+								each.action_status = assignmentSubmit_arr[findex]['sas_action_status'];
 								each.entrydate = assignmentSubmit_arr[findex]['sas_entry_date'];
 								each.attachment = assignmentSubmit_arr[findex]['as_attachment'];
-								sas_obtained_marks = assignmentSubmit_arr[findex]['sas_obtained_marks'];
+								sas_remarks = assignmentSubmit_arr[findex]['sas_remarks'];
+								let onlyText = this.removeHTML(assignmentSubmit_arr[findex]['sas_assignment_desc']);
+								each.assignment_desc =onlyText;
 								this.submited_count++;
 							}
-							this.obtained_marks_arr.push({
+							this.remarks_arr.push({
 								eachform: this.fbuild.group({
 									'sas_login_id': item.au_login_id,
 									'sas_as_id': this.currentAssignment.as_id,
-									'sas_obtained_marks': sas_obtained_marks
+									'sas_remarks': sas_remarks
 								})
 							})
 							this.ELEMENT_DATA.push(each);
@@ -262,7 +278,7 @@ export class ViewAsssignmentComponent implements OnInit {
 
 					}
 				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 					this.nodataFlag = true;
 				}
 			});
@@ -301,8 +317,8 @@ export class ViewAsssignmentComponent implements OnInit {
 	}
 	submitMarks() {
 		let marks_arr = [];
-		this.obtained_marks_arr.forEach(element => {
-			if (element.eachform.value.sas_obtained_marks) {
+		this.remarks_arr.forEach(element => {
+			if (element.eachform.value.sas_remarks) {
 				marks_arr.push(element.eachform.value)
 			}
 		});
