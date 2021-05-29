@@ -22,6 +22,8 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 })
 export class ViewAsssignmentComponent implements OnInit {
 
+	selection = new SelectionModel<Element>(true, []);
+
 	@Input() currentAssignment;
 	@Output() backEvent = new EventEmitter<any>();
 	paramForm: FormGroup;
@@ -37,7 +39,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	sessionArray: any[] = [];
 	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'attachment', 'entrydate'];
 	dataSource1 = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA1);
-	displayedColumns = ['srno', 'admission_no', 'name', 'rollno', 'attachment','assignment_desc', 'sas_remarks','entrydate','action_status'];
+	displayedColumns = ['srno', 'admission_no', 'name', 'rollno', 'attachment','assignment_desc', 'sas_remarks','entrydate','action_status','select'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -244,10 +246,12 @@ export class ViewAsssignmentComponent implements OnInit {
 							const each: any = {};
 							each.srno = ++i;
 							each.admission_no = item.au_admission_no;
+							each.au_login_id = item.au_login_id;
 							each.name = item.au_full_name;
 							each.rollno = item.r_rollno ? item.r_rollno : '';
 							
 							each.class = item.class_name + ' - ' + item.sec_name;
+							each.action_status = '';
 							each.entrydate = '';
 							each.attachment = [];
 							let sas_remarks = '';
@@ -319,7 +323,12 @@ export class ViewAsssignmentComponent implements OnInit {
 		let marks_arr = [];
 		this.remarks_arr.forEach(element => {
 			if (element.eachform.value.sas_remarks) {
-				marks_arr.push(element.eachform.value)
+				let item = JSON.parse(JSON.stringify(element.eachform.value));
+				const findex = this.selection.selected.findIndex(e => e.au_login_id == item.sas_login_id);
+				if(findex != -1){
+					item['sas_action_status'] = 'reviewed';
+				}
+				marks_arr.push(item);
 			}
 		});
 		if (marks_arr.length > 0) {

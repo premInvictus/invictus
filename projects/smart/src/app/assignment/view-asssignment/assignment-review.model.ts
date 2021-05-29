@@ -3,6 +3,7 @@ export interface Element {
 	name: any;
 	class: any;
 	admission_no: any;
+	au_login_id:any;
 	entrydate:any;
 	attachment:any;
 }
