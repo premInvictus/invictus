@@ -115,6 +115,7 @@ export class ViewAsssignmentComponent implements OnInit {
 		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 	ngOnInit() {
+		console.log('running');
 		console.log('currentAssignment', this.currentAssignment);
 		if(this.currentAssignment){
 			const each: any = {};

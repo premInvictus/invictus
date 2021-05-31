@@ -215,9 +215,9 @@
 								</div>
 								<div class="box-content-container" matTooltip="Join Now" (click)="openclass(item)">
 									<span class="font-size-30">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
-									<div class="margin-top-35">
+									<div class="margin-top-15">
 										<span class="font-size-16">{{className}} - {{secName}}</span><br>
-										<span class="font-size-16">{{item.subject_name}}</span>
+										<span class="font-size-16">{{item.subject_name | truncatetext:15}}</span>
 									</div>
 								</div>
 							</div>
@@ -582,7 +582,7 @@
 															<div class="margin-top-35">
 																<span class="font-size-14">{{className}} -
 																	{{secName}}</span><br>
-																<span class="font-size-14">{{item.subject_name}}</span>
+																<span class="font-size-14">{{item.subject_name | titlecase}}</span>
 															</div>
 														</div>
 													</div>

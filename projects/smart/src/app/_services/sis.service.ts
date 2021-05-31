@@ -89,6 +89,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/enableAcessCertificate', value);
 	}
+	enableAcessCertificateBulk(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/enableAcessCertificateBulk', value);
+	}
 	getUser(value) {
 		const param: any = {};
 		if (value.full_name) {
