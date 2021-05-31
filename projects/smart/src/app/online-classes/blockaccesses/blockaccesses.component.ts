@@ -152,6 +152,10 @@ export class BlockaccessesComponent implements OnInit {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
     if (this.paramForm.valid) {
+
+      this.paramForm.patchValue({
+        enrollment_type: '4'
+      });
       this.sisService.getMasterStudentDetail(this.paramForm.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentsArray = result.data;
@@ -174,6 +178,40 @@ export class BlockaccessesComponent implements OnInit {
               name: item.au_full_name,
               class: item.sec_name ? item.class_name + '-' + item.sec_name : item.class_name,
               em_admission_no: item[enrollment_fieldname],
+              action: item
+            });
+            counter += 1;
+          }
+          this.dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
+          this.dataSource.sort = this.sort;
+          this.tabledivflag = true;
+        }
+      })
+      this.paramForm.patchValue({
+        enrollment_type: '3'
+      });
+      this.sisService.getMasterStudentDetail(this.paramForm.value).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          this.studentsArray = result.data;
+          let counter = 1;
+          let enrollment_fieldname = '';
+          // if (this.paramForm.value.enrollment_type === '2') {
+          //   enrollment_fieldname = 'em_regd_no';
+          // } else if (this.paramForm.value.enrollment_type === '3') {
+            enrollment_fieldname = 'em_provisional_admission_no';
+          // } else if (this.paramForm.value.enrollment_type === '4') {
+          // enrollment_fieldname = 'em_admission_no';
+          // } else if (this.paramForm.value.enrollment_type === '5') {
+          //   enrollment_fieldname = 'em_alumini_no';
+          // }
+          for (const item of this.studentsArray) {
+
+            this.ELEMENT_DATA.push({
+              select: counter,
+              no: item.au_login_id,
+              name: item.au_full_name,
+              class: item.sec_name ? item.class_name + '-' + item.sec_name : item.class_name,
+              em_admission_no: 'P' + item[enrollment_fieldname],
               action: item
             });
             counter += 1;
