@@ -17,10 +17,8 @@ export class BlockaccessesComponent implements OnInit {
 
   paramForm: FormGroup;
   enrollMentTypeArray: any[] = [
-    { au_process_type: '2', au_process_name: 'Registration' },
     { au_process_type: '3', au_process_name: 'Provisional Admission' },
-    { au_process_type: '4', au_process_name: 'Admission' },
-    { au_process_type: '5', au_process_name: 'Alumini' }
+    { au_process_type: '4', au_process_name: 'Admission' }
   ];
   certificate_type_arr: any[] = [];
   classArray: any[] = [];
@@ -157,15 +155,15 @@ export class BlockaccessesComponent implements OnInit {
           this.studentsArray = result.data;
           let counter = 1;
           let enrollment_fieldname = '';
-          // if (this.paramForm.value.enrollment_type === '2') {
-          //   enrollment_fieldname = 'em_regd_no';
-          // } else if (this.paramForm.value.enrollment_type === '3') {
-          //   enrollment_fieldname = 'em_provisional_admission_no';
-          // } else if (this.paramForm.value.enrollment_type === '4') {
+          if (this.paramForm.value.enrollment_type === '2') {
+            enrollment_fieldname = 'em_regd_no';
+          } else if (this.paramForm.value.enrollment_type === '3') {
+            enrollment_fieldname = 'em_provisional_admission_no';
+          } else if (this.paramForm.value.enrollment_type === '4') {
           enrollment_fieldname = 'em_admission_no';
-          // } else if (this.paramForm.value.enrollment_type === '5') {
-          //   enrollment_fieldname = 'em_alumini_no';
-          // }
+          } else if (this.paramForm.value.enrollment_type === '5') {
+            enrollment_fieldname = 'em_alumini_no';
+          }
           for (const item of this.studentsArray) {
 
             this.ELEMENT_DATA.push({
