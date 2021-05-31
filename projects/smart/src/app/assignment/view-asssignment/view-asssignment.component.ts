@@ -23,6 +23,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class ViewAsssignmentComponent implements OnInit {
 
+	selection = new SelectionModel<Element>(true, []);
 	@Input() currentAssignment;
 	@Output() backEvent = new EventEmitter<any>();
 	@ViewChild('tooltip') tooltip: MatTooltip
@@ -39,7 +40,7 @@ export class ViewAsssignmentComponent implements OnInit {
 	sessionArray: any[] = [];
 	displayedColumns1 = ['class', 'subject', 'topic', 'assignment', 'assignedby', 'publishedby', 'attachment','entrydate'];
 	dataSource1 = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA1);
-	displayedColumns = ['srno', 'admission_no', 'name', 'rollno', 'attachment','assignment_desc', 'sas_remarks','entrydate','action_status'];
+	displayedColumns = ['srno', 'admission_no', 'name', 'rollno', 'attachment','assignment_desc', 'sas_remarks','entrydate','action_status','select'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -114,6 +115,7 @@ export class ViewAsssignmentComponent implements OnInit {
 		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 	ngOnInit() {
+		console.log('running');
 		console.log('currentAssignment', this.currentAssignment);
 		if(this.currentAssignment){
 			const each: any = {};
@@ -141,6 +143,22 @@ export class ViewAsssignmentComponent implements OnInit {
 		this.getSession();
 		this.getSchool();
 	}
+	/** Whether the number of selected elements matches the total number of rows. */
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+	  }
+	
+	  /** Selects all rows if they are not all selected; otherwise clear selection. */
+	  masterToggle() {
+		if (this.isAllSelected()) {
+		  this.selection.clear();
+		  return;
+		}
+	
+		this.selection.select(...this.dataSource.data);
+	  }
 	// get session name by session id
 	getSession() {
 		this.sisService.getSession()
@@ -247,12 +265,15 @@ export class ViewAsssignmentComponent implements OnInit {
 							const each: any = {};
 							each.srno = ++i;
 							each.admission_no = item.au_admission_no;
+							each.au_login_id = item.au_login_id;
 							each.name = item.au_full_name;
 							each.rollno = item.r_rollno ? item.r_rollno : '';
 							
 							each.class = item.class_name + ' - ' + item.sec_name;
+							each.action_status = '';
 							each.entrydate = '';
 							each.attachment = [];
+							each.action = null;
 							let sas_remarks = '';
 							const findex = assignmentSubmit_arr.findIndex(e => e.sas_login_id == item.au_login_id);
 							if (findex != -1) {
@@ -262,6 +283,7 @@ export class ViewAsssignmentComponent implements OnInit {
 								sas_remarks = assignmentSubmit_arr[findex]['sas_remarks'];
 								let onlyText = this.removeHTML(assignmentSubmit_arr[findex]['sas_assignment_desc']);
 								each.assignment_desc =onlyText;
+								each.action = assignmentSubmit_arr[findex];
 								this.submited_count++;
 							}
 							this.remarks_arr.push({
@@ -319,21 +341,31 @@ export class ViewAsssignmentComponent implements OnInit {
 		this.backEvent.emit({ page: 'assignment' });
 	}
 	submitMarks() {
+		console.log('sellection', this.selection.selected);
 		let marks_arr = [];
 		this.remarks_arr.forEach(element => {
 			if (element.eachform.value.sas_remarks) {
-				marks_arr.push(element.eachform.value)
+				let item = JSON.parse(JSON.stringify(element.eachform.value));
+				const findex = this.selection.selected.findIndex(e => e.au_login_id == item.sas_login_id);
+				if(findex != -1){
+					item['sas_action_status'] = 'reviewed';
+				}
+				marks_arr.push(item);
 			}
 		});
 		if (marks_arr.length > 0) {
 			console.log('marks_arr', marks_arr);
 			this.smartService.updateAssignmentSubmitMarks(marks_arr).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.getMasterStudentDetail();
 					this.commonAPIService.showSuccessErrorMessage('Marks updated successfully', 'success');
 				}
 			});
 		}
 
+	}
+	viewAssignment(data) {
+		console.log('viewAssignment',data);
 	}
 
 }
