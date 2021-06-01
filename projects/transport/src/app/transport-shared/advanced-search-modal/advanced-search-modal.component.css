@@ -1,0 +1,8 @@
+.material-icons {
+    cursor: pointer;
+}
+
+:host ::ng-deep .btn-lib-search span.mat-button-wrapper{
+    color: #fff !important;
+    
+}

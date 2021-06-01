@@ -1,0 +1,19 @@
+step1- ng generate application transport --style=scss --routing=true
+
+step2- copy misc-shared and miscusertype folder from projects/misc/arc/app
+
+step3- paste current appliation projects/transport/src/app/
+
+step4- rename file as well as class of current appliacation
+
+step5- add module transport-shared and transportusertype in src/tscconfig.app.json
+	"../projects/transport/src/app/transport-shared/transport-shared.module.ts",
+    	"../projects/transport/src/app/transportusertype/transportusertype.module.ts"
+
+step6 - add transport lazy loading routing to  src/app.routing.ts
+	import { TransportSharedAppModule } from 'projects/transport/src/app/app.module';
+	{path: 'transport', canActivate: [AuthGuard], loadChildren: 'projects/transport/src/app/app.module#TransportSharedAppModule'},
+	TransportSharedAppModule.forRoot()
+step7 - change detals of projects/transport/src/app/transportusertype/school/school-dashboard
+
+step8 - type url localhost:4200/transport/school

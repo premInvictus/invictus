@@ -14,6 +14,7 @@ import { LibrarySharedAppModule } from 'projects/library-management/src/app/app.
 import { MiscellaneousSharedAppModule } from 'projects/miscellaneous/src/app/app.module';
 import { InventorySharedAppModule } from 'projects/inventory/src/app/app.module';
 import { FinancialAccountingSharedAppModule } from 'projects/financial-accounting/src/app/app.module';
+import { TransportSharedAppModule } from 'projects/transport/src/app/app.module';
 const appRoutes: Routes = [
 		{path: 'login', loadChildren: 'src/app/login/login.module#LoginModule'},
 		{path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -30,6 +31,7 @@ const appRoutes: Routes = [
 		{path: 'misc', canActivate: [AuthGuard], loadChildren: 'projects/miscellaneous/src/app/app.module#MiscellaneousSharedAppModule'},
 		{path: 'inventory', canActivate: [AuthGuard], loadChildren: 'projects/inventory/src/app/app.module#InventorySharedAppModule'},
 		{path: 'finanacial-accounting', canActivate: [AuthGuard], loadChildren: 'projects/financial-accounting/src/app/app.module#FinancialAccountingSharedAppModule'},
+		{path: 'transport', canActivate: [AuthGuard], loadChildren: 'projects/transport/src/app/app.module#TransportSharedAppModule'},
 		{ path: '**', redirectTo: 'login'},
 ];
 
@@ -47,7 +49,8 @@ const appRoutes: Routes = [
 			LibrarySharedAppModule.forRoot(),
 			MiscellaneousSharedAppModule.forRoot(),
 			InventorySharedAppModule.forRoot(),
-			FinancialAccountingSharedAppModule.forRoot()
+			FinancialAccountingSharedAppModule.forRoot(),
+			TransportSharedAppModule.forRoot()
 		],
 	})
 	export class AppRoutingModule { }
