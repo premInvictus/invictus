@@ -5,7 +5,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { AssignmentModel } from './assignment-review.model';
-// tslint:disable-next-line:max-line-length
+// tslint:disable-next-line:max-line-length 
 import { AssignmentAttachmentDialogComponent } from '../../shared-module/assignment-attachment-dialog/assignment-attachment-dialog.component';
 import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
 @Component({
@@ -16,6 +16,8 @@ import { PreviewDocumentComponent } from '../../shared-module/preview-document/p
 })
 export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 
+	page = 'assignment';
+	currentAssignment={};
 	paramForm: FormGroup;
 	classArray: any[] = [];
 	subjectArray: any[] = [];
@@ -335,5 +337,16 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 		console.log(pageEvent);
 		// this.paginator.length = 100;
 	}
+	viewAssignment(item){
+		console.log('item',item);
+		item.param_sec_id = item.sec_id[0];
+		this.page = 'view assignment';
+		this.currentAssignment = item;
+	}
+	loadPage($event){
+		console.log('$event',$event);
+		this.page = $event.page
+	}
+
 
 }

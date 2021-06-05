@@ -216,6 +216,9 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			'login_id': '',
 			'order_by': ''
 		});
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd')
+		});
 	}
 
 	getSummarizedFeeReviewReport(value: any) {
@@ -389,15 +392,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'opening_outstanding',
-				name: 'Opening Outstanding',
-				field: 'opening_outstanding',
-				sortable: true,
-				filterable: true,
-				
-			},
-			{
-				id: 'au_enrollment_status', name: 'Enrollment Status', field: 'au_enrollment_status', filterable: true, width: 6,
+				id: 'au_enrollment_status', 
+				name: 'Enrollment Status', 
+				field: 'au_enrollment_status',
+				 filterable: true, 
+				 width: 6,
+				 sortable: true,
 				grouping: {
 					getter: 'au_enrollment_status',
 					formatter: (g) => {
@@ -405,8 +405,16 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false
+					collapsed: false,
 				},
+			},
+			{
+				id: 'opening_outstanding',
+				name: 'Opening Outstanding',
+				field: 'opening_outstanding',
+				sortable: true,
+				filterable: true,
+				
 			},
 			{
 				id: 'opening_advances',
@@ -485,7 +493,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					if (repoArray[Number(index)]['inv_opening_balance'] > 0)
 						obj['opening_outstanding'] = Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
 					else 
-						obj['opening_advances'] = -Number(repoArray[Number(index)]['opening_advances'] ? repoArray[Number(index)]['opening_advances'] : 0);
+						obj['opening_advances'] = -Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
 					
 					obj['due_for_period'] = Number(repoArray[Number(index)]['defaulter_inv_group_amount']);
 					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0 );
@@ -739,6 +747,22 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				}
 			}
 		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'fee_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	openFilterDialog() {
 		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {

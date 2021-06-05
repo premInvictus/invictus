@@ -503,6 +503,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/excelimportexport/uploadBulkDocuments', value);
 	}
+	getAssignmentSubmit(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignmentSubmit', value);
+	}
+	updateAssignmentSubmitMarks(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/updateAssignmentSubmitMarks', value);
+	}
 
 }
 

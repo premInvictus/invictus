@@ -154,7 +154,7 @@
                   <td class="custom-td text-left pad-sub" *ngIf="(item.subject_id !== '-')">
                     <i class="fas fa-circle margin-right-10 animation"
                       [ngStyle]="{color: getSubjectColor(item.subject_id)}"></i>
-                    {{item.subject_name}}
+                    {{item.subject_name | titlecase }}
                   </td>
                   <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
                 </ng-container>
@@ -196,7 +196,7 @@
                   </ng-container> -->
             <ng-container matColumnDef="subject">
               <th mat-header-cell *matHeaderCellDef> Subject </th>
-              <td mat-cell class="text-left" *matCellDef="let element"> {{element.subject | uppercase }} </td>
+              <td mat-cell class="text-left" *matCellDef="let element"> {{element.subject | titlecase }} </td>
             </ng-container>
             <ng-container matColumnDef="start">
               <th mat-header-cell *matHeaderCellDef> Start Time </th>

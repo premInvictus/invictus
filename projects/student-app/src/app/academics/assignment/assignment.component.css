@@ -11,3 +11,9 @@
     padding: 0 10px;
     background-color:transparent;
 }
+.submit-attachment {
+    background-color: #9c3 !important;
+}
+.p-m-b {
+    margin-bottom: 0.3rem !important
+}

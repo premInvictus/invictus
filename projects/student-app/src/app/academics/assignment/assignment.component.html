@@ -119,14 +119,27 @@
             class="font-size-20 font-bold font-skyblue">{{item.as_entry_date | date:'d-MMM-y'}}</span></ng-template>
         <ng-container *ngFor="let item2 of item.as_array">
           <div class="row">
-            <div class="col-11">
-              <span class="font-size-20 font-bold font-skyblue">{{item2.sub_name | titlecase}}</span><br>
-              <span class="font-size-18 font-bold">{{item2.topic_name | titlecase}}</span><br>
-              <p><span>Assigned By : </span><span class="font-bold">{{item2.au_full_name | titlecase}}</span></p>
-              <div class="margin-top-10" [innerHTML]="item2.as_assignment_desc | titlecase"></div>
+            <div class="col-10">
+              <span class="font-size-20 font-bold font-skyblue">{{item2.sub_name | titlecase}}</span>
+              <p class="p-m-b"><span>Topic : </span><span class="font-bold" [innerHTML]="item2.topic_name"></span></p>
+              <p class="p-m-b"><span>Assigned By : </span><span class="font-bold">{{item2.au_full_name | titlecase}}</span></p>
+              <!-- [innerHTML]="item2.as_assignment_desc | titlecase" -->
+              <p class="p-m-b" style="display:inline-flex !important;"><span>Description : </span><span [innerHTML]="item2.as_assignment_desc | titlecase" > 
+                
+              </span></p>
+              <p class="p-m-b"><span>Status : </span><span class="font-bold">{{item2.sas_action_status | titlecase}}</span></p>
+              <p class="p-m-b"><span>Teacher's Remarks : </span><span class="font-bold">{{item2.sas_remarks}}</span></p>
+              <button mat-raised-button class="submit-button" (click)="submit(item2)">Submit Assignment</button>
             </div>
+            <div class="col-1 " *ngIf="item2.sas_attachment.length > 0">
+                <!-- <i class="fas fa-upload down-ic" (click)="submit(item)"></i> -->
+                <button mat-mini-fab class="submit-attachment circle-button" [matTooltip]="'Your submittd assignment'"
+                  (click)="previewDocuments(item2.sas_attachment)"><span
+                    class="font-white font-size-16 font-bold">+{{item2.sas_attachment.length}}</span></button>
+              </div>
             <div class="col-1 " *ngIf="item2.as_attachment.length > 0">
-              <button mat-mini-fab class="yellow-circle-button circle-button"
+              <!-- <i class="fas fa-upload down-ic" (click)="submit(item)"></i> -->
+              <button mat-mini-fab class="yellow-circle-button circle-button" [matTooltip]="'assignment'"
                 (click)="previewDocuments(item2.as_attachment)"><span
                   class="font-white font-size-16 font-bold">+{{item2.as_attachment.length}}</span></button>
             </div>

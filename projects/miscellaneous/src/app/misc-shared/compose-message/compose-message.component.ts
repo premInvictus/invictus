@@ -516,6 +516,12 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 								}
 							}
 						}
+						let tempau_admission_no = '';
+						if(result.data[i]['au_process_type'] == '3') {
+							tempau_admission_no = 'P.A.'+result.data[i]['em_provisional_admission_no'];
+						} else if(result.data[i]['au_process_type'] == '4'){
+							tempau_admission_no = 'A.'+result.data[i]['em_admission_no'];
+						}
 						var inputJson = {
 							device_id: deviceId ? deviceId : '',
 							au_login_id: result.data[i]['au_login_id'],
@@ -528,7 +534,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							em_admission_no: result.data[i]['em_admission_no'],
 							au_role_id: '4',
 							checked: false,
-							au_admission_no: result.data[i]['em_admission_no'],
+							au_admission_no: tempau_admission_no,
 						}
 						if (result.data[i]['active_parent'] === 'F') {
 							inputJson['au_email'] = result.data[i]['father_email'] ? result.data[i]['father_email'] : '';

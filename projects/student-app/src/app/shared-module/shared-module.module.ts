@@ -64,6 +64,8 @@ import { MatGridListModule } from '@angular/material';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-payment-payu.component';
+import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -134,7 +136,8 @@ import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-
 		MakePaymentHdfcComponent,
 		AdmitCodeConfirmationModalComponent,
 		//NotificationPageComponent,
-		AngularCalendarYearViewComponent
+		AngularCalendarYearViewComponent,
+		AssignmentAttachmentDialogComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -191,7 +194,8 @@ import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-
 		MakePaymentPayuComponent,
 		AdmitCodeConfirmationModalComponent,
 		AngularCalendarYearViewComponent,
-		MatGridListModule
+		MatGridListModule,
+		AssignmentAttachmentDialogComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
@@ -201,7 +205,8 @@ import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
 		MakePaymentPayuComponent,
-		AdmitCodeConfirmationModalComponent
+		AdmitCodeConfirmationModalComponent,
+		AssignmentAttachmentDialogComponent
 	]
 })
 export class SharedModuleModule {

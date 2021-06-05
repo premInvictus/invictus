@@ -45,6 +45,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
+	uploadDocumentsAndMerge(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocumentsAndMerge', value);
+	}
 	getSession() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/session');
