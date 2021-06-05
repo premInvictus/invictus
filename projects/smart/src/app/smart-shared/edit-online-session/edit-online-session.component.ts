@@ -73,6 +73,8 @@ export class EditOnlineSessionComponent implements OnInit {
 		if (this.currentUser.role_id === '3') {
 			this.isTeacher = true;
 		}
+		console.log("i am herer . ", this.data.currentAttachment.tsoc_sec.split(","));
+		
 		this.getClass();
 		this.buildForm();
 		this.getTeacher();
@@ -85,7 +87,7 @@ export class EditOnlineSessionComponent implements OnInit {
 		this.assignment_desc = this.data.assignment_desc;
 		this.assignmentForm.patchValue({
 			class_id: this.data.currentAttachment.tsoc_class,
-			sec_id:this.data.currentAttachment.tsoc_sec.split(", "),
+			sec_id:this.data.currentAttachment.tsoc_sec.split(","),
 			sub_id: this.sub_id,
 			teacher_id: this.data.currentAttachment.tsoc_teacher,
 			session_start_time: this.data.currentAttachment.tsoc_start_time,

@@ -495,6 +495,14 @@ export class SmartService {
 	getTeachers() {
 		return this.http.get(environment.apiSmartUrl + '/smttimetable/getTeachers');
 	}
+	downloadBulkUpdateTemplate(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + "/excelimportexport/downloadBulkUpdateTemplate", value)
+	}
+	uploadBulkDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/uploadBulkDocuments', value);
+	}
 
 }
 

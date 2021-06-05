@@ -6,6 +6,7 @@ import { LoadingModule } from 'ngx-loading';
 import { SmartSharedModule } from '../smart-shared/smart-shared.module';
 import { ScheduleclassesComponent } from './scheduleclasses/scheduleclasses.component';
 import { BlockaccessesComponent } from './blockaccesses/blockaccesses.component';
+import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { BlockaccessesComponent } from './blockaccesses/blockaccesses.component'
     LoadingModule,
     SmartSharedModule
   ],
-  declarations: [ScheduleclassesComponent, BlockaccessesComponent],
+  declarations: [ScheduleclassesComponent, BlockaccessesComponent, BulkUploadComponent],
 	entryComponents: []
 })
 export class OnlineClassesModule { }
