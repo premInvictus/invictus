@@ -25,7 +25,7 @@ export class PreviewDocumentComponent implements OnInit {
 			this.data.index = 0;
 		}
 		for (const item of this.data.images) {
-			const url: String = item.imgUrl;
+			const url: String = item.imgUrl ? item.imgUrl : item.file_url;
 			const fileExt = url.split('.').pop();
 			console.log(fileExt);
 			if (url && (fileExt.match(/pdf/) || fileExt.match(/PDF/)
