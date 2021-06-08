@@ -1,0 +1,214 @@
+<ng-template #searchModal>
+  <div class="row remove-modal-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="dialog-title-container ">
+        <span class="font-size-24 font-white">Advanced Search</span>
+        <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+          cancel
+        </i>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <ng-container *ngFor="let form of formGroupArray;let i = index;">
+        <form [formGroup]="formGroupArray[i].formGroup">
+          <div [class]="i == 0 ? 'row margin-top-30' : 'row'">
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Choose your filter..</mat-label>
+                <mat-select formControlName="filter_type" (selectionChange)="setPlaceHolder($event.value, i)">
+                  <mat-option *ngFor="let item of filterArray" [value]="item.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-7">
+              <div>
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>
+                        {{placeholder[i] ? placeholder[i] : 'Select a filter type'}}</mat-label>
+                      <input matInput [placeholder]="placeholder[i] ? placeholder[i] : 'Select a filter type'"
+                        [type]="fieldType[i]" formControlName="filter_value"
+                        [readonly]="!(formGroupArray[i].formGroup.value.filter_type)" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10"
+                      (click)="addNewFilter(i);$event.stopPropagation()"
+                      [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
+                      <span style="color:#fff !important">Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center" *ngIf="i !== 0">
+              <div class="margin-top-15" (click)="deleteForm(i)">
+                <i class="fas fa-trash font-size-20 font-color-red"></i>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <div class="float-left">
+            <span class="font-size-16"><b>General Filters</b></span>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="generalFilterForm">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Status </mat-label>
+              <mat-select formControlName="emp_status" multiple>
+                <mat-option *ngFor="let item of statusArray" placeholder="Status" [value]="item.status_id">
+                  {{item.status_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Wing </mat-label>
+              <mat-select formControlName="emp_wing_detail.wing_id" multiple>
+                <mat-option placeholder="Wing" *ngFor="let item of wingArray" [value]="item.wing_id">
+                  {{item.wing_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Gender </mat-label>
+              <mat-select formControlName="gen_id" multiple>
+                <mat-option placeholder="Gender" *ngFor="let item of genderArray" [value]="item.gen_id">
+                  {{item.gen_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Month of Join </mat-label>
+              <mat-select formControlName="emp_salary_detail.emp_organisation_relation_detail.doj" multiple>
+                <mat-option *ngFor="let item of monthArray" [value]="item.month_id" placeholder="Month of Join">
+                  {{item.month_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Designation </mat-label>
+              <mat-select formControlName="emp_designation_detail.des_id" multiple>
+                <mat-option *ngFor="let item of designationArray" [value]="item.des_id" placeholder="Designation">
+                  {{item.des_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Department </mat-label>
+              <mat-select formControlName="emp_department_detail.dept_id" multiple>
+                <mat-option *ngFor="let item of departmentArray" [value]="item.dept_id" placeholder="Department">
+                  {{item.dept_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Category I </mat-label>
+              <mat-select formControlName="emp_salary_detail.emp_job_detail.category_1.cat_one_id" multiple>
+                <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id" placeholder="Category I">
+                  {{item.cat_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Category II </mat-label>
+              <mat-select formControlName="emp_salary_detail.emp_job_detail.category_2.cat_two_id" multiple>
+                <mat-option *ngFor="let item of categoryTwoArray" [value]="item.cat_id" placeholder="Category II">
+                  {{item.cat_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Category III </mat-label>
+              <mat-select formControlName="emp_salary_detail.emp_job_detail.category_3.cat_three_id" multiple>
+                <mat-option *ngFor="let item of categoryThreeArray" [value]="item.cat_id" placeholder="Category III">
+                  {{item.cat_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Scale </mat-label>
+              <mat-select formControlName="emp_salary_structure.emp_pay_scale.ss_id" multiple>
+                <mat-option *ngFor="let item of scaleArray" [value]="item.ss_id" placeholder="Scale">
+                  {{item?.ss_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label> Pay mode </mat-label>
+              <mat-select formControlName="emp_salary_structure.emp_pay_mode.pm_id" multiple>
+                <mat-option *ngFor="let item of paymentModeArray" [value]="item.pm_id" placeholder="Payment Mode">
+                  {{item.pm_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Bank Name </mat-label>
+              <mat-select formControlName="emp_bank_detail.bnk_detail.bnk_id" multiple>
+                <mat-option *ngFor="let item of bankArray" [value]="item.tb_id" placeholder="Bank Name">
+                  {{item.tb_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="currentUser.role_id === '2'">
+          <div class="col-12">
+            <div class="float-left">
+              <span class="font-size-16"><b>Additional Filters</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Contract From Date</mat-label>
+              <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="contract_from_date"
+                (blur)="getFromDate($event.target.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Contract To Date</mat-label>
+              <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="contract_to_date"
+                (blur)="getToDate($event.target.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</ng-template>
