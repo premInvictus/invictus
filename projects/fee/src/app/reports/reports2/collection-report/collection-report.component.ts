@@ -5384,9 +5384,9 @@ export class CollectionReportComponent implements OnInit {
 		}
 		let doc: any;
 		if(this.reportType === "dailyheadwise"){
-		  doc = new jsPDF('l', 'mm', 'a4');
+		  doc = new jsPDF('l', 'mm', 'a0');
 		}else{
-		  doc = new jsPDF('p', 'mm', 'a4');
+		  doc = new jsPDF('p', 'mm', 'a0');
 		}
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
