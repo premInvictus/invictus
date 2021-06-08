@@ -15,7 +15,7 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 })
 export class TyreLogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['date', 'bus_id','workshop','item','quantity','rate','amount','attachment', 'modify'];
+  displayedColumns: string[] = ['date', 'bus_id','nature','quantity','rate','amount','attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -35,6 +35,7 @@ export class TyreLogsComponent implements OnInit {
 	currentFileChangeEvent: any;
   currentImage: any;
   bus_arr=[];
+  nature_arr = ['resole' , 'change'];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,

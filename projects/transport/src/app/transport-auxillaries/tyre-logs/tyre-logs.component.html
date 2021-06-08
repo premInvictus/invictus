@@ -47,19 +47,24 @@
               <div class="row">
                 <div class="col-12 remove-col-padding">
                   <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Workshop</mat-label>
-                    <input matInput placeholder="Workshop" type="text" formControlName="workshop" required>
+                    <mat-label>Nature</mat-label>
+                    <mat-select formControlName="nature" required placeholder="Nature">
+                      <mat-option value="">Please select</mat-option>
+                      <mat-option *ngFor="let item of nature_arr" [value]="item">
+                        {{item | titlecase}}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
               </div>
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-12 remove-col-padding">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Item</mat-label>
                     <input matInput placeholder="Item" type="text" formControlName="item" required>
                   </mat-form-field>
                 </div>
-              </div>
+              </div> -->
               <div class="row">
                 <div class="col-12 remove-col-padding">
                   <mat-form-field class="form-field" appearance="outline">
