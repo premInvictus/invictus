@@ -1241,12 +1241,9 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
 			if(process_type == '1'|| process_type == '2' || process_type == '4') {
 				tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
-				tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Actice':'Inactive';
+				tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
 			}
-			if (this.reportProcessWiseData[key]['au_admission_no'] === 'A - 4324') {
-				console.log('tempObj', tempObj);
-				console.log('father_honorific',father_honorific,this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific']);
-			}
+			
 
 			this.dataset.push(tempObj);
 

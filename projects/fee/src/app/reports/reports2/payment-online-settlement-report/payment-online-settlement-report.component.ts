@@ -530,10 +530,10 @@ export class PaymentOnlineSettlementReportComponent implements OnInit {
 							obj.rpt_receipt_no = element.rpt_receipt_no;
 							obj.rpt_receipt_id = element.rpt_id;
 							obj.trans_txn_date =  new DatePipe('en-in').transform(element.trans_created_date, 'dd-MMM-yyyy');
-							obj.stoppages_name = new DatePipe('en-in').transform(element.trans_created_date, 'hh:mm');
-							obj.ftr_amount = element.trans_txn_amt;
+							obj.stoppages_name = new DatePipe('en-in').transform(element.trans_created_date, 'hh:mm a');
+							obj.ftr_amount = new DecimalPipe('en-in').transform(Number(element.trans_txn_amt));
 							obj.trans_bnk_txn_id = element.trans_bnk_txn_id;
-							obj.trans_pay_mode = element.trans_pay_mode;
+							obj.trans_pay_mode = element.trans_pay_mode.toUpperCase();
 							obj.trans_status = element.trans_status == 'TXN_SUCCESS' ? 'Success': element.trans_status == 'TXN_FAILURE' ? 'Failure':'Initiate';
 							obj.trans_resp_msg = element.trans_resp_msg;
 							obj.bnk_alias = element.bnk_alias ? element.bnk_alias : "-"

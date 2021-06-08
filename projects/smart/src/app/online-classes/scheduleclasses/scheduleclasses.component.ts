@@ -382,7 +382,7 @@ export class ScheduleclassesComponent implements OnInit, AfterViewInit {
 				meetingNumber: mId,
 				apiKey: name.apiacess,
 				apiSecret:  name.apisecret,
-				role: '5'
+				role: '1'
 			  });
 			  
 			  document.getElementById('zmmtg-root').style.display = 'block'
