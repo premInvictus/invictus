@@ -197,7 +197,7 @@ export class StudentDashboardComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
 					console.log('userDetail', this.userDetail);
-					this.erpCommonService.getStudentInformation({ login_id: currentUser.login_id, enrollment_type: '4' }).subscribe((resutl1: any) => {
+					this.erpCommonService.getStudentInformation({ login_id: currentUser.login_id, enrollment_type: this.userDetail.au_process_type }).subscribe((resutl1: any) => {
 						if (resutl1 && resutl1.status === 'ok') {
 							this.studentdetails = resutl1.data[0];
 							console.log('this.studentdetails', this.studentdetails);
