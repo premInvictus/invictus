@@ -15,7 +15,7 @@ export class AuthenticationService {
 				'Prefix': userParam[0]
 			};
 		}
-		prefixOptions['Prefix'] = 'demos';
+		// prefixOptions['Prefix'] = 'demos';
 
 
 		const headers = new HttpHeaders(prefixOptions);
