@@ -5382,7 +5382,12 @@ export class CollectionReportComponent implements OnInit {
 		} else if(this.reportType === "dailyheadwise"){
 			reportType = new TitleCasePipe().transform('daily head wise report: ') + this.sessionName;
 		}
-		const doc = new jsPDF('p', 'mm', 'a0');
+		let doc: any;
+		if(this.reportType === "dailyheadwise"){
+		  doc = new jsPDF('l', 'mm', 'a4');
+		}else{
+		  doc = new jsPDF('p', 'mm', 'a4');
+		}
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
