@@ -1,0 +1,17 @@
+.font-blue{
+    color:#17546c;
+}
+.information-bar {
+    border: 1px solid #06536b !important;
+}
+button.approve-btn.mat-raised-button {
+    background: #175022;
+    box-shadow: none !important;
+    border: none !important;
+    color: #fff;
+    margin-right: 5px;
+}
+button.cancel-btn.mat-raised-button {
+    background: transparent;
+    border: 1px dashed #000;
+}

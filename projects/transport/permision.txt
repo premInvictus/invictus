@@ -1,0 +1,15 @@
+INSERT INTO `demos`.`tbl_modules` (`mod_name`, `mod_router_link`, `mod_pro_id`, `mod_level`, `mod_icon`, `mod_parent_id`, `mod_created_date`) 
+VALUES 
+('Vehicle Profile', 'fleet-master/vehicle-profile', '14', '1', 'vehicle-profile', '826', '2019-06-10 12:06:33'),
+('Staff Profile', 'fleet-master/staff-profile', '14', '1', 'staff-profile', '826', '2019-06-10 12:06:33'),
+('Route Management', 'fleet-master/route-management', '14', '1', 'route-management', '826', '2019-06-10 12:06:33'),
+('Start Stop Trip', 'fleet-management/start-stop-trip', '14', '1', 'start-stop-trip', '827', '2019-06-10 12:06:33'),
+('Live Location', 'fleet-management/live-location', '14', '1', 'live-location', '827', '2019-06-10 12:06:33'),
+('Attendance', 'fleet-management/attendance', '14', '1', 'attendance', '827', '2019-06-10 12:06:33'),
+('Service Logs', 'auxillaries/service-logs', '14', '1', 'service-logs', '828', '2019-06-10 12:06:33'),
+('Fuel Logs', 'auxillaries/fuel-logs', '14', '1', 'fuel-logs', '828', '2019-06-10 12:06:33'),
+('Tyre Logs', 'auxillaries/tyre-logs', '14', '1', 'tyre-logs', '828', '2019-06-10 12:06:33'),
+('Fleet Dashboard', 'auxillaries/fleet-dashboard', '14', '1', 'fleet-dashboard', '828', '2019-06-10 12:06:33'),
+('Reminders', 'auxillaries/reminders', '14', '1', 'reminders', '828', '2019-06-10 12:06:33'),
+('Device Mapping', 'auxillaries/device-mapping', '14', '1', 'device-mapping', '828', '2019-06-10 12:06:33'),
+('Setup', 'configure/setup', '14', '1', 'setup', '830', '2019-06-10 12:06:33');

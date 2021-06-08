@@ -9,6 +9,7 @@ export const environment = {
 	apiHRUrl: 'https://apihr.invictusdigisoft.com',
 	apiInvUrl: 'https://apiinventory.invictusdigisoft.com',
 	apiFaUrl: 'https://apifa.invictusdigisoft.com',
+	apiTransportUrl: 'https://apitransport.invictusdigisoft.com',
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
