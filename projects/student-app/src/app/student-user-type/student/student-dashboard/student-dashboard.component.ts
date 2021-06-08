@@ -679,43 +679,46 @@ export class StudentDashboardComponent implements OnInit {
 	openclass(item) {
 		if (this.isAllowedToAttend) {
 			const studentParam: any = {};
+			
+			studentParam.au_login_id = this.userDetail.au_login_id;
 			studentParam.au_class_id = this.userDetail.au_class_id;
 			studentParam.au_sec_id = this.userDetail.au_sec_id;
 			studentParam.au_event_id = parseInt(item.no_of_period) + 1;
 			studentParam.ma_created_date = new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd');
 			studentParam.au_role_id = '4';
 			studentParam.au_status = '1';
-			this.erpCommonService.getUserAttendance(studentParam).subscribe((res: any) => {
-				console.log("i am res", res.data);
-				let check = [];
-				res.data.forEach(element => {
-					if (element.au_login_id == this.userDetail.au_login_id && element.ma_attendance == '1') {
-						check.push(element);
-					}
-				});
-				if (check.length == 0) {
-					let sendd = [
-						{
-							class_id: this.userDetail.au_class_id,
-							sec_id: this.userDetail.au_sec_id,
-							ma_event: parseInt(item.no_of_period) + 1,
-							ma_created_date: new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd'),
-							login_id: this.userDetail.au_login_id,
-							roll_no: '',
-							attendance: 1,
-							session_id: this.session.ses_id,
-							created_by: this.userDetail.au_login_id
-						}
-					]
-
-					this.erpCommonService.insertAttendance(sendd).subscribe((res: any) => {
-						console.log("i am res", res);
-
-					})
-				}
-
-			})
+			
 			if (item.tsoc_type == 'zoom') {
+				this.erpCommonService.getUserAttendance(studentParam).subscribe((res: any) => {
+					console.log("i am res", res.data);
+					let check = [];
+					res.data.forEach(element => {
+						if (element.au_login_id == this.userDetail.au_login_id && element.ma_attendance == '1') {
+							check.push(element);
+						}
+					});
+					if (check.length == 0) {
+						let sendd = [
+							{
+								class_id: this.userDetail.au_class_id,
+								sec_id: this.userDetail.au_sec_id,
+								ma_event: parseInt(item.no_of_period) + 1,
+								ma_created_date: new DatePipe('en-us').transform(new Date(), 'yyyy-MM-dd'),
+								login_id: this.userDetail.au_login_id,
+								roll_no: '',
+								attendance: 1,
+								session_id: this.session.ses_id,
+								created_by: this.userDetail.au_login_id
+							}
+						]
+	
+						this.erpCommonService.insertAttendance(sendd).subscribe((res: any) => {
+							console.log("i am res", res);
+	
+						})
+					}
+	
+				})
 				let spliturl = item.tsoc_url.split('/')[4];
 				let mId = spliturl.split('?')[0];
 				let pwd = spliturl.split("pwd=")[1];
@@ -740,6 +743,7 @@ export class StudentDashboardComponent implements OnInit {
 				ZoomMtg.init({
 					leaveUrl: window.location.href,
 					isSupportAV: true,
+					disableInvite: true,
 					meetingInfo: [
 						'topic',
 						'host',
