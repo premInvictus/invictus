@@ -8,14 +8,14 @@ export class AuthenticationService {
 
 	login(username: string, password: any, device_id: any, type: any, loginSource:any) {
 		this.loaderService.startLoading();
-		let prefixOptions;
+		let prefixOptions={};
 		if (username.match(/-/g)) {
 			const userParam = username.split('-');
 			prefixOptions = {
 				'Prefix': userParam[0]
 			};
 		}
-
+		prefixOptions['Prefix'] = 'demos';
 
 
 		const headers = new HttpHeaders(prefixOptions);
