@@ -4,9 +4,9 @@ import { VehicleProfileComponent } from './vehicle-profile/vehicle-profile.compo
 import { StaffProfileComponent } from './staff-profile/staff-profile.component';
 import { RouteManagementComponent } from './route-management/route-management.component';
 import { AssignStudentsComponent } from './assign-students/assign-students.component';
-
+import { VehicleComponent } from './vehicle/vehicle.component';
 const routes: Routes = [
-  {path:'vehicle-profile',component:VehicleProfileComponent},
+  {path:'vehicle-profile',component:VehicleComponent},
   {path:'staff-profile',component:StaffProfileComponent},
   {path:'route-management',component:RouteManagementComponent},
   {path:'assign-students',component:AssignStudentsComponent},
