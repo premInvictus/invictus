@@ -532,7 +532,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 							}
 						});
 					} else {
-						// this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
 						this.processType = this.studentRouteMoveStoreService.getProcessTypePrev();
 						this.nextId(this.previousAdmno);
