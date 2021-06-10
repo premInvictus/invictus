@@ -523,7 +523,7 @@ export class GenerateBillComponent implements OnInit {
         location_id:this.storeinchargeLocation,
         item_details: itemAssign,
       }
-      console.log('finalJson',finalJson);
+      console.log('finalJson',finalJson); 
       this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
         if (result) {
           let i = 0;
@@ -534,6 +534,7 @@ export class GenerateBillComponent implements OnInit {
           }
           let billArray: any = {};
           billArray['bill_id'] = result.bill_id;
+          billArray['bill_no'] = result.bill_no;
           billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
           billArray['bill_total'] = new IndianCurrency().transform(result.bill_total);
           billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));

@@ -65,6 +65,7 @@ export class BillDetailsModalComponent implements OnInit {
   print(){
     let billArray: any = {};
     billArray['bill_id'] = this.data.action.bill_id;
+    billArray['bill_no'] = this.data.action.bill_no;
     billArray['bill_date'] = this.common.dateConvertion(this.data.action.created_date, 'dd-MMM-y');
     billArray['bill_total'] = new IndianCurrency().transform(this.data.action.bill_total);
     billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(this.data.action.bill_total));
