@@ -30,7 +30,7 @@
                       border-radius: 5px;
                       opacity: 1;">
                     </label>
-                    <input id="file-input" #fileInput name="file-input" type="file" (change)="readUrl($event)" hidden />
+                    <input id="file-input" #fileInput name="file-input" type="file" (change)="readUrl($event)" hidden [disabled]="viewOnly"/>
                   </div>
                 </div>
               </div>
@@ -42,14 +42,14 @@
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Bus No</mat-label>
-                        <input matInput placeholder="Bus No" formControlName="bus_number" required tabindex="2" />
+                        <input matInput placeholder="Bus No" formControlName="bus_number" required tabindex="2" [readonly]="viewOnly"/>
                       </mat-form-field>
                     </div>
 
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Registration No</mat-label>
-                        <input matInput placeholder="Registration No" tabindex="3" formControlName="registration_no" />
+                        <input matInput placeholder="Registration No" tabindex="3" formControlName="registration_no" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
 
@@ -57,7 +57,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Registration Valid Upto</mat-label>
                         <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                          formControlName="registration_valid_upto">
+                          formControlName="registration_valid_upto" [readonly]="viewOnly">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
@@ -66,7 +66,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Permit Valid Upto</mat-label>
                         <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
-                          formControlName="permit_valid_upto">
+                          formControlName="permit_valid_upto" [readonly]="viewOnly">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                       </mat-form-field>
@@ -75,7 +75,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Insurance Valid Upto</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="Choose a date"
-                          formControlName="insurance_valid_upto">
+                          formControlName="insurance_valid_upto" [readonly]="viewOnly">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                       </mat-form-field>
@@ -84,7 +84,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>PUC Valid Upto</mat-label>
                         <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
-                          formControlName="puc_valid_upto">
+                          formControlName="puc_valid_upto" [readonly]="viewOnly">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
                       </mat-form-field>
@@ -93,39 +93,39 @@
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Insurance Provider</mat-label>
-                        <input matInput placeholder="Pages" tabindex="6" formControlName="insurance_provider"
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="insurance_provider" [readonly]="viewOnly"
                           type="text" />
                       </mat-form-field>
                     </div>
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Insurance No</mat-label>
-                        <input matInput placeholder="Pages" tabindex="6" formControlName="insurance_no" type="text" />
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="insurance_no" type="text" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Chasis No</mat-label>
-                        <input matInput placeholder="Pages" tabindex="6" formControlName="chasis_no" type="text" />
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="chasis_no" type="text" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Engine No</mat-label>
-                        <input matInput placeholder="Pages" tabindex="6" formControlName="engine_no" type="text" />
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="engine_no" type="text" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Device No</mat-label>
-                        <input matInput placeholder="Pages" tabindex="6" formControlName="device_no" type="text" />
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="device_no" type="text" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
 
                     <div class="col-8">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Bus Details</mat-label>
-                        <textarea matInput rows="3" formControlName="bus_details" tabindex="14"></textarea>
+                        <textarea matInput rows="3" formControlName="bus_details" tabindex="14" [readonly]="viewOnly"></textarea>
                       </mat-form-field>
                     </div>
                   </div>
@@ -147,12 +147,12 @@
                       <div class="col-8">
                         <span class="document-title"><b>{{item.name}}</b></span>
                       </div>
-                      <div class="col-4">
+                      <div class="col-3">
                         <div class="float-right">
                           <input type="file" class="form-control form-control-sm mv_top"
                             multiple="true" (change)="fileChangeEvent($event,item.id)" [id]="item.id"
-                            style="display: none !important">
-                          <button mat-raised-button class="btn-neutral">
+                            style="display: none !important" [disabled]="viewOnly">
+                          <button mat-raised-button class="btn-neutral" [disabled]="viewOnly">
                             <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
                               class="btn-document-label" [for]="item.id">Choose
                               File</label>
@@ -175,7 +175,7 @@
                                   </div>
                                   <div>
                                     <img class="btn-doc-upload-preview margin-left-10"
-                                    [src]="getuploadurl(img.file_url)" (click)="previewImage(imageArray, i)"><br>
+                                    [src]="getuploadurl(img.file_url)" (click)="previewImage(j,item.id)"><br>
                                   </div>
                                   <br>
                                 </div>
@@ -193,8 +193,10 @@
           <br />
           <div class="row text-center">
             <div class="col-12">
-              <button mat-raised-button class="btn-success-green"
+              <button *ngIf="data.action == 'add'" mat-raised-button class="btn-success-green"
                 (click)="submit()">Submit</button>
+                <button *ngIf="data.action == 'edit'" mat-raised-button class="btn-success-green"
+                (click)="submit()">Update</button>
               <button mat-raised-button class="btn-reset btn-spacer" (click)="close()">
                 Cancel
               </button>
