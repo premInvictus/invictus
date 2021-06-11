@@ -204,7 +204,7 @@
 				<div class="row margin-top-15" *ngIf="timeTableFlag">
 					<div class="col-12">
 						<ng-container *ngFor="let item of dayArray; let i=index">
-							<div class="info-box info-box-margin" [ngStyle]="{'background-color':item.sub_color}">
+							<div class="info-box info-box-margin" [ngStyle]="{'background-color':item.sub_color ? item.sub_color : '#000'}">
 								<div class="wave-container">
 									<svg viewBox="0 0 500 160" preserveAspectRatio="none"
 										style="height: 100%; width: 100%;">

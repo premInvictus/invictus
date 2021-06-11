@@ -15,7 +15,7 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 })
 export class TyreLogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['date', 'bus_id','nature','quantity','rate','amount','attachment', 'modify'];
+  displayedColumns: string[] = ['date', 'bus_id','nature','quantity','rate','amount','remarks','attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -65,7 +65,7 @@ export class TyreLogsComponent implements OnInit {
       'item': '',
       'quantity': '',
       'rate': '',
-      'amount': '',
+      'remarks': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -88,7 +88,7 @@ export class TyreLogsComponent implements OnInit {
       'item': '',
       'quantity': '',
       'rate': '',
-      'amount': '',
+      'remarks': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -148,7 +148,8 @@ export class TyreLogsComponent implements OnInit {
             item: item.item,
             quantity: item.quantity,
             rate: item.rate,
-            amount: item.amount,
+			amount: item.quantity*item.rate,
+			remarks:item.remarks,
             attachment: item.attachment,
             logs_type:item.logs_type,
             status:item.status,
@@ -191,7 +192,7 @@ export class TyreLogsComponent implements OnInit {
       item: value.item,
       quantity: value.quantity,
       rate: value.rate,
-      amount: value.amount,
+      remarks: value.remarks,
       logs_type: value.logs_type,
       attachment: value.attachment,
       status:value.status
@@ -209,7 +210,7 @@ export class TyreLogsComponent implements OnInit {
         inputJson.logs_type='tyre';
         inputJson.attachment=this.imageArray;
       }
-      this.transportService.updateTransportLogs(this.subExamForm.value).subscribe((result: any) => {
+      this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
         if (result) {
           this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
           this.getAllTransportLogs();

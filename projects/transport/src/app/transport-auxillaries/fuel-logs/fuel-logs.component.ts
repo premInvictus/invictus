@@ -15,7 +15,7 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 })
 export class FuelLogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['date', 'bus_id','fuel_type','item','quantity','rate','amount','attachment', 'modify'];
+  displayedColumns: string[] = ['date', 'bus_id','fuel_type','fuel_station','quantity','rate','amount','attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -62,10 +62,9 @@ export class FuelLogsComponent implements OnInit {
       'workshop': '',
       'fuel_type': '',
       'nature': '',
-      'item': '',
+      'fuel_station': '',
       'quantity': '',
       'rate': '',
-      'amount': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -85,10 +84,9 @@ export class FuelLogsComponent implements OnInit {
       'workshop': '',
       'fuel_type': '',
       'nature': '',
-      'item': '',
+      'fuel_station': '',
       'quantity': '',
       'rate': '',
-      'amount': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -145,10 +143,10 @@ export class FuelLogsComponent implements OnInit {
             workshop: item.workshop,
             fuel_type: item.fuel_type,
             nature: item.nature,
-            item: item.item,
+            fuel_station: item.fuel_station,
             quantity: item.quantity,
             rate: item.rate,
-            amount: item.amount,
+            amount: item.quantity * item.rate,
             attachment: item.attachment,
             logs_type:item.logs_type,
             status:item.status,
@@ -188,10 +186,9 @@ export class FuelLogsComponent implements OnInit {
       workshop: value.workshop,
       fuel_type: value.fuel_type,
       nature: value.nature,
-      item: value.item,
+      fuel_station: value.fuel_station,
       quantity: value.quantity,
       rate: value.rate,
-      amount: value.amount,
       logs_type: value.logs_type,
       attachment: value.attachment,
       status:value.status
@@ -209,7 +206,7 @@ export class FuelLogsComponent implements OnInit {
         inputJson.logs_type='fuel';
         inputJson.attachment=this.imageArray;
       }
-      this.transportService.updateTransportLogs(this.subExamForm.value).subscribe((result: any) => {
+      this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
         if (result) {
           this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
           this.getAllTransportLogs();

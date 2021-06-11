@@ -9,6 +9,7 @@ export interface Element {
     quantity:any,
     rate:any,
     amount:any,
+    remarks:any,
     logs_type:any,
     attachment: any
     status: any,

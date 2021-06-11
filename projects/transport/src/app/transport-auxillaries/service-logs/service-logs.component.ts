@@ -7,14 +7,16 @@ import { Element } from './service-logs.model';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from '../../transport-shared/preview-document/preview-document.component';
+import {ServiceLogItemsComponent } from '../service-log-items/service-log-items.component';
+import { TransportLogFilterComponent} from '../../transport-shared/transport-log-filter/transport-log-filter.component'
 
 @Component({
-  selector: 'app-service-logs',
-  templateUrl: './service-logs.component.html',
-  styleUrls: ['./service-logs.component.scss']
+	selector: 'app-service-logs',
+	templateUrl: './service-logs.component.html',
+	styleUrls: ['./service-logs.component.scss']
 })
 export class ServiceLogsComponent implements OnInit {
-  displayedColumns: string[] = ['date', 'bus_id','workshop','item','quantity','rate','amount','attachment', 'modify'];
+	displayedColumns: string[] = ['date', 'bus_id', 'workshop', 'items', 'amount', 'attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -26,14 +28,17 @@ export class ServiceLogsComponent implements OnInit {
 	UpdateFlag = false;
 	viewOnly = true;
 	param: any = {};
-  subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-  multipleFileArray: any[] = [];
+	subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	multipleFileArray: any[] = [];
 	imageArray: any[] = [];
-  finalDocumentArray: any[] = [];
-  counter: any = 0;
+	finalDocumentArray: any[] = [];
+	counter: any = 0;
 	currentFileChangeEvent: any;
-  currentImage: any;
-  bus_arr=[];
+	currentImage: any;
+	bus_arr = [];
+	tiersArray: any[] = [];
+	gradeDataFrmArr: any[] = [];
+	filter:any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -47,27 +52,61 @@ export class ServiceLogsComponent implements OnInit {
 		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 	ngOnInit() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		for (let i = 0; i < 25; i++) {
+			this.tiersArray.push(i);
+		}
+		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.buildForm();
-    this.getAllTransportLogs();
-    this.getAllTransportVehicle();
+		this.getAllTransportLogs();
+		this.getAllTransportVehicle();
 	}
 	buildForm() {
 		this.subExamForm = this.fbuild.group({
-      'tl_id': '',
+			'tl_id': '',
 			'date': '',
-      'bus_id': '',
-      'workshop': '',
-      'fuel_type': '',
-      'nature': '',
-      'item': '',
-      'quantity': '',
-      'rate': '',
-      'amount': '',
-      'logs_type': '',
-      'attachment':[],
-      'status':''
+			'bus_id': '',
+			'workshop': '',
+			'fuel_type': '',
+			'nature': '',
+			'no_of_item': '',
+			'logs_type': '',
+			'attachment': [],
+			'status': ''
 		});
+	}
+	prepareGradeData(event) {
+		const gradeDataTier = event.value;
+		this.gradeDataFrmArr = [];
+		for (let i = 0; i < gradeDataTier; i++) {
+			this.gradeDataFrmArr.push({
+				formGroup: this.fbuild.group({
+					item: '',
+					quantity: '',
+					rate: ''
+				})
+			});
+		}
+
+	}
+
+	setGradeData(gradeDataTier) {
+		this.gradeDataFrmArr = [];
+		for (let i = 0; i < gradeDataTier.length; i++) {
+			this.gradeDataFrmArr.push({
+				formGroup: this.fbuild.group({
+					item: gradeDataTier[i]['item'],
+					quantity: gradeDataTier[i]['quantity'],
+					rate: gradeDataTier[i]['rate']
+				})
+			});
+		}
+	}
+	deleteGradeData(index) {
+		const no_of_item = this.subExamForm.value.no_of_item - 1;
+		this.subExamForm.patchValue({
+			no_of_item: no_of_item
+		});
+		this.gradeDataFrmArr.splice(index, 1);
 	}
 	// delete dialog open modal function
 	openDeleteModal(value) {
@@ -79,33 +118,36 @@ export class ServiceLogsComponent implements OnInit {
 		this.subExamForm.patchValue({
 			'tl_id': '',
 			'date': '',
-      'bus_id': '',
-      'workshop': '',
-      'fuel_type': '',
-      'nature': '',
-      'item': '',
-      'quantity': '',
-      'rate': '',
-      'amount': '',
-      'logs_type': '',
-      'attachment':[],
-      'status':''
-    });
-    this.imageArray = [];
+			'bus_id': '',
+			'workshop': '',
+			'fuel_type': '',
+			'nature': '',
+			'no_of_item': '',
+			'logs_type': '',
+			'attachment': [],
+			'status': ''
+		});
+		this.imageArray = [];
 		this.UpdateFlag = false;
+		this.gradeDataFrmArr = [];
 		this.viewOnly = true;
 	}
 	submit() {
 		if (this.subExamForm.valid) {
 			this.disableApiCall = true;
-      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
-      if(inputJson.date){
-        inputJson.date = new DatePipe('en-in').transform(inputJson.date,'yyyy-MM-dd');
-        inputJson.logs_type='service';
-        inputJson.status='1';
-        inputJson.attachment=this.imageArray;
-        inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name}
-      }
+			const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
+			if (inputJson.date) {
+				inputJson.date = new DatePipe('en-in').transform(inputJson.date, 'yyyy-MM-dd');
+				inputJson.logs_type = 'service';
+				inputJson.status = '1';
+				inputJson.attachment = this.imageArray;
+				inputJson.created_by = { login_id: this.currentUser.login_id, full_name: this.currentUser.full_name };
+				let items = [];
+				this.gradeDataFrmArr.forEach(element => {
+					items.push(element.formGroup.value)
+				});
+				inputJson.items = items;
+			}
 			this.transportService.insertTransportLogs(inputJson).subscribe((result_i: any) => {
 				if (result_i) {
 					this.getAllTransportLogs();
@@ -118,41 +160,53 @@ export class ServiceLogsComponent implements OnInit {
 				}
 			});
 		} else {
-      this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
-    }
-  }
-  getAllTransportVehicle(){
-    this.bus_arr = [];
-    this.transportService.getAllTransportVehicle({ status: '1' }).subscribe((result: any) => {
+			this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
+		}
+	}
+	getAllTransportVehicle() {
+		this.bus_arr = [];
+		this.transportService.getAllTransportVehicle({ status: '1' }).subscribe((result: any) => {
 			if (result && result.length > 0) {
-        this.bus_arr = result;
-      }
-    });
-  }
+				this.bus_arr = result;
+			}
+		});
+	}
+	getTotal(gradeDataTier) {
+		let total = 0;
+		for (let i = 0; i < gradeDataTier.length; i++) {
+			total += (gradeDataTier[i].quantity * gradeDataTier[i].rate)
+		}
+		return total;
+	}
 	getAllTransportLogs() {
 		this.ELEMENT_DATA = [];
 		this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-		this.transportService.getAllTransportLogs({ status: '1',logs_type:'service',sort:{date:-1} }).subscribe((result: any) => {
+		const param:any = this.filter ? JSON.parse(JSON.stringify(this.filter)) : {};
+		param['status'] = '1';
+		param['logs_type'] = 'service';
+		param['sort'] = { date: -1 };
+		this.transportService.getAllTransportLogs(param).subscribe((result: any) => {
 			if (result && result.length > 0) {
 				this.transportlogsArray = result;
 				for (const item of this.transportlogsArray) {
-					this.ELEMENT_DATA.push({
-            tl_id: item.tl_id,
-            date: item.date,
-            bus_id: item.transport_vehicle.bus_number,
-            workshop: item.workshop,
-            fuel_type: item.fuel_type,
-            nature: item.nature,
-            item: item.item,
-            quantity: item.quantity,
-            rate: item.rate,
-            amount: item.amount,
-            attachment: item.attachment,
-            logs_type:item.logs_type,
-            status:item.status,
-            modify: item.tl_id,
-            action:item
-					});
+					const element = {
+						tl_id: item.tl_id,
+						date: item.date,
+						bus_id: item.transport_vehicle.bus_number,
+						workshop: item.workshop,
+						fuel_type: item.fuel_type,
+						nature: item.nature,
+						items:item.items,
+						no_of_item: item.no_of_item,
+						amount: this.getTotal(item.items),
+						attachment: item.attachment,
+						logs_type: item.logs_type,
+						status: item.status,
+						modify: item.tl_id,
+						action: item
+					};
+
+					this.ELEMENT_DATA.push(element);
 				}
 				this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 			}
@@ -178,46 +232,49 @@ export class ServiceLogsComponent implements OnInit {
 	}
 	formEdit(value: any) {
 		this.UpdateFlag = true;
-    this.viewOnly = false;
+		this.viewOnly = false;
 		this.subExamForm.patchValue({
 			tl_id: value.tl_id,
 			date: value.date,
-      bus_id: value.bus_id,
-      workshop: value.workshop,
-      fuel_type: value.fuel_type,
-      nature: value.nature,
-      item: value.item,
-      quantity: value.quantity,
-      rate: value.rate,
-      amount: value.amount,
-      logs_type: value.logs_type,
-      attachment: value.attachment,
-      status:value.status
-    });
-    if(value.attachment.length > 0){
-      this.imageArray = value.attachment;
-    }
-    
+			bus_id: value.bus_id,
+			workshop: value.workshop,
+			fuel_type: value.fuel_type,
+			nature: value.nature,
+			no_of_item: value.no_of_item,
+			logs_type: value.logs_type,
+			attachment: value.attachment,
+			status: value.status
+		});
+		if (value.attachment.length > 0) {
+			this.imageArray = value.attachment;
+		}
+		this.setGradeData(value.items)
+
 	}
 	updateTransportLogs() {
-    if(this.subExamForm.valid){
-      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
-      if(inputJson.date){
-        inputJson.date = new DatePipe('en-in').transform(inputJson.date,'yyyy-MM-dd');
-        inputJson.logs_type='service';
-        inputJson.attachment=this.imageArray;
-      }
-      this.transportService.updateTransportLogs(this.subExamForm.value).subscribe((result: any) => {
-        if (result) {
-          this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
-          this.getAllTransportLogs();
-          this.resetForm();
-        }
-      });
-    } else {
-      this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
-    }
-    
+		if (this.subExamForm.valid) {
+			const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
+			if (inputJson.date) {
+				inputJson.date = new DatePipe('en-in').transform(inputJson.date, 'yyyy-MM-dd');
+				inputJson.logs_type = 'service';
+				inputJson.attachment = this.imageArray;
+				let items = [];
+				this.gradeDataFrmArr.forEach(element => {
+					items.push(element.formGroup.value)
+				});
+				inputJson.items = items;
+			}
+			this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+					this.getAllTransportLogs();
+					this.resetForm();
+				}
+			});
+		} else {
+			this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
+		}
+
 	}
 	deleteTransportLogs($event) {
 		const deleteJson = {
@@ -231,8 +288,8 @@ export class ServiceLogsComponent implements OnInit {
 				this.resetForm();
 			}
 		});
-  }
-  fileChangeEvent(fileInput) {
+	}
+	fileChangeEvent(fileInput) {
 		this.multipleFileArray = [];
 		this.currentFileChangeEvent = fileInput;
 		const files = fileInput.target.files;
@@ -274,8 +331,8 @@ export class ServiceLogsComponent implements OnInit {
 
 	resetAttachment() {
 		this.imageArray = [];
-  }
-  getuploadurl(fileurl: string) {
+	}
+	getuploadurl(fileurl: string) {
 		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
 		if (filetype === 'pdf') {
 			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
@@ -284,8 +341,8 @@ export class ServiceLogsComponent implements OnInit {
 		} else {
 			return fileurl;
 		}
-  }
-  previewDocuments(attachmentArray) {
+	}
+	previewDocuments(attachmentArray) {
 		if (attachmentArray && attachmentArray.length > 0) {
 			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
 				height: '80%',
@@ -297,5 +354,30 @@ export class ServiceLogsComponent implements OnInit {
 			});
 		}
 	}
+	openDialogItemDetail(item): void {
+		const dialogRef = this.dialog.open(ServiceLogItemsComponent, {
+			height: '80%',
+			width: '1000px',
+		  	data: item
+		});
+	
+		dialogRef.afterClosed().subscribe(result => {
+		});
+	  }
+	  openDialogFilter(): void {
+		const dialogRef = this.dialog.open(TransportLogFilterComponent, {
+			height: '80%',
+			width: '1000px',
+		  	data: {}
+		});
+	
+		dialogRef.afterClosed().subscribe(result => {
+			if(result){
+				console.log(result);
+				this.filter = result
+				this.getAllTransportLogs()
+			}
+		});
+	  }
 
 }

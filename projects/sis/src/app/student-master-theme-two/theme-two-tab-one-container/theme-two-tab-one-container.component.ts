@@ -115,15 +115,19 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	saveForm() {
 		
 		this.parentDetails.finalFormParentStatus = true;
+
 		
 		
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
-			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
+			this.childDetails.paddressform.valid ) {
 			this.disabledApiCall = true;
-			if (this.childDetails.raddressform.value.ea_same_residential_address === false ||
+			// console.log("shcehc", (this.childDetails.raddressform.value.ea_same_residential_address === false), this.childDetails.raddressform);
+			
+			if (this.childDetails.raddressform.value.ea_same_residential_address === false || this.childDetails.raddressform.value.ea_same_residential_address === 'N' ||
 				(this.childDetails.raddressform.value.ea_same_residential_address === true && this.childDetails.raddressform.valid)) {
 				this.disabledApiCall = true;
+
 				this.taboneform = this.context.studentdetails.studentdetailsform.value;
 				this.childDetails.baseform.value.upd_doj =
 					this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_doj, 'yyyy-MM-dd');
@@ -159,25 +163,32 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				if (this.context.studentdetails.studentdetailsform.value.au_login_id) {
 					this.taboneform.au_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
 				}
-				this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.context.studentdetails.studentdetailsform.patchValue({
-							au_login_id: result.data.au_login_id,
-							au_enrollment_id: result.data.au_enrollment_id
-						});
-						this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
-						this.disabledApiCall = false;
-						this.commonAPIService.renderTab.next({ tabMove: true });
-					} else {
-						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-						this.disabledApiCall = false;
-					}
-				});
+				if(this.parentDetails.finalFormParentStatus) {
+					this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
+						if (result && result.status === 'ok') {
+							this.context.studentdetails.studentdetailsform.patchValue({
+								au_login_id: result.data.au_login_id,
+								au_enrollment_id: result.data.au_enrollment_id
+							});
+							this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
+							this.disabledApiCall = false;
+							this.commonAPIService.renderTab.next({ tabMove: true });
+						} else {
+							this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+							this.disabledApiCall = false;
+						}
+					});
+				} else {
+					this.disabledApiCall = false;
+				}
+				
 			} else {
 				console.log("hrere");
 				
 				this.disabledApiCall = false;
 				if(this.showOnlyOneMessage) {
+					console.log("11");
+					
 					this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 					this.showOnlyOneMessage = false;
 					setTimeout(() => {
@@ -205,6 +216,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		} else {
 			this.disabledApiCall = false;
 			if(this.showOnlyOneMessage) {
+				console.log("112")
 				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 				this.showOnlyOneMessage = false;
 					setTimeout(() => {
@@ -312,22 +324,28 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			if (this.context.studentdetails.studentdetailsform.value.au_login_id) {
 				this.taboneform.au_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
 			}
+			console.log("i am here", this.parentDetails.finalFormParentStatus);
+			
 			// this.context.studentdetails.studentdetailsform.value.au_process_type = this.context.processType;
-			this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Student Details Updated Successfully', 'success');
-					if (isview) {
-						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-						this.getStudent(this.login_id);
+			if(this.parentDetails.finalFormParentStatus) {
+				this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.commonAPIService.showSuccessErrorMessage('Student Details Updated Successfully', 'success');
+						if (isview) {
+							this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+							this.getStudent(this.login_id);
+						} else {
+							this.commonAPIService.renderTab.next({ tabMove: true });
+						}
 					} else {
-						this.commonAPIService.renderTab.next({ tabMove: true });
+						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-				}
-			});
+				});
+			}
+			
 		} else {
 			if(this.showOnlyOneMessage) {
+				console.log("113")
 				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 				this.showOnlyOneMessage = false;
 				setTimeout(() => {
@@ -410,7 +428,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			}
 			if (checkRequiredFieldCounter > 0) {
 				if(this.showOnlyOneMessage) {
-					this.showOnlyOneMessage = false
+					this.showOnlyOneMessage = false;
+					console.log("11p")
 					this.commonAPIService.showSuccessErrorMessage('Please Fill required fields in parent details', 'error');
 						setTimeout(() => {
 							this.showOnlyOneMessage = true;
