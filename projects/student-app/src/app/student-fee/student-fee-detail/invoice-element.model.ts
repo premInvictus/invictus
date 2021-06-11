@@ -7,6 +7,7 @@ export interface InvoiceElement {
 	invoicedate: any;
 	duedate: any;
 	feedue: string;
+	feereceived: string;
 	remark: string;
 	status: string;
 	statuscolor: string;
