@@ -234,7 +234,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				feeperiod: element.fp_name,
 				invoicedate: element.inv_invoice_date,
 				duedate: element.inv_due_date,
-				feedue: element.inv_fee_amount,
+				feedue: element.inv_amount,
 				feereceived: element.ftr_amount,
 				remark: element.inv_remark,
 				status: status,
