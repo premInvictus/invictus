@@ -5,7 +5,7 @@ export interface Element {
     workshop:any,
     fuel_type:any,
     nature:any,
-    item:any,
+    fuel_station:any,
     quantity:any,
     rate:any,
     amount:any,

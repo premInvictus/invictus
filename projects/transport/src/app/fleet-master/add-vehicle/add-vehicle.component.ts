@@ -21,9 +21,14 @@ export class AddVehicleComponent implements OnInit {
 	imageUrl: any = '';
 	bookForm: FormGroup;
 	imageArray = [];
+	viewOnly = false;
 	documentsArray = [
 		{ id: 'insurance', name: 'Insurance', document: [] },
-		{ id: 'rc', name: 'RC', document: [] }
+		{ id: 'rc', name: 'RC', document: [] },
+		{ id: 'puc', name: 'PUC', document: [] },
+		{ id: 'licence', name: 'Licence', document: [] },
+		{ id: 'permits', name: 'Permits', document: [] },
+		{ id: 'others', name: 'Others', document: [] }
 	];
 	currentFileChangeEvent: any;
 	multipleFileArray: any[] = [];
@@ -62,9 +67,34 @@ export class AddVehicleComponent implements OnInit {
 			device_no: '',
 			documents: [],
 			status: '',
-			ses_id: '',
-			checklist: [],
+			ses_id: ''
 		});
+		if(this.data.data){
+			this.bookForm.patchValue({
+				tv_id: this.data.data.tv_id,
+				bus_number: this.data.data.bus_number,
+				bus_details: this.data.data.bus_number,
+				registration_no: this.data.data.registration_no,
+				registration_valid_upto: this.data.data.registration_valid_upto,
+				permit_valid_upto: this.data.data.permit_valid_upto,
+				insurance_valid_upto: this.data.data.insurance_valid_upto,
+				puc_valid_upto: this.data.data.puc_valid_upto,
+				insurance_provider: this.data.data.insurance_provider,
+				bus_image: this.data.data.bus_image,
+				insurance_no: this.data.data.insurance_no,
+				chasis_no: this.data.data.chasis_no,
+				engine_no: this.data.data.engine_no,
+				device_no: this.data.data.device_no,
+				documents: this.data.data.documents,
+				status: this.data.data.status,
+				ses_id: this.data.data.ses_id
+			})
+			this.bookImage =  this.data.data.bus_image;
+			this.documentsArray = this.data.data.documents;
+			if(this.data.action == 'view') {
+				this.viewOnly = true;
+			}
+		}
 	}
 	readUrl(event: any) {
 		this.openCropDialog(event);
@@ -133,15 +163,16 @@ export class AddVehicleComponent implements OnInit {
 	// 		width: '70vh'
 	// 	});
 	// }
-	previewImage(doc_index, doc_req_id) {
+	previewImage(doc_index,doc_req_id ) {
 		const findex = this.documentsArray.findIndex(f => f.id === doc_req_id);
+		console.log(this.documentsArray[findex]['document'],doc_index);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			height: '80%',
+			width: '1000px',
 			data: {
-				imageArray: this.documentsArray[findex]['document'],
-				index: doc_index
-			},
-			height: '70vh',
-			width: '70vh'
+				index: doc_index,
+				images: this.documentsArray[findex]['document']
+			}
 		});
 	}
 	deleteFile(doc_index, doc_req_id) {
@@ -169,7 +200,6 @@ export class AddVehicleComponent implements OnInit {
 			let inputJson:any = JSON.parse(JSON.stringify(this.bookForm.value));
 			inputJson.bus_image = this.bookImage;
 			inputJson.documents = this.documentsArray
-			inputJson.status = '1';
 			if(moment.isMoment(inputJson.registration_valid_upto)){
 				inputJson.registration_valid_upto = inputJson.registration_valid_upto.format('YYYY-MM-DD');
 			} else {
@@ -191,12 +221,23 @@ export class AddVehicleComponent implements OnInit {
 				inputJson.puc_valid_upto = new DatePipe('en-in').transform(inputJson.puc_valid_upto,'yyyy-MM-dd');
 			}
 			console.log(inputJson);
-			this.transportService.insertTransportVehicle(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
-					// this.close({status:true});
-				}
-			})
+			if(inputJson.tv_id){
+				this.transportService.updateTransportVehicle(inputJson).subscribe((result: any) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
+						this.close({status:true});
+					}
+				})
+			} else {
+				inputJson.status = '1';
+				this.transportService.insertTransportVehicle(inputJson).subscribe((result: any) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
+						this.close({status:true});
+					}
+				})
+			}
+			
 
 		}
 	}

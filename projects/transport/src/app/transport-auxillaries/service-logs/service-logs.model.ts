@@ -5,9 +5,8 @@ export interface Element {
     workshop:any,
     fuel_type:any,
     nature:any,
-    item:any,
-    quantity:any,
-    rate:any,
+    items:any;
+    no_of_item:any,
     amount:any,
     logs_type:any,
     attachment: any

@@ -15,7 +15,7 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 })
 export class FuelLogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['date', 'bus_id','fuel_type','item','quantity','rate','amount','attachment', 'modify'];
+  displayedColumns: string[] = ['date', 'bus_id','fuel_type','fuel_station','quantity','rate','amount','attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -62,10 +62,10 @@ export class FuelLogsComponent implements OnInit {
       'workshop': '',
       'fuel_type': '',
       'nature': '',
-      'item': '',
+      'fuel_station': '',
       'quantity': '',
-      'rate': '',
-      'amount': '',
+	  'rate': '',
+	  'amount':'',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -85,10 +85,10 @@ export class FuelLogsComponent implements OnInit {
       'workshop': '',
       'fuel_type': '',
       'nature': '',
-      'item': '',
+      'fuel_station': '',
       'quantity': '',
-      'rate': '',
-      'amount': '',
+	  'rate': '',
+	  'amount':'',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -106,7 +106,8 @@ export class FuelLogsComponent implements OnInit {
         inputJson.logs_type='fuel';
         inputJson.status='1';
         inputJson.attachment=this.imageArray;
-        inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name}
+		inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name};
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
 			this.transportService.insertTransportLogs(inputJson).subscribe((result_i: any) => {
 				if (result_i) {
@@ -145,7 +146,7 @@ export class FuelLogsComponent implements OnInit {
             workshop: item.workshop,
             fuel_type: item.fuel_type,
             nature: item.nature,
-            item: item.item,
+            fuel_station: item.fuel_station,
             quantity: item.quantity,
             rate: item.rate,
             amount: item.amount,
@@ -188,10 +189,9 @@ export class FuelLogsComponent implements OnInit {
       workshop: value.workshop,
       fuel_type: value.fuel_type,
       nature: value.nature,
-      item: value.item,
+      fuel_station: value.fuel_station,
       quantity: value.quantity,
       rate: value.rate,
-      amount: value.amount,
       logs_type: value.logs_type,
       attachment: value.attachment,
       status:value.status
@@ -207,9 +207,10 @@ export class FuelLogsComponent implements OnInit {
       if(inputJson.date){
         inputJson.date = new DatePipe('en-in').transform(inputJson.date,'yyyy-MM-dd');
         inputJson.logs_type='fuel';
-        inputJson.attachment=this.imageArray;
+		inputJson.attachment=this.imageArray;
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
-      this.transportService.updateTransportLogs(this.subExamForm.value).subscribe((result: any) => {
+      this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
         if (result) {
           this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
           this.getAllTransportLogs();

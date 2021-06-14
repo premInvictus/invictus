@@ -61,7 +61,7 @@
                 <div class="col-12 remove-col-padding">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Fuel Station</mat-label>
-                    <input matInput placeholder="Fuel Station" type="text" formControlName="item" required>
+                    <input matInput placeholder="Fuel Station" type="text" formControlName="fuel_station" required>
                   </mat-form-field>
                 </div>
               </div>
@@ -81,14 +81,14 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-12 remove-col-padding">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Amount</mat-label>
                     <input matInput placeholder="Amount" type="number" formControlName="amount" required>
                   </mat-form-field>
                 </div>
-              </div>
+              </div> -->
               <div class="row" >
                 <div class="col-12">
                   <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment"
@@ -159,12 +159,12 @@
                     </td>
                   </ng-container>
                   
-                  <ng-container matColumnDef="item">
+                  <ng-container matColumnDef="fuel_station">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Fuel Station
                     </th>
                     <td mat-cell *matCellDef="let item">
-                      {{ item.item | titlecase}}
+                      {{ item.fuel_station | titlecase}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="quantity">

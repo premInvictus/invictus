@@ -32,8 +32,10 @@ export class VehicleComponent implements OnInit {
   }
   openDialog(action,data=null): void {
     let title = 'Add Vehicle';
-    if(data){
+    if(action=='edit'){
       title = 'Edit Vehicle'
+    } else if(action=='view'){
+      title = 'Vehicle Details'
     }
     const dialogRef = this.dialog.open(AddVehicleComponent, {
       width: '80%',

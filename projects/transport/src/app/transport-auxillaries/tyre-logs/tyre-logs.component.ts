@@ -15,7 +15,7 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 })
 export class TyreLogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['date', 'bus_id','nature','quantity','rate','amount','attachment', 'modify'];
+  displayedColumns: string[] = ['date', 'bus_id','nature','quantity','rate','amount','remarks','attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
@@ -64,8 +64,9 @@ export class TyreLogsComponent implements OnInit {
       'nature': '',
       'item': '',
       'quantity': '',
-      'rate': '',
-      'amount': '',
+	  'rate': '',
+	  'amount':'',
+      'remarks': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -87,8 +88,9 @@ export class TyreLogsComponent implements OnInit {
       'nature': '',
       'item': '',
       'quantity': '',
-      'rate': '',
-      'amount': '',
+	  'rate': '',
+	  'amount':'',
+      'remarks': '',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -106,7 +108,8 @@ export class TyreLogsComponent implements OnInit {
         inputJson.logs_type='tyre';
         inputJson.status='1';
         inputJson.attachment=this.imageArray;
-        inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name}
+		inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name};
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
 			this.transportService.insertTransportLogs(inputJson).subscribe((result_i: any) => {
 				if (result_i) {
@@ -148,7 +151,8 @@ export class TyreLogsComponent implements OnInit {
             item: item.item,
             quantity: item.quantity,
             rate: item.rate,
-            amount: item.amount,
+			amount: item.amount,
+			remarks:item.remarks,
             attachment: item.attachment,
             logs_type:item.logs_type,
             status:item.status,
@@ -191,7 +195,7 @@ export class TyreLogsComponent implements OnInit {
       item: value.item,
       quantity: value.quantity,
       rate: value.rate,
-      amount: value.amount,
+      remarks: value.remarks,
       logs_type: value.logs_type,
       attachment: value.attachment,
       status:value.status
@@ -207,9 +211,10 @@ export class TyreLogsComponent implements OnInit {
       if(inputJson.date){
         inputJson.date = new DatePipe('en-in').transform(inputJson.date,'yyyy-MM-dd');
         inputJson.logs_type='tyre';
-        inputJson.attachment=this.imageArray;
+		inputJson.attachment=this.imageArray;
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
-      this.transportService.updateTransportLogs(this.subExamForm.value).subscribe((result: any) => {
+      this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
         if (result) {
           this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
           this.getAllTransportLogs();

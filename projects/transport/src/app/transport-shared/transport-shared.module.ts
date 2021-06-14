@@ -22,7 +22,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe, IndianCurrency } from '../_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -46,6 +46,7 @@ import { CallLogRemarksModalComponent } from './call-log-remarks-modal/call-log-
 import { CreateFolderComponent } from './create-folder/create-folder.component';
 import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.component';
 import { ScheduleMessageComponent } from './schedule-message/schedule-message.component';
+import { TransportLogFilterComponent } from './transport-log-filter/transport-log-filter.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -111,6 +112,7 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
+		IndianCurrency,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		NoDataComponent,
@@ -125,6 +127,7 @@ export const MY_FORMATS = {
 		CreateFolderComponent,
 		UploadFileModalComponent,
 		ScheduleMessageComponent,
+		TransportLogFilterComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -142,7 +145,8 @@ export const MY_FORMATS = {
 		CallLogRemarksModalComponent,
 		CreateFolderComponent,
 		UploadFileModalComponent,
-		ScheduleMessageComponent
+		ScheduleMessageComponent,
+		TransportLogFilterComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -180,6 +184,7 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
+		IndianCurrency,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent,
@@ -189,7 +194,8 @@ export const MY_FORMATS = {
 		PreviewDocumentComponent,
 		CreateFolderComponent,
 		UploadFileModalComponent,
-		ScheduleMessageComponent
+		ScheduleMessageComponent,
+		TransportLogFilterComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
