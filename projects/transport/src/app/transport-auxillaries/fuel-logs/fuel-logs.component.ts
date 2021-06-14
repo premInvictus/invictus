@@ -64,7 +64,8 @@ export class FuelLogsComponent implements OnInit {
       'nature': '',
       'fuel_station': '',
       'quantity': '',
-      'rate': '',
+	  'rate': '',
+	  'amount':'',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -86,7 +87,8 @@ export class FuelLogsComponent implements OnInit {
       'nature': '',
       'fuel_station': '',
       'quantity': '',
-      'rate': '',
+	  'rate': '',
+	  'amount':'',
       'logs_type': '',
       'attachment':[],
       'status':''
@@ -104,7 +106,8 @@ export class FuelLogsComponent implements OnInit {
         inputJson.logs_type='fuel';
         inputJson.status='1';
         inputJson.attachment=this.imageArray;
-        inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name}
+		inputJson.created_by = {login_id: this.currentUser.login_id,full_name:this.currentUser.full_name};
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
 			this.transportService.insertTransportLogs(inputJson).subscribe((result_i: any) => {
 				if (result_i) {
@@ -146,7 +149,7 @@ export class FuelLogsComponent implements OnInit {
             fuel_station: item.fuel_station,
             quantity: item.quantity,
             rate: item.rate,
-            amount: item.quantity * item.rate,
+            amount: item.amount,
             attachment: item.attachment,
             logs_type:item.logs_type,
             status:item.status,
@@ -204,7 +207,8 @@ export class FuelLogsComponent implements OnInit {
       if(inputJson.date){
         inputJson.date = new DatePipe('en-in').transform(inputJson.date,'yyyy-MM-dd');
         inputJson.logs_type='fuel';
-        inputJson.attachment=this.imageArray;
+		inputJson.attachment=this.imageArray;
+		inputJson.amount = inputJson.quantity * inputJson.rate;
       }
       this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
         if (result) {

@@ -1,7 +1,7 @@
-<div class="add-book-container">
+<div class="add-book-container remove-col-padding">
   <div class="row">
-    <div class="col-12">
-      <mat-card>
+    <div class="col-12 remove-col-padding">
+      <mat-card style="padding:0px !important">
         <div class="row">
           <div class="col-6">
             <span class="font-size-24">{{data.title}}</span>
@@ -11,8 +11,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12">
-      <mat-card>
+    <div class="col-12 remove-col-padding">
+      <mat-card style="padding:0px !important">
         <form [formGroup]="bookForm" autocomplete="off">
           <div class="row">
             <div class="col-12">

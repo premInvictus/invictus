@@ -69,6 +69,7 @@ export class ServiceLogsComponent implements OnInit {
 			'fuel_type': '',
 			'nature': '',
 			'no_of_item': '',
+			'amount' : '',
 			'logs_type': '',
 			'attachment': [],
 			'status': ''
@@ -123,6 +124,7 @@ export class ServiceLogsComponent implements OnInit {
 			'fuel_type': '',
 			'nature': '',
 			'no_of_item': '',
+			'amount':'',
 			'logs_type': '',
 			'attachment': [],
 			'status': ''
@@ -147,6 +149,7 @@ export class ServiceLogsComponent implements OnInit {
 					items.push(element.formGroup.value)
 				});
 				inputJson.items = items;
+				inputJson.amount = this.getTotal(items);
 			}
 			this.transportService.insertTransportLogs(inputJson).subscribe((result_i: any) => {
 				if (result_i) {
@@ -198,7 +201,7 @@ export class ServiceLogsComponent implements OnInit {
 						nature: item.nature,
 						items:item.items,
 						no_of_item: item.no_of_item,
-						amount: this.getTotal(item.items),
+						amount: item.amount,
 						attachment: item.attachment,
 						logs_type: item.logs_type,
 						status: item.status,
@@ -263,6 +266,7 @@ export class ServiceLogsComponent implements OnInit {
 					items.push(element.formGroup.value)
 				});
 				inputJson.items = items;
+				inputJson.amount = this.getTotal(items);
 			}
 			this.transportService.updateTransportLogs(inputJson).subscribe((result: any) => {
 				if (result) {
