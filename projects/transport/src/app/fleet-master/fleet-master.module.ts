@@ -9,6 +9,7 @@ import { RouteManagementComponent } from './route-management/route-management.co
 import { AssignStudentsComponent } from './assign-students/assign-students.component';
 import { VehicleComponent } from './vehicle/vehicle.component';
 import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
+import { AddTransportStaffComponent } from './add-transport-staff/add-transport-staff.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
     LoadingModule,
     TransportSharedModule
   ],
-  declarations: [VehicleProfileComponent, StaffProfileComponent, RouteManagementComponent, AssignStudentsComponent, VehicleComponent, AddVehicleComponent],
-  entryComponents:[AddVehicleComponent]
+  declarations: [VehicleProfileComponent, StaffProfileComponent, RouteManagementComponent, AssignStudentsComponent, VehicleComponent, AddVehicleComponent, AddTransportStaffComponent],
+  entryComponents:[AddVehicleComponent,AddTransportStaffComponent]
 })
 export class FleetMasterModule { }
