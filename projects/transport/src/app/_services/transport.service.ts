@@ -103,5 +103,17 @@ export class TransportService {
     getChecklist(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiTransportUrl + '/checklist/get/'+value.id);
-    }
+	}
+	getRoutes(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/getTransportRoutes', value);
+	}
+	getStoppages(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportStoppages', value);
+	}
+	getStoppagesPerRoute(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/getStoppagesPerRoute', value);
+	}
 }

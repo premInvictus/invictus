@@ -166,7 +166,7 @@
           <div class="row">
             <div class="col-12 remove-col-padding">
                 
-              <table mat-table #table [dataSource]="subExamDataSource" matSort class="table-100 text-center">
+              <table mat-table #table [dataSource]="datasource" matSort class="table-100 text-center">
 
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -247,8 +247,10 @@
                 <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
                 </tr>
-                >
               </table>
+              <mat-paginator [hidden]="!(ELEMENT_DATA.length > 0)" #paginator [pageSize]="25"
+              [pageSizeOptions]="[25,50,100]" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+            </mat-paginator>0
             </div>
           </div>
         </div>

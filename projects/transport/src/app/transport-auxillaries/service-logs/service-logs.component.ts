@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, TransportService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Element } from './service-logs.model';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from '../../transport-shared/preview-document/preview-document.component';
-import {ServiceLogItemsComponent } from '../service-log-items/service-log-items.component';
-import { TransportLogFilterComponent} from '../../transport-shared/transport-log-filter/transport-log-filter.component'
+import { ServiceLogItemsComponent } from '../service-log-items/service-log-items.component';
+import { TransportLogFilterComponent } from '../../transport-shared/transport-log-filter/transport-log-filter.component'
 
 @Component({
 	selector: 'app-service-logs',
@@ -16,6 +16,7 @@ import { TransportLogFilterComponent} from '../../transport-shared/transport-log
 	styleUrls: ['./service-logs.component.scss']
 })
 export class ServiceLogsComponent implements OnInit {
+	@ViewChild(MatPaginator) paginator: MatPaginator;
 	displayedColumns: string[] = ['date', 'bus_id', 'workshop', 'items', 'amount', 'attachment', 'modify'];
 	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
@@ -28,7 +29,7 @@ export class ServiceLogsComponent implements OnInit {
 	UpdateFlag = false;
 	viewOnly = true;
 	param: any = {};
-	subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	datasource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	multipleFileArray: any[] = [];
 	imageArray: any[] = [];
 	finalDocumentArray: any[] = [];
@@ -38,7 +39,7 @@ export class ServiceLogsComponent implements OnInit {
 	bus_arr = [];
 	tiersArray: any[] = [];
 	gradeDataFrmArr: any[] = [];
-	filter:any;
+	filter: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -69,7 +70,7 @@ export class ServiceLogsComponent implements OnInit {
 			'fuel_type': '',
 			'nature': '',
 			'no_of_item': '',
-			'amount' : '',
+			'amount': '',
 			'logs_type': '',
 			'attachment': [],
 			'status': ''
@@ -124,7 +125,7 @@ export class ServiceLogsComponent implements OnInit {
 			'fuel_type': '',
 			'nature': '',
 			'no_of_item': '',
-			'amount':'',
+			'amount': '',
 			'logs_type': '',
 			'attachment': [],
 			'status': ''
@@ -183,8 +184,8 @@ export class ServiceLogsComponent implements OnInit {
 	}
 	getAllTransportLogs() {
 		this.ELEMENT_DATA = [];
-		this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-		const param:any = this.filter ? JSON.parse(JSON.stringify(this.filter)) : {};
+		this.datasource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		const param: any = this.filter ? JSON.parse(JSON.stringify(this.filter)) : {};
 		param['status'] = '1';
 		param['logs_type'] = 'service';
 		param['sort'] = { date: -1 };
@@ -199,7 +200,7 @@ export class ServiceLogsComponent implements OnInit {
 						workshop: item.workshop,
 						fuel_type: item.fuel_type,
 						nature: item.nature,
-						items:item.items,
+						items: item.items,
 						no_of_item: item.no_of_item,
 						amount: item.amount,
 						attachment: item.attachment,
@@ -211,7 +212,9 @@ export class ServiceLogsComponent implements OnInit {
 
 					this.ELEMENT_DATA.push(element);
 				}
-				this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				this.datasource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				this.datasource.paginator.length = this.paginator.length = this.ELEMENT_DATA.length;
+				this.datasource.paginator = this.paginator;
 			}
 		});
 	}
@@ -362,26 +365,26 @@ export class ServiceLogsComponent implements OnInit {
 		const dialogRef = this.dialog.open(ServiceLogItemsComponent, {
 			height: '80%',
 			width: '1000px',
-		  	data: item
+			data: item
 		});
-	
+
 		dialogRef.afterClosed().subscribe(result => {
 		});
-	  }
-	  openDialogFilter(): void {
+	}
+	openDialogFilter(): void {
 		const dialogRef = this.dialog.open(TransportLogFilterComponent, {
 			height: '80%',
 			width: '1000px',
-		  	data: {}
+			data: {}
 		});
-	
+
 		dialogRef.afterClosed().subscribe(result => {
-			if(result){
+			if (result) {
 				console.log(result);
 				this.filter = result
 				this.getAllTransportLogs()
 			}
 		});
-	  }
+	}
 
 }

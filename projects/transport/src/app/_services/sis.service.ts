@@ -223,4 +223,21 @@ export class SisService {
 	resetAdmitCode(value) {
 		return this.http.post(environment.apiSisUrl + '/users/resetAdmitCode', value);
 	}
+	getMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
+	}
+	getAllDesignation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/designation/getAll', value);
+	}
+
+	getAllWing(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/wing/getAll', value);
+	}
+	getCategoryOne(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/category-one/getAll', value);
+	}
 }
