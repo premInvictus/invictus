@@ -197,20 +197,20 @@
               (change)="isMinority_change($event)"></mat-slide-toggle>
           </div>
           <div class="col-12 " *ngIf="checkIfFieldExist('upd_special_need') || checkIfFieldExist('upd_is_ews')">
-            <div class="row">
+            <div class="row" style="margin-left: 0px;">
               <div class="col-6" *ngIf="checkIfFieldExist('upd_special_need')">
                 <span>Whether the child is Specially abled?</span>
                 <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isSpeciallyAbled"
                   (change)="isSpecialChild_change($event)"></mat-slide-toggle>
               </div>
               <div class="col-6" *ngIf="checkIfFieldExist('upd_is_ews')">
-                <span>Whether the child belongs to EWS category?</span>
+                <span>Whether child belongs to EWS category?</span>
                 <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isEws"
                   (change)="isEwsChanged($event)"></mat-slide-toggle>
               </div>
             </div>
           </div>
-          <div class="col-12 ">
+          <div class="col-12 " style="margin-left: 10px;">
             <span>Whether the child is having any sibling?</span>
             <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="siblingdetailsdiv"
               (change)="siblingdetailsdiv_change($event)">{{siblingStaus}}</mat-slide-toggle>
