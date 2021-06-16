@@ -213,6 +213,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true},
 			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true },
 			{ id: 'upd_is_minority', name: 'Is Minority', field: 'upd_is_minority', sortable: true, filterable: true },
+			{ id: 'upd_is_ews', name: 'Is EWS', field: 'upd_is_ews', sortable: true, filterable: true },
+
 			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
 			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
 			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
@@ -1173,7 +1175,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
 			tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
 			tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
-			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority']);;
+			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority']);
+			tempObj['upd_is_ews'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_ews']);
 			tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need']);
 			tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
 			tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);

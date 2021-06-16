@@ -45,6 +45,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	maxDate = new Date();
 	siblingdetailsdiv = false;
 	isSpeciallyAbled = false;
+	isEws = false;
 	isMinority = false;
 	siblingedit = false;
 	checkReadOnlyStatus = false;
@@ -207,6 +208,14 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.isSpeciallyAbled = false;
 		}
 	}
+	isEwsChanged(event) {
+		if (event.checked) {
+			this.isEws = true;
+
+		} else {
+			this.isEws = false;
+		}
+	}
 
 	// getConfigureSetting() {
 	// 	this.sisService.getConfigureSetting({
@@ -341,6 +350,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.siblingdetailsdiv = false;
 		this.isMinority = false;
 		this.isSpeciallyAbled = false;
+		this.isEws =false;
 	}
 
 	openEditDialog = (data) => this.editReference.openModal(data);
@@ -660,6 +670,10 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			if(personalDetails[0].upd_special_need) {
 				if(personalDetails[0].upd_special_need == 'Y')
 					this.isSpeciallyAbled = true;
+			}
+			if(personalDetails[0].upd_is_ews) {
+				if(personalDetails[0].upd_is_ews == 'Y')
+					this.isEws = true;
 			}
 			if (personalDetails[0].siblingDetails.length > 0) {
 				this.siblingdetailsdiv = true;
