@@ -5,7 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { InventoryService, SisService } from '../../_services/index';
 import { saveAs } from 'file-saver';
 import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SelectionModel} from '@angular/cdk/collections';
 import { SearchViaNameComponent } from '../../inventory-shared/search-via-name/search-via-name.component';
@@ -50,7 +50,7 @@ export class GenerateBillComponent implements OnInit {
   session:any
   constructor(
     private fbuild: FormBuilder,
-    private common: CommonAPIService,
+    public common: CommonAPIService,
     private erpCommonService: ErpCommonService,
     public dialog: MatDialog,
     public inventory: InventoryService,
@@ -93,7 +93,8 @@ export class GenerateBillComponent implements OnInit {
       due_date: '',
       issue_date: '',
       return_date: '',
-      bundle_id:''
+      bundle_id:'',
+      created_date:''
     });
     this.formGroupArray = [];
     this.payForm = this.fbuild.group({
@@ -510,6 +511,7 @@ export class GenerateBillComponent implements OnInit {
         grandTotal = Number(grandTotal) + Number(item.total_price);
       }
       finalJson = {
+        created_date :this.itemSearchForm.value.created_date ? new DatePipe('en-in').transform(this.itemSearchForm.value.created_date,'yyyy-MM-dd') : '',
         buyer_details: this.userData,
         bill_details: itemAssign,
         bill_total: grandTotal,
