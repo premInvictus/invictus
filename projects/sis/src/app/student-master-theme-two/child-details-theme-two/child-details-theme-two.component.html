@@ -27,7 +27,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    
+
                     <div class="col-12 " style="padding-top: 0;" *ngIf="checkIfFieldExist('upd_category')">
                       <div class="row" style="margin-top: 0px">
                         <div class="col-6" style="padding-left:0; padding-top:0">
@@ -65,7 +65,8 @@
                     </div>
                     <div class="col-12">
                       <div class='row' style="margin-top: 0px">
-                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left" style="padding-left:0" *ngIf="checkIfFieldExist('upd_religion_id')">
+                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left"
+                          style="padding-left:0" *ngIf="checkIfFieldExist('upd_religion_id')">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Religion</mat-label>
                             <mat-select formControlName="upd_religion_id" placeholder="Religion" required
@@ -80,7 +81,8 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right" style="padding-right:0"*ngIf="checkIfFieldExist('upd_mt_id')">
+                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right"
+                          style="padding-right:0" *ngIf="checkIfFieldExist('upd_mt_id')">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Mother Tongue</mat-label>
                             <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required
@@ -95,7 +97,7 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                        
+
                       </div>
                     </div>
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_reference')">
@@ -107,13 +109,15 @@
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_designation')">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Current Designation</mat-label>
-                        <input formControlName="upd_designation" matInput [readonly]="viewOnly" placeholder="Current Designation">
+                        <input formControlName="upd_designation" matInput [readonly]="viewOnly"
+                          placeholder="Current Designation">
                       </mat-form-field>
                     </div>
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_organization')">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Organisation</mat-label>
-                        <input formControlName="upd_organization" matInput [readonly]="viewOnly" placeholder="Organisation">
+                        <input formControlName="upd_organization" matInput [readonly]="viewOnly"
+                          placeholder="Organisation">
                       </mat-form-field>
                     </div>
                   </div>
@@ -175,7 +179,8 @@
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_qualification')">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Educational Qualification</mat-label>
-                        <input formControlName="upd_qualification" matInput [readonly]="viewOnly" placeholder="Educational Qualification">
+                        <input formControlName="upd_qualification" matInput [readonly]="viewOnly"
+                          placeholder="Educational Qualification">
                       </mat-form-field>
                     </div>
                   </div>
@@ -191,10 +196,19 @@
             <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isMinority"
               (change)="isMinority_change($event)"></mat-slide-toggle>
           </div>
-          <div class="col-12 " *ngIf="checkIfFieldExist('upd_special_need')">
-            <span>Whether the child is Specially abled?</span>
-            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isSpeciallyAbled"
-              (change)="isSpecialChild_change($event)"></mat-slide-toggle>
+          <div class="col-12 " *ngIf="checkIfFieldExist('upd_special_need') || checkIfFieldExist('upd_is_ews')">
+            <div class="row">
+              <div class="col-6" *ngIf="checkIfFieldExist('upd_special_need')">
+                <span>Whether the child is Specially abled?</span>
+                <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isSpeciallyAbled"
+                  (change)="isSpecialChild_change($event)"></mat-slide-toggle>
+              </div>
+              <div class="col-6" *ngIf="checkIfFieldExist('upd_is_ews')">
+                <span>Whether the child belongs to EWS category?</span>
+                <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="isEws"
+                  (change)="isEwsChanged($event)"></mat-slide-toggle>
+              </div>
+            </div>
           </div>
           <div class="col-12 ">
             <span>Whether the child is having any sibling?</span>
@@ -219,7 +233,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
                     <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
-                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"  />
+                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error *ngIf="paddressform.get('ea_address1').hasError('required')">
                       This field is required
                     </mat-error>
@@ -241,7 +255,8 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_state')">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left "
+                  *ngIf="checkIfFieldExist('ea_state')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>State</mat-label>
                     <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
@@ -256,7 +271,8 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_district')">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left "
+                  *ngIf="checkIfFieldExist('ea_district')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>District</mat-label>
                     <mat-select formControlName="ea_district" placeholder="District" required disabled="true"
@@ -367,10 +383,11 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_district')">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right "
+                  *ngIf="checkIfFieldExist('ea_district')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>District</mat-label>
-                    <mat-select formControlName="ea_district" placeholder="District" required 
+                    <mat-select formControlName="ea_district" placeholder="District" required
                       [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayDist2" [value]="item.dist_id">

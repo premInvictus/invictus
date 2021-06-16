@@ -157,6 +157,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				this.validateParent();
 				this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
 				this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
+				this.taboneform.personalDetails.upd_is_ews = this.childDetails.isEws;
 				this.taboneform.parentDetails = this.parentDetails ? this.parentJson : this.parentJson;
 				// this.medicalDetails.addMedicalInfo();
 				this.taboneform.medicalDetails = this.medicalDetails ? this.medicalDetails.medicalform.value : '';
@@ -313,6 +314,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.taboneform.personalDetails.siblingDetails = [];
 			this.taboneform.personalDetails.upd_is_minority = this.childDetails.isMinority;
 			this.taboneform.personalDetails.upd_special_need = this.childDetails.isSpeciallyAbled;
+			this.taboneform.personalDetails.upd_is_ews = this.childDetails.isEws;
 			if (this.childDetails.siblingArray.length > 0) {
 				this.taboneform.personalDetails.siblingDetails = this.childDetails.siblingArray;
 			}
