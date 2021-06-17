@@ -160,11 +160,11 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				onCommand: (e, args) => {
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
+						this.exportAsPDF(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
+						this.exportToExcel(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'export-csv') {
 						this.exportToFile('csv');
@@ -312,6 +312,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		this.levelSubtotalFooter = [];
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const doc = new jsPDF('p', 'mm', 'a0');
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
@@ -345,13 +346,13 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			theme: 'striped'
 		});
 		const rowData: any[] = [];
-		for (const item of this.columnDefinitions) {
+		for (const item of log_detail) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const arr: any[] = [];
-				this.columnDefinitions.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
@@ -363,7 +364,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
-			for (const item of this.columnDefinitions) {
+			for (const item of log_detail) {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
@@ -524,6 +525,8 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
+		
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
@@ -554,14 +557,14 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const earr: any[] = [];
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of log_detail) {
 							earr.push(groupItem.rows[key][item2.id]);
 						}
 						rowData.push(earr);
 						this.pdfrowdata.push(earr);
 					});
 					const levelArray: any[] = [];
-					for (const item2 of this.columnDefinitions) {
+					for (const item2 of log_detail) {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
@@ -584,6 +587,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	}
 	checkGroupLevel(item, worksheet) {
 		console.log('checkGroupLevel item ', item);
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		// console.log('checkGroupLevel worksheet ', worksheet);
 		if (item.length > 0) {
 			for (const groupItem of item) {
@@ -614,7 +618,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				if (groupItem.groups) {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -651,7 +655,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -669,13 +673,13 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				} else {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of log_detail) {
 							obj[item2.id] = groupItem.rows[key][item2.id];
 						}
 						worksheet.addRow(obj);
 					});
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -689,7 +693,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -712,7 +716,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -734,10 +738,11 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
 		console.log('excel json', json);
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		for (const item of log_detail) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -763,7 +768,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const excelobj: any = {};
-				this.columnDefinitions.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
 				});
 				worksheet.addRow(excelobj);
@@ -777,7 +782,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		}
 		// style grand total
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-			this.columnDefinitions.forEach(element => {
+			log_detail.forEach(element => {
 				cell.font = {
 					color: { argb: 'ffffff' },
 					bold: true,
