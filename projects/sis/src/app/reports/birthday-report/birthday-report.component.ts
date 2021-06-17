@@ -224,6 +224,17 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
 					collapsed: false,
+				} },
+				{ id: 'age', name: 'Age', field: 'age', sortable: true, filterable: true,
+				 
+				 grouping: {
+					getter: 'age',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				} }
 		];
 	}
@@ -1064,6 +1075,8 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		let counter = 1;
 		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
 			const tempObj = {};
+			let a = new Date().getFullYear();
+			let b = new Date(this.reportProcessWiseData[i]['au_dob']).getFullYear();
 			tempObj['id'] = counter;
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportProcessWiseData[i]['sec_name'] ?
@@ -1072,7 +1085,10 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['au_admission_no']);
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['au_full_name']));
 			tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[i]['au_dob']);
+			tempObj['age'] = a - b;
 			this.dataset.push(tempObj);
+			// console.log("i am here", new Date().getFullYear(),new Date(this.reportProcessWiseData[i]['au_dob']).getFullYear() );
+			
 			counter++;
 		}
 		const blankTempObj = {};
