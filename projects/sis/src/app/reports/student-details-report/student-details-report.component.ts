@@ -260,6 +260,17 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
+			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true,
+			grouping: {
+				getter: 'promotion',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+
 			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
 			grouping: {
 				getter: 'rel_name',
@@ -1240,6 +1251,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
 			tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
 			tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
+			tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
+
 			tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
 			if(process_type == '1'|| process_type == '2' || process_type == '4') {
