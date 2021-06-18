@@ -1039,7 +1039,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	prepareDataSource() {
 		this.columnDefinitions = [
 			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false, width: 100,
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true, width: 100,
 			grouping: {
 				getter: 'class_name',
 				formatter: (g) => {

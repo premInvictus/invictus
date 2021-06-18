@@ -194,7 +194,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	isMinority_change(event) {
 		if (event.checked) {
 			this.isMinority = true;
-			
+
 
 		} else {
 			this.isMinority = false;
@@ -252,7 +252,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.baseform = this.fbuild.group({
 			upd_id: '',
 			upd_aadhaar_no: '',
-			au_process_class:'',
+			au_process_class: '',
 			upd_dob: '',
 			upd_doj: '',
 			upd_religion_id: '',
@@ -263,7 +263,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			upd_tag_id: '',
 			upd_reference: '',
 			upd_qualification: '',
-			upd_organization : '',
+			upd_organization: '',
 			upd_designation: ''
 		});
 		this.paddressform = this.fbuild.group({
@@ -350,7 +350,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.siblingdetailsdiv = false;
 		this.isMinority = false;
 		this.isSpeciallyAbled = false;
-		this.isEws =false;
+		this.isEws = false;
 	}
 
 	openEditDialog = (data) => this.editReference.openModal(data);
@@ -369,14 +369,14 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 
 	set_upd_nationality() {
 		/* this.childdetialsform.patchValue({
-      upd_nationality : this.childdetialsform.value.upd_nationality_other
-    }); */
+	  upd_nationality : this.childdetialsform.value.upd_nationality_other
+	}); */
 	}
 
 	set_upd_category() {
 		/* this.childdetialsform.patchValue({
-      upd_category : this.childdetialsform.value.upd_category_other
-    }); */
+	  upd_category : this.childdetialsform.value.upd_category_other
+	}); */
 	}
 
 	getClass() {
@@ -594,7 +594,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				upd_aadhaar_no: personalDetails[0].upd_aadhaar_no,
 				upd_reference: personalDetails[0].upd_reference,
 				upd_qualification: personalDetails[0].upd_qualification,
-				upd_organization : personalDetails[0].upd_organization,
+				upd_organization: personalDetails[0].upd_organization,
 				upd_designation: personalDetails[0].upd_designation,
 				au_process_class: personalDetails[0].au_process_class,
 				upd_dob: personalDetails[0].upd_dob,
@@ -617,7 +617,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							});
 						}
 						console.log("i am eeeee", element);
-						
+
 						this.paddressform.patchValue({
 							ea_id: element.ea_id,
 							ea_login_id: element.ea_login_id,
@@ -663,17 +663,29 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				this.resetpaddressform();
 				this.resetraddressform();
 			}
-			if(personalDetails[0].upd_is_minority) {
-				if(personalDetails[0].upd_is_minority == 'Y')
+			if (personalDetails[0].upd_is_minority) {
+				if (personalDetails[0].upd_is_minority == 'Y') {
 					this.isMinority = true;
+				}
+				else {
+					this.isMinority = false;
+				}	
 			}
-			if(personalDetails[0].upd_special_need) {
-				if(personalDetails[0].upd_special_need == 'Y')
+			if (personalDetails[0].upd_special_need) {
+				if (personalDetails[0].upd_special_need == 'Y') {
 					this.isSpeciallyAbled = true;
+				}
+				else {
+					this.isSpeciallyAbled = false
+				}
 			}
-			if(personalDetails[0].upd_is_ews) {
-				if(personalDetails[0].upd_is_ews == 'Y')
+			if (personalDetails[0].upd_is_ews) {
+				if (personalDetails[0].upd_is_ews == 'Y') {
 					this.isEws = true;
+				}
+				else {
+					this.isEws = false
+				}
 			}
 			if (personalDetails[0].siblingDetails.length > 0) {
 				this.siblingdetailsdiv = true;
@@ -695,8 +707,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	getCityResId(item: any) {
 		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
 		this.cityId2 = item.cit_id;
-		
-		
+
+
 		this.raddressform.patchValue({
 			ea_city1: this.getCityName(item.cit_id),
 			ea_city: item.cit_id,
@@ -719,8 +731,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	getCityPerId(item: any) {
 		this.cityId = item.cit_id;
 		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
-		
-		
+
+
 		this.paddressform.patchValue({
 			ea_city1: this.getCityName(item.cit_id),
 			ea_city: item.cit_id,
@@ -728,7 +740,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_country: item.cou_id,
 			ea_district: item.dist_id
 		});
-		
+
 		this.paddressform.controls.ea_city.markAsTouched();
 		// this.paddressform.controls.ea_city.markAsPending();
 		this.paddressform.controls.ea_city.markAsDirty();
