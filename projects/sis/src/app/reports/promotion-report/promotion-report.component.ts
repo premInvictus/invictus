@@ -27,10 +27,10 @@ import { SmartService } from 'projects/axiom/src/app/_services';
 
 
 @Component({
-  selector: 'app-promotion-report',
-  templateUrl: './promotion-report.component.html',
-  styleUrls: ['./promotion-report.component.css'],
-  encapsulation: ViewEncapsulation.None
+	selector: 'app-promotion-report',
+	templateUrl: './promotion-report.component.html',
+	styleUrls: ['./promotion-report.component.css'],
+	encapsulation: ViewEncapsulation.None
 })
 export class PromotionReportComponent implements OnInit, AfterViewInit {
 	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
@@ -91,12 +91,12 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 	events: any;
 	@ViewChild('TABLE') table: ElementRef;
 	enrollMentTypeArray: any[] = [
-	{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	}];
+		{
+			au_process_type: '3', au_process_name: 'Provisional Admission'
+		},
+		{
+			au_process_type: '4', au_process_name: 'Admission'
+		}];
 
 
 	studentDetailReportForm: FormGroup;
@@ -160,11 +160,11 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 				onCommand: (e, args) => {
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
+						this.exportAsPDF(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
+						this.exportToExcel(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'export-csv') {
 						this.exportToFile('csv');
@@ -191,50 +191,88 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
-			groupTotalsFormatter: this.srnTotalsFormatter  },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', 
-			name: 'Class', 
-			field: 'class_name', 
-			sortable: true, 
-			filterable: true, 
-			maxWidth: 150,
-			filterSearchType: FieldType.string,
-			filter: { model: Filters.compoundInput },
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				comparer: (a, b) => {
-					// (optional) comparer is helpful to sort the grouped data
-					// code below will sort the grouped value in ascending order
-					return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			}},
-			{ id: 'student_prev_school', name: 'Status', field: 'student_prev_school', sortable: true, filterable: true },
-			{ id: 'reason_title', name: 'Promoted Class', field: 'reason_title', sortable: true, filterable: true },
+			{
+				id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+				groupTotalsFormatter: this.countTotalsFormatter
+			},
+			{
+				id: 'class_name',
+				name: 'Class',
+				field: 'class_name',
+				sortable: true,
+				filterable: true,
+				maxWidth: 150,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'student_prev_school', name: 'Status', field: 'student_prev_school', sortable: true, filterable: true,
+				grouping: {
+					getter: 'student_prev_school',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'reason_title', name: 'Promoted Class', field: 'reason_title', sortable: true, filterable: true,
+				grouping: {
+					getter: 'reason_title',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
 		];
 	}
 	getClass() {
 		this.classArray = [];
-		
+
 		this.smartService.getClass({ class_status: '1' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
 					// console.log("-----------------", this.classArray);
-					
+
 				}
 			}
 		);
-		this.smartService.getSection({}).subscribe((res:any) => {
-			
+		this.smartService.getSection({}).subscribe((res: any) => {
+
 			this.sectionArray = res.data;
 			// console.log("i am res", this.sectionArray);
 		})
@@ -313,6 +351,8 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 	exportAsPDF(json: any[]) {
+		// console.log('------------------------------',this.angularGrid.slickGrid.getColumns());
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		const headerData: any[] = [];
 		this.pdfrowdata = [];
 		this.levelHeading = [];
@@ -353,13 +393,13 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 			theme: 'striped'
 		});
 		const rowData: any[] = [];
-		for (const item of this.columnDefinitions) {
+		for (const item of log_detail) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const arr: any[] = [];
-				this.columnDefinitions.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
@@ -371,7 +411,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
-			for (const item of this.columnDefinitions) {
+			for (const item of log_detail) {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
@@ -532,6 +572,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
@@ -540,11 +581,11 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 				if (groupItem.groups) {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
-					for (const item2 of this.columnDefinitions) {
+					for (const item2 of log_detail) {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -562,18 +603,18 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const earr: any[] = [];
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of log_detail) {
 							earr.push(groupItem.rows[key][item2.id]);
 						}
 						rowData.push(earr);
 						this.pdfrowdata.push(earr);
 					});
 					const levelArray: any[] = [];
-					for (const item2 of this.columnDefinitions) {
+					for (const item2 of log_detail) {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -591,15 +632,14 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 	checkGroupLevel(item, worksheet) {
-		// console.log('checkGroupLevel item ', item);
-		// console.log('checkGroupLevel worksheet ', worksheet);
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				worksheet.addRow({});
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[log_detail.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -622,7 +662,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 				if (groupItem.groups) {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -636,7 +676,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -659,7 +699,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -677,13 +717,13 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 				} else {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of log_detail) {
 							obj[item2.id] = groupItem.rows[key][item2.id];
 						}
 						worksheet.addRow(obj);
 					});
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -697,7 +737,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -720,7 +760,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -741,18 +781,19 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		// console.log('excel json', json);
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		for (const item of log_detail) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
 			});
 			columValue.push(item.name);
 		}
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
@@ -771,7 +812,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const excelobj: any = {};
-				this.columnDefinitions.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
 				});
 				worksheet.addRow(excelobj);
@@ -785,7 +826,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		}
 		// style grand total
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-			this.columnDefinitions.forEach(element => {
+			log_detail.forEach(element => {
 				cell.font = {
 					color: { argb: 'ffffff' },
 					bold: true,
@@ -891,7 +932,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -943,7 +984,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		if(this.studentDetailReportForm.value.enrolment_type) {
+		if (this.studentDetailReportForm.value.enrolment_type) {
 			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
 		}
 		if (this.showDateRange) {
@@ -971,7 +1012,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -1087,7 +1128,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 			honorific = 'Dr.';
 		} else if (value === '8') {
 			honorific = 'Lady';
-		}  else if (value === '9') {
+		} else if (value === '9') {
 			honorific = 'Late';
 		} else if (value === '10') {
 			honorific = 'Md.';
@@ -1123,36 +1164,36 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 
 			let class_sec_pro = this.sectionArray.find(o => o.sec_id === this.reportProcessWiseData[key]['pmap_sec_id']);
 			// console.log("i am class sec", class_sec);
-			
-			
-			
-			tempObj['class_name'] = (class_na ?  class_na.class_name: '') + ' - ' + (class_sec ? class_sec.sec_name: '');
+
+
+
+			tempObj['reason_title'] = (class_na ? class_na.class_name : '') + ' - ' + (class_sec ? class_sec.sec_name : '');
 
 			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
 
-	
-			
+
+
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
-			tempObj['student_prev_school'] = this.reportProcessWiseData[key]['pmap_class_id'] ? 'Promoted': 'Pending';
+			tempObj['student_prev_school'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
 			// tempObj['reason_title'] = this.valueAndDash(this.reportProcessWiseData[key]['reason_title']);
-			tempObj['reason_title'] = (class_na_pro ?  class_na_pro.class_name: '') + ' - ' + (class_sec_pro ? class_sec_pro.sec_name: '');
-			
+			tempObj['class_name'] = (class_na_pro ? class_na_pro.class_name : '') + ' - ' + (class_sec_pro ? class_sec_pro.sec_name : '');
+
 
 			this.dataset.push(tempObj);
 
 			counter++;
 		}
-		// const blankTempObj = {};
-		// // this.columnDefinitions.forEach(element => {
-		// // 	if (element.id === 'admission_no') {
-		// // 		blankTempObj[element.id] = 'Grand Total';
-		// // 	} else if (element.id === 'full_name') {
-		// // 		blankTempObj[element.id] = '  ' + this.dataset.length;
-		// // 	} else {
-		// // 		blankTempObj[element.id] = '';
-		// // 	}
-		// // });
-		// this.totalRow = blankTempObj;
+		const blankTempObj = {};
+		this.columnDefinitions.forEach(element => {
+			if (element.id === 'admission_no') {
+				blankTempObj[element.id] = 'Grand Total';
+			} else if (element.id === 'full_name') {
+				blankTempObj[element.id] = '  ' + this.dataset.length;
+			} else {
+				blankTempObj[element.id] = '';
+			}
+		});
+		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 800;
@@ -1198,7 +1239,7 @@ export class PromotionReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Promotion Detail Detail Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
