@@ -19,7 +19,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	ELEMENT_DATA: FHModel[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feetype','feeorder', 'class', 'calculate', 'period', 'date', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'feeorder', 'class', 'calculate', 'period', 'date', 'status', 'action'];
 	dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
 	// member declaration
@@ -29,6 +29,12 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	feemonthArray: any[] = [];
 	feeotherArray: any[] = [];
 	feeheadArray: any[] = [];
+	feeheadtypeArray: any[] = [
+		{
+			type: "tuiton",
+			name: "Tuition"
+		}
+	];
 	calculationmethodArray: any[] = [];
 	concessionruleArray: any[] = [];
 	classArray: any[] = [];
@@ -81,7 +87,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_hostel: '',
 			fh_fcc_id: '',
 			fh_status: '',
-			fh_order:''
+			fh_order: '',
+			fh_fee_head_type: ''
 
 		});
 	}
@@ -148,7 +155,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 						if (item.fh_class_amount_detail && item.fh_class_amount_detail.length > 0) {
 							for (const cname of item.fh_class_amount_detail) {
 								class_name = class_name + 'Class' + cname.class_name + ':' +
-								new DecimalPipe('en-us').transform(cname.head_amt) +  ' ,';
+									new DecimalPipe('en-us').transform(cname.head_amt) + ' ,';
 							}
 							class_name = class_name.substring(0, class_name.length - 2);
 						}
@@ -159,6 +166,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 						pushitem.calculate = item.calm_name;
 						pushitem.period = item.fp_name;
 						pushitem.feeorder = item.fh_order;
+						pushitem.fh_fee_head_type = item.fh_fee_head_type;
 						pushitem.date = item.fh_created_date;
 						pushitem.status = item.fh_status === '1' ? true : false;
 						pushitem.action = item;
@@ -235,6 +243,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			}
 			this.newAmtDetails = value.fh_class_amount_detail;
 		}
+		console.log("i am value", value);
+		
 		this.feeheadform.patchValue({
 			fh_id: value.fh_id,
 			fh_name: value.fh_name,
@@ -250,7 +260,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_hostel: value.fh_hostel,
 			fh_fcc_id: value.fh_fcc_id,
 			fh_status: value.fh_status,
-			fh_order:value.fh_order
+			fh_order: value.fh_order,
+			fh_fee_head_type: value.fh_fee_head_type
 
 		});
 	}
@@ -347,7 +358,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_hostel: '',
 			fh_fcc_id: '',
 			fh_status: '',
-			fh_order:''
+			fh_order: '',
+			fh_fee_head_type: ''
 
 		});
 	}
