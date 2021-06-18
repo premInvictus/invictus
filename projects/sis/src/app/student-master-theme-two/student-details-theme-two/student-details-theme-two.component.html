@@ -83,8 +83,12 @@
                     [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)" #myInput>
                 </mat-form-field><br>
                 <div class="font-size-16 font-bold blink"
+                  *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type == '5' && studentdetails.au_enrollment_status == 'left'))">
+                  <span>Left</span> 
+                </div>
+                <div class="font-size-16 font-bold blink"
                   *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type != '5' && studentdetails.au_enrollment_status == 'left'))">
-                  <span>Dropout</span>
+                  <span>Dropout</span> 
                 </div>
                 <br>
               </div>

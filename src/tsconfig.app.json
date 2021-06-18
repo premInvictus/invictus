@@ -135,7 +135,14 @@
     "../projects/financial-accounting/src/app/transaction-master/transaction-master.module.ts",
     "../projects/teacherapp/src/app/leave-management/leave-management.module.ts",
     // "../projects/fee/src/app/wallets/wallets.module.ts",
-    "../projects/human-resource/src/app/personaldetails/personaldetails.module.ts"
+    "../projects/human-resource/src/app/personaldetails/personaldetails.module.ts",
+    "../projects/transport/src/app/transport-shared/transport-shared.module.ts",
+    "../projects/transport/src/app/transportusertype/transportusertype.module.ts",
+    "../projects/transport/src/app/transport-configure/transport-configure.module.ts",
+    "../projects/transport/src/app/transport-reports/transport-reports.module.ts",
+    "../projects/transport/src/app/transport-auxillaries/transport-auxillaries.module.ts",
+    "../projects/transport/src/app/fleet-master/fleet-master.module.ts",
+    "../projects/transport/src/app/fleet-management/fleet-management.module.ts"
 
   ]
 }

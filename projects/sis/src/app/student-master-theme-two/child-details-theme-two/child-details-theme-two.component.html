@@ -307,12 +307,12 @@
                   *ngIf="checkIfFieldExist('ea_pincode')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Pin Code</mat-label>
-                    <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
-                      placeholder="Zip/Pin Code" required [readonly]="viewOnly"
+                    <input formControlName="ea_pincode" matInput
+                      placeholder="Zip/Pin Code" [readonly]="viewOnly"
                       [errorStateMatcher]="confirmValidParentMatcher" />
-                    <mat-error *ngIf="paddressform.get('ea_pincode').hasError('required')">
+                    <!-- <mat-error *ngIf="paddressform.get('ea_pincode').hasError('required')">
                       This field is required
-                    </mat-error>
+                    </mat-error> -->
                   </mat-form-field>
                 </div>
               </div>
@@ -418,12 +418,12 @@
                   *ngIf="checkIfFieldExist('ea_pincode')">
                   <mat-form-field class="form-field " appearance="outline">
                     <mat-label>Pin Code</mat-label>
-                    <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
+                    <input formControlName="ea_pincode" matInput
                       placeholder="Zip/Pin Code" [readonly]="viewOnly || (editOnly && !showAddressFlag)
                       || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher" />
-                    <mat-error>
+                    <!-- <mat-error>
                       This field is required
-                    </mat-error>
+                    </mat-error> -->
                   </mat-form-field>
                 </div>
               </div>

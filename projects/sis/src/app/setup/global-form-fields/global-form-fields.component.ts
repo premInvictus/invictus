@@ -93,10 +93,18 @@ export class GlobalFormFieldsComponent implements OnInit {
 		}
 		if (this.labelForm.valid) {
 			this.typeFlag = false;
+			let findex = -1;
 			if (this.prefetchFlag === true) {
 				this.labelForm.value.sff_field_tag = this.getFieldName2(this.labelForm.value.sff_ff_id);
 			}
-			const findex = this.configArray.findIndex(f => f.sff_ff_id === this.labelForm.value.sff_ff_id);
+			if(this.labelForm.value.sff_field_type == 'custom') {
+				findex = this.configArray.findIndex(f => f.sff_label === this.labelForm.value.sff_label);
+			} else {
+				findex = this.configArray.findIndex(f => f.sff_ff_id === this.labelForm.value.sff_ff_id);
+			}
+			
+			console.log('this.labelForm.value',this.labelForm.value);
+			console.log('this.configArray',this.configArray);
 			if (findex === -1) {
 				this.configArray.push(this.labelForm.value);
 				this.common.showSuccessErrorMessage('Added Successfully', 'success');

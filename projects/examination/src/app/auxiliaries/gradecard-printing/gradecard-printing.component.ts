@@ -107,6 +107,8 @@ export class GradecardPrintingComponent implements OnInit {
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
 				window.open(result.data, '_blank');
+      }else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     })
 

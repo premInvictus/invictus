@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+        <div class="row">
+          <div class="col-6 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Transport Vehicle List</span>
+          </div>
+          <div class="col-6 remove-col-padding-right text-right">
+              <button mat-button class="btn-success-purple text-capitalize" (click)="openDialog('add')">Add</button>
+          </div>
+        </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field appearance="legacy">
+                <input matInput (keyup)="applyFilter($event.target.value)">
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-6 text-right">
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+  
+                <ng-container matColumnDef="bus_number">
+                  <th width="50" mat-header-cell *matHeaderCellDef> Bus No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.bus_number}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="bus_details">
+                  <th width="150" mat-header-cell *matHeaderCellDef> Bus Details </th>
+                  <td mat-cell *matCellDef="let element" class="text-left"> {{element.bus_details | titlecase}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="registration_no">
+                  <th width="100" mat-header-cell *matHeaderCellDef> Reg. No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.registration_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="registration_valid_upto">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Reg. Valid Upto </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.registration_valid_upto | date:'d-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="permit_valid_upto">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Permit Valid Upto </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.permit_valid_upto | date:'d-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="insurance_valid_upto">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Ins. Valid Upto </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.insurance_valid_upto | date:'d-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="puc_valid_upto">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > PUC Valid Upto </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.puc_valid_upto | date:'d-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="insurance_provider">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Ins. Provider </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.insurance_provider | titlecase}} </td>
+                </ng-container>
+                <ng-container matColumnDef="insurance_no">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Ins. No. </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.insurance_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="chasis_no">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Chasis No. </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.chasis_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="engine_no">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Engine No. </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.engine_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="device_no">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef > Device No. </th>
+                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.device_no}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span><i class="fas fa-edit icon-purple" (click)="openDialog('edit',element.action)"></i></span>
+                    <span><i class="fas fa-eye icon-purple" (click)="openDialog('view',element.action)"></i></span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+    <div class="col-12 text-center">
+        <mat-card>
+            <app-no-data 
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" 
+            [noDataText]="" [subText]="'No record found'"></app-no-data>
+        </mat-card>
+    </div>
+</div>

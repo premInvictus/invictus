@@ -74,7 +74,7 @@ export class DownCertificateComponent implements OnInit {
     param.sec_id = (this.studentDetails.sec_id);
     param.term_id = this.gradeDetails.term_id;
     param.exam_id = this.gradeDetails.exam_id;
-    param.se_id = this.gradeDetails.subexam_id;
+    param.se_id = this.gradeDetails.sub_exam_id;
     this.erp.printGradecard(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.commonApiService.showSuccessErrorMessage('Download Successfully', 'success');

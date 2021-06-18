@@ -1,0 +1,75 @@
+<div class="row remove-modal-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="dialog-title-container ">
+      <span class="font-size-24 font-white">Advanced Search</span>
+      <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+        cancel
+      </i>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 remove-col-padding">
+    <form [formGroup]="generalFilterForm">
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Bus No</mat-label>
+            <mat-select formControlName="bus_id" required placeholder="Bus No">
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of bus_arr" [value]="item.tv_id">
+                {{item.bus_number}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>From</mat-label>
+            <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
+              (blur)="getFromDate($event.target.value)" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>To</mat-label>
+            <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to"
+              (blur)="getToDate($event.target.value)" />
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Amount Operator </mat-label>
+            <mat-select formControlName="amount_op" multiple>
+              <mat-option *ngFor="let item of op_arr" placeholder="Amount Operator" [value]="item.id">
+                {{item.value}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput placeholder="Amount" type="text" formControlName="amount" required>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+    <br />
+    <div class="row text-center">
+      <div class="col-12">
+        <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+        <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>

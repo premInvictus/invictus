@@ -1,0 +1,239 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Route Management</span>
+          </div>
+        </div>
+        <div class="col-6 text-right">
+
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <div class="row">
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="subExamForm" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Select Route</mat-label>
+                  <mat-select formControlName="route_id" required placeholder="Select Route">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of route_arr" [value]="item.tr_id">
+                      {{item.tr_route_no | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Bus No</mat-label>
+                  <mat-select formControlName="tv_id" required placeholder="Bus No">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of bus_arr" [value]="item.tv_id">
+                      {{item.bus_number}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Select Driver</mat-label>
+                  <mat-select formControlName="driver_id" required placeholder="Select Driver">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
+                      {{item.au_full_name | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Select Conductor</mat-label>
+                  <mat-select formControlName="conductor_id" required placeholder="Select Conductor">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
+                      {{item.au_full_name | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Select Supervisor</mat-label>
+                  <mat-select formControlName="supervisor_id" required placeholder="Select Supervisor">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
+                      {{item.au_full_name | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Start Time</mat-label>
+                  <input matInput placeholder="Start Time" type="time" formControlName="start_time" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>End Time</mat-label>
+                  <input matInput placeholder="End Time" type="time" formControlName="end_time" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Stoppage</mat-label>
+                  <mat-select formControlName="stoppages" required placeholder="Stoppage" multiple>
+                    <mat-option *ngFor="let item of stoppage_arr" [value]="item.tsp_id">
+                      {{item.tsp_name | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding text-center">
+                <!-- [disabled]="disableApiCall" -->
+                <button mat-raised-button class="btn-add" *ngIf="viewOnly" (click)="submit()">Add</button>
+                <button *ngIf="UpdateFlag && !viewOnly" mat-raised-button class="btn-add"
+                  (click)="updateRouteManagement()">Update</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-10">
+          <div class="row">
+            <div class="col-12 remove-col-padding">
+              <table mat-table #table [dataSource]="subExamDataSource" matSort class="table-100 text-center">
+                <ng-container matColumnDef="route_no">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Route No
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.route_no }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="route_name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Route Name
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.route_name }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tv_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Bus No
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.tv_id }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="driver_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Driver
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.driver_id | titlecase }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="conductor_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Conductor
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.conductor_id | titlecase}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="supervisor_id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Supervisor
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.supervisor_id }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="start_time">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Start Time
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.start_time }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="end_time">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    End Time
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.end_time }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="stoppages">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Stoppage
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                      {{ item.stoppages }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    <mat-slide-toggle class="inline-form-radio-spacing" [checked]="getActiveStatus(item.action)"
+                      aria-hidden="true" (click)="toggleStatus(item.action)"></mat-slide-toggle>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="modify">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Action
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                      aria-hidden="true" (click)="formEdit(item.action)"></i>
+                    <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                      matTooltip="Delete" aria-hidden="true" (click)="openDeleteModal(item.modify)"></i>
+                  </td>
+                </ng-container>
+                <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                >
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #deleteModal (deleteOk)="deleteTransportLogs($event)"></app-delete-modal>

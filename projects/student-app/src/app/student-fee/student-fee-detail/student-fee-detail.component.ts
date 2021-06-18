@@ -57,7 +57,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 
 	// tslint:disable-next-line: max-line-length
-	displayedColumns: string[] = ['srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'feereceived' ,'status', 'action'];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT);
 
 	displayedLedgerColumns: string[] = ['srno', 'date', 'invoiceno', 'feeperiod', 'particular', 'amount', 'concession', 'reciept', 'balance'];
@@ -234,7 +234,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				feeperiod: element.fp_name,
 				invoicedate: element.inv_invoice_date,
 				duedate: element.inv_due_date,
-				feedue: element.inv_fee_amount,
+				feedue: element.inv_amount,
+				feereceived: element.ftr_amount,
 				remark: element.inv_remark,
 				status: status,
 				statuscolor: statusColor,

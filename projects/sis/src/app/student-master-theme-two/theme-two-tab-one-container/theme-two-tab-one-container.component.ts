@@ -392,7 +392,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		}
 	}
 	validateParent() {
-		console.log("check and help");
+		console.log("check and help"); 
 		
 		this.parentJson = [];
 		let ctr = 0;

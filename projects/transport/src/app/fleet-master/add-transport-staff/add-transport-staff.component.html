@@ -1,0 +1,143 @@
+<div class="add-book-container remove-col-padding">
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card style="padding:0px !important">
+        <form [formGroup]="personalDetails" autocomplete="off">
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-20 font-bold">{{data.title}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <div class=" margin-top-20">
+                <div class="book-cover-img-2">
+                  <div class="text-center">
+                    <label for="file-input">
+                      <img [src]="au_profileimage ? au_profileimage : '/assets/images/book_placeholder.png'" style="width: 160px;
+                      height: 230px;
+                      border-radius: 5px;
+                      opacity: 1;">
+                    </label>
+                    <input id="file-input" #fileInput name="file-input" type="file" (change)="readUrl($event)" hidden
+                      [disabled]="viewOnly" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-10 col-sm-10 col-lg-9 col-md-10 col-xs-9 margin-top-10">
+              <div class="row remove-top-margin">
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Full Name</mat-label>
+                    <input class="text-capitalize" pattern="[a-zA-Z0-9\s]+" formControlName="au_full_name" matInput
+                      placeholder="Full Name" required [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Date of Birth"
+                      formControlName="au_dob" required [readonly]="viewOnly">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Mobile No.</mat-label>
+                    <input class="text-capitalize" matInput placeholder="Primary Mobile No." required minlength="10"
+                      maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" formControlName="au_mobile"
+                      [errorStateMatcher]="confirmValidParentMatcher" />
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <!-- <i class="fab fa-whatsapp whatsapp-field-icon1" matTooltip="Mark as What's app No."
+                    (click)="copyForWhatsapp('seconday')" matPrefix></i> -->
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Whatsapp No.</mat-label>
+                    <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Whatsapp No."
+                      formControlName="whatsapp_no" [readonly]="viewOnly"
+                      [errorStateMatcher]="confirmValidParentMatcher">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Email Id</mat-label>
+                    <input pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" type="email" matInput
+                      formControlName="au_email" placeholder="Email Id" required [readonly]="viewOnly"
+                      [errorStateMatcher]="confirmValidParentMatcher">
+                    <mat-error>
+                      Please enter valid email
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Driver Id</mat-label>
+                    <input class="text-capitalize" formControlName="driver_id" matInput placeholder="Driver Id" required
+                      [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Licence Type</mat-label>
+                    <input class="text-capitalize" formControlName="licence_type" matInput placeholder="Licence Type"
+                      required [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Licence No.</mat-label>
+                    <input class="text-capitalize" formControlName="licence_no" matInput placeholder="Licence no."
+                      required [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Valid Upto</mat-label>
+                    <input matInput [matDatepicker]="picker1" [max]="maxDate" placeholder="Valid Upto"
+                      formControlName="valid_upto" required [readonly]="viewOnly">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Batch License No.</mat-label>
+                    <input class="text-capitalize" pattern="[a-zA-Z0-9\s]+" formControlName="batch_licence_no" matInput
+                      placeholder="Batch License No." required [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row text-center">
+            <div class="col-12">
+              <button *ngIf="data.action == 'add'" mat-raised-button class="btn-success-green"
+                (click)="submit()">Submit</button>
+              <button *ngIf="data.action == 'edit'" mat-raised-button class="btn-success-green"
+                (click)="submit()">Update</button>
+              <button mat-raised-button class="btn-reset btn-spacer" (click)="close()">
+                Cancel
+              </button>
+            </div>
+          </div>
+          <br>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)" [roundCropper]="false"
+  [resizeToWidth]="160"></app-imagecrop>

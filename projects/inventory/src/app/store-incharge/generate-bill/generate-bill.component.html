@@ -45,8 +45,8 @@
                 </mat-form-field>
               </div>
               <div class="col-1">
-                <i *ngIf="searchForm.value.user_role_id == '4'" style="cursor: pointer;" class="fas fa-search margin-top-20" matTooltip="Search Students"
-                (click)="openSearchDialog()"></i>
+                <i *ngIf="searchForm.value.user_role_id == '4'" style="cursor: pointer;"
+                  class="fas fa-search margin-top-20" matTooltip="Search Students" (click)="openSearchDialog()"></i>
               </div>
               <div class="col-4 margin-top-10  text-right">
                 <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
@@ -160,26 +160,35 @@
     <form [formGroup]="itemSearchForm">
       <mat-card class="mat-card-108">
         <div class="row">
-          <div class="col-8 margin-top-15">
+          <div class="col-7 margin-top-15">
             <span class="font-size-20 font-bold">Add Items</span>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <div class="row remove-top-margin">
-              <div class="col-4">
+              <div class="col-3" *ngIf="common.isExistUserAccessMenu('846')">
+                  <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Date</mat-label>
+                      <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+              </div>
+              <div class="col-3">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Bundle</mat-label>
                   <mat-select formControlName="bundle_id" required (selectionChange)="addBundleItems()">
-                      <mat-option *ngFor="let item of bundleArray" [value]="item.bundle_id">{{item.bundle_name | titlecase}}</mat-option>                    
+                    <mat-option *ngFor="let item of bundleArray" [value]="item.bundle_id">
+                      {{item.bundle_name | titlecase}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-4">
+              <div class="col-3">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Scan Item Code</mat-label>
                   <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
                 </mat-form-field>
               </div>
-              <div class="col-4 margin-top-10  text-right">
+              <div class="col-3 margin-top-10  text-right">
                 <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
                   (click)="searchItemData()" style="width: auto !important;">
                   Add To List
@@ -224,10 +233,9 @@
                     <td width="10%" class="custom-td">
                       <!-- <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i> -->
                       <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? selection.toggle(item.item_code) : null"
-                      [checked]="selection.isSelected(item.item_code)"
-                      [disabled]="checkRequired(item.item_code)"
-                      [aria-label]="checkboxLabel(item.item_code)">
+                        (change)="$event ? selection.toggle(item.item_code) : null"
+                        [checked]="selection.isSelected(item.item_code)" [disabled]="checkRequired(item.item_code)"
+                        [aria-label]="checkboxLabel(item.item_code)">
                       </mat-checkbox>
                     </td>
                   </tr>
@@ -333,7 +341,8 @@
                         </th>
                         <th class=" pad-overall border-table-th">Item Price</th>
                         <th class=" pad-overall border-table-th">Item Quantity</th>
-                        <th class=" pad-overall border-table-th">Total(<i style="font-size: 11px;" class="fas fa-rupee-sign"></i>)</th>
+                        <th class=" pad-overall border-table-th">Total(<i style="font-size: 11px;"
+                            class="fas fa-rupee-sign"></i>)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -400,23 +409,24 @@
               </tr>
               <tr style="margin-top: 5%;">
                 <td class="text-left pad-overall-2" style="width: 30%; font-size: 12px;">
-                    <form [formGroup]="payForm">
-                        <div class="row">
-                            <div class="col-12">
-                               <mat-form-field appearance="outline" class="form-field ">
-                                  <mat-label>Payment Mode</mat-label>
-                                  <mat-select formControlName="pay_id" placeholder="Payment Mode"
-                                     (selectionChange)="getWallets()" required>
-                                     <mat-option value="">Please Select</mat-option>
-                                     <mat-option *ngFor="let mode of payModes" [value]="mode">{{mode | titlecase}}
-                                     </mat-option>
-                                  </mat-select>
-                               </mat-form-field>
-                            </div>
-                         </div>
-                    </form>
+                  <form [formGroup]="payForm">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="outline" class="form-field ">
+                          <mat-label>Payment Mode</mat-label>
+                          <mat-select formControlName="pay_id" placeholder="Payment Mode"
+                            (selectionChange)="getWallets()" required>
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let mode of payModes" [value]="mode">{{mode | titlecase}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </form>
                 </td>
-                <td class="text-left pad-overall-2" style="width: 30%;" *ngIf="payForm.value.pay_id == 'wallet'">Balance: {{wallet_details.balancetype}}{{wallet_details.balancetotal}}
+                <td class="text-left pad-overall-2" style="width: 30%;" *ngIf="payForm.value.pay_id == 'wallet'">
+                  Balance: {{wallet_details.balancetype}}{{wallet_details.balancetotal}}
                 </td>
                 <td class="text-left pad-overall-2" style="width: 40%;">
                 </td>
@@ -428,7 +438,8 @@
           <br><br>
         </div>
         <div class="col-12 text-center " style="margin-top:2%">
-          <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton" *ngIf="wallet_details.submitflag">Submit
+          <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton"
+            *ngIf="wallet_details.submitflag">Submit
             & Print</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="resetPrint()">
             Back
