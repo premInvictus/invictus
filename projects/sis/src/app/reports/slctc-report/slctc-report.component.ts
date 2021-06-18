@@ -23,13 +23,13 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-  selector: 'app-slctc-report',
-  templateUrl: './slctc-report.component.html',
-  styleUrls: ['./slctc-report.component.css']
+	selector: 'app-slctc-report',
+	templateUrl: './slctc-report.component.html',
+	styleUrls: ['./slctc-report.component.css']
 })
 export class SlctcReportComponent implements OnInit, AfterViewInit {
 
-  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -94,7 +94,17 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 	},
 	{
 		au_process_type: '2', au_process_name: 'Issued'
-	}];
+	},
+	{
+		au_process_type: '3', au_process_name: 'Reissued'
+	},
+	{
+		au_process_type: '4', au_process_name: 'Cancel'
+	},
+	{
+		au_process_type: '5', au_process_name: 'Print'
+	}
+	];
 
 
 	studentDetailReportForm: FormGroup;
@@ -154,11 +164,11 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 				onCommand: (e, args) => {
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
+						this.exportAsPDF(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
+						this.exportToExcel(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'export-csv') {
 						this.exportToFile('csv');
@@ -185,28 +195,40 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
-			groupTotalsFormatter: this.srnTotalsFormatter  },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-      }},
-      { id: 'contact', name: 'Contact', field: 'contact', sortable: true, filterable: true },
-      { id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
+			{
+				id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+				groupTotalsFormatter: this.countTotalsFormatter
+			},
+			{
+				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{ id: 'contact', name: 'Contact', field: 'contact', sortable: true, filterable: true },
+			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
 			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
-			{ id: 'tc_request_date', name: 'Request Date', field: 'tc_request_date', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
-      { id: 'tc_approval_date', name: 'Approval Date', field: 'tc_approval_date', sortable: true, filterable: true ,
-        formatter: this.checkDateFormatter },
-      { id: 'approval_status', name: 'Status', field: 'approval_status', sortable: true, filterable: true },
+			{ id: 'request_no', name: 'Request No', field: 'request_no', sortable: true, filterable: true },
+			{ id: 'transfern_no', name: 'Transfer No', field: 'transfern_no', sortable: true, filterable: true },
+			{
+				id: 'tc_request_date', name: 'Request Date', field: 'tc_request_date', sortable: true, filterable: true,
+				formatter: this.checkDateFormatter
+			},
+			{
+				id: 'tc_approval_date', name: 'Approval Date', field: 'tc_approval_date', sortable: true, filterable: true,
+				formatter: this.checkDateFormatter
+			},
+			{ id: 'approval_status', name: 'Status', field: 'approval_status', sortable: true, filterable: true },
 			{ id: 'tc_remark', name: 'Remarks', field: 'tc_remark', sortable: true, filterable: true },
 		];
 	}
@@ -516,7 +538,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -545,7 +567,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -571,7 +593,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -724,7 +746,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 			});
 			columValue.push(item.name);
 		}
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
@@ -741,6 +763,8 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		worksheet.columns = columns;
 		console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
 		if (this.dataviewObj.getGroups().length === 0) {
+			console.log("i am json bro", json);
+			
 			json.forEach(element => {
 				const excelobj: any = {};
 				this.columnDefinitions.forEach(element1 => {
@@ -863,7 +887,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -915,7 +939,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		if(this.studentDetailReportForm.value.enrolment_type) {
+		if (this.studentDetailReportForm.value.enrolment_type) {
 			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
 		}
 		if (this.showDateRange) {
@@ -943,7 +967,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -996,8 +1020,8 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 	}
 
 	submit() {
-    this.resetGrid();
-           
+		this.resetGrid();
+
 		const inputJson = {};
 		if (this.showDate) {
 			inputJson['tc_todate'] = this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'yyyy-MM-dd');
@@ -1066,7 +1090,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 			honorific = 'Dr.';
 		} else if (value === '8') {
 			honorific = 'Lady';
-		}  else if (value === '9') {
+		} else if (value === '9') {
 			honorific = 'Late';
 		} else if (value === '10') {
 			honorific = 'Md.';
@@ -1079,15 +1103,15 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		let counter = 1;
 		const total = 0;
 		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
-			const tempObj = {};tempObj['id'] = counter;
+			const tempObj = {}; tempObj['id'] = counter;
 			tempObj['counter'] = counter;
 
 			tempObj['class_name'] = this.reportProcessWiseData[i]['sec_name'] ?
-			this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] :
-			this.reportProcessWiseData[i]['class_name'];
+				this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] :
+				this.reportProcessWiseData[i]['class_name'];
 			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['tc_admission_no']);
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['au_full_name']));
-			let status='';
+			let status = '';
 			if (this.reportProcessWiseData[i].tc_approval_status === '1') {
 				status = 'Approved';
 			} else if (this.reportProcessWiseData[i].tc_approval_status === '2') {
@@ -1096,16 +1120,18 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 				status = 'Reissued';
 			} else if (this.reportProcessWiseData[i].tc_approval_status === '0') {
 				status = 'Pending';
-			}	
-			tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[i]['au_mobile'])	;
+			}
+			tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[i]['au_mobile']);
+			tempObj['transfern_no'] = this.valueAndDash(this.reportProcessWiseData[i]['certificate_no']);
+			tempObj['request_no'] = this.valueAndDash(this.reportProcessWiseData[i]['tc_id']);
 			tempObj['father_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['father_name']));
 			tempObj['approval_status'] = status;
 			tempObj['mother_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['mother_name']));
 			tempObj['tc_remark'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['tc_remark']));
-			
-			tempObj['tc_request_date'] = this.valueAndDash(this.reportProcessWiseData[i]['tc_request_date']);
-			
-			tempObj['tc_approval_date'] = this.valueAndDash(this.reportProcessWiseData[i]['tc_approval_date']);;
+
+			tempObj['tc_request_date'] = this.valueAndDash(new DatePipe('en-in').transform(this.reportProcessWiseData[i]['tc_request_date'], 'd-MMM-y'));
+
+			tempObj['tc_approval_date'] = this.valueAndDash(new DatePipe('en-in').transform(this.reportProcessWiseData[i]['tc_approval_date'], 'd-MMM-y'));;
 			this.dataset.push(tempObj);
 
 			counter++;
@@ -1148,7 +1174,7 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Detail Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
