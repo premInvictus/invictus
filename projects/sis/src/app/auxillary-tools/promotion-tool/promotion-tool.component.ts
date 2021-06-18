@@ -159,7 +159,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	}
 	getCountCurrentYearStudents() {
 		this.sisService.getCountStudents({
-			ses_id: this.promoteSessionId
+			ses_id: this.promoteSessionId,
+			pmap_status: '1'
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.currentSessionStudentCount = result.data;
@@ -168,7 +169,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	}
 	getCountNextYearStudents() {
 		this.sisService.getCountStudents({
-			ses_id: this.demoteSessionId
+			ses_id: this.promoteSessionId,
+			pmap_status: '0'
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.nextSessionStudentCount = result.data;
