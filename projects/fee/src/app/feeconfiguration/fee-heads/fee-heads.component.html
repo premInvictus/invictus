@@ -92,7 +92,7 @@
                   <div class="col-6">
                     <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Fee Head Type</mat-label>
-                      <mat-select formControlName="fh_fee_head_type" placeholder="Fee Type" required>
+                      <mat-select formControlName="fh_fee_head_type"  >
                         <mat-option value="">Please Select</mat-option>
                         <mat-option *ngFor="let item of feeheadtypeArray" [value]="item.type">{{item.name}}</mat-option>
                       </mat-select>
