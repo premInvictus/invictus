@@ -763,7 +763,6 @@ export class SlctcReportComponent implements OnInit, AfterViewInit {
 		worksheet.columns = columns;
 		console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
 		if (this.dataviewObj.getGroups().length === 0) {
-			console.log("i am json bro", json);
 			
 			json.forEach(element => {
 				const excelobj: any = {};
