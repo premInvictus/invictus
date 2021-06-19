@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulat
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService, FeeService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -107,14 +107,17 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 
 	reportProcessWiseData: any[] = [];
 	exportcolumndefination: any;
+	feeOtherCategory: any;
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
+		private feeService: FeeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
+		this.getFeeOtherCategory();
 		this.getSession();
 		this.buildForm();
 		this.gridOptions = {
@@ -206,17 +209,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			}},
-			{ id: 'dob', name: 'DOB', field: 'dob', sortable: true, filterable: true,
+			{ id: 'dob', name: 'Date of Birth', field: 'dob', sortable: true, filterable: true,
 				 formatter: this.checkDateFormatter },
-			{ id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true },
+			{ id: 'admission_date', name: 'Date of Admn.', field: 'admission_date', sortable: true, filterable: true,
+			 	formatter: this.checkDateFormatter },
 			{ id: 'au_process_class', name: 'Admitted In', field: 'au_process_class', sortable: true, filterable: true },
-			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true},
-			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true },
-			{ id: 'upd_is_minority', name: 'Is Minority', field: 'upd_is_minority', sortable: true, filterable: true },
-			{ id: 'upd_is_ews', name: 'Is EWS', field: 'upd_is_ews', sortable: true, filterable: true },
-
-			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
-			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
 			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
 			grouping: {
 				getter: 'gender',
@@ -227,29 +224,6 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
-			grouping: {
-				getter: 'tag_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
-			{ id: 'email', name: 'Email', field: 'email', sortable: true, filterable: true },
-			{ id: 'contact', name: 'Contact', field: 'contact', sortable: true, filterable: true },
-			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
-			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
-			{ id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
-			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
-			{ id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
-			{ id: 'guardian_name', name: 'Guardian Name', field: 'guardian_name', sortable: true, filterable: true },
-			{ id: 'guardian_contact', name: 'Guardian Contact No', field: 'guardian_contact', sortable: true, filterable: true },
-			{ id: 'emergency_name', name: 'Emergency Name', field: 'emergency_name', sortable: true, filterable: true },
-			{ id: 'emergency_contact', name: 'Emergency Contact No', field: 'emergency_contact', sortable: true, filterable: true },
 			{ id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true,
 			grouping: {
 				getter: 'category',
@@ -260,17 +234,6 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true,
-			grouping: {
-				getter: 'promotion',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-
 			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
 			grouping: {
 				getter: 'rel_name',
@@ -281,15 +244,67 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
+			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true},
+			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true },
+			{ id: 'upd_is_minority', name: 'Minority', field: 'upd_is_minority', sortable: true, filterable: true },
+			{ id: 'upd_is_ews', name: 'EWS', field: 'upd_is_ews', sortable: true, filterable: true },
+
+			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
+			{ id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true },
+			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
+			
+			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
+			grouping: {
+				getter: 'tag_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			
+			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
+			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
+			{ id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
+			{ id: 'father_email', name: 'Father Email', field: 'father_email', sortable: true, filterable: true },
+
+			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
+			{ id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
+			{ id: 'mother_email', name: 'Mother Email', field: 'mother_email', sortable: true, filterable: true },
+
 			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
-			{ id: 'cit_name', name: 'City', field: 'cit_name', sortable: true, filterable: true },
-			{ id: 'sta_name', name: 'State', field: 'sta_name', sortable: true, filterable: true },
-			{ id: 'dist_name', name: 'District', field: 'dist_name', sortable: true, filterable: true },
-			{ id: 'ea_pincode', name: 'Pin', field: 'ea_pincode', sortable: true, filterable: true },
+			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true,
+			grouping: {
+				getter: 'promotion',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true,
+			grouping: {
+				getter: 'accd_fo_id',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			
 			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true }
 		];
 	}
-
+	getFeeOtherCategory() {
+		this.feeService.getFeeOthers({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.feeOtherCategory = result.data;
+			}
+		});
+	}
 	ngAfterViewInit() {
 	}
 	getSchool() {
@@ -1205,27 +1220,33 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
 			let fdetail = {
 				name: '-',
-				contact: '-'
+				contact: '-',
+				email: '-'
 			}
 			let mdetail = {
 				name: '-',
-				contact: '-'
+				contact: '-',
+				email: '-'
 			}
 			if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
 				this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
 					if(element.epd_parent_type == "M") {
 						mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
-						mdetail.contact = element.epd_contact_no
+						mdetail.contact = element.epd_contact_no;
+						mdetail.email = element.epd_email ? element.epd_email: '-';
 					} else if(element.epd_parent_type == "F") {
 						fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
-						fdetail.contact = element.epd_contact_no
+						fdetail.contact = element.epd_contact_no;
+						fdetail.email = element.epd_email ? element.epd_email : '-';
 					}
 				});
 			}
 			tempObj['father_name'] = fdetail.name;
 			tempObj['father_contact'] = fdetail.contact;
+			tempObj['father_email'] = fdetail.email;
 			tempObj['mother_name'] = mdetail.name;
 			tempObj['mother_contact'] = mdetail.contact;
+			tempObj['mother_email'] = mdetail.email;
 			tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
 				this.reportProcessWiseData[key]['student_parent_data'][2] &&
 				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
@@ -1246,13 +1267,13 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['emergency_name'] =
 			new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_name']));
 			tempObj['emergency_contact'] = this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_no']);
-			tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']);
-			tempObj['cit_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']));
-			tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
-			tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
-			tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
+			tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']) + " - " + (new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']))) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name'])) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name'])) + " - " + this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']) ;
+			// tempObj['cit_name'] = ;
+			// tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
+			// tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
+			// tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
 			tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
-
+			tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
 			tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
 			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
 			if(process_type == '1'|| process_type == '2' || process_type == '4') {
