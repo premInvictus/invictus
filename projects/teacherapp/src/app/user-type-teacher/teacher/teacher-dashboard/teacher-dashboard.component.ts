@@ -153,7 +153,7 @@ export class TeacherDashboardComponent implements OnInit {
 	tsecArr: any[] = [];
 	aparamform: FormGroup;
 	workingDay = 0;
-	holidayArr: any[];
+	holidayArr: any[] = [];
 	sessionLeave: any;
 	sessionValue = 4;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
@@ -622,12 +622,13 @@ export class TeacherDashboardComponent implements OnInit {
 		const inputJson: any = {};
 		inputJson.datefrom = new DatePipe('en-in').transform(dayOne, 'yyyy-MM-dd');
 		inputJson.dateto = new DatePipe('en-in').transform(lastDay, 'yyyy-MM-dd');
-
+		this.holidayArr = [];
 		this.commonAPIService.getHolidayOnly(inputJson).subscribe(
 			(res: any) => {
-				console.log("i am response json", res);
-				this.holidayArr = res.data;
-
+				if(res.status == 'ok'){
+					console.log("i am response json", res);
+					this.holidayArr = res.data;
+				}
 			}
 		)
 
