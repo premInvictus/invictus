@@ -29,6 +29,7 @@ import { StudentEnqAdmnRegReportComponent } from './student_enq_admn_reg_report/
 import { SlctcReportComponent } from './slctc-report/slctc-report.component';
 import { RemarksReportComponent } from './remarks-report/remarks-report.component';
 import { UtilizationReportComponent } from './utilization-report/utilization-report.component';
+import { PromotionReportComponent } from './promotion-report/promotion-report.component';
 
 @NgModule({
 	imports: [
@@ -62,7 +63,8 @@ import { UtilizationReportComponent } from './utilization-report/utilization-rep
 		StudentEnqAdmnRegReportComponent,
 		SlctcReportComponent,
 		RemarksReportComponent,
-		UtilizationReportComponent
+		UtilizationReportComponent,
+		PromotionReportComponent
 	],
 	providers: [TranslateService],
 })

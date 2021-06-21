@@ -1,0 +1,27 @@
+<form [formGroup]="studentDetailReportForm" autocomplete="off">
+  <div class="row">
+      <div class="col-2">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Enrollment Type</mat-label>
+              <mat-select placeholder="Enrollment Type" formControlName="enrolment_type" required>
+                  <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">
+                      {{item?.au_process_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      
+      <div class="col-2">
+          <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
+      </div>
+  </div>
+</form>
+<div *ngIf="tableFlag && dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+      [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+      No Records Found
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulat
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService, FeeService } from '../../_services/index';
+import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -19,16 +19,20 @@ import {
 	Filters,
 	Formatters,
 	DelimiterType,
-	FileType
+	FileType,
+	Sorters,
+	SortDirectionNumber
 } from 'angular-slickgrid';
+import { SmartService } from 'projects/axiom/src/app/_services';
+
 
 @Component({
-	selector: 'app-student-details-report',
-	templateUrl: './student-details-report.component.html',
-	styleUrls: ['./student-details-report.component.scss'],
+	selector: 'app-promotion-report',
+	templateUrl: './promotion-report.component.html',
+	styleUrls: ['./promotion-report.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
+export class PromotionReportComponent implements OnInit, AfterViewInit {
 	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
@@ -86,40 +90,32 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	showDateRange = false;
 	events: any;
 	@ViewChild('TABLE') table: ElementRef;
-	enrollMentTypeArray: any[] = [{
-		au_process_type: '1', au_process_name: 'Enquiry'
-	},
-	{
-		au_process_type: '2', au_process_name: 'Registration'
-	},
-	{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	},
-	{
-		au_process_type: '5', au_process_name: 'Alumini'
-	}];
+	enrollMentTypeArray: any[] = [
+		{
+			au_process_type: '3', au_process_name: 'Provisional Admission'
+		},
+		{
+			au_process_type: '4', au_process_name: 'Admission'
+		}];
 
 
 	studentDetailReportForm: FormGroup;
 
 	reportProcessWiseData: any[] = [];
-	exportcolumndefination: any;
-	feeOtherCategory: any;
+	classArray: any[];
+	sectionArray: any;
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
-		private feeService: FeeService,
 		private router: Router,
+		private smartService: SmartService,
 		private route: ActivatedRoute) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
-		this.getFeeOtherCategory();
 		this.getSession();
 		this.buildForm();
+		this.getClass();
 		this.gridOptions = {
 			enableDraggableGrouping: true,
 			enableGrouping: true,
@@ -175,7 +171,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 					}
 				},
 				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					// console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
@@ -195,115 +191,91 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
-			groupTotalsFormatter: this.srnTotalsFormatter  },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			}},
-			{ id: 'dob', name: 'Date of Birth', field: 'dob', sortable: true, filterable: true,
-				 formatter: this.checkDateFormatter },
-			{ id: 'admission_date', name: 'Date of Admn.', field: 'admission_date', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
-			{ id: 'au_process_class', name: 'Admitted In', field: 'au_process_class', sortable: true, filterable: true },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
-			grouping: {
-				getter: 'gender',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true,
-			grouping: {
-				getter: 'category',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
-			grouping: {
-				getter: 'rel_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true},
-			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true },
-			{ id: 'upd_is_minority', name: 'Minority', field: 'upd_is_minority', sortable: true, filterable: true },
-			{ id: 'upd_is_ews', name: 'EWS', field: 'upd_is_ews', sortable: true, filterable: true },
-
-			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
-			{ id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true },
-			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
-			
-			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
-			grouping: {
-				getter: 'tag_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			
-			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
-			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
-			{ id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
-			{ id: 'father_email', name: 'Father Email', field: 'father_email', sortable: true, filterable: true },
-
-			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
-			{ id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
-			{ id: 'mother_email', name: 'Mother Email', field: 'mother_email', sortable: true, filterable: true },
-
-			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
-			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true,
-			grouping: {
-				getter: 'promotion',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true,
-			grouping: {
-				getter: 'accd_fo_id',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			
-			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true }
+			{
+				id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+				groupTotalsFormatter: this.countTotalsFormatter
+			},
+			{
+				id: 'class_name',
+				name: 'Class',
+				field: 'class_name',
+				sortable: true,
+				filterable: true,
+				maxWidth: 150,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'student_prev_school', name: 'Status', field: 'student_prev_school', sortable: true, filterable: true,
+				grouping: {
+					getter: 'student_prev_school',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'reason_title', name: 'Promoted Class', field: 'reason_title', sortable: true, filterable: true,
+				grouping: {
+					getter: 'reason_title',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					comparer: (a, b) => {
+						// (optional) comparer is helpful to sort the grouped data
+						// code below will sort the grouped value in ascending order
+						return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
 		];
 	}
-	getFeeOtherCategory() {
-		this.feeService.getFeeOthers({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.feeOtherCategory = result.data;
+	getClass() {
+		this.classArray = [];
+
+		this.smartService.getClass({ class_status: '1' }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+					// console.log("-----------------", this.classArray);
+
+				}
 			}
-		});
+		);
+		this.smartService.getSection({}).subscribe((res: any) => {
+
+			this.sectionArray = res.data;
+			// console.log("i am res", this.sectionArray);
+		})
 	}
 	ngAfterViewInit() {
 	}
@@ -334,10 +306,10 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '';
 			});
 		}
-		console.log('dataviewObj', this.dataviewObj.getGroups());
+		// console.log('dataviewObj', this.dataviewObj.getGroups());
 	}
 	updateTotalRow(grid: any) {
-		console.log('this.groupColumns', this.groupColumns);
+		// console.log('this.groupColumns', this.groupColumns);
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
@@ -362,7 +334,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		const grid = angularGrid.slickGrid; // grid object
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
-		console.log('dataviewObj', this.dataviewObj);
+		// console.log('dataviewObj', this.dataviewObj);
 		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	checkWidth(id, header) {
@@ -379,6 +351,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 	exportAsPDF(json: any[]) {
+		// console.log('------------------------------',this.angularGrid.slickGrid.getColumns());
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		const headerData: any[] = [];
 		this.pdfrowdata = [];
 		this.levelHeading = [];
@@ -419,14 +393,13 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			theme: 'striped'
 		});
 		const rowData: any[] = [];
-		this.exportcolumndefination = this.angularGrid.slickGrid.getColumns();
-		for (const item of this.exportcolumndefination) {
+		for (const item of log_detail) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const arr: any[] = [];
-				this.exportcolumndefination.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
@@ -438,7 +411,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
-			for (const item of this.exportcolumndefination) {
+			for (const item of log_detail) {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
@@ -599,6 +572,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
@@ -607,11 +581,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				if (groupItem.groups) {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
-					for (const item2 of this.exportcolumndefination) {
+					for (const item2 of log_detail) {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -629,18 +603,18 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const earr: any[] = [];
-						for (const item2 of this.exportcolumndefination) {
+						for (const item2 of log_detail) {
 							earr.push(groupItem.rows[key][item2.id]);
 						}
 						rowData.push(earr);
 						this.pdfrowdata.push(earr);
 					});
 					const levelArray: any[] = [];
-					for (const item2 of this.exportcolumndefination) {
+					for (const item2 of log_detail) {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -658,15 +632,14 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 	checkGroupLevel(item, worksheet) {
-		console.log('checkGroupLevel item ', item);
-		// console.log('checkGroupLevel worksheet ', worksheet);
+		let log_detail = this.angularGrid.slickGrid.getColumns();
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				worksheet.addRow({});
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[log_detail.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -689,7 +662,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				if (groupItem.groups) {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
-					this.exportcolumndefination.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -703,7 +676,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportcolumndefination.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -726,7 +699,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportcolumndefination.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -744,13 +717,13 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				} else {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.exportcolumndefination) {
+						for (const item2 of log_detail) {
 							obj[item2.id] = groupItem.rows[key][item2.id];
 						}
 						worksheet.addRow(obj);
 					});
 					const blankTempObj = {};
-					this.exportcolumndefination.forEach(element => {
+					log_detail.forEach(element => {
 						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
 						} else if (element.id === 'full_name') {
@@ -764,7 +737,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportcolumndefination.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -787,7 +760,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportcolumndefination.forEach(element => {
+							log_detail.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -808,19 +781,19 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
-		console.log('excel json', );
+		let log_detail = this.angularGrid.slickGrid.getColumns();
+		// console.log('excel json', json);
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		this.exportcolumndefination  = this.angularGrid.slickGrid.getColumns();
-		for (const item of this.exportcolumndefination) {
+		for (const item of log_detail) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
 			});
 			columValue.push(item.name);
 		}
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
@@ -835,11 +808,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		worksheet.getRow(4).values = columValue;
 
 		worksheet.columns = columns;
-		console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
+		// console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const excelobj: any = {};
-				this.exportcolumndefination.forEach(element1 => {
+				log_detail.forEach(element1 => {
 					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
 				});
 				worksheet.addRow(excelobj);
@@ -853,7 +826,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		}
 		// style grand total
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-			this.exportcolumndefination.forEach(element => {
+			log_detail.forEach(element => {
 				cell.font = {
 					color: { argb: 'ffffff' },
 					bold: true,
@@ -959,7 +932,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -1011,7 +984,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		if(this.studentDetailReportForm.value.enrolment_type) {
+		if (this.studentDetailReportForm.value.enrolment_type) {
 			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
 		}
 		if (this.showDateRange) {
@@ -1025,7 +998,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Students Details Report';
+		return 'Promotion Details Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -1039,11 +1012,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		console.log('srnTotalsFormatter ', totals);
+		// console.log('srnTotalsFormatter ', totals);
 		if (totals.group.level === 0) {
 			return '<b class="total-footer-report">Total</b>';
 		}
@@ -1051,17 +1024,17 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			return '<b class="total-footer-report">Sub Total level ' + totals.group.level + ' </b>';
 		}
 	}
-	sumTotalsFormatter(totals, columnDef) {
-		// console.log('totals ', totals);
-		// console.log('columnDef ', columnDef);
-		const val = totals.sum && totals.sum[columnDef.field];
-		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
-			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
-		}
-		return '';
-	}
+	// sumTotalsFormatter(totals, columnDef) {
+	// 	// console.log('totals ', totals);
+	// 	// console.log('columnDef ', columnDef);
+	// 	const val = totals.sum && totals.sum[columnDef.field];
+	// 	if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
+	// 		return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+	// 	}
+	// 	return '';
+	// }
 	countTotalsFormatter(totals, columnDef) {
-		console.log('countTotalsFormatter ', totals);
+		// console.log('countTotalsFormatter ', totals);
 		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
 	}
 
@@ -1094,19 +1067,10 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	submit() {
 		this.resetGrid();
 		const inputJson = {};
-		if (this.showDate) {
-			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'yyyy-MM-dd');
-		} else {
-			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'yyyy-MM-dd');
-			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
-		}
 		inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
-		// if(this.studentDetailReportForm.value.enrolment_type) {
-
-		// }
 		const validateFlag = this.checkValidation();
 		if (validateFlag) {
-			this.sisService.getStudentReportDetails(inputJson).subscribe((result: any) => {
+			this.sisService.getPromotedReport(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.reportProcessWiseData = result.data;
 					this.prepareDataSource(inputJson['au_process_type']);
@@ -1164,7 +1128,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			honorific = 'Dr.';
 		} else if (value === '8') {
 			honorific = 'Lady';
-		}  else if (value === '9') {
+		} else if (value === '9') {
 			honorific = 'Late';
 		} else if (value === '10') {
 			honorific = 'Md.';
@@ -1176,13 +1140,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	prepareDataSource(process_type) {
 		let counter = 1;
 		const total = 0;
-		if((process_type == '1'|| process_type == '2' || process_type == '4') && this.columnDefinitions.length < 34)
-		{
-			this.columnDefinitions.push(
-				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true },
-				{ id: 'au_status', name: 'Status', field: 'au_status', sortable: true, filterable: true }
-			)
-		}
+		// if(process_type == '1'|| process_type == '2' || process_type == '4')
+		// {
+		// 	this.columnDefinitions.push(
+		// 		{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true }
+		// 	)
 		// } else {
 		// 	this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
 		// }
@@ -1191,96 +1153,31 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			const key = Object.keys(this.reportProcessWiseData)[i];
 			tempObj['id'] = key + counter;
 			tempObj['counter'] = counter;
+			let class_na = this.classArray.find(o => o.class_id === this.reportProcessWiseData[key]['au_class_id'])
+			// console.log("i am class name", class_na);
 
-			tempObj['class_name'] = this.reportProcessWiseData[key]['sec_name'] ?
-			this.reportProcessWiseData[key]['class_name'] + '-' + this.reportProcessWiseData[key]['sec_name'] :
-			this.reportProcessWiseData[key]['class_name'];
+			let class_sec = this.sectionArray.find(o => o.sec_id === this.reportProcessWiseData[key]['au_sec_id']);
+			// console.log("i am class sec", class_sec);
+
+			let class_na_pro = this.classArray.find(o => o.class_id === this.reportProcessWiseData[key]['pmap_class_id'])
+			// console.log("i am class name", class_na_pro, '-------', this.reportProcessWiseData[key]);
+
+			let class_sec_pro = this.sectionArray.find(o => o.sec_id === this.reportProcessWiseData[key]['pmap_sec_id']);
+			// console.log("i am class sec", class_sec);
+
+
+
+			tempObj['reason_title'] = (class_na ? class_na.class_name : '') + ' - ' + (class_sec ? class_sec.sec_name : '');
 
 			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
-			tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[key]['dob']);
-			tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
-			tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
-			tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
-			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority']);
-			tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? this.reportProcessWiseData[key]['upd_is_ews']: 'N');
-			tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need']);
-			tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
-			tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);
 
-			const father_honorific = this.getParentHonorific((this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][0]) ?
-			this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific'] : '');
 
-			const mother_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][1] ?
-			this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_honorific'] : '');
 
-			const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][2] ?
-			this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
-			let fdetail = {
-				name: '-',
-				contact: '-',
-				email: '-'
-			}
-			let mdetail = {
-				name: '-',
-				contact: '-',
-				email: '-'
-			}
-			if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
-				this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
-					if(element.epd_parent_type == "M") {
-						mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
-						mdetail.contact = element.epd_contact_no;
-						mdetail.email = element.epd_email ? element.epd_email: '-';
-					} else if(element.epd_parent_type == "F") {
-						fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
-						fdetail.contact = element.epd_contact_no;
-						fdetail.email = element.epd_email ? element.epd_email : '-';
-					}
-				});
-			}
-			tempObj['father_name'] = fdetail.name;
-			tempObj['father_contact'] = fdetail.contact;
-			tempObj['father_email'] = fdetail.email;
-			tempObj['mother_name'] = mdetail.name;
-			tempObj['mother_contact'] = mdetail.contact;
-			tempObj['mother_email'] = mdetail.email;
-			tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
-				guardian_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] : '-');
-			tempObj['guardian_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] ?
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] : '-';
-			tempObj['gender'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_gender']);
-			tempObj['tag_name'] = this.valueAndDash(this.reportProcessWiseData[key]['tag_name']);
-			
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
-			tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[key]['em_admission_date']);
-			tempObj['email'] = this.valueAndDash(this.reportProcessWiseData[key]['au_email']);
-			tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[key]['au_mobile']);
-			tempObj['category'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['category']));
-			tempObj['rel_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['rel_name']));
-			tempObj['emergency_name'] =
-			new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_name']));
-			tempObj['emergency_contact'] = this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_no']);
-			tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']) + " - " + (new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']))) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name'])) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name'])) + " - " + this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']) ;
-			// tempObj['cit_name'] = ;
-			// tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
-			// tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
-			// tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
-			tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
-			tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
-			tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
-			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
-			if(process_type == '1'|| process_type == '2' || process_type == '4') {
-				tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
-				tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
-			}
-			
+			tempObj['student_prev_school'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
+			// tempObj['reason_title'] = this.valueAndDash(this.reportProcessWiseData[key]['reason_title']);
+			tempObj['class_name'] = (class_na_pro ? class_na_pro.class_name : '') + ' - ' + (class_sec_pro ? class_sec_pro.sec_name : '');
+
 
 			this.dataset.push(tempObj);
 
@@ -1308,6 +1205,24 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
+		setTimeout(() => this.groupByClass(), 2);
+	}
+	groupByClass() {
+		this.dataviewObj.setGrouping({
+			getter: 'class_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('class_name');
 	}
 	exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
@@ -1315,7 +1230,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'StudentDetailReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'PromotionDetailReport_' + (new Date).getTime() + '.xlsx');
 
 	}
 
@@ -1324,11 +1239,12 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Detail Report</h2></center></div>'
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Promotion Detail Detail Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
 	}
 
 
 }
+
