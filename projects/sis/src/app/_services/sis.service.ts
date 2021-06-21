@@ -1243,6 +1243,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/feeAccount/getConcessionPerUser', value);
 	}
+	getNewEnrollment(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/reportSis/getNewEnrollment', value);
+	}
 	getPromotedReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/getPromotedReport', value);

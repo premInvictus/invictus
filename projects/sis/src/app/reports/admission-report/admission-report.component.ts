@@ -666,7 +666,8 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 				});
 			} else if (this.admissionReportForm.value.reviewReport === '3') {
 				inputJson['au_status'] = 1;
-				this.sisService.getEnrollmentDetialedReport(inputJson).subscribe((result: any) => {
+				inputJson['accd_fo_id'] = 1;
+				this.sisService.getNewEnrollment(inputJson).subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.reportEnrolmentWiseData = result.data;
 						this.prepareEnrolmentDataSource();
