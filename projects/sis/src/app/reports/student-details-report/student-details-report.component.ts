@@ -264,7 +264,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			} },
 			
-			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 50 },
+			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 100 },
 			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true, minWidth: 100 },
 			{ id: 'father_contact', name: 'F-Contact', field: 'father_contact', sortable: true, filterable: true, minWidth: 120 },
 			{ id: 'father_email', name: 'F-Email', field: 'father_email', sortable: true, filterable: true, minWidth: 200 },
@@ -284,7 +284,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true, width: 120,
+			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true, minWidth: 120,
 			grouping: {
 				getter: 'accd_fo_id',
 				formatter: (g) => {
@@ -295,7 +295,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			} },
 			
-			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true, minWidth: 50 }
+			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true, minWidth: 100 }
 		];
 	}
 	getFeeOtherCategory() {
@@ -1179,8 +1179,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		if((process_type == '1'|| process_type == '2' || process_type == '4') && this.columnDefinitions.length < 34)
 		{
 			this.columnDefinitions.push(
-				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true },
-				{ id: 'au_status', name: 'Status', field: 'au_status', sortable: true, filterable: true }
+				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true, minWidth:100 },
+				{ id: 'au_status', name: 'Status', field: 'au_status', sortable: true, filterable: true, minWidth:100 }
 			)
 		}
 		// } else {
