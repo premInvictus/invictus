@@ -195,11 +195,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
+			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true, minWidth: 100,
 			groupTotalsFormatter: this.srnTotalsFormatter  },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true, minWidth: 200,
 			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, minWidth: 150,
 			grouping: {
 				getter: 'class_name',
 				formatter: (g) => {
@@ -209,12 +209,12 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			}},
-			{ id: 'dob', name: 'Date of Birth', field: 'dob', sortable: true, filterable: true,
+			{ id: 'dob', name: 'Date of Birth', field: 'dob', sortable: true, filterable: true, minWidth: 200,
 				 formatter: this.checkDateFormatter },
-			{ id: 'admission_date', name: 'Date of Admn.', field: 'admission_date', sortable: true, filterable: true,
+			{ id: 'admission_date', name: 'Date of Admn.', field: 'admission_date', sortable: true, filterable: true, minWidth: 200,
 			 	formatter: this.checkDateFormatter },
-			{ id: 'au_process_class', name: 'Admitted In', field: 'au_process_class', sortable: true, filterable: true },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true,
+			{ id: 'au_process_class', name: 'Admitted In', field: 'au_process_class', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, minWidth: 50,
 			grouping: {
 				getter: 'gender',
 				formatter: (g) => {
@@ -224,7 +224,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true,
+			{ id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true, minWidth: 150,
 			grouping: {
 				getter: 'category',
 				formatter: (g) => {
@@ -234,7 +234,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true,
+			{ id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true, minWidth: 100,
 			grouping: {
 				getter: 'rel_name',
 				formatter: (g) => {
@@ -244,16 +244,16 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true},
-			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true },
-			{ id: 'upd_is_minority', name: 'Minority', field: 'upd_is_minority', sortable: true, filterable: true },
-			{ id: 'upd_is_ews', name: 'EWS', field: 'upd_is_ews', sortable: true, filterable: true },
+			{ id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true, minWidth: 100},
+			{ id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'upd_is_minority', name: 'Minority', field: 'upd_is_minority', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'upd_is_ews', name: 'EWS', field: 'upd_is_ews', sortable: true, filterable: true , minWidth: 100},
 
-			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true },
-			{ id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true },
-			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true },
+			{ id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true, minWidth: 200 },
+			{ id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true , minWidth: 200},
+			{ id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true, minWidth: 200 },
 			
-			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
+			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true, minWidth: 200,
 			grouping: {
 				getter: 'tag_name',
 				formatter: (g) => {
@@ -264,17 +264,17 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			} },
 			
-			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true },
-			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true },
-			{ id: 'father_contact', name: 'Father Contact No', field: 'father_contact', sortable: true, filterable: true },
-			{ id: 'father_email', name: 'Father Email', field: 'father_email', sortable: true, filterable: true },
+			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 50 },
+			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'father_contact', name: 'F-Contact', field: 'father_contact', sortable: true, filterable: true, minWidth: 120 },
+			{ id: 'father_email', name: 'F-Email', field: 'father_email', sortable: true, filterable: true, minWidth: 200 },
 
-			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true },
-			{ id: 'mother_contact', name: 'Mother Contact No', field: 'mother_contact', sortable: true, filterable: true },
-			{ id: 'mother_email', name: 'Mother Email', field: 'mother_email', sortable: true, filterable: true },
+			{ id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'mother_contact', name: 'M-Contact', field: 'mother_contact', sortable: true, filterable: true, minWidth: 120 },
+			{ id: 'mother_email', name: 'M-Email', field: 'mother_email', sortable: true, filterable: true, minWidth: 200 },
 
-			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true },
-			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true,
+			{ id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true, minWidth: 400 },
+			{ id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true, minWidth: 100,
 			grouping: {
 				getter: 'promotion',
 				formatter: (g) => {
@@ -284,7 +284,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
-			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true,
+			{ id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true, width: 120,
 			grouping: {
 				getter: 'accd_fo_id',
 				formatter: (g) => {
@@ -295,7 +295,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			} },
 			
-			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true }
+			{ id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true, minWidth: 50 }
 		];
 	}
 	getFeeOtherCategory() {
@@ -1201,9 +1201,9 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
 			tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
 			tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
-			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority']);
-			tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? this.reportProcessWiseData[key]['upd_is_ews']: 'N');
-			tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need']);
+			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority'] == "n" ? 'No' : 'Yes');
+			tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? (this.reportProcessWiseData[key]['upd_is_ews'] =="Y"? "Yes":'No'): 'No');
+			tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need'] == "Y" ? "Yes": "No");
 			tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
 			tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);
 
