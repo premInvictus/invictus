@@ -221,7 +221,7 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		if (this.common.isExistUserAccessMenu('661')) {
 			this.reportTypeArray.push({ report_type: 'aging_detail', report_name: 'Aging Detail' });
-		} if (this.common.isExistUserAccessMenu('845')) {
+		} if (this.common.isExistUserAccessMenu('848')) {
 			this.reportTypeArray.push({ report_type: 'day_book', report_name: 'Due Report' });
 		}
 		if (this.sessionName) {
