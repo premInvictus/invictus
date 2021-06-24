@@ -44,6 +44,7 @@ export class OutstandingReportComponent implements OnInit {
 	groupLength: any;
 	feeHeadJSON: any[] = [];
 	exportColumnDefinitions: any[] = [];
+	monName: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -141,9 +142,27 @@ export class OutstandingReportComponent implements OnInit {
 	multiBranchFeeHeads: any[] = [];
 	multiBranchRoutes: any[] = [];
 	multiValueArray: any[] = [];
+	adjustmentStatus: number;
+	currentTabIndex: number;
+	chartsOfAccount: any[];
+	feeReceivableAccountName: any;
+	headtoatl: number;
+	contoatl: number;
+	displayedColumns: any[];
+	apiInvoiceData: any[];
+	apiReceiptData: any[];
+	previousBalanceObject: {};
+	previousYearVoucherData: any[] = [];
+	apiData: any;
+	con_adj_details: {};
+	eachheadtotal_details: {};
+	previousYearVoucherExists: boolean;
+	feeMonthArray: any[];
+	objobjectmain = {};
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
+		// private faService : ,
 		private sisService: SisService,
 		public dialog: MatDialog,
 		private fbuild: FormBuilder) { }
@@ -152,11 +171,12 @@ export class OutstandingReportComponent implements OnInit {
 
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.checkForMultiBranch();
+		this.getGlobalSetting();
 		this.getSchool();
 		this.getInvoiceFeeMonths();
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
-
+		this.getFeeMonths();
 		this.buildForm();
 		this.getClassData();
 		// this.reportTypeArray.push({
@@ -181,8 +201,8 @@ export class OutstandingReportComponent implements OnInit {
 		// if(this.common.isExistUserAccessMenu('656')) {
 		// 	this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
 		// }
-		if(this.common.isExistUserAccessMenu('657')) {
-			this.reportTypeArray.push({report_type: 'headwisedetail', report_name: 'Head Wise Detail'});
+		if (this.common.isExistUserAccessMenu('657')) {
+			this.reportTypeArray.push({ report_type: 'headwisedetail', report_name: 'Head Wise Detail' });
 		}
 		if (this.common.isExistUserAccessMenu('658')) {
 			this.reportTypeArray.push({ report_type: 'routewise', report_name: 'Route Wise' });
@@ -201,6 +221,8 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		if (this.common.isExistUserAccessMenu('661')) {
 			this.reportTypeArray.push({ report_type: 'aging_detail', report_name: 'Aging Detail' });
+		} if (this.common.isExistUserAccessMenu('845')) {
+			this.reportTypeArray.push({ report_type: 'day_book', report_name: 'Due Report' });
 		}
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
@@ -236,6 +258,8 @@ export class OutstandingReportComponent implements OnInit {
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
+		console.log("i am here", grid.getColumns());
+
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
@@ -273,32 +297,16 @@ export class OutstandingReportComponent implements OnInit {
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
 				grid.onSort.subscribe((e, args) => {
 					console.log('in, args', args);
-					// args.multiColumnSort indicates whether or not this is a multi-column sort.
-					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
-					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
-
-					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
 					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-
-
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-
-
 						} else {
-
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-
 					}
-
-					// Delegate the sorting to DataView.
-					// This will fire the change events and update the grid.
 					dataView.sort(comparer, args.sortAsc);
 				});
 			}
@@ -327,7 +335,8 @@ export class OutstandingReportComponent implements OnInit {
 			'pageIndex': '0',
 			'login_id': '',
 			'orderBy': '',
-			'school_branch': tempArray
+			'school_branch': tempArray,
+			'day_book_type': ''
 		});
 		this.reportFilterForm.patchValue({
 			school_branch: tempArray
@@ -3228,9 +3237,9 @@ export class OutstandingReportComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data;
-						
-						repoArray =	 result.data.filter((v,i,a)=>a.findIndex(t=>(t.resultData.ltm.au_admission_no === v.resultData.ltm.au_admission_no))===i)
-						
+
+						repoArray = result.data.filter((v, i, a) => a.findIndex(t => (t.resultData.ltm.au_admission_no === v.resultData.ltm.au_admission_no)) === i)
+
 						let index = 0;
 						var total = 0;
 						for (const item of repoArray) {
@@ -3285,6 +3294,467 @@ export class OutstandingReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
+			} else if (this.reportType === 'day_book') {
+				// ngOnChanges() {
+				if (this.reportFilterForm.value.day_book_type == '1') {
+					this.getGlobalSetting();
+					this.getChartsOfAccount();
+					this.getInvoiceDayBook();
+				} else if (this.reportFilterForm.value.day_book_type == '0') {
+
+					this.gridOptions.rowHeight = 65;
+					value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+					const collectionJSON: any = {
+						'admission_no': '',
+						'studentName': '',
+						'report_type': 'feedue',
+						'feeHeadId': value.fee_value,
+						'from_date': this.reportFilterForm.value.to_date,
+						'to_date': this.reportFilterForm.value.to_date,
+						// 'month_id': this.reportFilterForm.value.month_id,
+						'pageSize': '10',
+						'pageIndex': '0',
+						'filterReportBy': 'outstanding',
+						'login_id': value.login_id,
+						'orderBy': value.orderBy,
+						'downloadAll': true,
+						'faduedate': this.reportFilterForm.value.to_date,
+						'school_branch': this.reportFilterForm.value.school_branch,
+						'forPrevious': false
+					};
+
+					if (1 == 1) {
+						this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+							this.common.startLoading();
+							if (result && result.status === 'ok' && result.data !== null) {
+								this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == value.from_date) : [];
+								console.log("-------------------", repoArray);
+
+								this.totalRecords = Number(result.data.totalRecords);
+								localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+								let i = 0;
+								let j = 0;
+								const feeHead: any[] = [];
+								var branchArray = this.reportFilterForm.value.school_branch;
+								let stuFeeHeadArray = [];
+								var tempHeadArray = [];
+								var schoolArray = [];
+								var commonHeadsArray = [];
+								var tempCommonHeadsArray = [];
+
+								for (var bi = 0; bi < repoArray.length; bi++) {
+
+									if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1
+										&& ((schoolArray.indexOf(repoArray[bi]['school_prefix'])) == -1)) {
+
+										schoolArray.push(repoArray[bi]['school_prefix']);
+										if (repoArray[bi]['fee_head_data']) {
+											for (var ji = 0; ji < repoArray[bi]['fee_head_data'].length; ji++) {
+												if (typeof repoArray[bi]['fee_head_data'][ji] == 'object') {
+													repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+												}
+												tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
+											}
+										}
+
+									}
+								}
+
+								for (var ti = 0; ti < tempHeadArray.length; ti++) {
+									if (tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+										tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
+										commonHeadsArray.push(tempHeadArray[ti]);
+									}
+								}
+								Object.keys(repoArray).forEach((keys: any) => {
+									const obj: any = {};
+									if (Number(keys) === 0) {
+										this.columnDefinitions = [
+											{
+												id: 'srno',
+												name: 'SNo.',
+												field: 'srno',
+												sortable: true,
+												width: 2
+											},
+											{
+												id: 'stu_admission_no',
+												name: 'Enrollment No.',
+												field: 'stu_admission_no',
+												filterable: true,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												sortable: true,
+												width: 90,
+												grouping: {
+													getter: 'stu_admission_no',
+													formatter: (g) => {
+														return `${g.value} <span style="color:green"> (${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false
+												},
+											},
+											{
+												id: 'stu_full_name',
+												name: 'Student Name',
+												field: 'stu_full_name',
+												filterable: true,
+												sortable: true,
+												width: 180,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												grouping: {
+													getter: 'stu_full_name',
+													formatter: (g) => {
+														return `${g.value}  <span style="color:green">(${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false
+												},
+											},
+											{
+												id: 'stu_class_name',
+												name: 'Class-Section',
+												field: 'stu_class_name',
+												sortable: true,
+												filterable: true,
+												width: 60,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												grouping: {
+													getter: 'stu_class_name',
+													formatter: (g) => {
+														return `${g.value}  <span style="color:green">(${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false,
+												},
+											},
+											{
+												id: 'tag_name',
+												name: 'Tag',
+												field: 'tag_name',
+												sortable: true,
+												filterable: true,
+												width: 60,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												grouping: {
+													getter: 'tag_name',
+													formatter: (g) => {
+														return `${g.value}  <span style="color:green">(${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false,
+												},
+											},
+											{
+												id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date',
+												sortable: true,
+												filterable: true,
+												width: 120,
+												formatter: this.checkDateFormatter,
+												filterSearchType: FieldType.dateIso,
+												filter: { model: Filters.compoundDate },
+												grouping: {
+													getter: 'invoice_created_date',
+													formatter: (g) => {
+														if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+															return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+														} else {
+															return `${''}`;
+														}
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false
+												},
+												groupTotalsFormatter: this.srnTotalsFormatter,
+											},
+											{
+												id: 'fp_name',
+												name: 'Fee Period',
+												field: 'fp_name',
+												sortable: true,
+												filterable: true,
+												width: 100,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												grouping: {
+													getter: 'fp_name',
+													formatter: (g) => {
+														return `${g.value}  <span style="color:green">(${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false,
+												},
+											},
+											{
+												id: 'invoice_due_date', name: 'Invoice Due Date', field: 'invoice_due_date',
+												sortable: true,
+												filterable: true,
+												width: 120,
+												formatter: this.checkDateFormatter,
+												filterSearchType: FieldType.dateIso,
+												filter: { model: Filters.compoundDate },
+												grouping: {
+													getter: 'invoice_due_date',
+													formatter: (g) => {
+														if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+															return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+														} else {
+															return `${''}`;
+														}
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false
+												},
+												groupTotalsFormatter: this.srnTotalsFormatter,
+											},
+											{
+												id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+												filterable: true,
+												cssClass: 'amount-report-fee',
+												filterSearchType: FieldType.number,
+												filter: { model: Filters.compoundInputNumber },
+												sortable: true,
+												formatter: this.checkFeeFormatter,
+												groupTotalsFormatter: this.sumTotalsFormatter
+											}
+										];
+										if (this.reportFilterForm.value.school_branch.length > 1) {
+											let aColumn = {
+												id: 'school_prefix',
+												name: 'School',
+												field: 'school_prefix',
+												filterable: true,
+												filterSearchType: FieldType.string,
+												filter: { model: Filters.compoundInputText },
+												sortable: true,
+												width: 90,
+												grouping: {
+													getter: 'school_prefix',
+													formatter: (g) => {
+														return `${g.value} <span style="color:green"> (${g.count})</span>`;
+													},
+													aggregators: this.aggregatearray,
+													aggregateCollapsed: true,
+													collapsed: false
+												},
+											};
+											this.columnDefinitions.splice(1, 0, aColumn);
+
+										}
+									}
+									if (repoArray[Number(keys)] && repoArray[Number(keys)]['fee_head_data']) {
+										let k = 0;
+										let tot = 0;
+										stuFeeHeadArray = [];
+										for (let fij = 0; fij < repoArray[Number(keys)]['fee_head_data'].length; fij++) {
+											if (typeof repoArray[Number(keys)]['fee_head_data'][fij] == 'object') {
+												repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+											}
+											stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
+
+										}
+										for (const titem of commonHeadsArray) {
+											Object.keys(titem).forEach((key2: any) => {
+												// console.log('titem', titem);
+												if (key2 === 'fh_name' && Number(keys) === 0) {
+													const feeObj: any = {};
+													this.columnDefinitions.push({
+														id: 'fh_name' + j,
+														name: new CapitalizePipe().transform(titem[key2]),
+														field: 'fh_name' + j,
+														cssClass: 'amount-report-fee',
+														sortable: true,
+														filterable: true,
+														filterSearchType: FieldType.number,
+														type: FieldType.number,
+														filter: { model: Filters.compoundInput },
+														formatter: this.checkFeeFormatter,
+														groupTotalsFormatter: this.sumTotalsFormatter
+													});
+													feeObj['fh_name' + j] = '';
+													feeHead.push(feeObj);
+													this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+													j++;
+												}
+
+												if (key2 === 'fh_name') {
+													obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+														repoArray[Number(keys)]['rpt_id'];
+													obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+														(Number(keys) + 1);
+													obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+														repoArray[Number(keys)]['stu_admission_no'] : '-';
+													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+														repoArray[Number(keys)]['school_prefix'] : '-';
+													obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+														repoArray[Number(keys)]['login_id'] : '-';
+													obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+													obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+													if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+														obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+															repoArray[Number(keys)]['stu_sec_name'];
+													} else {
+														obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+													}
+													obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+														repoArray[Number(keys)]['invoice_id'] : '-';
+													obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+													obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+														repoArray[Number(keys)]['fp_name'] : '-';
+													obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+														repoArray[Number(keys)]['invoice_no'] : '-';
+													obj['invoice_due_date'] = repoArray[Number(keys)]['invoice_due_date'] ?
+														repoArray[Number(keys)]['invoice_due_date'] : '-';
+
+													// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
+													// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+													for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
+														if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+															if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
+																obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
+																	? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+																tot = tot + repoArray[Number(keys)]['inv_opening_balance']
+																	? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+																break;
+															} else {
+																obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+																tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+																//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+																break;
+															}
+
+														}
+
+														if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															//console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+															break;
+
+														}
+													}
+													obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+														? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+													obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+														? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
+													obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
+														? Number(repoArray[Number(keys)]['inv_due_total_amt']) + (repoArray[Number(keys)]['inv_fine_amount'] ? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0) : 0;
+													obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+													obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+														repoArray[Number(keys)]['epd_contact_no'] : '-';
+													k++;
+												}
+											});
+										}
+									}
+									i++;
+									if (Object.keys(obj).length > 0) {
+										this.dataset.push(obj);
+									}
+								});
+								this.columnDefinitions.push(
+									{
+										id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+										filterable: true,
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										sortable: true,
+										formatter: this.checkFeeFormatter,
+										groupTotalsFormatter: this.sumTotalsFormatter
+									},
+									{
+										id: 'total', name: 'Total', field: 'total',
+										filterable: true,
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										type: FieldType.number,
+										sortable: true,
+										formatter: this.checkTotalFormatter,
+										cssClass: 'amount-report-fee',
+										groupTotalsFormatter: this.sumTotalsFormatter
+									},
+								);
+								if (this.columnDefinitions.length > 18) {
+									this.gridOptions.defaultColumnWidth = 100;
+									this.gridOptions.forceFitColumns = false;
+									this.gridOptions.enableAutoResize = false;
+									this.gridOptions.autoFitColumnsOnFirstLoad = false;
+								}
+								this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
+								this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
+								this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
+								this.aggregatearray.push(new Aggregators.Sum('total'));
+								this.aggregatearray.push(new Aggregators.Sum('srno'));
+								console.log(this.columnDefinitions);
+								console.log(this.dataset);
+								this.totalRow = {};
+								const obj3: any = {};
+								obj3['id'] = 'footer';
+								obj3['srno'] = '';
+								obj3['invoice_created_date'] = this.common.htmlToText('<b>Grand Total</b>');
+								obj3['invoice_due_date'] = this.common.htmlToText('<b></b>');
+								obj3['stu_admission_no'] = '';
+								obj3['stu_full_name'] = '';
+								obj3['stu_class_name'] = '';
+								obj3['receipt_id'] = '';
+								obj3['fp_name'] = '';
+								obj3['receipt_no'] = '';
+								obj3['inv_opening_balance'] =
+									new DecimalPipe('en-in').transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
+								obj3['invoice_fine_amount'] =
+									new DecimalPipe('en-in').transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+								Object.keys(feeHead).forEach((key: any) => {
+									Object.keys(feeHead[key]).forEach(key2 => {
+										Object.keys(this.dataset).forEach(key3 => {
+											Object.keys(this.dataset[key3]).forEach(key4 => {
+												if (key4 === key2) {
+													obj3[key4] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0));
+												}
+											});
+										});
+									});
+								});
+								obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+								obj3['receipt_mode_name'] = '';
+								this.totalRow = obj3;
+								// if (this.dataset.length <= 5) {
+								// 	this.gridHeight = 300;
+								// } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+								// 	this.gridHeight = 400;
+								// } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+								// 	this.gridHeight = 550;
+								// } else if (this.dataset.length > 20) {
+								// 	this.gridHeight = 750;
+								// }
+								this.gridHeight = 750;
+								this.tableFlag = true;
+								this.common.stopLoading();
+							} else {
+								this.tableFlag = true;
+								this.common.stopLoading();
+							}
+							this.common.stopLoading();
+						});
+					} else {
+
+					}
+
+
+				} else if (this.reportFilterForm.value.day_book_type == '2') {
+					this.getInvoiceYearBook();
+				}
 			}
 			else {
 				this.common.showSuccessErrorMessage('Please select date also', 'error');
@@ -3292,6 +3762,431 @@ export class OutstandingReportComponent implements OnInit {
 		} else {
 			this.common.showSuccessErrorMessage('Please choose report type', 'error');
 		}
+	}
+	getChartsOfAccount() {
+		this.chartsOfAccount = [];
+		this.feeService.getAllChartsOfAccount({}).subscribe((result: any) => {
+			for (var i = 0; i < result.length; i++) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
+					console.log('result--', result[i]);
+					this.chartsOfAccount.push(result[i]);
+				}
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
+					console.log('result--', result[i]);
+					this.feeReceivableAccountName = result[i]['coa_id'];
+					this.feeReceivableAccountName = result[i]['coa_acc_name'];
+				}
+			}
+		});
+	}
+	getInvoiceDayBook() {
+		// this.showLoadingFlag = true;
+		this.headtoatl = 0;
+		this.contoatl = 0;
+		this.displayedColumns = [];
+		this.apiInvoiceData = [];
+		this.apiReceiptData = [];
+		this.previousBalanceObject = {};
+		this.feeService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: this.reportFilterForm.value.month_id, vc_process: 'automatic/invoice' }).subscribe((data: any) => {
+			// this.commonAPIService.startLoading();
+			if (data && data.invoice_due_data.length > 0) {
+				this.displayedColumns = [];
+				if (Number(this.reportFilterForm.value.month_id) == 4) {
+					this.checkForPreviousYearVoucher();
+
+					console.log("i am here", this.previousBalanceObject);
+
+					this.apiData = data.previous_years_data ? data.previous_years_data : [];
+					if (this.previousYearVoucherData.length > 0) {
+
+					} else {
+						this.previousBalanceObject = {};
+						this.previousBalanceObject['voucherExists'] = this.previousYearVoucherData;
+						this.previousBalanceObject['vc_id'] = '';
+						this.previousBalanceObject['vc_state'] = 'draft';
+						this.previousBalanceObject['vc_records'] = [];
+						this.previousBalanceObject['value'] = this.apiData;
+						this.previousBalanceObject['prev_balance_voucher'] = true;
+						this.previousBalanceObject['date'] = '';
+						for (var i = 0; i < this.apiData.length; i++) {
+							if (!(this.apiData[i]['fh_name'])) {
+								this.apiData[i]['fh_name'] = 'Transport Fee';
+								this.apiData[i]['fh_id'] = 0;
+								this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+							} else {
+								this.previousBalanceObject['id_' + this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+							}
+						}
+						console.log('this.previousBalanceObject--', this.previousBalanceObject)
+					}
+				}
+				this.apiInvoiceData = data.invoice_due_data;
+				this.apiReceiptData = data.receipt_data;
+				const tempData: any = data.invoice_due_data;
+				const tempHeader: any[] = [];
+				this.columnDefinitions.push({
+					id: 'date',
+					name: 'Date',
+					field: 'date',
+					formatter: this.checkDateFormatter,
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.dateIso,
+					filter: { model: Filters.compoundDate },
+				});
+				tempData[0].value.forEach(element => {
+					this.columnDefinitions.push({
+						id: "id_" + element.fh_id,
+						name: element.fh_name,
+						field: "id_" + element.fh_id,
+						formatter: this.checkCurrencyFormatter, filterable: true,
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						type: FieldType.number,
+						sortable: true,
+					});
+				});
+
+				this.con_adj_details = {};
+				this.eachheadtotal_details = {};
+				this.eachheadtotal_details['date'] = 'Previous Year';
+				this.columnDefinitions.forEach(ee => {
+					this.con_adj_details['id_' + ee.id] = 0;
+
+					this.eachheadtotal_details['id_' + ee.id] = 0;
+					if (this.previousBalanceObject['id_' + ee.id]) {
+						console.log(this.previousBalanceObject['id_' + ee.id]);
+
+						this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_' + ee.id]);
+						this.headtoatl += Number(this.previousBalanceObject['id_' + ee.id]);
+					}
+
+				});
+				const dateArray: any[] = [];
+				tempData.forEach(e => {
+					const index = dateArray.findIndex(t => t == e.date);
+					if (index == -1) {
+						dateArray.push(e);
+					}
+				})
+				if (tempData.length > 0) {
+					let fine_amt = 0;
+					let count = 0;
+					let obj3 = {};
+					this.columnDefinitions.forEach((e: any) => {
+						if (e.id != "date")
+							obj3[e.id] = 0;
+						else {
+							obj3[e.id] = 'Grand Total';
+						}
+					})
+					dateArray.forEach(e => {
+						const tempelement: any = {};
+						tempelement['id'] = count + 1;
+						count += 1;
+						tempelement['date'] = e.date;
+						tempelement['vc_id'] = e.vc_id;
+						tempelement['vc_state'] = e.vc_state;
+						tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
+						tempelement['vc_records'] = e.vc_data;
+						let tempvalue = tempData.find(element => element.date == e.date);
+						if (tempvalue) {
+
+							this.columnDefinitions.forEach(ee => {
+
+								tempvalue.value.forEach(element => {
+									if ("id_" + element.fh_id == ee.id) {
+										let tempvaluehead = 0;
+										if (this.adjustmentStatus) {
+											if (element.fine_amt > 0)
+												fine_amt = Number(element.fine_amt);
+											console.log(fine_amt);
+											tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
+											obj3[ee.id] += tempvaluehead
+										} else {
+											if (element.fine_amt)
+												fine_amt = Number(element.fine_amt);
+											console.log(fine_amt);
+											tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+											obj3[ee.id] += tempvaluehead
+										}
+
+										// if (ee.id == -1) {
+										// 	console.log('in', fine_amt);
+										// 	tempvaluehead = fine_amt;
+										// }
+
+										let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
+										this.headtoatl += tempvaluehead;
+										this.contoatl += tempvaluecon;
+										tempelement[ee.id] = tempvaluehead;
+										this.con_adj_details[ee.id] += tempvaluecon;
+										this.eachheadtotal_details[ee.id] += tempvaluehead;
+
+									}
+								});
+								//
+
+							});
+							fine_amt = 0;
+
+						}
+						this.totalRow = obj3;
+						// console.log('tempelement--',tempelement);
+						this.dataset.push(tempelement);
+					});
+
+				}
+				console.log(this.eachheadtotal_details, "------------------------", this.dataset);
+				// console.log(this.eachheadtotal_details);
+				// console.log(this.con_adj_details);
+
+			}
+			this.tableFlag = true;
+			// this.commonAPIService.stopLoading();
+			//   this.showLoadingFlag = false;
+			//   this.tableDivFlag = true;
+		});
+	}
+	getInvoiceDayBook2(montid) {
+		// this.showLoadingFlag = true;
+		this.headtoatl = 0;
+		this.contoatl = 0;
+		this.displayedColumns = [];
+		this.apiInvoiceData = [];
+		this.apiReceiptData = [];
+		this.previousBalanceObject = {};
+		this.feeService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: montid, vc_process: 'automatic/invoice' }).subscribe((data: any) => {
+			this.common.startLoading();
+			if (data && data.invoice_due_data.length > 0) {
+				this.displayedColumns = [];
+				if (Number(this.reportFilterForm.value.month_id) == 4) {
+					this.checkForPreviousYearVoucher();
+
+					// console.log("i am here", this.previousBalanceObject);
+
+					this.apiData = data.previous_years_data ? data.previous_years_data : [];
+					if (this.previousYearVoucherData.length > 0) {
+
+					} else {
+						this.previousBalanceObject = {};
+						this.previousBalanceObject['voucherExists'] = this.previousYearVoucherData;
+						this.previousBalanceObject['vc_id'] = '';
+						this.previousBalanceObject['vc_state'] = 'draft';
+						this.previousBalanceObject['vc_records'] = [];
+						this.previousBalanceObject['value'] = this.apiData;
+						this.previousBalanceObject['prev_balance_voucher'] = true;
+						this.previousBalanceObject['date'] = '';
+						for (var i = 0; i < this.apiData.length; i++) {
+							if (!(this.apiData[i]['fh_name'])) {
+								this.apiData[i]['fh_name'] = 'Transport Fee';
+								this.apiData[i]['fh_id'] = 0;
+								this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+							} else {
+								this.previousBalanceObject['id_' + this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+							}
+						}
+						// console.log('this.previousBalanceObject--', this.previousBalanceObject)
+					}
+				}
+				this.apiInvoiceData = data.invoice_due_data;
+				// console.log('data.invoice_due_data--', data.invoice_due_data)
+				this.apiReceiptData = data.receipt_data;
+				const tempData: any = data.invoice_due_data;
+				const tempHeader: any[] = [];
+				if (this.columnDefinitions.length == 0) {
+					this.columnDefinitions.push({
+						id: 'date',
+						name: 'Date',
+						field: 'date',
+						// formatter: this.checkDateFormatter,
+						sortable: true,
+						filterable: true,
+						filterSearchType: FieldType.dateIso,
+						filter: { model: Filters.compoundDate },
+					});
+					tempData[0].value.forEach(element => {
+						this.columnDefinitions.push({
+							id: "id_" + element.fh_id,
+							name: element.fh_name,
+							field: "id_" + element.fh_id,
+							formatter: this.checkCurrencyFormatter, filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInputNumber },
+							type: FieldType.number,
+							sortable: true,
+						});
+					});
+					this.objobjectmain
+					this.columnDefinitions.forEach((e: any) => {
+						if (e.id != "date") {
+							this.objobjectmain[e.id] = 0;
+							
+						} else {
+							this.objobjectmain['date'] = 'Grand Total'
+						}
+					})
+				}
+
+				this.con_adj_details = {};
+				this.eachheadtotal_details = {};
+				this.eachheadtotal_details['date'] = 'Previous Year';
+				this.columnDefinitions.forEach(ee => {
+					this.con_adj_details['id_' + ee.id] = 0;
+
+					this.eachheadtotal_details['id_' + ee.id] = 0;
+					if (this.previousBalanceObject['id_' + ee.id]) {
+						console.log(this.previousBalanceObject['id_' + ee.id]);
+
+						this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_' + ee.id]);
+						this.headtoatl += Number(this.previousBalanceObject['id_' + ee.id]);
+					}
+
+				});
+				const dateArray: any[] = [];
+				tempData.forEach(e => {
+					const index = dateArray.findIndex(t => t == e.date);
+					if (index == -1) {
+						dateArray.push(e);
+					}
+				})
+				if (tempData.length > 0) {
+					let fine_amt = 0;
+					let count = 0;
+					let obj3 = {};
+					this.columnDefinitions.forEach((e: any) => {
+						if (e.id != "date") {
+							obj3[e.id] = 0;
+
+						}
+
+						else {
+							obj3[e.id] = this.monthArray[montid];
+
+						}
+					})
+					dateArray.forEach(e => {
+						const tempelement: any = {};
+						tempelement['id'] = count + 1;
+						count += 1;
+						tempelement['date'] = e.date;
+						tempelement['vc_id'] = e.vc_id;
+						tempelement['vc_state'] = e.vc_state;
+						tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
+						tempelement['vc_records'] = e.vc_data;
+						let tempvalue = tempData.find(element => element.date == e.date);
+						if (tempvalue) {
+
+							this.columnDefinitions.forEach(ee => {
+
+								tempvalue.value.forEach(element => {
+									if ("id_" + element.fh_id == ee.id) {
+										let tempvaluehead = 0;
+										if (this.adjustmentStatus) {
+											if (element.fine_amt > 0)
+												fine_amt = Number(element.fine_amt);
+											// console.log(fine_amt);
+											tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
+											obj3[ee.id] += tempvaluehead;
+											this.objobjectmain[ee.id] += tempvaluehead;
+										} else {
+											if (element.fine_amt)
+												fine_amt = Number(element.fine_amt);
+											// console.log(fine_amt);
+											tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+											obj3[ee.id] += tempvaluehead;
+											this.objobjectmain[ee.id] += tempvaluehead;
+										}
+
+										// if (ee.id == -1) {
+										// 	console.log('in', fine_amt);
+										// 	tempvaluehead = fine_amt;
+										// }
+
+										let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
+										this.headtoatl += tempvaluehead;
+										this.contoatl += tempvaluecon;
+										tempelement[ee.id] = tempvaluehead;
+										this.con_adj_details[ee.id] += tempvaluecon;
+										this.eachheadtotal_details[ee.id] += tempvaluehead;
+
+									}
+								});
+								//
+
+							});
+							fine_amt = 0;
+
+						}
+
+					});
+					obj3['id'] = montid;
+					obj3['date'] = this.monName[montid - 1];
+					this.dataset.push(obj3);
+					if (montid == 3) {
+						console.log(this.objobjectmain);
+						this.totalRow = this.objobjectmain;
+						this.tableFlag = true;
+						this.common.stopLoading();
+					}
+				}
+
+			}
+
+		});
+	}
+	getInvoiceYearBook() {
+		// this.showLoadingFlag = true;
+		let month_array = [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3];
+		month_array.forEach(element => {
+			this.getInvoiceDayBook2(element)
+		});
+
+
+	}
+	checkForPreviousYearVoucher() {
+
+		this.feeService.checkPreviosuDueStatus({ vc_narrations: 'Previous Due' }).subscribe((data: any) => {
+			// this.commonAPIService.startLoading();
+			console.log('data--', data);
+			if (data && data[0] && data[0]['vc_id']) {
+				this.previousYearVoucherData = data[0];
+				this.previousYearVoucherExists = true;
+				this.previousBalanceObject = {};
+				this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
+				this.previousBalanceObject['vc_id'] = this.previousYearVoucherData['vc_id'];
+				this.previousBalanceObject['vc_state'] = this.previousYearVoucherData['vc_state'];
+				this.previousBalanceObject['vc_records'] = [this.previousYearVoucherData];
+				this.previousBalanceObject['value'] = this.apiData;
+				this.previousBalanceObject['prev_balance_voucher'] = true;
+				this.previousBalanceObject['date'] = '';
+				for (var i = 0; i < this.apiData.length; i++) {
+					if (!(this.apiData[i]['fh_name'])) {
+						this.apiData[i]['fh_name'] = 'Transport Fee';
+						this.apiData[i]['fh_id'] = 0;
+						this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'];
+					} else {
+						this.previousBalanceObject['id_' + this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'];
+					}
+				}
+			} else {
+				this.previousYearVoucherExists = false;
+			}
+		})
+	}
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['fee_invoice_includes_adjustments'];
+		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+
+			if (result && result.status === 'ok') {
+				if (result.data && result.data[0]) {
+					this.adjustmentStatus = result.data[0]['gs_value'] == '1' ? 1 : 0;
+					this.currentTabIndex = this.adjustmentStatus ? 6 : 5;
+				}
+
+			}
+		})
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
@@ -3875,8 +4770,6 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getSchoolBranch() {
-
-
 		this.feeService.getAllSchoolGroups({ si_group: this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix }).subscribe((data: any) => {
 			if (data && data.status == 'ok') {
 				//this.schoolGroupData = data.data;
@@ -3975,14 +4868,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		console.log('this.exportColumnDefinitions-->', this.exportColumnDefinitions)
-		// for (const item of this.exportColumnDefinitions) {
-		// 	if(!(item.id.includes('checkbox_select'))) {
-		// 	columns.push({
-		// 		key: item.id,
-		// 		//width: this.checkWidth(item.id, item.name)
-		// 	});
-		// 	columValue.push(item.name);}
-		// }
+
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
 			reportType = new TitleCasePipe().transform('head wise outstanding report: ') + this.sessionName;
@@ -4999,6 +5885,15 @@ export class OutstandingReportComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
+	}
+	getFeeMonths() {
+		this.feeMonthArray = [];
+		this.feeService.getFeeMonths({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				this.feeMonthArray = result.data;
+			}
+		});
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		let exportColumnDefinitionsTemp = [];
