@@ -3619,18 +3619,31 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
 															break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
+																obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																break;
+															}
+														} else if ((repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' || repoArray[Number(keys)]['accd_opening_balance_paid_status'] == null) && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
+																obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+																tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+																	? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+																break;
+															}
+														} else if ((repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' || repoArray[Number(keys)]['accd_opening_balance_paid_status'] == null) && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
 															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
-															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
-															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
-																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
-															break;
+														} else {
+															
 														}
+														
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
@@ -3649,6 +3662,11 @@ export class CollectionReportComponent implements OnInit {
 											}
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
+												console.log('in opening balance');
+												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+											}
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
 												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
@@ -3837,7 +3855,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
-							new IndianCurrency().transform(this.dataset.map(t => t.inv_fine_amount).reduce((acc, val) => acc + val, 0));
+							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -6092,10 +6110,13 @@ export class CollectionReportComponent implements OnInit {
 	}
 	addNewlines(str) {
 		let result = '';
-		while (str.length > 0) {
-			result += str.substring(0, 15) + '\n';
-			str = str.substring(15);
+		if(str) {
+			while (str.length > 0) {
+				result += str.substring(0, 15) + '\n';
+				str = str.substring(15);
+			}
 		}
+		
 		return this.common.htmlToText(result);
 	}
 }
