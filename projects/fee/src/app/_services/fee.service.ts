@@ -691,4 +691,23 @@ export class FeeService {
 		// this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/concessionGroup/updateConcessionRectificationNew', value);
 	}
+	getAllChartsOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/getAllChartsOfAccount', value);
+	}
+	getInvoiceDayBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
+	}
+	getInvoiceYearBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceYearBook', value);
+	}
+	checkPreviosuDueStatus(value) {
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/checkPreviosuDueStatus', value);
+	}
+	getBankChargeReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getBankChargeReport', value);
+	}
 }
