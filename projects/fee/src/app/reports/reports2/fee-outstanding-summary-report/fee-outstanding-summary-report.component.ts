@@ -17,7 +17,7 @@ import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../../_pipes';
+import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -393,7 +393,8 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 										name: 'Amount',
 										field: 'fh_amount',
 										sortable: true,
-										width: 4
+										width: 4,
+										formatter: this.checkFeeFormatter,
 									},
 						];
 						let pos = 1;
@@ -419,6 +420,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 										name: 'Fee Head',
 										field: 'fh_name',
 										sortable: true,
+										
 									},
 						];
 						let aa = Object.keys(res.data[0]);
@@ -432,6 +434,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 									name: element != 'Total' ? new DatePipe('en-in').transform(element, 'dd-MMM'): element,
 									field: element,
 									sortable: true,
+									formatter: this.checkFeeFormatter,
 								}
 								this.columnDefinitions.push(obj);
 							}
@@ -457,79 +460,92 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 										id: 'April',
 										name:'April',
 										field: 'April',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'May',
 										name:'May',
 										field: 'May',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'June',
 										name:'June',
 										field: 'June',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'July',
 										name:'July',
 										field: 'July',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'August',
 										name:'August',
 										field: 'August',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'September',
 										name:'September',
 										field: 'September',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'October',
 										name:'October',
 										field: 'October',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'November',
 										name:'November',
 										field: 'November',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'December',
 										name:'December',
 										field: 'December',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'January',
 										name:'January',
 										field: 'January',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'Feburary',
 										name:'Feburary',
 										field: 'Feburary',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'March',
 										name:'March',
 										field: 'March',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									},
 									{
 										id: 'Total',
 										name:'Total',
 										field: 'Total',
-										sortable: true
+										sortable: true,
+										formatter: this.checkFeeFormatter,
 									}
 						];
 						
@@ -624,25 +640,27 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value) {
-				return new DecimalPipe('en-in').transform(value);
+			if (value > 0) {
+				return new IndianCurrency().transform(value);
 			} else {
-				return '-';
+				if (value && value != '-') {
+					return '-' + new IndianCurrency().transform(-value);
+				}
 			}
-			
+
 		}
 	}
-	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
-		if (value === 0) {
-			return '-';
-		} else {
-			if (value) {
-				return new DecimalPipe('en-in').transform(value);
-			} else {
-				return '-';
-			}
-		}
-	}
+	// checkFeeFormatter(row, cell, value, columnDef, dataContext) {
+	// 	if (value === 0) {
+	// 		return '-';
+	// 	} else {
+	// 		if (value) {
+	// 			return new DecimalPipe('en-in').transform(value);
+	// 		} else {
+	// 			return '-';
+	// 		}
+	// 	}
+	// }
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
