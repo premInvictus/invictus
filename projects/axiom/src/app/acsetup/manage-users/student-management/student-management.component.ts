@@ -96,6 +96,7 @@ export class StudentManagementComponent implements OnInit {
 		}
 		param.role_id = '4';
 		param.enrollment_type = ['3','4'];
+		param.statusflag = false;
 		this.common.getMasterStudentDetail(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.studentdetailArray = result.data;
