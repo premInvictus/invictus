@@ -6,7 +6,8 @@ import { RouteManagementComponent } from './route-management/route-management.co
 import { AssignStudentsComponent } from './assign-students/assign-students.component';
 import { VehicleComponent } from './vehicle/vehicle.component';
 const routes: Routes = [
-  {path:'vehicle-profile',component:VehicleComponent},
+  {path:'vehicle-profile',component:VehicleProfileComponent},
+  {path:'vehicle',component:VehicleComponent},
   {path:'staff-profile',component:StaffProfileComponent},
   {path:'route-management',component:RouteManagementComponent},
   {path:'assign-students',component:AssignStudentsComponent},

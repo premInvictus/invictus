@@ -1,3 +1,80 @@
-<p>
-  vehicle-profile works!
-</p>
+<div>
+  <div class="row">
+    <div class="col-12 ">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6">
+            <h1 class="remove-bottom-margin font-size-24">Vehicle Profile</h1>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <app-vehicle-common-profile [vehicleDetails]="vehicleDetails" (next)="getAllTransportVehicle($event.bus_number)"
+        [total]="totalObj" (prev)="getAllTransportVehicle($event.bus_number)"
+        (key)="getAllTransportVehicle($event.bus_number)" (first)="getAllTransportVehicle($event.bus_number)"
+        (last)="getAllTransportVehicle($event.bus_number)">
+      </app-vehicle-common-profile>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-top-title__container ">
+        <mat-accordion multi="true" class="theme-accordion">
+          <mat-expansion-panel [expanded]="'true'">
+            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+              <mat-panel-title>
+                <span class="text-uppercase">STAFF PROFILe</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <!-- <app-child-details-theme-two [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly"
+                [configSetting]="settingsArray">
+              </app-child-details-theme-two> -->
+          </mat-expansion-panel>
+
+          <mat-expansion-panel class="margin-top-10" [expanded]="'true'">
+            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+              <mat-panel-title>
+                <span class="text-uppercase">LOG</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-6">
+                <app-fuel-logs-tab [vehicle]="vehicleDetails"> </app-fuel-logs-tab>
+              </div>
+              <div class="col-6">
+                <app-running-logs-tab> </app-running-logs-tab>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <app-service-logs-tab [vehicle]="vehicleDetails"> </app-service-logs-tab>
+              </div>
+              <div class="col-6">
+                <app-tyre-logs-tab [vehicle]="vehicleDetails"> </app-tyre-logs-tab>
+              </div>
+            </div>
+            <!-- <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly"
+                [configSetting]="settingsArray">
+              </app-parent-details-theme-two> -->
+
+          </mat-expansion-panel>
+          <mat-expansion-panel class="margin-top-10" [expanded]="'true'">
+            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+              <mat-panel-title>
+                <span class="text-uppercase">ATTENDANCE</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly"
+                [configSetting]="settingsArray">
+              </app-parent-details-theme-two> -->
+
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card>
+    </div>
+  </div>
+</div>
