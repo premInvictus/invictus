@@ -194,6 +194,9 @@ export class CollectionReportComponent implements OnInit {
 		if (this.common.isExistUserAccessMenu('655')) {
 			this.reportTypeArray.push({ report_type: 'dailyheadwise', report_name: 'Daily Collection Report' });
 		}
+		if (true) {
+			this.reportTypeArray.push({ report_type: 'bankcharge', report_name: 'Bank Charge Collection Report' });
+		}
 		// this.reportType = 'headwise';
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
@@ -2526,7 +2529,7 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
-			} else if (this.reportType === 'summary') {
+			} else if (this.reportType === 'bankcharge') {
 				const collectionJSON: any = {
 					'from_date': value.from_date,
 					'to_date': value.to_date,
@@ -2535,146 +2538,190 @@ export class CollectionReportComponent implements OnInit {
 				};
 				collectionJSON['group_report'] = this.groupReport;
 
-				this.feeService.getFeeCollectionSummaryReport(collectionJSON).subscribe((result: any) => {
+				this.feeService.getBankChargeReport(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-						repoArray = result.data.reportData;
+						let repoArray = result.data;
 						var payModeArray = result.data.payment_mode_data;
 						console.log('repoArray', repoArray);
 
 						let i = 0;
 						let j = 0;
-						const feeHead: any[] = [];
-						Object.keys(repoArray).forEach((keys: any) => {
+						this.columnDefinitions = [
+							{
+								id: 'stu_admission_no',
+								name: 'Enrn. no',
+								field: 'stu_admission_no',
+								filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								sortable: true,
+								width: 90,
+								grouping: {
+									getter: 'stu_admission_no',
+									formatter: (g) => {
+										return `${g.value} <span style="color:green"> (${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'stu_full_name',
+								name: 'Student Name',
+								field: 'stu_full_name',
+								filterable: true,
+								sortable: true,
+								width: 180,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'stu_full_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'class_name',
+								name: 'Class',
+								field: 'class_name',
+								sortable: true,
+								filterable: true,
+								width: 80,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'class_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false,
+								},
+							},
+							{
+								id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
+								sortable: true,
+								filterable: true,
+								width: 120,
+								formatter: this.checkDateFormatter,
+								filterSearchType: FieldType.dateIso,
+								filter: { model: Filters.compoundDate },
+								grouping: {
+									getter: 'invoice_created_date',
+									formatter: (g) => {
+										if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+										} else {
+											return `${''}`;
+										}
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+								groupTotalsFormatter: this.srnTotalsFormatter,
+							},
+							{
+								id: 'receipt_no',
+								name: 'Reciept No.',
+								field: 'receipt_no',
+								sortable: true,
+								width: 70,
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								formatter: this.checkReceiptFormatter,
+								cssClass: 'receipt_collection_report'
+							},
+							{
+								id: 'ftr_amount', name: 'Amount (₹)', field: 'ftr_amount',
+								filterable: true,
+								cssClass: 'amount-report-fee',
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								type: FieldType.number,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
+								id: 'ftr_bnk_charge', name: 'Bank Charge (₹)', field: 'ftr_bnk_charge',
+								filterable: true,
+								cssClass: 'amount-report-fee',
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								type: FieldType.number,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							}
+						];
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							let aColumn = {
+								id: 'school_prefix',
+								name: 'School',
+								field: 'school_prefix',
+								filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								sortable: true,
+								width: 90,
+								grouping: {
+									getter: 'school_prefix',
+									formatter: (g) => {
+										return `${g.value} <span style="color:green"> (${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							};
+							this.columnDefinitions.splice(0, 0, aColumn);
+
+						}
+						for (let i = 0; i < repoArray.length; i++) {
+							const element = repoArray[i];
 							const obj: any = {};
-							if (Number(keys) === 0) {
-								this.columnDefinitions = [
-									// {
-									// 	id: 'school_prefix',
-									// 	name: 'School',
-									// 	field: 'school_prefix',
-									// 	filterable: true,
-									// 	filterSearchType: FieldType.string,
-									// 	filter: { model: Filters.compoundInputText },
-									// 	sortable: true,
-									// 	width: 90,
-									// 	grouping: {
-									// 		getter: 'school_prefix',
-									// 		formatter: (g) => {
-									// 			return `${g.value} <span style="color:green"> (${g.count})</span>`;
-									// 		},
-									// 		aggregators: this.aggregatearray,
-									// 		aggregateCollapsed: true,
-									// 		collapsed: false
-									// 	},
-									// },
-									{
-										id: 'fh_name',
-										name: 'Fee Heads',
-										field: 'fh_name',
-										filterable: true,
-										filterSearchType: FieldType.string,
-										filter: { model: Filters.compoundInputText },
-										sortable: true,
-										width: 300,
-										groupTotalsFormatter: this.srnTotalsFormatter
-									}];
-								if (this.reportFilterForm.value.school_branch.length > 1) {
-									let aColumn = {
-										id: 'school_prefix',
-										name: 'School',
-										field: 'school_prefix',
-										filterable: true,
-										filterSearchType: FieldType.string,
-										filter: { model: Filters.compoundInputText },
-										sortable: true,
-										width: 90,
-										grouping: {
-											getter: 'school_prefix',
-											formatter: (g) => {
-												return `${g.value} <span style="color:green"> (${g.count})</span>`;
-											},
-											aggregators: this.aggregatearray,
-											aggregateCollapsed: true,
-											collapsed: false
-										},
-									};
-									this.columnDefinitions.splice(0, 0, aColumn);
-
-								}
+							obj['id'] = element['stu_admission_no'] +
+												element['ftr_rpt_no'];
+							if (element['sec_id']) {
+								obj['class_name'] = element['class_name'] + '-' +
+									element['sec_name'];
+							} else {
+								obj['class_name'] = element['class_name'];
 							}
-							if (repoArray[Number(keys)] && repoArray[Number(keys)]['modes_arr'] && repoArray[Number(keys)]['modes_arr'].length > 0) {
-								let k = 0;
-								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['modes_arr']) {
-									if (titem && titem.pay_name !== "Other Payment" && titem.pay_name !== "Fine Payment") {
-										Object.keys(titem).forEach((key2: any) => {
-											var total_row_amt = 0;
-
-											if (key2 === 'pay_name' && Number(keys) === 0) {
-												const feeObj: any = {};
-												this.columnDefinitions.push({
-													id: 'pay_name' + j,
-													name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
-													field: 'pay_name' + j,
-													cssClass: 'amount-report-fee',
-													sortable: true,
-													filterable: true,
-													formatter: this.checkFeeFormatter,
-													filterSearchType: FieldType.number,
-													filter: { model: Filters.compoundInput },
-													groupTotalsFormatter: this.sumTotalsFormatter
-												});
-												feeObj['pay_name' + j] = '';
-												feeHead.push(feeObj);
-												this.feeHeadJSON.push(feeObj);
-												this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
-												j++;
-											}
-											if (key2 === 'pay_name') {
-												obj['school_prefix'] = repoArray[Number(keys)]['fh_prefix'] ?
-													repoArray[Number(keys)]['fh_prefix'] : '-';
-												obj['id'] = obj['fh_prefix'] + repoArray[Number(keys)]['pay_name'] + keys;
-												// obj['school_prefix'] = repoArray[Number(keys)]['fh_prefix'] ?
-												// repoArray[Number(keys)]['fh_prefix'] : '-';
-												obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
-													repoArray[Number(keys)]['fh_name'] : '-';
-												obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
-												k++;
-												total_row_amt = total_row_amt + titem['total_amount'] ? Number(titem['total_amount']) : 0;
-											}
-
-
-										});
-									}
-
-								}
+							let enrolPrefix = 'A-';
+							if(element.au_process_type == 3){
+								enrolPrefix = 'P-';
 							}
-							i++;
-							if (obj && Object.keys(obj).length > 0) {
-								this.dataset.push(obj);
-							}
-
-							console.log('this.dataset--', this.dataset)
-						});
+							obj['stu_admission_no'] = enrolPrefix + element.au_admission_no;
+							obj['stu_full_name'] = element.au_full_name;
+							obj['invoice_created_date'] = element.ftr_transaction_date;
+							obj['receipt_no'] = element.ftr_rpt_no;
+							obj['ftr_bnk_charge'] = element.ftr_bnk_charge;
+							obj['ftr_amount'] = element.ftr_amount;
+							this.dataset.push(obj)
+						}
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
-
-						Object.keys(feeHead).forEach((key: any) => {
-							Object.keys(feeHead[key]).forEach(key2 => {
-								Object.keys(this.dataset).forEach(key3 => {
-									Object.keys(this.dataset[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = new IndianCurrency().transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-										}
-									});
-								});
-							});
-						});
-
+						obj3['stu_admission_no'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
+						obj3['stu_full_name'] = '';
+						obj3['class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ftr_amount'] = '';
+						obj3['invoice_created_date'] = '';
+						obj3['ftr_bnk_charge'] = this.dataset.map(e => e.ftr_bnk_charge ? parseInt(e.ftr_bnk_charge) : 0).reduce((acc,value) => acc + value, 0);
+						
 						this.totalRow = obj3;
+						this.aggregatearray.push(new Aggregators.Sum('ftr_bnk_charge'));
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 350;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -3888,7 +3935,170 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
-			}
+			} else if (this.reportType === 'summary') {
+				const collectionJSON: any = {
+					'from_date': value.from_date,
+					'to_date': value.to_date,
+					'school_branch': value.school_branch,
+
+				};
+				collectionJSON['group_report'] = this.groupReport;
+
+				this.feeService.getFeeCollectionSummaryReport(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data.reportData;
+						var payModeArray = result.data.payment_mode_data;
+						console.log('repoArray', repoArray);
+
+						let i = 0;
+						let j = 0;
+						const feeHead: any[] = [];
+						Object.keys(repoArray).forEach((keys: any) => {
+							const obj: any = {};
+							if (Number(keys) === 0) {
+								this.columnDefinitions = [
+									// {
+									// 	id: 'school_prefix',
+									// 	name: 'School',
+									// 	field: 'school_prefix',
+									// 	filterable: true,
+									// 	filterSearchType: FieldType.string,
+									// 	filter: { model: Filters.compoundInputText },
+									// 	sortable: true,
+									// 	width: 90,
+									// 	grouping: {
+									// 		getter: 'school_prefix',
+									// 		formatter: (g) => {
+									// 			return `${g.value} <span style="color:green"> (${g.count})</span>`;
+									// 		},
+									// 		aggregators: this.aggregatearray,
+									// 		aggregateCollapsed: true,
+									// 		collapsed: false
+									// 	},
+									// },
+									{
+										id: 'fh_name',
+										name: 'Fee Heads',
+										field: 'fh_name',
+										filterable: true,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										sortable: true,
+										width: 300,
+										groupTotalsFormatter: this.srnTotalsFormatter
+									}];
+								if (this.reportFilterForm.value.school_branch.length > 1) {
+									let aColumn = {
+										id: 'school_prefix',
+										name: 'School',
+										field: 'school_prefix',
+										filterable: true,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										sortable: true,
+										width: 90,
+										grouping: {
+											getter: 'school_prefix',
+											formatter: (g) => {
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									};
+									this.columnDefinitions.splice(0, 0, aColumn);
+
+								}
+							}
+							if (repoArray[Number(keys)] && repoArray[Number(keys)]['modes_arr'] && repoArray[Number(keys)]['modes_arr'].length > 0) {
+								let k = 0;
+								let tot = 0;
+								for (const titem of repoArray[Number(keys)]['modes_arr']) {
+									if (titem && titem.pay_name !== "Other Payment" && titem.pay_name !== "Fine Payment") {
+										Object.keys(titem).forEach((key2: any) => {
+											var total_row_amt = 0;
+
+											if (key2 === 'pay_name' && Number(keys) === 0) {
+												const feeObj: any = {};
+												this.columnDefinitions.push({
+													id: 'pay_name' + j,
+													name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
+													field: 'pay_name' + j,
+													cssClass: 'amount-report-fee',
+													sortable: true,
+													filterable: true,
+													formatter: this.checkFeeFormatter,
+													filterSearchType: FieldType.number,
+													filter: { model: Filters.compoundInput },
+													groupTotalsFormatter: this.sumTotalsFormatter
+												});
+												feeObj['pay_name' + j] = '';
+												feeHead.push(feeObj);
+												this.feeHeadJSON.push(feeObj);
+												this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+												j++;
+											}
+											if (key2 === 'pay_name') {
+												obj['school_prefix'] = repoArray[Number(keys)]['fh_prefix'] ?
+													repoArray[Number(keys)]['fh_prefix'] : '-';
+												obj['id'] = obj['fh_prefix'] + repoArray[Number(keys)]['pay_name'] + keys;
+												// obj['school_prefix'] = repoArray[Number(keys)]['fh_prefix'] ?
+												// repoArray[Number(keys)]['fh_prefix'] : '-';
+												obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
+													repoArray[Number(keys)]['fh_name'] : '-';
+												obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
+												k++;
+												total_row_amt = total_row_amt + titem['total_amount'] ? Number(titem['total_amount']) : 0;
+											}
+
+
+										});
+									}
+
+								}
+							}
+							i++;
+							if (obj && Object.keys(obj).length > 0) {
+								this.dataset.push(obj);
+							}
+
+							console.log('this.dataset--', this.dataset)
+						});
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
+
+						Object.keys(feeHead).forEach((key: any) => {
+							Object.keys(feeHead[key]).forEach(key2 => {
+								Object.keys(this.dataset).forEach(key3 => {
+									Object.keys(this.dataset[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = new IndianCurrency().transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+										}
+									});
+								});
+							});
+						});
+
+						this.totalRow = obj3;
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 350;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 450;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+					} else {
+						this.tableFlag = true;
+					}
+				});
+			} 
 		} else {
 			this.common.showSuccessErrorMessage('Please choose report type', 'error');
 		}
@@ -4683,6 +4893,16 @@ export class CollectionReportComponent implements OnInit {
 
 						});
 					}
+					if (this.reportType === 'bankcharge') {
+						obj3['id'] = 'footer';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = '';
+						obj3['class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_amount'] = '';
+					}
 					// for (key in obj3) {
 					// 	// console.log(obj,obj[key]);
 					// 	if ((key.toString()).includes('fh_name')) {
@@ -4937,6 +5157,16 @@ export class CollectionReportComponent implements OnInit {
 
 						});
 					}
+					if (this.reportType === 'bankcharge') {
+						obj3['id'] = 'footer';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = '';
+						obj3['class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_amount'] = '';
+					}
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					if (groupItem.level === 0) {
@@ -5010,6 +5240,8 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('cumulativeheadwise_') + this.sessionName;
 		} else if (this.reportType === 'dailyheadwise') {
 			reportType = new TitleCasePipe().transform('dailycollection_') + this.sessionName;
+		} else if (this.reportType === 'bankcharge') {
+			reportType = new TitleCasePipe().transform('bankcharge_') + this.sessionName;
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
@@ -5099,7 +5331,19 @@ export class CollectionReportComponent implements OnInit {
 			}
 			worksheet.properties.defaultRowHeight = 40;
 			reportType2 = new TitleCasePipe().transform('daily collection report: ') + this.sessionName;
+		} else if (this.reportType === 'bankcharge') {
+			for (const item of this.exportColumnDefinitions) {
+
+				columns.push({
+					key: item.id,
+					width: 8
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight = 30;
+			reportType2 = new TitleCasePipe().transform('bank charge report: ') + this.sessionName;
 		}
+
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -5113,7 +5357,7 @@ export class CollectionReportComponent implements OnInit {
 		for (var i = 1; i <= columns.length; i++) {
 			if (this.reportType === 'headwise' || this.reportType === 'classwise' || this.reportType === 'modewise' ||
 				this.reportType === 'mfr' || this.reportType === 'summary'
-				|| this.reportType === 'cumulativeheadwise' || this.reportType === 'dailyheadwise') {
+				|| this.reportType === 'cumulativeheadwise' || this.reportType === 'dailyheadwise' || this.reportType === 'bankcharge') {
 				worksheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
 			}
 		}
@@ -5401,6 +5645,8 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
 		} else if (this.reportType === "dailyheadwise") {
 			reportType = new TitleCasePipe().transform('daily head wise report: ') + this.sessionName;
+		} else if (this.reportType === "bankcharge") {
+			reportType = new TitleCasePipe().transform('Bank Charge report: ') + this.sessionName;
 		}
 		let doc: any;
 		if (this.reportType === "dailyheadwise") {
@@ -5823,6 +6069,24 @@ export class CollectionReportComponent implements OnInit {
 							});
 						}
 					}
+					if (this.reportType === 'bankcharge') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = '';
+						obj3['class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_amount'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
 
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
@@ -6050,6 +6314,24 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
+					if (this.reportType === 'bankcharge') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = '';
+						obj3['class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_amount'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {

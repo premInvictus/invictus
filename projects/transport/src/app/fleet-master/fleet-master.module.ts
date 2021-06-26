@@ -10,6 +10,12 @@ import { AssignStudentsComponent } from './assign-students/assign-students.compo
 import { VehicleComponent } from './vehicle/vehicle.component';
 import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
 import { AddTransportStaffComponent } from './add-transport-staff/add-transport-staff.component';
+import { ServiceLogsTabComponent } from './vehicle-profile/service-logs-tab/service-logs-tab.component';
+import { FuelLogsTabComponent } from './vehicle-profile/fuel-logs-tab/fuel-logs-tab.component';
+import { TyreLogsTabComponent } from './vehicle-profile/tyre-logs-tab/tyre-logs-tab.component';
+import { VehicleCommonProfileComponent } from './vehicle-profile/vehicle-common-profile/vehicle-common-profile.component';
+import { RunningLogsTabComponent } from './vehicle-profile/running-logs-tab/running-logs-tab.component';
+import { ServiceLogItemsComponent } from '../transport-auxillaries/service-log-items/service-log-items.component';
 
 @NgModule({
   imports: [
@@ -18,7 +24,7 @@ import { AddTransportStaffComponent } from './add-transport-staff/add-transport-
     LoadingModule,
     TransportSharedModule
   ],
-  declarations: [VehicleProfileComponent, StaffProfileComponent, RouteManagementComponent, AssignStudentsComponent, VehicleComponent, AddVehicleComponent, AddTransportStaffComponent],
-  entryComponents:[AddVehicleComponent,AddTransportStaffComponent]
+  declarations: [VehicleProfileComponent, StaffProfileComponent, RouteManagementComponent, AssignStudentsComponent, VehicleComponent, AddVehicleComponent, AddTransportStaffComponent, ServiceLogsTabComponent, FuelLogsTabComponent, TyreLogsTabComponent, VehicleCommonProfileComponent, RunningLogsTabComponent,ServiceLogItemsComponent],
+  entryComponents:[AddVehicleComponent,AddTransportStaffComponent,ServiceLogItemsComponent]
 })
 export class FleetMasterModule { }
