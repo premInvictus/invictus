@@ -8,13 +8,13 @@ import { PreviewDocumentComponent } from '../../transport-shared/preview-documen
 import * as moment from 'moment/moment';
 
 @Component({
-  selector: 'app-add-transport-staff',
-  templateUrl: './add-transport-staff.component.html',
-  styleUrls: ['./add-transport-staff.component.scss']
+	selector: 'app-add-transport-staff',
+	templateUrl: './add-transport-staff.component.html',
+	styleUrls: ['./add-transport-staff.component.scss']
 })
 export class AddTransportStaffComponent implements OnInit {
 
-  @ViewChild('cropModal') cropModal;
+	@ViewChild('cropModal') cropModal;
 	@ViewChild('fileInput') myInputVariable: ElementRef;
 	imageFlag = false;
 	au_profileimage: any = '';
@@ -26,12 +26,12 @@ export class AddTransportStaffComponent implements OnInit {
 	currentFileChangeEvent: any;
 	multipleFileArray: any[] = [];
 	counter: any = 0;
-  currentImage: any;
-  
-  departmentArray = [];
+	currentImage: any;
+
+	departmentArray = [];
 	wingArray = [];
-  designationArray: any[] = [];
-  categoryOneArray: any[] = [];
+	designationArray: any[] = [];
+	categoryOneArray: any[] = [];
 	constructor(
 		public dialogRef: MatDialogRef<AddTransportStaffComponent>,
 		public dialogRef2: MatDialogRef<PreviewDocumentComponent>,
@@ -45,12 +45,12 @@ export class AddTransportStaffComponent implements OnInit {
 
 	ngOnInit() {
 		console.log('data', this.data);
-    this.builForm();
-    this.getDepartment();
+		this.builForm();
+		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
-  }
-  getDepartment() {
+	}
+	getDepartment() {
 		this.sisService.getMaster({ type_id: '7' }).subscribe((result: any) => {
 			if (result) {
 				this.departmentArray = result;
@@ -80,33 +80,33 @@ export class AddTransportStaffComponent implements OnInit {
 			}
 
 		});
-  }
+	}
 	builForm() {
 		this.personalDetails = this.fbuild.group({
-      ts_au_login_id:'',
-      au_profileimage:'',
-      au_full_name:'',
-			p_address: '',		
+			ts_au_login_id: '',
+			au_profileimage: '',
+			au_full_name: '',
+			p_address: '',
 			au_mobile: '',
 			whatsapp_no: '',
 			au_email: '',
 			au_dob: '',
-      batch_licence_no:'',
-      driver_id:'',
-      licence_type:'',
-      licence_no:'',
-      valid_upto:'',
-      status:''
+			batch_licence_no: '',
+			driver_id: '',
+			licence_type: '',
+			licence_no: '',
+			valid_upto: '',
+			status: ''
 		});
-		if(this.data.data){
+		if (this.data.data) {
 			this.personalDetails.patchValue({
 				ts_au_login_id: this.data.data.ts_au_login_id,
-				au_full_name: this.data.data.au_full_name,
-				p_address: this.data.data.p_address,
-				au_mobile: this.data.data.au_mobile,
+				au_full_name: this.data.data.users_det.au_full_name,
+				au_mobile: this.data.data.users_det.au_mobile,
+				au_email: this.data.data.users_det.au_email,
+				au_dob: this.data.data.users_det.au_dob,
 				whatsapp_no: this.data.data.whatsapp_no,
-				au_email: this.data.data.au_email,
-				au_dob: this.data.data.au_dob,
+				p_address: this.data.data.p_address,
 				batch_licence_no: this.data.data.batch_licence_no,
 				driver_id: this.data.data.driver_id,
 				licence_type: this.data.data.licence_type,
@@ -114,8 +114,8 @@ export class AddTransportStaffComponent implements OnInit {
 				valid_upto: this.data.data.valid_upto,
 				status: this.data.data.status,
 			})
-			this.au_profileimage =  this.data.data.au_profileimage;
-			if(this.data.action == 'view') {
+			this.au_profileimage = this.data.data.users_det.au_profileimage;
+			if (this.data.action == 'view') {
 				this.viewOnly = true;
 			}
 		}
@@ -137,7 +137,7 @@ export class AddTransportStaffComponent implements OnInit {
 				}
 			});
 	}
-	
+
 	acceptCrop(result) {
 		this.uploadImage(result.filename, result.base64);
 	}
@@ -146,24 +146,24 @@ export class AddTransportStaffComponent implements OnInit {
 	}
 	submit() {
 		if (this.personalDetails.valid) {
-			let inputJson:any = JSON.parse(JSON.stringify(this.personalDetails.value));
+			let inputJson: any = JSON.parse(JSON.stringify(this.personalDetails.value));
 			inputJson.au_profileimage = this.au_profileimage;
-			if(moment.isMoment(inputJson.au_dob)){
+			if (moment.isMoment(inputJson.au_dob)) {
 				inputJson.au_dob = inputJson.au_dob.format('YYYY-MM-DD');
 			} else {
-				inputJson.au_dob = new DatePipe('en-in').transform(inputJson.au_dob,'yyyy-MM-dd');
+				inputJson.au_dob = new DatePipe('en-in').transform(inputJson.au_dob, 'yyyy-MM-dd');
 			}
-			if(moment.isMoment(inputJson.valid_upto)){
+			if (moment.isMoment(inputJson.valid_upto)) {
 				inputJson.valid_upto = inputJson.valid_upto.format('YYYY-MM-DD');
 			} else {
-				inputJson.valid_upto = new DatePipe('en-in').transform(inputJson.valid_upto,'yyyy-MM-dd');
+				inputJson.valid_upto = new DatePipe('en-in').transform(inputJson.valid_upto, 'yyyy-MM-dd');
 			}
 			console.log(inputJson);
-			if(inputJson.ts_au_login_id){
+			if (inputJson.ts_au_login_id) {
 				this.transportService.updateTransportStaff(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
-						this.close({status:true});
+						this.close({ status: true });
 					}
 				})
 			} else {
@@ -171,15 +171,15 @@ export class AddTransportStaffComponent implements OnInit {
 				this.transportService.insertTransportStaff(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
-						this.close({status:true});
+						this.close({ status: true });
 					}
 				})
 			}
-			
+
 
 		}
 	}
-	close(data=null){
+	close(data = null) {
 		this.dialogRef.close(data)
 	}
 

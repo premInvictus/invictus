@@ -61,13 +61,13 @@ export class StaffProfileComponent implements OnInit {
         const temp = result;
         temp.forEach(element => {
           const tempelement:any = {};
-          tempelement.au_profileimage=element.users_det.au_profileimage;
-          tempelement.au_full_name=element.users_det.au_full_name;
-          tempelement.au_mobile=element.users_det.au_mobile;
-          tempelement.au_email=element.users_det.au_email;
-          tempelement.au_dob=element.users_det.au_dob;
+          tempelement.au_profileimage=element.users_det ? element.users_det.au_profileimage : '';
+          tempelement.au_full_name=element.users_det ? element.users_det.au_full_name : '';
+          tempelement.au_mobile=element.users_det ? element.users_det.au_mobile : '';
+          tempelement.au_email=element.users_det ? element.users_det.au_email : '';
+          tempelement.au_dob=element.users_det ? element.users_det.au_dob : '';
 
-          tempelement.ts_au_login_id=element.users_det.ts_au_login_id;
+          tempelement.ts_au_login_id=element.users_det ? element.users_det.ts_au_login_id : '';
           tempelement.p_address=element.p_address;
           tempelement.whatsapp_no=element.whatsapp_no;
           tempelement.batch_licence_no=element.batch_licence_no;

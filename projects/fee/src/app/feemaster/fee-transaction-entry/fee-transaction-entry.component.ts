@@ -46,6 +46,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	invoiceArrayForm: any[]= [];
 	walletProcess: any[]= ['deposit','withdrawal'];
 	opening_balance_paid_status = 0;
+	bnk_charge =  0;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -121,6 +122,36 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.getInvoices(invDet2.inv_id);
 		}
 	}
+	addBankCharge(event){
+		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
+			const bnk = this.banks.find(e => e.bnk_id == event.value);
+			if(bnk){
+				this.bnk_charge = this.invoice.netPay * bnk.bnk_charge / 100;
+				this.bnk_charge = Math.round(this.bnk_charge);
+			} else {
+				this.removeBankCharge();
+			}
+		} else {
+			this.bnk_charge = 0;
+		}
+		this.setBankCharge(this.bnk_charge)
+		console.log(this.bnk_charge);
+	}
+	setBankCharge(bnk_charge){
+		this.invoice.netPay += bnk_charge;
+		this.feeTransactionForm.patchValue({
+			ftr_amount: this.invoice.netPay
+		});
+		this.invoiceTotal = this.invoice.netPay;
+	}
+	removeBankCharge(){
+		this.invoice.netPay -= this.bnk_charge;
+		this.feeTransactionForm.patchValue({
+			ftr_amount: this.invoice.netPay
+		});
+		this.invoiceTotal = this.invoice.netPay;
+		this.bnk_charge = 0;
+	}
 	buildForm() {
 		this.feeTransactionForm = this.fbuild.group({
 			'inv_id': [],
@@ -166,6 +197,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 	}
 	getInvoices(inv_number) {
+		this.bnk_charge = 0;
 		const datePipe = new DatePipe('en-in');
 		this.INVOICE_ELEMENT_DATA = [];
 		this.invoiceArrayForm = [];
@@ -347,6 +379,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 	}
 	async getStudentInformation(login_id) {
+		this.bnk_charge = 0;
 		this.commonStu.showWalletLedger=false;
 		this.studentInfo = {};
 		this.entryModes = JSON.parse(JSON.stringify(this.tempentryModes));
@@ -695,7 +728,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				} else {
 					inputjson.opening_balance_transaction =  false
 				}
-				
+				inputjson.ftr_bnk_charge =  Math.round(this.bnk_charge);
+				inputjson.ftr_amount =  this.feeTransactionForm.value.ftr_amount - inputjson.ftr_bnk_charge;
 				console.log('inputjson-->', inputjson);
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
@@ -995,6 +1029,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
 	setPayAmount(event) {
+		this.feeTransactionForm.patchValue({
+			'ftr_bnk_id': ''
+		});
 		if (event.value === 2 || event.value === '2') {
 			// tslint:disable-next-line: max-line-length
 			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) ;
@@ -1019,6 +1056,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'ftr_amount' : this.studentInfo.student_opening_balance,
 				'ftr_pay_id': event.value
 			});
+		}
+		if(event.value !== '4'){
+			this.removeBankCharge();
 		}
 	}
 	checkStatus() {
@@ -1054,7 +1094,23 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
 		let changeValue = 0;
 		console.log("----------------------------------------", val);
-		
+		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
+			const bnk = this.banks.find(e => e.bnk_id == this.feeTransactionForm.value.ftr_bnk_id);
+			console.log('bnk',bnk);
+			if(bnk){
+				bnk.bnk_charge = bnk.bnk_charge ? bnk.bnk_charge : 0;
+				console.log('bnk.bnk_charge',bnk.bnk_charge);
+				this.bnk_charge = ((val * bnk.bnk_charge)/(100 + parseInt(bnk.bnk_charge)))
+				// this.invoice.netPay = this.bnk_charge;
+				// this.invoiceTotal = this.invoice.netPay;
+			} else {
+				this.bnk_charge = 0;
+			}	
+			this.bnk_charge = Math.round(this.bnk_charge);
+			console.log('bnk_charge',this.bnk_charge);		
+		} else {
+			this.removeBankCharge();
+		}
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
 			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
@@ -1068,8 +1124,6 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				changeValue +=(val - changeValue);
 
 			}
-			
-			
 		}
 		this.invoiceArrayForm[0].patchValue({
 			netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)

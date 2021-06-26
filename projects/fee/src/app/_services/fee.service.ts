@@ -706,4 +706,8 @@ export class FeeService {
 	checkPreviosuDueStatus(value) {
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/checkPreviosuDueStatus', value);
 	}
+	getBankChargeReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getBankChargeReport', value);
+	}
 }

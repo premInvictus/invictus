@@ -23,7 +23,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	vaccinationArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
-	displayedColumns: any[] = ['position', 'name', 'alias','branch','bnk_module_list', 'column1', 'column2', 'action', 'modify'];
+	displayedColumns: any[] = ['position', 'name', 'alias','branch','bnk_module_list', 'column1', 'column2', 'bnk_charge','action', 'modify'];
 	firstHeaderArray: any[] = ['Bank Name'];
 	column1HeaderArray: any[] = ['Account Number'];
 	column2HeaderArray: any[] = ['IFSC Code'];
@@ -72,6 +72,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				bnk_branch: '',
 				bnk_account_no: '',
 				bnk_ifsc: '',
+				bnk_charge:'',
 				bnk_status: '',
 				bnk_module_list: ''
 			})
@@ -146,6 +147,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						bnk_module_list: item.bnk_module_list,						
 						column1: item.bnk_account_no,
 						column2: item.bnk_ifsc,
+						bnk_charge:item.bnk_charge,
 						action: item
 					});
 					pos++;
@@ -183,6 +185,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				bnk_module_list:value.bnk_module_list ? (value.bnk_module_list.split(",")) : [],
 				bnk_account_no: value.bnk_account_no,
 				bnk_ifsc: value.bnk_ifsc,
+				bnk_charge:value.bnk_charge,
 				bnk_status: value.bnk_status
 			});
 		}
