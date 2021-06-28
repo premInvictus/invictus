@@ -231,15 +231,14 @@ export class CollectionReportComponent implements OnInit {
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	updateTotalRow(grid: any) {
-		console.log("hum aaye he");
 
 		let columnIdx = grid.getColumns().length;
-		let elements = document.getElementById('fontsizer');
-		if(columnIdx < 10) {
-			elements.style.fontSize = '10px';
-		} else {
-			elements.style.fontSize = '8px';
-		}
+		// let elements = document.getElementById('fontsizer');
+		// if(columnIdx < 10) {
+		// 	elements.style.fontSize = '10px';
+		// } else {
+		// 	elements.style.fontSize = '8px';
+		// }
 			
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
@@ -5785,6 +5784,7 @@ export class CollectionReportComponent implements OnInit {
 				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
 				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
+					
 					doc.setFontSize('18');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(0, 62, 120);
@@ -5820,14 +5820,14 @@ export class CollectionReportComponent implements OnInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: 18,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: 18,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
