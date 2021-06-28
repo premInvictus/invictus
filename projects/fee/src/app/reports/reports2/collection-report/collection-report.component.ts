@@ -5657,7 +5657,7 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('Bank Charge report: ') + this.sessionName;
 		}
 		let doc: any;
-		if (this.reportType === "dailyheadwise") {
+		if (this.reportType === "dailyheadwise" || this.reportType === 'cumulativeheadwise') {
 			doc = new jsPDF('l', 'mm', 'a0');
 		} else {
 			doc = new jsPDF('p', 'mm', 'a0');

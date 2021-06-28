@@ -3325,9 +3325,11 @@ export class OutstandingReportComponent implements OnInit {
 					if (1 == 1) {
 						this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 							this.common.startLoading();
-							if (result && result.status === 'ok' && result.data !== null) {
+							console.log("i am result", result);
+							
+							if (result && result.status === 'ok' && result.data != null) {
 								this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == value.from_date) : [];
+								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.reportFilterForm.value.to_date) : [];
 								console.log("-------------------", repoArray);
 
 								this.totalRecords = Number(result.data.totalRecords);
