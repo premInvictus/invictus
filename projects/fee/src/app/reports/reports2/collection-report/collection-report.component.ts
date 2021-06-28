@@ -5784,8 +5784,20 @@ export class CollectionReportComponent implements OnInit {
 				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
 				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
+					if( data.row.raw.length < 10 ) {
+						doc.setFontSize('28');
+					} else if(data.row.raw.length < 12) {
+						doc.setFontSize('26');
+					} else if(data.row.raw.length < 14 ) {
+						doc.setFontSize('24');
+					} else if(data.row.raw.length < 16 ) {
+						doc.setFontSize('22');
+					} else if(data.row.raw.length < 18 ) {
+						doc.setFontSize('20');
+					} else {
+						doc.setFontSize('18');
+					}
 					
-					doc.setFontSize('18');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(0, 62, 120);
 				}
@@ -5794,7 +5806,19 @@ export class CollectionReportComponent implements OnInit {
 				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
 				if (lsfIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					if( data.row.raw.length < 10 ) {
+						doc.setFontSize('28');
+					} else if(data.row.raw.length < 12) {
+						doc.setFontSize('26');
+					} else if(data.row.raw.length < 14 ) {
+						doc.setFontSize('24');
+					} else if(data.row.raw.length < 16 ) {
+						doc.setFontSize('22');
+					} else if(data.row.raw.length < 18 ) {
+						doc.setFontSize('20');
+					} else {
+						doc.setFontSize('18');
+					}
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(229, 136, 67);
 				}
@@ -5803,7 +5827,19 @@ export class CollectionReportComponent implements OnInit {
 				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
 				if (lhIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					if( data.row.raw.length < 10 ) {
+						doc.setFontSize('28');
+					} else if(data.row.raw.length < 12) {
+						doc.setFontSize('26');
+					} else if(data.row.raw.length < 14 ) {
+						doc.setFontSize('24');
+					} else if(data.row.raw.length < 16 ) {
+						doc.setFontSize('22');
+					} else if(data.row.raw.length < 18 ) {
+						doc.setFontSize('20');
+					} else {
+						doc.setFontSize('18');
+					}
 					doc.setTextColor('#5e666d');
 					doc.setFillColor('#c8d6e5');
 				}
@@ -5811,7 +5847,20 @@ export class CollectionReportComponent implements OnInit {
 				// Grand_Total
 				if (data.row.index === rows.length - 1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('18');
+					
+					if( data.row.raw.length < 10 ) {
+						doc.setFontSize('28');
+					} else if(data.row.raw.length < 12) {
+						doc.setFontSize('26');
+					} else if(data.row.raw.length < 14 ) {
+						doc.setFontSize('24');
+					} else if(data.row.raw.length < 16 ) {
+						doc.setFontSize('22');
+					} else if(data.row.raw.length < 18 ) {
+						doc.setFontSize('20');
+					} else {
+						doc.setFontSize('18');
+					}
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(67, 160, 71);
 				}
@@ -5820,14 +5869,14 @@ export class CollectionReportComponent implements OnInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
