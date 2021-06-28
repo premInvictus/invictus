@@ -109,7 +109,7 @@
         </div>
     </div>
     
-    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions"  [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
         (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
