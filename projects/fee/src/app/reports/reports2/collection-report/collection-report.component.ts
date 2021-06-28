@@ -683,7 +683,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -1092,7 +1092,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand Total';
+						obj3['invoice_created_date'] = 'Grand_Total';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -1259,7 +1259,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
@@ -1458,7 +1458,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -1615,7 +1615,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -1799,7 +1799,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -1953,7 +1953,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
@@ -2154,7 +2154,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -2525,7 +2525,7 @@ export class CollectionReportComponent implements OnInit {
 						obj2['srno'] = '';
 						obj2['au_login_id'] = '';
 						obj2['stu_opening_balance'] = this.dataset.map(f => f.stu_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj2['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj2['stu_admission_no'] = this.common.htmlToText('<b>Grand_Total</b>');
 						obj2['stu_full_name'] = this.dataset.length;
 						obj2['stu_class_name'] = '';
 						obj2['fp_name'] = '';
@@ -2624,7 +2624,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'invoice_created_date',
 									formatter: (g) => {
-										if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+										if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 										} else {
 											return `${''}`;
@@ -2720,7 +2720,7 @@ export class CollectionReportComponent implements OnInit {
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['stu_admission_no'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
+						obj3['stu_admission_no'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand_Total</b></div>');
 						obj3['stu_full_name'] = '';
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
@@ -2935,7 +2935,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -3294,7 +3294,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand Total';
+						obj3['invoice_created_date'] = 'Grand_Total';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -3523,7 +3523,7 @@ export class CollectionReportComponent implements OnInit {
 									// 	grouping: {
 									// 		getter: 'invoice_created_date',
 									// 		formatter: (g) => {
-									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
 									// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 									// 			} else {
 									// 				return `${''}`;
@@ -3900,7 +3900,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand Total';
+						obj3['invoice_created_date'] = 'Grand_Total';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -4077,7 +4077,7 @@ export class CollectionReportComponent implements OnInit {
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
+						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand_Total</b></div>');
 
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
@@ -4170,7 +4170,7 @@ export class CollectionReportComponent implements OnInit {
 	}
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
-		if (val != null && val != '-' && totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
+		if (val != null && val != '-' && totals.group.rows[0].invoice_created_date !== '<b>Grand_Total</b>') {
 			if (new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100)))) {
 				return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
 			} else {
@@ -4214,7 +4214,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand Total</b>' && value !== '-' && value !== '') {
+		if (value !== '<b>Grand_Total</b>' && value !== '-' && value !== '') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
 			return value;
@@ -5374,8 +5374,8 @@ export class CollectionReportComponent implements OnInit {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
 					//console.log(item2, 'item2');
-					if (this.reportType === 'summary' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					if (this.reportType === 'summary' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 							obj[item2.id] = new IndianCurrency().transform(Number(json[key][item2.id]));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
@@ -5383,22 +5383,22 @@ export class CollectionReportComponent implements OnInit {
 						}
 
 					}
-					if (this.reportType !== 'mfr' && this.reportType !== 'summary' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					if (this.reportType !== 'mfr' && this.reportType !== 'summary' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							&& this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& json[key][item2.id] === '<b>Grand Total</b>') {
+							&& json[key][item2.id] === '<b>Grand_Total</b>') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
-					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 						if (item2.id.toString().match(/Q/)) {
 							obj[item2.id] = json[key][item2.id].status !== 'Not Generated' ? json[key][item2.id].status : '-';
 						} else {
@@ -5423,7 +5423,7 @@ export class CollectionReportComponent implements OnInit {
 		if (this.totalRow) {
 			worksheet.addRow(this.totalRow);
 		}
-		// style grand total
+		// style Grand_Total
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
 			this.columnDefinitions.forEach(element => {
 				cell.font = {
@@ -5703,7 +5703,7 @@ export class CollectionReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType === 'summary') {
-						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 							arr.push(new IndianCurrency().transform(Number(json[key][item2.id])));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
@@ -5715,11 +5715,11 @@ export class CollectionReportComponent implements OnInit {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							&& this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
 							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
+							&& this.dataset[key][item2.id] === '<b>Grand_Total</b>') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
@@ -5808,7 +5808,7 @@ export class CollectionReportComponent implements OnInit {
 					doc.setFillColor('#c8d6e5');
 				}
 
-				// grand total
+				// Grand_Total
 				if (data.row.index === rows.length - 1) {
 					doc.setFontStyle('bold');
 					doc.setFontSize('18');
