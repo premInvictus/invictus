@@ -231,7 +231,16 @@ export class CollectionReportComponent implements OnInit {
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	updateTotalRow(grid: any) {
+		console.log("hum aaye he");
+
 		let columnIdx = grid.getColumns().length;
+		let elements = document.getElementById('fontsizer');
+		if(columnIdx < 10) {
+			elements.style.fontSize = '10px';
+		} else {
+			elements.style.fontSize = '8px';
+		}
+			
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
@@ -1435,7 +1444,7 @@ export class CollectionReportComponent implements OnInit {
 								new CapitalizePipe().transform(repoArray[Number(index)]['tb_name']) : '-';
 							if (Number(repoArray[Number(index)]['ftr_pay_id']) === 3) {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_cheque_no'] ?
-								this.addNewlines(repoArray[Number(index)]['ftr_cheque_no']) : 0;
+									this.addNewlines(repoArray[Number(index)]['ftr_cheque_no']) : 0;
 							} else {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] > 0 ?
 									(repoArray[Number(index)]['ftr_transaction_id']) : '-';
@@ -2690,7 +2699,7 @@ export class CollectionReportComponent implements OnInit {
 							const element = repoArray[i];
 							const obj: any = {};
 							obj['id'] = element['stu_admission_no'] +
-												element['ftr_rpt_no'];
+								element['ftr_rpt_no'];
 							if (element['sec_id']) {
 								obj['class_name'] = element['class_name'] + '-' +
 									element['sec_name'];
@@ -2698,7 +2707,7 @@ export class CollectionReportComponent implements OnInit {
 								obj['class_name'] = element['class_name'];
 							}
 							let enrolPrefix = 'A-';
-							if(element.au_process_type == 3){
+							if (element.au_process_type == 3) {
 								enrolPrefix = 'P-';
 							}
 							obj['stu_admission_no'] = enrolPrefix + element.au_admission_no;
@@ -2718,8 +2727,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['receipt_no'] = '';
 						obj3['ftr_amount'] = '';
 						obj3['invoice_created_date'] = '';
-						obj3['ftr_bnk_charge'] = this.dataset.map(e => e.ftr_bnk_charge ? parseInt(e.ftr_bnk_charge) : 0).reduce((acc,value) => acc + value, 0);
-						
+						obj3['ftr_bnk_charge'] = this.dataset.map(e => e.ftr_bnk_charge ? parseInt(e.ftr_bnk_charge) : 0).reduce((acc, value) => acc + value, 0);
+
 						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('ftr_bnk_charge'));
 						if (this.dataset.length <= 5) {
@@ -3688,9 +3697,9 @@ export class CollectionReportComponent implements OnInit {
 																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
 														} else {
-															
+
 														}
-														
+
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
@@ -4098,7 +4107,7 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
-			} 
+			}
 		} else {
 			this.common.showSuccessErrorMessage('Please choose report type', 'error');
 		}
@@ -6392,13 +6401,13 @@ export class CollectionReportComponent implements OnInit {
 	}
 	addNewlines(str) {
 		let result = '';
-		if(str) {
+		if (str) {
 			while (str.length > 0) {
 				result += str.substring(0, 15) + '\n';
 				str = str.substring(15);
 			}
 		}
-		
+
 		return this.common.htmlToText(result);
 	}
 }

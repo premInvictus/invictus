@@ -76,3 +76,7 @@ button.filter-bt{
   height:auto !important;
   top:none !important;
 }
+
+.fontsizer {
+  font-size: 10px;
+}

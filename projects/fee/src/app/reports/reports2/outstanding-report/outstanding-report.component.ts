@@ -3846,22 +3846,31 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 					});
 				});
-
+				this.columnDefinitions.push({
+					id: 'total',
+					name: "Total",
+					field: 'total',
+					formatter: this.checkCurrencyFormatter, filterable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
+					type: FieldType.number,
+					sortable: true,
+				});
 				this.con_adj_details = {};
 				this.eachheadtotal_details = {};
 				this.eachheadtotal_details['date'] = 'Previous Year';
-				this.columnDefinitions.forEach(ee => {
-					this.con_adj_details['id_' + ee.id] = 0;
+				// this.columnDefinitions.forEach(ee => {
+				// 	this.con_adj_details['id_' + ee.id] = 0;
 
-					this.eachheadtotal_details['id_' + ee.id] = 0;
-					if (this.previousBalanceObject['id_' + ee.id]) {
-						console.log(this.previousBalanceObject['id_' + ee.id]);
+				// 	this.eachheadtotal_details['id_' + ee.id] = 0;
+				// 	if (this.previousBalanceObject['id_' + ee.id]) {
+				// 		console.log(this.previousBalanceObject['id_' + ee.id]);
 
-						this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_' + ee.id]);
-						this.headtoatl += Number(this.previousBalanceObject['id_' + ee.id]);
-					}
+				// 		this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_' + ee.id]);
+				// 		this.headtoatl += Number(this.previousBalanceObject['id_' + ee.id]);
+				// 	}
 
-				});
+				// });
 				const dateArray: any[] = [];
 				tempData.forEach(e => {
 					const index = dateArray.findIndex(t => t == e.date);
@@ -3889,6 +3898,7 @@ export class OutstandingReportComponent implements OnInit {
 						tempelement['vc_state'] = e.vc_state;
 						tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
 						tempelement['vc_records'] = e.vc_data;
+						tempelement['total'] = 0;
 						let tempvalue = tempData.find(element => element.date == e.date);
 						if (tempvalue) {
 
@@ -3902,13 +3912,15 @@ export class OutstandingReportComponent implements OnInit {
 												fine_amt = Number(element.fine_amt);
 											console.log(fine_amt);
 											tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
-											obj3[ee.id] += tempvaluehead
+											obj3[ee.id] += tempvaluehead;
+											tempelement['total'] += tempvaluehead;
 										} else {
 											if (element.fine_amt)
 												fine_amt = Number(element.fine_amt);
 											console.log(fine_amt);
 											tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
-											obj3[ee.id] += tempvaluehead
+											obj3[ee.id] += tempvaluehead;
+											tempelement['total'] += tempvaluehead;
 										}
 
 										// if (ee.id == -1) {
@@ -3929,6 +3941,7 @@ export class OutstandingReportComponent implements OnInit {
 
 							});
 							fine_amt = 0;
+							obj3['total'] += tempelement['total'];
 
 						}
 						this.totalRow = obj3;
@@ -4017,6 +4030,16 @@ export class OutstandingReportComponent implements OnInit {
 							sortable: true,
 						});
 					});
+					this.columnDefinitions.push({
+						id: 'total',
+						name: 'Total',
+						field: 'total',
+						formatter: this.checkCurrencyFormatter, filterable: true,
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						type: FieldType.number,
+						sortable: true,
+					});
 					this.objobjectmain
 					this.columnDefinitions.forEach((e: any) => {
 						if (e.id != "date") {
@@ -4065,6 +4088,7 @@ export class OutstandingReportComponent implements OnInit {
 
 						}
 					})
+					obj3['total'] = 0;
 					dateArray.forEach(e => {
 						const tempelement: any = {};
 						tempelement['id'] = count + 1;
@@ -4088,14 +4112,18 @@ export class OutstandingReportComponent implements OnInit {
 											// console.log(fine_amt);
 											tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
 											obj3[ee.id] += tempvaluehead;
+											obj3['total'] += tempvaluehead;
 											this.objobjectmain[ee.id] += tempvaluehead;
+											this.objobjectmain['total'] += tempvaluehead;
 										} else {
 											if (element.fine_amt)
 												fine_amt = Number(element.fine_amt);
 											// console.log(fine_amt);
 											tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
 											obj3[ee.id] += tempvaluehead;
+											obj3['total'] += tempvaluehead;
 											this.objobjectmain[ee.id] += tempvaluehead;
+											this.objobjectmain['total'] += tempvaluehead;
 										}
 
 										// if (ee.id == -1) {
@@ -4122,11 +4150,14 @@ export class OutstandingReportComponent implements OnInit {
 					});
 					obj3['id'] = montid;
 					obj3['date'] = this.monName[montid - 1];
+					
 					this.dataset.push(obj3);
 					if (montid == 3) {
 						console.log(this.objobjectmain);
 						this.totalRow = this.objobjectmain;
 						this.tableFlag = true;
+						this.common.stopLoading();
+						this.common.stopLoading();
 						this.common.stopLoading();
 					}
 				}
