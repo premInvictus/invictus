@@ -5820,14 +5820,14 @@ export class CollectionReportComponent implements OnInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: this.exportColumnDefinitions.length < 10 ? 20: this.exportColumnDefinitions.length < 15 ? 18 : 16,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
