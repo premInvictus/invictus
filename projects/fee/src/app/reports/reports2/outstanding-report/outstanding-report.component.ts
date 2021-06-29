@@ -3325,9 +3325,11 @@ export class OutstandingReportComponent implements OnInit {
 					if (1 == 1) {
 						this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 							this.common.startLoading();
-							if (result && result.status === 'ok' && result.data !== null) {
+							console.log("i am result", result);
+							
+							if (result && result.status === 'ok' && result.data != null) {
 								this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == value.from_date) : [];
+								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.reportFilterForm.value.to_date) : [];
 								console.log("-------------------", repoArray);
 
 								this.totalRecords = Number(result.data.totalRecords);
@@ -3593,8 +3595,8 @@ export class OutstandingReportComponent implements OnInit {
 														repoArray[Number(keys)]['rpt_id'];
 													obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 														(Number(keys) + 1);
-													obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-														repoArray[Number(keys)]['stu_admission_no'] : '-';
+													obj['stu_admission_no'] = repoArray[Number(keys)]['login_id'] ?
+														repoArray[Number(keys)]['login_id'] : '-';
 													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
 														repoArray[Number(keys)]['school_prefix'] : '-';
 													obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
@@ -3909,15 +3911,20 @@ export class OutstandingReportComponent implements OnInit {
 										if (this.adjustmentStatus) {
 											if (element.fine_amt > 0)
 												fine_amt = Number(element.fine_amt);
-											console.log(fine_amt);
+											// console.log(fine_amt, '------------------');
 											tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
 											obj3[ee.id] += tempvaluehead;
 											tempelement['total'] += tempvaluehead;
 										} else {
 											if (element.fine_amt)
 												fine_amt = Number(element.fine_amt);
-											console.log(fine_amt);
-											tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+											// console.log(element, '+++++++++++++++', Number(element.head_amt) , Number(element.concession_at));
+											if(element.fh_id !== -1) {
+												tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+											}else {
+												tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
+											}
+											
 											obj3[ee.id] += tempvaluehead;
 											tempelement['total'] += tempvaluehead;
 										}
@@ -5006,6 +5013,19 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			}
 			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
+		} else if (this.reportType === 'day_book') {
+			
+			for (const item of this.exportColumnDefinitions) {
+				if (!(item.id.includes('checkbox_select'))) {
+					columns.push({
+						key: item.id,
+						width: this.checkWidth(item.id, item.name)
+					});
+					columValue.push(item.name);
+				}
+			}
+			reportType2 = new TitleCasePipe().transform('day book_') + this.sessionName;
+		
 		}
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
