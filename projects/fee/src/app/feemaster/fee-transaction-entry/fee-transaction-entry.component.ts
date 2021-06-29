@@ -207,176 +207,179 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			inv_id: inv_number,
 			ftr_transaction_date : datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
 		};
-		this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
+		if(inv_number) {
+			this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
 
-				this.INVOICE_ELEMENT_DATA = [];
-				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-				this.invoice = {};
-				this.invoice = result.data[0];
-				
-				this.invoice.netPay = this.invoice.late_fine_amt ?
-					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
-					Number(this.invoice.fee_amount);
-
-
-				if (this.invoice.balance_amt) {
-					console.log("i am here ", this.invoice.balance_amt);
+					this.INVOICE_ELEMENT_DATA = [];
+					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
+					this.invoice = {};
+					this.invoice = result.data[0];
 					
-					this.invoice.balance_amt = Number(this.invoice.balance_amt);
-					this.invoice.netPay += this.invoice.balance_amt;
-					// this.invoice.netPay += Number(this.invoice.balance_amt);
-				}
-				// if (this.invoice.prev_balance) {
-				// 	this.invoice.netPay += Number(this.invoice.prev_balance);
-				// 	this.invoice.balance_amt += Number(this.invoice.prev_balance);
-				// }
-
-				if (this.invoice.netPay < 0) {
-					this.invoice.netPay = 0;
-				}
-
-				
-
-				this.invoiceArray = this.invoice.invoice_bifurcation;
-
-				
-
-				this.feeTransactionForm.patchValue({
-					'ftr_amount': this.invoice.netPay,
-					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
-				});
-				let pos = 1;
-				
-				// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
-				// 	// const element = {
-				// 	// 	srno: pos,
-				// 	// 	feehead: 'Previous Balance',
-				// 	// 	feedue: Number(this.invoice.inv_prev_balance),
-				// 	// 	concession: 0,
-				// 	// 	adjustment: 0,
-				// 	// 	netpay: Number(this.invoice.inv_prev_balance)
-				// 	// };
-				// 	// this.invoiceTotal += element.netpay;
-				// 	// this.INVOICE_ELEMENT_DATA.push(element);
-				// 	// var fb = this.fbuild.group({	
-				// 	// 	rm_inv_id:'',
-				// 	// 	rm_head_type:'',
-				// 	// 	rm_fm_id:'',
-				// 	// 	rm_fh_id:'',
-				// 	// 	rm_fh_name:'',
-				// 	// 	rm_fh_amount:'',
-				// 	// 	rm_fcc_id:'',
-				// 	// 	rm_fcc_name:'',
-				// 	// 	rm_fcc_amount:'',
-				// 	// 	rm_adj_amount:'',
-				// 	// 	rm_total_amount:'',
+					this.invoice.netPay = this.invoice.late_fine_amt ?
+						Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
+						Number(this.invoice.fee_amount);
 
 
-				// 	// 	netpay:Number(this.invoice.inv_prev_balance),
-				// 	// 	feehead: 'Previous Balance'
-				// 	// });
-				// 	// this.invoiceArrayForm.push(fb);
-				// 	pos++;
-				// }
-				this.invoiceTotal = 0;
-				let arr = [];
-				for (const item of this.invoiceArray) {
-					if (Number(item.head_bal_amount) != 0) {
-					this.INVOICE_ELEMENT_DATA.push({
-						srno: pos,
-						feehead: item.invg_fh_name,
-						feedue: item.invg_fh_amount,
-						concession: item.invg_fcc_amount,
-						adjustment: item.invg_adj_amount,
-						// tslint:disable-next-line: max-line-length
-						// netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-						netpay: Number(item.head_bal_amount)
-					});}
-					// tslint:disable-next-line: max-line-length
-					if (item.head_bal_amount && Number(item.head_bal_amount) != 0 && item.invg_fh_name != 'Previous Received Amt.' ) {
-						var fb = this.fbuild.group({
-							rm_inv_id:item.invg_inv_id,
-							rm_head_type:item.invg_head_type,
-							rm_fm_id:item.invg_fm_id,
-							rm_fh_id:item.invg_fh_id,
-							rm_fh_name:item.invg_fh_name,
-							rm_fh_amount:item.invg_fh_amount,
-							rm_fcc_id:item.invg_fcc_id,
-							rm_fcc_name:item.invg_fcc_name,
-							rm_fcc_amount:item.invg_fcc_amount,
-							rm_adj_amount:item.invg_adj_amount,
-							rm_total_amount:Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
-							// netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
+					if (this.invoice.balance_amt) {
+						console.log("i am here ", this.invoice.balance_amt);
+						
+						this.invoice.balance_amt = Number(this.invoice.balance_amt);
+						this.invoice.netPay += this.invoice.balance_amt;
+						// this.invoice.netPay += Number(this.invoice.balance_amt);
+					}
+					// if (this.invoice.prev_balance) {
+					// 	this.invoice.netPay += Number(this.invoice.prev_balance);
+					// 	this.invoice.balance_amt += Number(this.invoice.prev_balance);
+					// }
+
+					if (this.invoice.netPay < 0) {
+						this.invoice.netPay = 0;
+					}
+
+					
+
+					this.invoiceArray = this.invoice.invoice_bifurcation;
+
+					
+
+					this.feeTransactionForm.patchValue({
+						'ftr_amount': this.invoice.netPay,
+						'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
+					});
+					let pos = 1;
+					
+					// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
+					// 	// const element = {
+					// 	// 	srno: pos,
+					// 	// 	feehead: 'Previous Balance',
+					// 	// 	feedue: Number(this.invoice.inv_prev_balance),
+					// 	// 	concession: 0,
+					// 	// 	adjustment: 0,
+					// 	// 	netpay: Number(this.invoice.inv_prev_balance)
+					// 	// };
+					// 	// this.invoiceTotal += element.netpay;
+					// 	// this.INVOICE_ELEMENT_DATA.push(element);
+					// 	// var fb = this.fbuild.group({	
+					// 	// 	rm_inv_id:'',
+					// 	// 	rm_head_type:'',
+					// 	// 	rm_fm_id:'',
+					// 	// 	rm_fh_id:'',
+					// 	// 	rm_fh_name:'',
+					// 	// 	rm_fh_amount:'',
+					// 	// 	rm_fcc_id:'',
+					// 	// 	rm_fcc_name:'',
+					// 	// 	rm_fcc_amount:'',
+					// 	// 	rm_adj_amount:'',
+					// 	// 	rm_total_amount:'',
+
+
+					// 	// 	netpay:Number(this.invoice.inv_prev_balance),
+					// 	// 	feehead: 'Previous Balance'
+					// 	// });
+					// 	// this.invoiceArrayForm.push(fb);
+					// 	pos++;
+					// }
+					this.invoiceTotal = 0;
+					let arr = [];
+					for (const item of this.invoiceArray) {
+						if (Number(item.head_bal_amount) != 0) {
+						this.INVOICE_ELEMENT_DATA.push({
+							srno: pos,
+							feehead: item.invg_fh_name,
+							feedue: item.invg_fh_amount,
+							concession: item.invg_fcc_amount,
+							adjustment: item.invg_adj_amount,
+							// tslint:disable-next-line: max-line-length
+							// netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 							netpay: Number(item.head_bal_amount)
+						});}
+						// tslint:disable-next-line: max-line-length
+						if (item.head_bal_amount && Number(item.head_bal_amount) != 0 && item.invg_fh_name != 'Previous Received Amt.' ) {
+							var fb = this.fbuild.group({
+								rm_inv_id:item.invg_inv_id,
+								rm_head_type:item.invg_head_type,
+								rm_fm_id:item.invg_fm_id,
+								rm_fh_id:item.invg_fh_id,
+								rm_fh_name:item.invg_fh_name,
+								rm_fh_amount:item.invg_fh_amount,
+								rm_fcc_id:item.invg_fcc_id,
+								rm_fcc_name:item.invg_fcc_name,
+								rm_fcc_amount:item.invg_fcc_amount,
+								rm_adj_amount:item.invg_adj_amount,
+								rm_total_amount:Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
+								// netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
+								netpay: Number(item.head_bal_amount)
+							});
+							this.invoiceArrayForm.push(fb);
+							pos++;
+							this.invoiceTotal += Number(item.head_bal_amount);
+							arr.push(item);
+						}
+						
+						
+						
+						
+						
+					}
+					this.invoiceArray = arr;
+					if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
+						const element = {
+							srno: pos,
+							feehead: 'Fine & Penalties',
+							feedue: Number(this.invoice.inv_fine_amount),
+							concession: 0,
+							adjustment: 0,
+							netpay: Number(this.invoice.inv_fine_amount),
+						};
+						this.invoiceTotal += element.netpay;
+						this.INVOICE_ELEMENT_DATA.push(element);
+						var fb = this.fbuild.group({
+							rm_inv_id:'',
+							rm_head_type:'',
+							rm_fm_id:'',
+							rm_fh_id:'',
+							rm_fh_name:'',
+							rm_fh_amount:'',
+							rm_fcc_id:'',
+							rm_fcc_name:'',
+							rm_fcc_amount:'',
+							rm_adj_amount:'',
+							rm_total_amount:'',						
+							netpay:Number(this.invoice.inv_fine_amount)
 						});
 						this.invoiceArrayForm.push(fb);
-						pos++;
-						this.invoiceTotal += Number(item.head_bal_amount);
-						arr.push(item);
 					}
-					
-					
-					
-					
-					
-				}
-				this.invoiceArray = arr;
-				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
-					const element = {
-						srno: pos,
-						feehead: 'Fine & Penalties',
-						feedue: Number(this.invoice.inv_fine_amount),
-						concession: 0,
-						adjustment: 0,
-						netpay: Number(this.invoice.inv_fine_amount),
-					};
-					this.invoiceTotal += element.netpay;
-					this.INVOICE_ELEMENT_DATA.push(element);
-					var fb = this.fbuild.group({
-						rm_inv_id:'',
-						rm_head_type:'',
-						rm_fm_id:'',
-						rm_fh_id:'',
-						rm_fh_name:'',
-						rm_fh_amount:'',
-						rm_fcc_id:'',
-						rm_fcc_name:'',
-						rm_fcc_amount:'',
-						rm_adj_amount:'',
-						rm_total_amount:'',						
-						netpay:Number(this.invoice.inv_fine_amount)
-					});
-					this.invoiceArrayForm.push(fb);
-				}
 
-				
-				
-				if((this.invoice.netPay - this.invoiceTotal) > 0) {
-					this.INVOICE_ELEMENT_DATA[0].netpay += this.invoice.netPay - this.invoiceTotal;
+					
+					
+					if((this.invoice.netPay - this.invoiceTotal) > 0) {
+						this.INVOICE_ELEMENT_DATA[0].netpay += this.invoice.netPay - this.invoiceTotal;
+					}
+					if((this.invoice.netPay - this.invoiceTotal) < 0) {
+						let catchData = this.invoice.netPay;
+						for(let  i = this.INVOICE_ELEMENT_DATA.length -1; i > 0; i--) {
+							if(this.INVOICE_ELEMENT_DATA[i].netpay > catchData - this.invoiceTotal) {
+								this.INVOICE_ELEMENT_DATA[i].netpay -= (catchData - this.invoiceTotal);
+								break;
+							} else {
+								catchData -= this.INVOICE_ELEMENT_DATA[i].netpay;
+								this.INVOICE_ELEMENT_DATA[i].netpay = 0;
+							}
+						} 
+					}
+					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
+					this.invoiceArrayForm[0].patchValue({
+						netpay: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal),
+						rm_total_amount: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal)
+					})
+					console.log("i am here", this.invoiceArrayForm[0].value, this.invoice.netPay - this.invoiceTotal, this.invoice.netPay , this.invoiceTotal);
+					this.invoiceTotal = this.invoice.netPay;
+					
 				}
-				if((this.invoice.netPay - this.invoiceTotal) < 0) {
-					let catchData = this.invoice.netPay;
-					for(let  i = this.INVOICE_ELEMENT_DATA.length -1; i > 0; i--) {
-						if(this.INVOICE_ELEMENT_DATA[i].netpay > catchData - this.invoiceTotal) {
-							this.INVOICE_ELEMENT_DATA[i].netpay -= (catchData - this.invoiceTotal);
-							break;
-						} else {
-							catchData -= this.INVOICE_ELEMENT_DATA[i].netpay;
-							this.INVOICE_ELEMENT_DATA[i].netpay = 0;
-						}
-					} 
-				}
-				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-				this.invoiceArrayForm[0].patchValue({
-					netpay: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal),
-					rm_total_amount: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal)
-				})
-				console.log("i am here", this.invoiceArrayForm[0].value, this.invoice.netPay - this.invoiceTotal, this.invoice.netPay , this.invoiceTotal);
-				this.invoiceTotal = this.invoice.netPay;
-				
-			}
-		});
+			});
+		}
+			
 	}
 	async getStudentInformation(login_id) {
 		this.bnk_charge = 0;
