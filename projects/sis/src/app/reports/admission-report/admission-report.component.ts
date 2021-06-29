@@ -853,7 +853,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			// this.dataset.push(blankTempObj);
 			this.totalRow = blankTempObj;
 			console.log('dataset  ', this.dataset);
-		} else if (this.admissionReportForm.value.reviewReport === '2' || this.admissionReportForm.value.reviewReport === '3' || this.admissionReportForm.value.reviewReport === '4') {
+		} else if (this.admissionReportForm.value.reviewReport === '2' || this.admissionReportForm.value.reviewReport === '3') {
 			let process_type_name='';
 			let process_type_field_no='';
 			let process_type_field_date='';
@@ -896,6 +896,50 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 				tempObj['em_no'] = this.reportEnrolmentWiseData[i][process_type_field_no]? this.reportEnrolmentWiseData[i][process_type_field_no]: '';
 				tempObj['em_date'] = this.reportEnrolmentWiseData[i][process_type_field_date] ? this.reportEnrolmentWiseData[i][process_type_field_date]: '';
 				tempObj['class_name'] = this.reportEnrolmentWiseData[i]['class_name'] ? this.reportEnrolmentWiseData[i]['class_name']: '';
+				this.dataset.push(tempObj);
+				counter++;
+			}
+	
+			const blankTempObj = {};
+			blankTempObj['id'] = 'footer';
+			blankTempObj['pos'] = 'Grand Total';
+			blankTempObj['au_full_name'] = this.dataset.length;
+			blankTempObj['em_no'] = '';
+			blankTempObj['em_date'] = '';
+			blankTempObj['class_name'] = '';
+			// this.dataset.push(blankTempObj);
+			this.totalRow = blankTempObj;
+			console.log('dataset  ', this.dataset);
+		} else if(this.admissionReportForm.value.reviewReport === '4') {
+			let process_type_name='';
+			let process_type_field_no='';
+			let process_type_field_date='';
+			
+			if (this.admissionReportForm.value.reviewReport === '4'){
+				process_type_name = 'Admn. ';
+				process_type_field_no = 'em_admission_no';
+				process_type_field_date = 'em_admission_date';
+			} 
+			this.columnDefinitions = [
+				{ id: 'pos', name: 'S. No', field: 'pos', sortable: true, filterable: true, resizable: true },
+				{ id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: true },
+				{ id: 'em_no', name: process_type_name+'No', field: 'em_no', sortable: true, filterable: true, resizable: true },
+				{ id: 'em_date', name: process_type_name+'Date', field: 'em_date', sortable: true, filterable: true, resizable: true,
+				formatter: this.checkDateFormatter },
+		 		{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true }	,
+				 { id: 'ces_enrollment_remark', name: 'Remark', field: 'ces_enrollment_remark', sortable: true, filterable: true, resizable: true }	
+				
+			];
+			let counter = 1;
+			for (let i = 0; i < this.reportEnrolmentWiseData.length; i++) {
+				const tempObj = {};
+		  		tempObj['id'] = counter;
+				tempObj['pos'] = counter;
+				tempObj['au_full_name'] = this.reportEnrolmentWiseData[i]['au_full_name'] ? this.reportEnrolmentWiseData[i]['au_full_name'] : '' ;
+				tempObj['em_no'] = this.reportEnrolmentWiseData[i][process_type_field_no]? this.reportEnrolmentWiseData[i][process_type_field_no]: '';
+				tempObj['em_date'] = this.reportEnrolmentWiseData[i][process_type_field_date] ? this.reportEnrolmentWiseData[i][process_type_field_date]: '';
+				tempObj['class_name'] = this.reportEnrolmentWiseData[i]['class_name'] ? this.reportEnrolmentWiseData[i]['class_name'] + '-' + this.reportEnrolmentWiseData[i]['sec_name'] : '';
+				tempObj['ces_enrollment_remark'] = this.reportEnrolmentWiseData[i]['ces_enrollment_remark']? this.reportEnrolmentWiseData[i]['ces_enrollment_remark']: '';
 				this.dataset.push(tempObj);
 				counter++;
 			}
