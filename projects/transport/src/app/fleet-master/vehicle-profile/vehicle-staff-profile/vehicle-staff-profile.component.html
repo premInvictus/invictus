@@ -1,0 +1,98 @@
+<div class="row" style="margin-bottom: 10px;">
+  <div class="col-4">
+    <fieldset class="col-12 fieldset_invoice">
+      <div class="col-12">
+        <div class=" student-img ">
+          <div class="student-pic--parent text-center">
+            <img class="parent-pic--imgone parent-pic__circle sis-parent-pic-size2" style="border-radius: 50%;"
+              [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + driver_au_profileimage + '&h=150&w=150'"
+              onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=150&w=150'" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 text-center">
+        <span class="font-size-14 font-light">Driver Name</span><br>
+        <span class="font-size-16 font-bold">{{driver_det.user_det.au_full_name ? 
+              (driver_det.user_det.au_full_name | titlecase): '-'}}</span>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-4 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact No </span><br>
+            <span class="font-size-16 font-bold">{{driver_det.user_det.au_mobile ? (driver_det.user_det.au_mobile) : '-'}}</span>
+          </div>
+          <div class="col-4 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">License No </span><br>
+            <span class="font-size-16 font-bold">{{driver_det.licence_no ? (driver_det.licence_no) : '-'}}</span>
+          </div>
+          <div class="col-4 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Valid Upto </span><br>
+            <span class="font-size-16 font-bold">{{driver_det.valid_upto ? (driver_det.valid_upto | date:'d-MMM-y') : '-'}}</span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="col-4">
+    <fieldset class="col-12 fieldset_invoice">
+      <div class="col-12">
+        <div class=" student-img ">
+          <div class="student-pic--parent text-center">
+            <img class="parent-pic--imgone parent-pic__circle sis-parent-pic-size2" style="border-radius: 50%;"
+              [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + conductor_au_profileimage + '&h=150&w=150'"
+              onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=150&w=150'" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 text-center">
+        <span class="font-size-14 font-light">Conductor Name</span><br>
+        <span class="font-size-16 font-bold">{{conductor_det.user_det.au_full_name ? 
+              (conductor_det.user_det.au_full_name | titlecase): '-'}}</span>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact No </span><br>
+            <span class="font-size-16 font-bold">{{conductor_det.user_det.au_mobile ? (conductor_det.user_det.au_mobile) : '-'}}</span>
+          </div>
+          <div class="col-6 text-right tab-remove-padding">
+            <span class="font-size-14 font-light">License No </span><br>
+            <span class="font-size-16 font-bold">{{conductor_det.licence_no ? (conductor_det.licence_no) : '-'}}</span>
+          </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="col-4">
+    <fieldset class="col-12 fieldset_invoice">
+      <div class="col-12">
+        <div class=" student-img ">
+          <div class="student-pic--parent text-center">
+            <img class="parent-pic--imgone parent-pic__circle sis-parent-pic-size2" style="border-radius: 50%;"
+              [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + supervisor_au_profileimage + '&h=150&w=150'"
+              onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=150&w=150'" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 text-center">
+        <span class="font-size-14 font-light">Supervisor Name</span><br>
+        <span class="font-size-16 font-bold">{{supervisor_det.user_det.au_full_name ? 
+              (supervisor_det.user_det.au_full_name | titlecase): '-'}}</span>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact No </span><br>
+            <span class="font-size-16 font-bold">{{supervisor_det.user_det.au_mobile ? (supervisor_det.user_det.au_mobile) : '-'}}</span>
+          </div>
+          <div class="col-6 text-right tab-remove-padding">
+            <span class="font-size-14 font-light">License No </span><br>
+            <span class="font-size-16 font-bold">{{supervisor_det.licence_no ? (supervisor_det.licence_no) : '-'}}</span>
+          </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>

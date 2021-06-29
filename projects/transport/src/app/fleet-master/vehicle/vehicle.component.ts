@@ -16,7 +16,7 @@ export class VehicleComponent implements OnInit {
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
   displayedColumns: string[] = ['bus_number', 'bus_details', 'registration_no', 'registration_valid_upto','permit_valid_upto',
-  'insurance_valid_upto','puc_valid_upto','insurance_provider','insurance_no','chasis_no','engine_no','device_no','action'];
+  'insurance_valid_upto','puc_valid_upto','insurance_provider','insurance_no','chasis_no','engine_no','device_no','driver_id', 'conductor_id', 'supervisor_id','action'];
   dataSource = new MatTableDataSource<Element>();
   constructor(
     private fbuild: FormBuilder,
@@ -77,6 +77,9 @@ export class VehicleComponent implements OnInit {
           tempelement.device_no = element.device_no ;
           tempelement.documents = element.documents,
           tempelement.status = element.status ;
+          tempelement.driver_id = element.driver.user_det ? element.driver.user_det.au_full_name:'',
+          tempelement.conductor_id = element.conductor.user_det ? element.conductor.user_det.au_full_name:'',
+          tempelement.supervisor_id = element.supervisor.user_det ? element.supervisor.user_det.au_full_name:'',
           tempelement.action = element;   
           this.ELEMENT_DATA.push(tempelement) ;    
         });

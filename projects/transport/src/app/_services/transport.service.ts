@@ -116,4 +116,20 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/transportroutes/getStoppagesPerRoute', value);
 	}
+	insertTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/insert', value);
+    }
+    updateTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/update', value);
+    }
+    getAllTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/getAll', value);
+    }
+    getTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/transport-setup/get/'+value.id);
+	}
 }

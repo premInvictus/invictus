@@ -1,4 +1,4 @@
-<div class="row" *ngIf="ELEMENT_DATA.length > 0">
+<div class="row">
     <div class="col-12 remove-col-padding log-heading">
       Fuel Log 
     </div>
@@ -60,5 +60,6 @@
         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
         </tr>
       </table>
+      <div class="nc" *ngIf="ELEMENT_DATA.length === 0">No records found</div>
     </div>
   </div>

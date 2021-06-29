@@ -9,7 +9,7 @@ import { FleetDashboardComponent } from './fleet-dashboard/fleet-dashboard.compo
 import { RemindersComponent } from './reminders/reminders.component';
 import { DeviceMappingComponent } from './device-mapping/device-mapping.component';
 import { TyreLogsComponent } from './tyre-logs/tyre-logs.component';
-import { ServiceLogItemsComponent } from './service-log-items/service-log-items.component';
+// import { ServiceLogItemsComponent } from './service-log-items/service-log-items.component';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import { ServiceLogItemsComponent } from './service-log-items/service-log-items.
     TransportSharedModule,
     LoadingModule
   ],
-  declarations: [ServiceLogsComponent, FuelLogsComponent, FleetDashboardComponent, RemindersComponent, DeviceMappingComponent, TyreLogsComponent, ServiceLogItemsComponent],
-  entryComponents:[ServiceLogItemsComponent]
+  declarations: [ServiceLogsComponent, FuelLogsComponent, FleetDashboardComponent, RemindersComponent, DeviceMappingComponent, TyreLogsComponent],
+  entryComponents:[]
 })
 export class TransportAuxillariesModule { }

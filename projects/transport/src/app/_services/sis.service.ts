@@ -236,8 +236,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/wing/getAll', value);
 	}
-	getCategoryOne(value) {
+	getTransportStudent(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiHRUrl + '/category-one/getAll', value);
+		return this.http.post(environment.apiSisUrl + '/transport/getTransportStudent', value);
 	}
 }
