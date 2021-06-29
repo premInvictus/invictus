@@ -1128,9 +1128,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 			}
 		}
-		this.invoiceArrayForm[0].patchValue({
-			netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)
-		});
+		if(this.invoiceArrayForm.length > 0){
+			this.invoiceArrayForm[0].patchValue({
+				netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)
+			});
+		}
+		
 		this.feeTransactionForm.patchValue({
 			ftr_amount:val
 		}); 
