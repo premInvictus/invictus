@@ -132,4 +132,8 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.get(environment.apiTransportUrl + '/transport-setup/get/'+value.id);
 	}
+	getTransportStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transport/getTransportStudent', value);
+	}
 }

@@ -4,6 +4,7 @@ import { AxiomService, SisService, SmartService, CommonAPIService,TransportServi
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './element.model';
 import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-attendance',
@@ -14,8 +15,7 @@ export class AttendanceComponent implements OnInit {
 
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
-  displayedColumns: string[] = ['au_full_name', 'au_mobile', 'whatsapp_no', 'au_dob','valid_upto',
-  'au_email','batch_licence_no','driver_id','licence_type','licence_no','action'];
+  displayedColumns: string[] = ['select','au_admission_no','au_full_name', 'class_name','action'];
   dataSource = new MatTableDataSource<Element>();
   bus_arr:any=[];
   route_arr:any=[];
@@ -23,6 +23,7 @@ export class AttendanceComponent implements OnInit {
   type_arr:any=[];
   transportstudent_arr:any=[];
   paramform:FormGroup;
+  selection = new SelectionModel<Element>(true, []);
   constructor(
     private fbuild: FormBuilder,
     private transportService: TransportService,
@@ -33,7 +34,7 @@ export class AttendanceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getAllTransportStaff();
+    // this.getAllTransportStaff();
     this.getAllTransportVehicle();
     this.getAllTrip();
     this.getAllType();
@@ -47,16 +48,52 @@ export class AttendanceComponent implements OnInit {
       type_id:''
     })
   }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: Element): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   getTransportStudent(){
     this.transportstudent_arr = [];
+    this.ELEMENT_DATA = [];
+    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const param:any = {};
     param.routeId = this.paramform.value.route_id;
-    this.sisService.getTransportStudent(param).subscribe((result: any) => {
+    this.transportService.getTransportStudent(param).subscribe((result: any) => {
 			if (result && result.status == 'ok') {
         this.transportstudent_arr = result.data;
+        this.transportstudent_arr.forEach((element,index) => {
+          const tempelement:any = {};
+          tempelement.position = index + 1;
+          tempelement.au_full_name=element.au_full_name;
+          tempelement.class_name=element.sec_name ? element.class_name + '-' + element.sec_name: element.class_name;
+          tempelement.au_admission_no=element.au_admission_no;
+          tempelement.action = element;   
+          this.ELEMENT_DATA.push(tempelement) ;    
+        });
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.tableDivFlag = true;
       }
     });
   }
@@ -94,37 +131,26 @@ export class AttendanceComponent implements OnInit {
       }
     });
   }
-  getAllTransportStaff(){
-    this.ELEMENT_DATA = [];
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    this.transportService.getAllTransportStaff({}).subscribe((result: any) => {
-      if(result && result.length > 0) {
-        const temp = result;
-        temp.forEach(element => {
-          const tempelement:any = {};
-          tempelement.au_profileimage=element.users_det ? element.users_det.au_profileimage : '';
-          tempelement.au_full_name=element.users_det ? element.users_det.au_full_name : '';
-          tempelement.au_mobile=element.users_det ? element.users_det.au_mobile : '';
-          tempelement.au_email=element.users_det ? element.users_det.au_email : '';
-          tempelement.au_dob=element.users_det ? element.users_det.au_dob : '';
+  // getAllTransportStaff(){
+  //   this.ELEMENT_DATA = [];
+  //   this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  //   this.transportService.getAllTransportStaff({}).subscribe((result: any) => {
+  //     if(result && result.length > 0) {
+  //       const temp = result;
+  //       temp.forEach((element,index) => {
+  //         const tempelement:any = {};
+  //         tempelement.position = index + 1;
+  //         tempelement.au_full_name=element.au_full_name;
+  //         tempelement.class_name=element.sec_name ? element.class_name + '-' + element.sec_name: element.class_name;
+  //         tempelement.au_admission_no=element.au_admission_no;
+  //         tempelement.action = element;   
+  //         this.ELEMENT_DATA.push(tempelement) ;    
+  //       });
+  //       this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  //       this.tableDivFlag = true;
+  //     }
+  //   })
 
-          tempelement.ts_au_login_id=element.users_det ? element.users_det.ts_au_login_id : '';
-          tempelement.p_address=element.p_address;
-          tempelement.whatsapp_no=element.whatsapp_no;
-          tempelement.batch_licence_no=element.batch_licence_no;
-          tempelement.driver_id=element.driver_id;
-          tempelement.licence_type=element.licence_type;
-          tempelement.licence_no=element.licence_no;
-          tempelement.valid_upto=element.valid_upto;
-          tempelement.status=element.status;  
-          tempelement.action = element;   
-          this.ELEMENT_DATA.push(tempelement) ;    
-        });
-        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        this.tableDivFlag = true;
-      }
-    })
-
-  }
+  // }
 
 }

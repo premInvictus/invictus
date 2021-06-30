@@ -79,50 +79,38 @@
           <div class="row remove-top-margin">
             <div class="col-12">
               <table mat-table [dataSource]="dataSource" class="table-100 text-center">
-
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                  [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)"
+                                  [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
                 <ng-container matColumnDef="au_full_name">
-                  <th width="150" mat-header-cell *matHeaderCellDef> Staff Name </th>
+                  <th width="150" mat-header-cell *matHeaderCellDef> Student Name </th>
                   <td mat-cell *matCellDef="let element"> {{element.au_full_name}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="au_mobile">
-                  <th width="150" mat-header-cell *matHeaderCellDef>Mobile No. </th>
-                  <td mat-cell *matCellDef="let element" class="text-left"> {{element.au_mobile | titlecase}} </td>
+                <ng-container matColumnDef="class_name">
+                  <th width="150" mat-header-cell *matHeaderCellDef>Class </th>
+                  <td mat-cell *matCellDef="let element" class="text-left"> {{element.class_name | titlecase}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="whatsapp_no">
-                  <th width="100" mat-header-cell *matHeaderCellDef> whatsapp No. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.whatsapp_no}} </td>
+                <ng-container matColumnDef="au_admission_no">
+                  <th width="100" mat-header-cell *matHeaderCellDef> Adm No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.au_admission_no}} </td>
                 </ng-container>
-                <ng-container matColumnDef="au_dob">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> DOB </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.au_dob | date:'d-MMM-y'}} </td>
-                </ng-container>
-                <ng-container matColumnDef="valid_upto">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Valid Upto </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.valid_upto | date:'d-MMM-y'}}
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="au_email">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Email Id </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.au_email}} </td>
-                </ng-container>
-                <ng-container matColumnDef="batch_licence_no">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Batch Licende No. </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.batch_licence_no}} </td>
-                </ng-container>
-                <ng-container matColumnDef="driver_id">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Driver Id </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.driver_id}} </td>
-                </ng-container>
-                <ng-container matColumnDef="licence_type">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Licence Type </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.licence_type}} </td>
-                </ng-container>
-                <ng-container matColumnDef="licence_no">
-                  <th class="text-left" mat-header-cell *matHeaderCellDef> Licence No. </th>
-                  <td class="text-left" mat-cell *matCellDef="let element"> {{element.licence_no}} </td>
-                </ng-container>
+                
+                
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef> Action </th>
