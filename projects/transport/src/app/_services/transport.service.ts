@@ -136,4 +136,20 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/transport/getTransportStudent', value);
 	}
+	insertTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/insert', value);
+    }
+    updateTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/update', value);
+    }
+    getAllTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/getAll', value);
+    }
+    getTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/transport-attendance/get/'+value.id);
+	}
 }
