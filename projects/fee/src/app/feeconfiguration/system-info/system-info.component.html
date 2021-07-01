@@ -47,8 +47,8 @@
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Enter Account Number</mat-label>
-                          <input matInput placeholder="Enter Account Number..."  type="text" (keypress)="numberOnly($event)"
-                            formControlName="bnk_account_no">
+                          <input matInput placeholder="Enter Account Number..." type="text"
+                            (keypress)="numberOnly($event)" formControlName="bnk_account_no">
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Enter IFSC code</mat-label>
@@ -57,16 +57,44 @@
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Bank For Module</mat-label>
-                          <mat-select placeholder="Bank For Module" multiple formControlName="bnk_module_list">                            
+                          <mat-select placeholder="Bank For Module" multiple formControlName="bnk_module_list">
                             <mat-option value="fees">Fees</mat-option>
                             <mat-option value="other">Other</mat-option>
                           </mat-select>
                         </mat-form-field>
-                        <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>Enter Bank Charge</mat-label>
-                          <input matInput placeholder="Enter Bank Charge..."  type="text" (keypress)="numberOnly($event)"
-                            formControlName="bnk_charge">
-                        </mat-form-field>
+                        <ng-container *ngFor="let eachform of bnkchargeForm; let i=index;">
+                          <form [formGroup]="eachform.formGroup">
+                            <div class="row" style="padding-right: 0px; padding-left: 0px;">
+                              <div class="col-3">
+                                <mat-form-field class="form-field" appearance="outline">
+                                  <mat-label>start</mat-label>
+                                  <input matInput placeholder="Start" type="text"
+                                    (keypress)="numberOnly($event)" formControlName="bnk_charge_start" required>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-3">
+                                <mat-form-field class="form-field" appearance="outline">
+                                  <mat-label>End</mat-label>
+                                  <input matInput placeholder="End" type="text" (keypress)="numberOnly($event)"
+                                    formControlName="bnk_charge_end" required>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-3">
+                                <mat-form-field class="form-field" appearance="outline">
+                                  <mat-label>Enter Bank Charge</mat-label>
+                                  <input matInput placeholder="Enter Bank Charge..." type="text"
+                                    (keypress)="numberOnly($event)" formControlName="bnk_charge" required>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-3" style="padding-right: 0px; padding-left: 0px; margin-top: 15px">
+                                <i class="fa fa-plus " data-toggle="tooltip" data-placement="top" style="color: green; padding: 0 5px;"
+                                  matTooltip="Add" aria-hidden="true" (click)="addBnkChargeForm()"></i>
+                                <i *ngIf="i != 0" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                  matTooltip="Delete" aria-hidden="true" (click)="removeBnkChargeForm(i)"></i>
+                              </div>
+                            </div>
+                          </form>
+                        </ng-container>
                       </form>
                     </div>
                     <div *ngIf="configValue < 2">
@@ -136,8 +164,8 @@
                                           {{ item.alias }}
                                         </td>
                                       </ng-container>
-                                       <!-- Class Column -->
-                                       <ng-container matColumnDef="branch">
+                                      <!-- Class Column -->
+                                      <ng-container matColumnDef="branch">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           {{secondHeaderArray[1]}}
                                         </th>
@@ -145,7 +173,7 @@
                                           {{ item.branch }}
                                         </td>
                                       </ng-container>
-                                      <ng-container matColumnDef="bnk_module_list" >
+                                      <ng-container matColumnDef="bnk_module_list">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           {{secondHeaderArray[2]}}
                                         </th>
@@ -176,7 +204,7 @@
                                           Bank Charge
                                         </th>
                                         <td mat-cell *matCellDef="let item">
-                                          {{ item.bnk_charge }}%
+                                          {{ item.bnk_charge }}
                                         </td>
                                       </ng-container>
                                       <!-- Section Column -->
@@ -227,11 +255,12 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-6">
-                                      <mat-radio-group formControlName="spt_print_format" (change)="enableHeaderFooter($event)">
+                                      <mat-radio-group formControlName="spt_print_format"
+                                        (change)="enableHeaderFooter($event)">
                                         <mat-radio-button value="1">Pre-Printed</mat-radio-button>
                                         <mat-radio-button class="margin-left-5" value="2">Stationary</mat-radio-button>
                                       </mat-radio-group>
-                                    </div>                                   
+                                    </div>
                                   </div>
                                 </div>
                                 <div class="col-lg-4 col-mobile-view-add-ques">
@@ -242,7 +271,8 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-6">
-                                      <mat-radio-group formControlName="spt_print_format_receipt" (change)="enableReceiptHeaderFooter($event)">
+                                      <mat-radio-group formControlName="spt_print_format_receipt"
+                                        (change)="enableReceiptHeaderFooter($event)">
                                         <mat-radio-button value="1">Pre-Printed</mat-radio-button>
                                         <mat-radio-button class="margin-left-5" value="2">Stationary</mat-radio-button>
                                       </mat-radio-group>
@@ -289,7 +319,8 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-12">
-                                      <input type="color" matInput placeholder="Invoice Text Color" formControlName="spt_invoice_text_color">
+                                      <input type="color" matInput placeholder="Invoice Text Color"
+                                        formControlName="spt_invoice_text_color">
                                     </div>
                                   </div>
                                 </div>
@@ -301,7 +332,8 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-12">
-                                      <input type="color" matInput placeholder="Receipt Text Color" formControlName="spt_receipt_text_color">
+                                      <input type="color" matInput placeholder="Receipt Text Color"
+                                        formControlName="spt_receipt_text_color">
                                     </div>
                                   </div>
                                 </div>
@@ -341,7 +373,8 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-12">
-                                      <ckeditor [config]="ckeConfig" formControlName="spt_receipt_header_template"></ckeditor>
+                                      <ckeditor [config]="ckeConfig" formControlName="spt_receipt_header_template">
+                                      </ckeditor>
                                     </div>
                                   </div>
                                 </div>
@@ -353,7 +386,8 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-12">
-                                      <ckeditor [config]="ckeConfig" formControlName="spt_receipt_footer_template"></ckeditor>
+                                      <ckeditor [config]="ckeConfig" formControlName="spt_receipt_footer_template">
+                                      </ckeditor>
                                     </div>
                                   </div>
                                 </div>
@@ -377,11 +411,11 @@
                 </div>
               </div>
             </div>
-            </div>
           </div>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
+</div>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteConfirm($event)"
   (deleteCancel)="deleteCancel()"></app-delete-modal>

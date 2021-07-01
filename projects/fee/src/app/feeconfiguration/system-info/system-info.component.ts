@@ -35,6 +35,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	settings: any = {};
 	allBanks: any[] = [];
 	ckeConfig: any = {};
+	bnkchargeForm:any[] = [];
 	constructor(private fbuild: FormBuilder,
 		public feeService: FeeService,
 		private commonService: CommonAPIService) { }
@@ -57,6 +58,33 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			],
 			removeDialogTabs: 'image:advanced;image:Link'
 		};
+	}
+	addBnkChargeForm(item=null){
+		if(item){
+			this.bnkchargeForm.push({
+				formGroup:this.fbuild.group({
+					bnk_charge_start:item.bnk_charge_start,
+					bnk_charge_end:item.bnk_charge_end,
+					bnk_charge:item.bnk_charge
+				})
+			})
+		} else {
+			this.bnkchargeForm.push({
+				formGroup:this.fbuild.group({
+					bnk_charge_start:'',
+					bnk_charge_end:'',
+					bnk_charge:''
+				})
+			})
+		}
+		
+	}
+	removeBnkChargeForm(i){
+		this.bnkchargeForm.splice(i,1);
+	}
+	resetBnkChargeForm(){
+		this.bnkchargeForm = [];
+		this.addBnkChargeForm();
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -90,6 +118,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			'spt_invoice_text_color': '',
 			'spt_receipt_text_color': ''
 		});
+		this.addBnkChargeForm();
 	}
 	loadConfiguration($event) {
 		this.configFlag = false;
@@ -139,6 +168,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			if (result.status === 'ok') {
 				let pos = 1;
 				for (const item of result.data) {
+					let bnk_charge_arr = [];
+					let bnk_charge = JSON.parse(item.bnk_charge);
+					if(bnk_charge && bnk_charge.length > 0){
+						bnk_charge.forEach(element => {
+							bnk_charge_arr.push(element.bnk_charge_start + '-'+element.bnk_charge_end+'('+element.bnk_charge+'%)');
+						});						
+					}
 					that.CONFIG_ELEMENT_DATA.push({
 						position: pos,
 						name: item.bank_name,
@@ -147,7 +183,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						bnk_module_list: item.bnk_module_list,						
 						column1: item.bnk_account_no,
 						column2: item.bnk_ifsc,
-						bnk_charge:item.bnk_charge,
+						bnk_charge:bnk_charge_arr.join(', '),
 						action: item
 					});
 					pos++;
@@ -161,6 +197,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 	resetForm(value) {
 		this.formGroupArray[value - 1].formGroup.reset();
+		this.resetBnkChargeForm();
 	}
 	addConfiguration(value) {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
@@ -185,9 +222,17 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				bnk_module_list:value.bnk_module_list ? (value.bnk_module_list.split(",")) : [],
 				bnk_account_no: value.bnk_account_no,
 				bnk_ifsc: value.bnk_ifsc,
-				bnk_charge:value.bnk_charge,
 				bnk_status: value.bnk_status
 			});
+			this.bnkchargeForm = [];
+			const bnk_charge = JSON.parse(value.bnk_charge);
+			if(bnk_charge && bnk_charge.length > 0){
+				bnk_charge.forEach(element => {
+					this.addBnkChargeForm(element);
+				});
+			} else {
+				this.addBnkChargeForm();
+			}
 		}
 	}
 	updateConfiguration(value) {
@@ -214,6 +259,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		});
 	}
 	addEntry(data, serviceName, next) {
+		if (Number(this.configValue) === 1) {
+			data['bnk_charge'] = [];
+			this.bnkchargeForm.forEach(element => {
+				if(element.formGroup.valid){
+					data['bnk_charge'].push(element.formGroup.value)
+				}
+			});
+			data['bnk_charge'] = JSON.stringify(data['bnk_charge']);
+		}
 		this.feeService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
@@ -223,6 +277,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		});
 	}
 	updateEntry(data, serviceName, next) {
+		if (Number(this.configValue) === 1) {
+			data['bnk_charge'] = [];
+			this.bnkchargeForm.forEach(element => {
+				if(element.formGroup.valid){
+					data['bnk_charge'].push(element.formGroup.value)
+				}
+			});
+			data['bnk_charge'] = JSON.stringify(data['bnk_charge']);
+		}
 		this.feeService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
