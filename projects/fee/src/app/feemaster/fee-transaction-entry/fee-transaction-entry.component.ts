@@ -124,8 +124,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 	}
 	addBankCharge(event){
-		this.bnk_charge = 0;
-		this.bnk_charge_per = 0;
+		this.removeBankCharge();
 		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == event.value);
 			if(bnk){
