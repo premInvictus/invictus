@@ -47,6 +47,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	walletProcess: any[]= ['deposit','withdrawal'];
 	opening_balance_paid_status = 0;
 	bnk_charge =  0;
+	bnk_charge_per = 0;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -123,16 +124,28 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 	}
 	addBankCharge(event){
+		this.bnk_charge = 0;
+		this.bnk_charge_per = 0;
 		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == event.value);
 			if(bnk){
-				this.bnk_charge = this.invoice.netPay * bnk.bnk_charge / 100;
+				const bnk_charge = JSON.parse(bnk.bnk_charge);
+				let bnkcharge = 0;
+				if(bnk_charge && bnk_charge.length > 0){
+					for (let i = 0; i < bnk_charge.length; i++) {
+						const element = bnk_charge[i];
+						if(this.invoice.netPay >= element.bnk_charge_start && this.invoice.netPay <= element.bnk_charge_end) {
+							bnkcharge = element.bnk_charge;
+							break;
+						}
+					}
+				}
+				this.bnk_charge = this.invoice.netPay * bnkcharge / 100;
 				this.bnk_charge = Math.round(this.bnk_charge);
+				this.bnk_charge_per = bnkcharge;
 			} else {
 				this.removeBankCharge();
 			}
-		} else {
-			this.bnk_charge = 0;
 		}
 		this.setBankCharge(this.bnk_charge)
 		console.log(this.bnk_charge);
@@ -151,6 +164,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 		this.invoiceTotal = this.invoice.netPay;
 		this.bnk_charge = 0;
+		this.bnk_charge_per = 0;
 	}
 	buildForm() {
 		this.feeTransactionForm = this.fbuild.group({
@@ -732,6 +746,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					inputjson.opening_balance_transaction =  false
 				}
 				inputjson.ftr_bnk_charge =  Math.round(this.bnk_charge);
+				inputjson.ftr_bnk_charge_per =  Math.round(this.bnk_charge_per);
 				inputjson.ftr_amount =  this.feeTransactionForm.value.ftr_amount - inputjson.ftr_bnk_charge;
 				console.log('inputjson-->', inputjson);
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
@@ -1096,19 +1111,28 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	changeValue(val) {
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
 		let changeValue = 0;
+		this.bnk_charge = 0;
+		this.bnk_charge_per = 0;
 		console.log("----------------------------------------", val);
 		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == this.feeTransactionForm.value.ftr_bnk_id);
 			console.log('bnk',bnk);
 			if(bnk){
-				bnk.bnk_charge = bnk.bnk_charge ? bnk.bnk_charge : 0;
-				console.log('bnk.bnk_charge',bnk.bnk_charge);
-				this.bnk_charge = ((val * bnk.bnk_charge)/(100 + parseInt(bnk.bnk_charge)))
+				const bnk_charge = JSON.parse(bnk.bnk_charge);
+				let bnkcharge = 0;
+				if(bnk_charge && bnk_charge.length > 0){
+					for (let i = 0; i < bnk_charge.length; i++) {
+						const element = bnk_charge[i];
+						if(val >= element.bnk_charge_start && val <= element.bnk_charge_end) {
+							bnkcharge = element.bnk_charge;
+						}
+					}
+				}
+				this.bnk_charge = ((val * bnkcharge)/(100 + bnkcharge));
+				this.bnk_charge_per = bnkcharge;
 				// this.invoice.netPay = this.bnk_charge;
 				// this.invoiceTotal = this.invoice.netPay;
-			} else {
-				this.bnk_charge = 0;
-			}	
+			}
 			this.bnk_charge = Math.round(this.bnk_charge);
 			console.log('bnk_charge',this.bnk_charge);		
 		} else {

@@ -3595,8 +3595,8 @@ export class OutstandingReportComponent implements OnInit {
 														repoArray[Number(keys)]['rpt_id'];
 													obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 														(Number(keys) + 1);
-													obj['stu_admission_no'] = repoArray[Number(keys)]['login_id'] ?
-														repoArray[Number(keys)]['login_id'] : '-';
+													obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+														repoArray[Number(keys)]['stu_admission_no'] : '-';
 													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
 														repoArray[Number(keys)]['school_prefix'] : '-';
 													obj['login_id'] = repoArray[Number(keys)]['login_id'] ?

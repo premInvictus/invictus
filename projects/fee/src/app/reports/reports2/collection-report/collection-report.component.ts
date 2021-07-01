@@ -2669,6 +2669,17 @@ export class CollectionReportComponent implements OnInit {
 								formatter: this.checkFeeFormatter,
 								type: FieldType.number,
 								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
+								id: 'ftr_bnk_charge_per', name: 'Bank Charge(%)', field: 'ftr_bnk_charge_per',
+								filterable: true,
+								cssClass: 'amount-report-fee',
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								type: FieldType.number,
+								groupTotalsFormatter: this.sumTotalsFormatter
 							}
 						];
 						if (this.reportFilterForm.value.school_branch.length > 1) {
@@ -2714,6 +2725,7 @@ export class CollectionReportComponent implements OnInit {
 							obj['invoice_created_date'] = element.ftr_transaction_date;
 							obj['receipt_no'] = element.ftr_rpt_no;
 							obj['ftr_bnk_charge'] = element.ftr_bnk_charge;
+							obj['ftr_bnk_charge_per'] = element.ftr_bnk_charge_per ? element.ftr_bnk_charge_per : '';
 							obj['ftr_amount'] = element.ftr_amount;
 							this.dataset.push(obj)
 						}
@@ -2727,7 +2739,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['ftr_amount'] = '';
 						obj3['invoice_created_date'] = '';
 						obj3['ftr_bnk_charge'] = this.dataset.map(e => e.ftr_bnk_charge ? parseInt(e.ftr_bnk_charge) : 0).reduce((acc, value) => acc + value, 0);
-
+						obj3['ftr_bnk_charge_per'] = '';
 						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('ftr_bnk_charge'));
 						if (this.dataset.length <= 5) {
@@ -4180,7 +4192,7 @@ export class CollectionReportComponent implements OnInit {
 		return '';
 	}
 	checkFeeFormatter(row, cell, value, columnDef, dataContext) {
-		if (value === 0) {
+		if (value === 0 || value === '0') {
 			return '-';
 		} else {
 			if (value > 0) {
@@ -4909,6 +4921,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_bnk_charge_per'] = '';
 						obj3['ftr_amount'] = '';
 					}
 					// for (key in obj3) {
@@ -5173,6 +5186,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_bnk_charge_per'] = '';
 						obj3['ftr_amount'] = '';
 					}
 					worksheet.addRow(obj3);
@@ -6136,6 +6150,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_bnk_charge_per'] = '';
 						obj3['ftr_amount'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
@@ -6389,6 +6404,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['ftr_bnk_charge'] = groupItem.rows.map(t => parseInt(t['ftr_bnk_charge'])).reduce((acc, val) => acc + val, 0);
+						obj3['ftr_bnk_charge_per'] = '';
 						obj3['ftr_amount'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
