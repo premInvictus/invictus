@@ -1096,7 +1096,6 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	changeValue(val) {
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
 		let changeValue = 0;
-		console.log("----------------------------------------", val);
 		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == this.feeTransactionForm.value.ftr_bnk_id);
 			console.log('bnk',bnk);
@@ -1114,13 +1113,23 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		} else {
 			this.removeBankCharge();
 		}
+		this.invoiceArrayForm.filter(item => {
+			
+			if (item.value.rm_fh_name === '' && item.value.netpay <= val) {
+				changeValue += item.value.netpay
+			} else if(item.value.rm_fh_name === '' && item.value.netpay > val) {
+				changeValue += val;
+			}
+		});
+		
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
-			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
+			
+			if(this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
 				});
 				changeValue +=this.invoiceArray[i].head_bal_amount;
-			} else if (this.invoiceArray[i].head_bal_amount > val - changeValue) {
+			} else if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount > val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: val - changeValue
 				});
