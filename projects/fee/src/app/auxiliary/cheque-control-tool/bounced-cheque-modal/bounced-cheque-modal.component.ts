@@ -71,9 +71,11 @@ export class BouncedChequeModalComponent implements OnInit {
 		}
 	}
 	buildForm() {
+		console.log("i am here", this.data.ftr_deposit_bnk_id);
+		
 		this.bouncedForm = this.fbuild.group({
 			'fcc_id': this.data.fcc_id ? this.data.fcc_id : '',
-			'ftr_deposit_bnk_id': this.data.ftr_deposit_bnk_id ? this.data.ftr_deposit_bnk_id : '',
+			'ftr_deposit_bnk_id': this.data.bank_id ? this.data.bank_id : '',
 			'fcc_deposite_date': this.data.fcc_deposite_date ? this.data.fcc_deposite_date : '',
 			'fcc_ftr_id': this.data.fee_transaction_id ? this.data.fee_transaction_id : '',
 			'fcc_dishonor_date': this.data.dishonor_date ? this.data.dishonor_date : '',
@@ -118,6 +120,8 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.feeService.getBanks({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.allBanks = result.data;
+				console.log("i am here", this.allBanks);
+				
 			}
 		});
 		
@@ -126,6 +130,7 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.dialogRef.close({ status: '0' });
 	}
 	submit(event) {
+		
 		if (this.bouncedForm.value.fcc_status === 'd') {
 			if (this.bouncedForm.value.fcc_deposite_date && this.bouncedForm.value.fcc_remarks
 				&& this.bouncedForm.value.ftr_deposit_bnk_id) {
