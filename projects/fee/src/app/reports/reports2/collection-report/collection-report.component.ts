@@ -283,7 +283,6 @@ export class CollectionReportComponent implements OnInit {
 								this.schoolBranchArray.push(data.data[i]);
 							}
 						}
-						console.log('userSchoolMappedData', this.schoolBranchArray);
 					}
 				})
 			}
@@ -323,7 +322,6 @@ export class CollectionReportComponent implements OnInit {
 	}
 	buildForm() {
 		let tempArray = [];
-		console.log('this.currentUser', this.currentUser)
 		tempArray.push(this.currentUser.Prefix);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
@@ -366,7 +364,7 @@ export class CollectionReportComponent implements OnInit {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class') {
 				grid.onSort.subscribe((e, args) => {
-					console.log('in, args', args);
+					// console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
@@ -775,7 +773,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 								// console.log(repoArray[Number(keys)]['stu_admission_no']);
 								//console.log(repoArray[Number(keys)], repoArray[Number(keys)]);
-								console.log('commonHeadsArray--', commonHeadsArray);
+								// console.log('commonHeadsArray--', commonHeadsArray);
 								commonHeadsArray.sort(function (a, b) { return a.fh_order - b.fh_order; });
 								for (const titem of commonHeadsArray) {
 
@@ -881,7 +879,7 @@ export class CollectionReportComponent implements OnInit {
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-												console.log('in opening balance');
+												// console.log('in opening balance');
 												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											}
@@ -916,7 +914,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 
 							} else {
-								console.log('in add');
+								// console.log('in add');
 								if (repoArray[Number(keys)]['stu_admission_no']) {
 									let tot = 0;
 									obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
@@ -1119,8 +1117,8 @@ export class CollectionReportComponent implements OnInit {
 
 						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-						console.log('additional_amt--', additional_amt)
-						console.log('tamt--', tamt)
+						// console.log('additional_amt--', additional_amt)
+						// console.log('tamt--', tamt)
 						obj3['total'] = new IndianCurrency().transform(tamt);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
@@ -2355,7 +2353,7 @@ export class CollectionReportComponent implements OnInit {
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['stu_opening_balance'] = repoArray[Number(index)] && repoArray[Number(index)]['stu_opening_balance'] && Number(repoArray[Number(index)]['stu_opening_balance']) ?
 								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
-							console.log(obj['stu_opening_balance'], " ----------------------------------------------- ");
+							// console.log(obj['stu_opening_balance'], " ----------------------------------------------- ");
 							if (obj['stu_opening_balance'] === undefined) {
 								obj['stu_opening_balance'] = 0;
 							}
@@ -2551,7 +2549,7 @@ export class CollectionReportComponent implements OnInit {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						let repoArray = result.data;
 						var payModeArray = result.data.payment_mode_data;
-						console.log('repoArray', repoArray);
+						// console.log('repoArray', repoArray);
 
 						let i = 0;
 						let j = 0;
@@ -3124,7 +3122,7 @@ export class CollectionReportComponent implements OnInit {
 													if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-														console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														// break;
 
 													}
@@ -3134,7 +3132,7 @@ export class CollectionReportComponent implements OnInit {
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											if (repoArray[Number(keys)]['stu_admission_no'] == "A - 5731")
-												console.log("i am here    ", repoArray[Number(keys)]);
+												// console.log("i am here    ", repoArray[Number(keys)]);
 
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
@@ -3730,7 +3728,7 @@ export class CollectionReportComponent implements OnInit {
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-												console.log('in opening balance');
+												// console.log('in opening balance');
 												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											}
@@ -3969,7 +3967,7 @@ export class CollectionReportComponent implements OnInit {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						var payModeArray = result.data.payment_mode_data;
-						console.log('repoArray', repoArray);
+						// console.log('repoArray', repoArray);
 
 						let i = 0;
 						let j = 0;
@@ -4084,7 +4082,7 @@ export class CollectionReportComponent implements OnInit {
 								this.dataset.push(obj);
 							}
 
-							console.log('this.dataset--', this.dataset)
+							// console.log('this.dataset--', this.dataset)
 						});
 						this.totalRow = {};
 						const obj3: any = {};
@@ -4177,8 +4175,8 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	onCellChanged(e, args) {
-		console.log(e);
-		console.log(args);
+		// console.log(e);
+		// console.log(args);
 	}
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
@@ -4379,7 +4377,7 @@ export class CollectionReportComponent implements OnInit {
 		// console.log(sessionEndDate);
 		// console.log(currentDate, (new Date(currentDate) >= new Date(sessionStartDate))), (new Date(currentDate) <= new Date(sessionEndDate));
 		if ((new Date(currentDate).getTime() >= new Date(sessionStartDate).getTime()) && (new Date(currentDate).getTime() <= new Date(sessionEndDate).getTime())) {
-			console.log('in');
+			// console.log('in');
 			var currentMonth = new Date().getMonth();
 			var currentSessionYear = '';
 			if (currentMonth >= 1 && currentMonth <= sessionEndMonth) {
@@ -4394,7 +4392,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': date
 			});
 		} else {
-			console.log('in1');
+			// console.log('in1');
 			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
 			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
 			this.reportFilterForm.patchValue({
@@ -4491,7 +4489,7 @@ export class CollectionReportComponent implements OnInit {
 	getMultiBranchFeeHeads() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('inputJson--', inputJson)
+		// console.log('inputJson--', inputJson)
 		this.feeService.getMultiBranchFeeHeads(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
@@ -4525,7 +4523,7 @@ export class CollectionReportComponent implements OnInit {
 	getGroupedFeeHeads() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('inputJson--', inputJson)
+		// console.log('inputJson--', inputJson)
 		this.feeService.getGroupFeeHeads(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
@@ -4568,7 +4566,7 @@ export class CollectionReportComponent implements OnInit {
 	getMultiBranchRoutes() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('multi branch route json', inputJson)
+		// console.log('multi branch route json', inputJson)
 		this.feeService.getMultiBranchRoutes(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchRoutes = result.data;
@@ -4695,7 +4693,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	filtered(event) {
-		console.log('event-->', event)
+		// console.log('event-->', event)
 		let commonFilter: any = '';
 		for (const item of event.source.selected) {
 			commonFilter = commonFilter + item.viewValue + ',';
@@ -4725,7 +4723,7 @@ export class CollectionReportComponent implements OnInit {
 		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {
-		console.log("i am here");
+		// console.log("i am here");
 
 		if (level === 0) {
 			return 'Total';
@@ -6196,7 +6194,6 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
 						obj3['fp_name'] = '';
-						console.log("-------------------", this.exportColumnDefinitions, obj3);
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6216,11 +6213,9 @@ export class CollectionReportComponent implements OnInit {
 				} else {
 
 					const rowData: any[] = [];
-					// console.log("-----------------------------------------------------",this.reportType, groupItem);
 
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						// console.log("i am keys------------------", groupItem.rows[key][item2.id]);
 
 						for (const item2 of this.exportColumnDefinitions) {
 
@@ -6391,8 +6386,6 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
 						obj3['fp_name'] = '';
 
-						console.log("-------------------", this.exportColumnDefinitions, obj3);
-
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6432,7 +6425,6 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
-						console.log("i am exportColumnDefinitions", this.exportColumnDefinitions, obj3);
 
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
@@ -6463,7 +6455,6 @@ export class CollectionReportComponent implements OnInit {
 					}
 					// style row having total
 					if (groupItem.level === 0) {
-						// console.log("i am levelarray", levelArray);
 
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
