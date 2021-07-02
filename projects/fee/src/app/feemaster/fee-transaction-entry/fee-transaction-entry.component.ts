@@ -1137,13 +1137,23 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		} else {
 			this.removeBankCharge();
 		}
+		this.invoiceArrayForm.filter(item => {
+			
+			if (item.value.rm_fh_name === '' && item.value.netpay <= val) {
+				changeValue += item.value.netpay
+			} else if(item.value.rm_fh_name === '' && item.value.netpay > val) {
+				changeValue += val;
+			}
+		});
+		
 		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
-			if(this.invoiceArray[i].head_bal_amount <= val - changeValue) {
+			
+			if(this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
 				});
 				changeValue +=this.invoiceArray[i].head_bal_amount;
-			} else if (this.invoiceArray[i].head_bal_amount > val - changeValue) {
+			} else if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount > val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: val - changeValue
 				});
