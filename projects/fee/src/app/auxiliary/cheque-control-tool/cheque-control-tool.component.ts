@@ -161,7 +161,9 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				for (const item of temparray) {
+				
+				
+				for (let item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: item,
 						position:pos,
@@ -245,7 +247,10 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				
+				
 				for (const item of temparray) {
+					
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: item,
 						position:pos,
@@ -264,7 +269,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
 						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
-						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
 						status:item.fcc_status,
@@ -282,8 +287,10 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					});
 					pos++;
 				}
+				
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+				this.dataSource.paginator.length = this.totalRecords ;
+				this.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
 			}
 		});
@@ -341,7 +348,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'status': '',
 			'deposit_bank_id':'',
 			'tag_id':'',
-			'cheque_no':''
+			'cheque_no':'',
+			'inv_process_usr_no': ''
 		});
 		this.getChequeControlListAll();
 	}
@@ -376,7 +384,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					this.selection.select(row);
 				}
 				//this.selection.select(row);
-				console.log(row);
+				// console.log(row);
 			});
 		this.checkboxLength = this.selection.selected.length;
 	}
@@ -518,8 +526,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 
 	getBankInfo(bnk_id) {
-		console.log('bnk_id',bnk_id);
-		console.log('allBanks',this.allBanks);
+		// console.log('bnk_id',bnk_id);
+		// console.log('allBanks',this.allBanks);
 		var bankOInfo:any;
 		for(var i=0; i<this.allBanks.length;i++) {
 			if(Number(this.allBanks[i]['bnk_id'] === bnk_id)) {
@@ -543,7 +551,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
 		let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
 
-		console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
+		// console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
 		setTimeout(() => {
 			const doc = new jsPDF('landscape');
 
