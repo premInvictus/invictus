@@ -3618,7 +3618,7 @@ export class CollectionReportComponent implements OnInit {
 											const feeObj: any = {};
 											this.columnDefinitions.push({
 												id: 'fh_name' + j,
-												name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
+												name: new CapitalizePipe().transform(titem[key2] != 'Previous Session Data' ? titem[key2]: 'Prev. Ses. Data') + ' (₹)',
 												field: 'fh_name' + j,
 												cssClass: 'amount-report-fee',
 												sortable: true,
@@ -4865,8 +4865,8 @@ export class CollectionReportComponent implements OnInit {
 					}
 					if (this.reportType === 'dailyheadwise') {
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -5985,8 +5985,8 @@ export class CollectionReportComponent implements OnInit {
 
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6052,8 +6052,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6071,8 +6071,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6094,10 +6094,10 @@ export class CollectionReportComponent implements OnInit {
 						levelArray.push('', '');
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = ''
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
@@ -6194,8 +6194,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'headwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6232,8 +6232,8 @@ export class CollectionReportComponent implements OnInit {
 
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6265,8 +6265,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6284,8 +6284,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6306,8 +6306,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType == 'cumulativeheadwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6347,10 +6347,10 @@ export class CollectionReportComponent implements OnInit {
 						levelArray.push('', '');
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
