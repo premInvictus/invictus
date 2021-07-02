@@ -7,6 +7,7 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import * as XLSX from 'xlsx';
 import { ckconfig } from '../ckeditorconfig';
 import { saveAs } from 'file-saver';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-system-info',
@@ -44,7 +45,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'order', 'action', 'modify'];
-	firstHeaderArray: any[] = ['Checklist Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name', 'Class Name'];
+	firstHeaderArray: any[] = ['Checklist Name', 'Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name', 'Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
 	paramform: FormGroup;
@@ -53,7 +54,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	ptopicArray: any[] = [];
 	stopicArray: any[] = [];
 	disabledApiButton = false;
-	checklist_type_arr = ['interior','exterior','itemlist']
+	checklist_type_arr = ['interior','exterior','itemlist'];
+	transportsetup_type_arr = ['trip','type'];
 	ckeConfig:any;
 	constructor(
 		private fbuild: FormBuilder,
@@ -144,25 +146,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		},
 		{
 			formGroup: this.fbuild.group({
-				sec_id: '',
-				sec_name: '',
-				sec_order: '',
-				sec_status: ''
-			})
-		},
-		{
-			formGroup: this.fbuild.group({
-				sub_id: '',
-				sub_parent_id: '',
-				sub_code: '',
-				sub_name: '',
-				sub_order: '',
-				sub_status: '',
-				sub_timetable: '',
-				sub_isexam: '',
-				sub_type_id: '',
-				sub_category: '',
-				sub_color: '#000000'
+				ts_id: '',
+				name: '',
+				type: '',
+				status: ''
 			})
 		},
 		{
@@ -298,20 +285,20 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-	getSection(that) {
+	getAllTransportSetup(that) {
 		that.secArray = [];
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
-		that.smartService.getSection().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				that.secArray = result.data;
+		that.transportService.getAllTransportSetup().subscribe((result: any) => {
+			if (result && result.length > 0) {
+				that.secArray = result;
 				if (that.configValue === '2') {
 					let pos = 1;
-					for (const item of result.data) {
+					for (const item of result) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: item.sec_id,
-							name: item.sec_name,
-							order: item.sec_order,
+							position: item.ts_id,
+							name: new TitleCasePipe().transform(item.name),
+							type: item.type,
 							action: item
 						});
 						pos++;
@@ -774,7 +761,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				return true;
 			}
 		} else if (Number(this.configValue) === 2) {
-			if (value.sec_status === '1') {
+			if (value.status === '1') {
 				return true;
 			}
 		} else if (Number(this.configValue) === 3) {
@@ -812,10 +799,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 2) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
-				sec_id: value.sec_id,
-				sec_name: value.sec_name,
-				sec_order: value.sec_order,
-				sec_status: value.sec_status
+				ts_id: value.ts_id,
+				name: value.name,
+				type: value.type,
+				status: value.status
 			});
 		} else if (Number(this.configValue) === 3) {
 			this.setupUpdateFlag = true;
@@ -887,8 +874,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['position', 'name', 'type', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
-			this.getSection(this);
-			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
+			this.getAllTransportSetup(this);
+			this.displayedColumns = ['position', 'name', 'type', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSubjectType(this);
@@ -921,8 +908,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				this.deleteEntry(data, 'updateChecklist', this.getAllChecklist);
 				break;
 			case '2':
-				data.sec_status = '5';
-				this.deleteEntry(data, 'insertSection', this.getSection);
+				data.status = '5';
+				this.deleteEntry(data, 'updateTransportSetup', this.getAllTransportSetup);
 				break;
 			case '3':
 				data.sub_status = '5';
@@ -957,8 +944,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertChecklist', this.getAllChecklist);
 					break;
 				case '2':
-					this.formGroupArray[value - 1].formGroup.value.sec_status = '1';
-					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSection', this.getSection);
+					this.formGroupArray[value - 1].formGroup.value.status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertTransportSetup', this.getAllTransportSetup);
 					break;
 				case '3':
 					this.formGroupArray[value - 1].formGroup.value.sub_status = '1';
@@ -994,7 +981,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateChecklist', this.getAllChecklist);
 					break;
 				case '2':
-					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSection', this.getSection);
+					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateTransportSetup', this.getAllTransportSetup);
 					break;
 				case '3':
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubject', this.getSubject);
@@ -1029,15 +1016,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				}
 			});
 		} else if (Number(this.configValue) === 2) {
-			if (value.sec_status === '1') {
-				value.sec_status = '0';
+			if (value.status === '1') {
+				value.status = '0';
 			} else {
-				value.sec_status = '1';
+				value.status = '1';
 			}
-			this.smartService.insertSection(value).subscribe((result: any) => {
-				if (result.status === 'ok') {
+			this.transportService.updateTransportSetup(value).subscribe((result: any) => {
+				if (result) {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
-					this.getSection(this);
+					this.getAllTransportSetup(this);
 				}
 			});
 		} else if (Number(this.configValue) === 3) {

@@ -104,6 +104,39 @@
                         <input matInput placeholder="Pages" tabindex="6" formControlName="engine_no" type="text" [readonly]="viewOnly" />
                       </mat-form-field>
                     </div>
+                    <div class="col-2 remove-col-padding">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Select Driver</mat-label>
+                        <mat-select formControlName="driver_id" required placeholder="Select Driver">
+                          <mat-option value="">Please select</mat-option>
+                          <mat-option *ngFor="let item of userDataArr" [value]="item.users_det.au_login_id">
+                            {{item.users_det.au_full_name | titlecase}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2 remove-col-padding">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Select Conductor</mat-label>
+                        <mat-select formControlName="conductor_id" required placeholder="Select Conductor">
+                          <mat-option value="">Please select</mat-option>
+                          <mat-option *ngFor="let item of userDataArr" [value]="item.users_det.au_login_id">
+                            {{item.users_det.au_full_name | titlecase}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2 remove-col-padding">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Select Supervisor</mat-label>
+                        <mat-select formControlName="supervisor_id" required placeholder="Select Supervisor">
+                          <mat-option value="">Please select</mat-option>
+                          <mat-option *ngFor="let item of userDataArr" [value]="item.users_det.au_login_id">
+                            {{item.users_det.au_full_name | titlecase}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
                     <div class="col-2">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Device No</mat-label>

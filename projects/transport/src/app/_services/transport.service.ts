@@ -116,4 +116,40 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/transportroutes/getStoppagesPerRoute', value);
 	}
+	insertTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/insert', value);
+    }
+    updateTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/update', value);
+    }
+    getAllTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-setup/getAll', value);
+    }
+    getTransportSetup(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/transport-setup/get/'+value.id);
+	}
+	getTransportStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transport/getTransportStudent', value);
+	}
+	insertTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/insert', value);
+    }
+    updateTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/update', value);
+    }
+    getAllTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-attendance/getAll', value);
+    }
+    getTransportAttendance(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/transport-attendance/get/'+value.id);
+	}
 }

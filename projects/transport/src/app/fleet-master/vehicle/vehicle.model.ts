@@ -13,6 +13,9 @@ export interface Element {
   chasis_no: any,
   engine_no: any,
   device_no: any,
+  driver_id: any,
+  conductor_id: any,
+  supervisor_id: any,
   documents: any,
   status: any,
   action:any
