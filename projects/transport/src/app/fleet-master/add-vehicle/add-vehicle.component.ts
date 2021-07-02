@@ -34,6 +34,7 @@ export class AddVehicleComponent implements OnInit {
 	multipleFileArray: any[] = [];
 	counter: any = 0;
 	currentImage: any;
+	userDataArr: any = [];
 	constructor(
 		public dialogRef: MatDialogRef<AddVehicleComponent>,
 		public dialogRef2: MatDialogRef<PreviewDocumentComponent>,
@@ -46,8 +47,28 @@ export class AddVehicleComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.getAllTransportStaff();
 		console.log('data', this.data);
 		this.builForm();
+	}
+	// getUser() {
+	// 	this.userDataArr = [];
+	// 	const inputJson: any = {};
+	// 	inputJson['role_id'] = '2';
+	// 	inputJson['status'] = '1';
+	// 	this.sisService.getUser(inputJson).subscribe((result: any) => {
+	// 		if (result && result.data && result.data[0]['au_login_id']) {
+	// 			this.userDataArr = result.data;
+	// 		}
+	// 	});
+	// }
+	getAllTransportStaff() {
+		this.userDataArr = [];
+		this.transportService.getAllTransportStaff({}).subscribe((result: any) => {
+			if (result && result.length > 0) {
+				this.userDataArr = result;
+			}
+		});
 	}
 	builForm() {
 		this.bookForm = this.fbuild.group({
@@ -67,9 +88,12 @@ export class AddVehicleComponent implements OnInit {
 			device_no: '',
 			documents: [],
 			status: '',
-			ses_id: ''
+			ses_id: '',
+			driver_id: '',
+			conductor_id: '',
+			supervisor_id: '',
 		});
-		if(this.data.data){
+		if (this.data.data) {
 			this.bookForm.patchValue({
 				tv_id: this.data.data.tv_id,
 				bus_number: this.data.data.bus_number,
@@ -87,11 +111,14 @@ export class AddVehicleComponent implements OnInit {
 				device_no: this.data.data.device_no,
 				documents: this.data.data.documents,
 				status: this.data.data.status,
-				ses_id: this.data.data.ses_id
+				ses_id: this.data.data.ses_id,
+				driver_id: this.data.data.driver_id,
+				conductor_id: this.data.data.conductor_id,
+				supervisor_id: this.data.data.supervisor_id,
 			})
-			this.bookImage =  this.data.data.bus_image;
+			this.bookImage = this.data.data.bus_image;
 			this.documentsArray = this.data.data.documents;
-			if(this.data.action == 'view') {
+			if (this.data.action == 'view') {
 				this.viewOnly = true;
 			}
 		}
@@ -163,9 +190,9 @@ export class AddVehicleComponent implements OnInit {
 	// 		width: '70vh'
 	// 	});
 	// }
-	previewImage(doc_index,doc_req_id ) {
+	previewImage(doc_index, doc_req_id) {
 		const findex = this.documentsArray.findIndex(f => f.id === doc_req_id);
-		console.log(this.documentsArray[findex]['document'],doc_index);
+		console.log(this.documentsArray[findex]['document'], doc_index);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			height: '80%',
 			width: '1000px',
@@ -197,35 +224,35 @@ export class AddVehicleComponent implements OnInit {
 	}
 	submit() {
 		if (this.bookForm.valid) {
-			let inputJson:any = JSON.parse(JSON.stringify(this.bookForm.value));
+			let inputJson: any = JSON.parse(JSON.stringify(this.bookForm.value));
 			inputJson.bus_image = this.bookImage;
 			inputJson.documents = this.documentsArray
-			if(moment.isMoment(inputJson.registration_valid_upto)){
+			if (moment.isMoment(inputJson.registration_valid_upto)) {
 				inputJson.registration_valid_upto = inputJson.registration_valid_upto.format('YYYY-MM-DD');
 			} else {
-				inputJson.registration_valid_upto = new DatePipe('en-in').transform(inputJson.registration_valid_upto,'yyyy-MM-dd');
+				inputJson.registration_valid_upto = new DatePipe('en-in').transform(inputJson.registration_valid_upto, 'yyyy-MM-dd');
 			}
-			if(moment.isMoment(inputJson.permit_valid_upto)){
+			if (moment.isMoment(inputJson.permit_valid_upto)) {
 				inputJson.permit_valid_upto = inputJson.permit_valid_upto.format('YYYY-MM-DD');
 			} else {
-				inputJson.permit_valid_upto = new DatePipe('en-in').transform(inputJson.permit_valid_upto,'yyyy-MM-dd');
+				inputJson.permit_valid_upto = new DatePipe('en-in').transform(inputJson.permit_valid_upto, 'yyyy-MM-dd');
 			}
-			if(moment.isMoment(inputJson.insurance_valid_upto)){
+			if (moment.isMoment(inputJson.insurance_valid_upto)) {
 				inputJson.insurance_valid_upto = inputJson.insurance_valid_upto.format('YYYY-MM-DD');
 			} else {
-				inputJson.insurance_valid_upto = new DatePipe('en-in').transform(inputJson.insurance_valid_upto,'yyyy-MM-dd');
+				inputJson.insurance_valid_upto = new DatePipe('en-in').transform(inputJson.insurance_valid_upto, 'yyyy-MM-dd');
 			}
-			if(moment.isMoment(inputJson.puc_valid_upto)){
+			if (moment.isMoment(inputJson.puc_valid_upto)) {
 				inputJson.puc_valid_upto = inputJson.puc_valid_upto.format('YYYY-MM-DD');
 			} else {
-				inputJson.puc_valid_upto = new DatePipe('en-in').transform(inputJson.puc_valid_upto,'yyyy-MM-dd');
+				inputJson.puc_valid_upto = new DatePipe('en-in').transform(inputJson.puc_valid_upto, 'yyyy-MM-dd');
 			}
 			console.log(inputJson);
-			if(inputJson.tv_id){
+			if (inputJson.tv_id) {
 				this.transportService.updateTransportVehicle(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
-						this.close({status:true});
+						this.close({ status: true });
 					}
 				})
 			} else {
@@ -233,15 +260,15 @@ export class AddVehicleComponent implements OnInit {
 				this.transportService.insertTransportVehicle(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Created Successfully', 'success');
-						this.close({status:true});
+						this.close({ status: true });
 					}
 				})
 			}
-			
+
 
 		}
 	}
-	close(data=null){
+	close(data = null) {
 		this.dialogRef.close(data)
 	}
 

@@ -50,45 +50,6 @@
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Select Driver</mat-label>
-                  <mat-select formControlName="driver_id" required placeholder="Select Driver">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
-                      {{item.au_full_name | titlecase}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 remove-col-padding">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Select Conductor</mat-label>
-                  <mat-select formControlName="conductor_id" required placeholder="Select Conductor">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
-                      {{item.au_full_name | titlecase}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 remove-col-padding">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Select Supervisor</mat-label>
-                  <mat-select formControlName="supervisor_id" required placeholder="Select Supervisor">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of userDataArr" [value]="item.au_login_id">
-                      {{item.au_full_name | titlecase}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 remove-col-padding">
-                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Start Time</mat-label>
                   <input matInput placeholder="Start Time" type="time" formControlName="start_time" required>
                 </mat-form-field>
@@ -152,31 +113,6 @@
                   </th>
                   <td mat-cell *matCellDef="let item">
                     {{ item.tv_id }}
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="driver_id">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Driver
-                  </th>
-                  <td mat-cell *matCellDef="let item">
-                    {{ item.driver_id | titlecase }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="conductor_id">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Conductor
-                  </th>
-                  <td mat-cell *matCellDef="let item">
-                    {{ item.conductor_id | titlecase}}
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="supervisor_id">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Supervisor
-                  </th>
-                  <td mat-cell *matCellDef="let item">
-                    {{ item.supervisor_id }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="start_time">

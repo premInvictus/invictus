@@ -3,3 +3,23 @@
     color: #88a8c9;
     padding: 5px 0 ;
 }
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+tr.mat-footer-row {
+    font-weight: bold;
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+td.mat-footer-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+.nc{
+    text-align:center;
+    padding: 20px; 
+}

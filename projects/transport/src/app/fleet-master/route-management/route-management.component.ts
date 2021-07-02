@@ -14,7 +14,7 @@ import { DatePipe } from '@angular/common';
 })
 export class RouteManagementComponent implements OnInit {
 
-  displayedColumns: string[] = ['route_no', 'route_name', 'tv_id', 'driver_id', 'conductor_id', 'supervisor_id', 'start_time','end_time', 'stoppages','status', 'modify'];
+  displayedColumns: string[] = ['route_no', 'route_name', 'tv_id', 'start_time','end_time', 'stoppages','status', 'modify'];
   @ViewChild('deleteModal') deleteModal;
   subExamForm: FormGroup;
   currentUser: any;
@@ -67,9 +67,6 @@ export class RouteManagementComponent implements OnInit {
       'route_id': '',
       'route_no': '',
       'route_name': '',
-      'driver_id': '',
-      'conductor_id': '',
-      'supervisor_id': '',
       'start_time': '',
       'end_time': '',
       'stoppages': [],
@@ -90,9 +87,6 @@ export class RouteManagementComponent implements OnInit {
       'route_id': '',
       'route_no': '',
       'route_name': '',
-      'driver_id': '',
-      'conductor_id': '',
-      'supervisor_id': '',
       'start_time': '',
       'end_time': '',
       'stoppages': [],
@@ -188,9 +182,6 @@ export class RouteManagementComponent implements OnInit {
             route_id: item.route_id,
             route_no: item.route_no,
             route_name: item.route_name,
-            driver_id: item.driver_det ? item.driver_det.au_full_name:'',
-            conductor_id: item.conductor_det ? item.conductor_det.au_full_name:'',
-            supervisor_id: item.supervisor_det ? item.supervisor_det.au_full_name:'',
             start_time: item.start_time,
             end_time: item.end_time,
             stoppages: stoppage_name_arr,
@@ -230,9 +221,6 @@ export class RouteManagementComponent implements OnInit {
       route_id: value.route_id.toString(),
       route_no: value.route_no,
       route_name: value.route_name,
-      driver_id: value.driver_id.toString(),
-      conductor_id: value.conductor_id.toString(),
-      supervisor_id: value.supervisor_id.toString(),
       start_time: value.start_time,
       end_time: value.end_time,
       stoppages: value.stoppages,
