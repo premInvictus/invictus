@@ -4764,9 +4764,9 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'headwise') {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
@@ -4787,6 +4787,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						console.log("------------------", obj3, this.exportColumnDefinitions );
+						
 					}
 					if (this.reportType === 'cumulativeheadwise') {
 						obj3['id'] = 'footer';
@@ -5037,6 +5039,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						console.log("------------------", obj3, this.exportColumnDefinitions );
 					}
 					if (this.reportType === 'modewise') {
 						obj3['id'] = 'footer';
@@ -5998,14 +6001,16 @@ export class CollectionReportComponent implements OnInit {
 
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -6023,6 +6028,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						obj3['tag_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6065,12 +6071,13 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
@@ -6080,6 +6087,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
+						console.log("------------------", obj3, this.exportColumnDefinitions );
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
@@ -6108,7 +6116,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
@@ -6248,17 +6256,18 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'headwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);	Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
 									Object.keys(groupItem.rows[key3]).forEach(key4 => {
@@ -6273,7 +6282,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
-						levelArray.push("");
+						obj3['tag_name'] = '';
+						
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6281,6 +6291,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
+						
 					}
 					if (this.reportType === 'modewise') {
 
@@ -6319,12 +6330,13 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
@@ -6334,6 +6346,8 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
+						console.log("----------------", this.exportColumnDefinitions, obj3);
+						
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
