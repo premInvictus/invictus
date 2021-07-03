@@ -1,6 +1,6 @@
 export const environment = {
 	production: false,
-	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
+	apiAxiomUrl: 'http://localhost/axiom-backend', 
 	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
