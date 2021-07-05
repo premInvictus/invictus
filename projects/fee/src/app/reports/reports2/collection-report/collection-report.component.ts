@@ -3102,9 +3102,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
-												if(repoArray[Number(keys)]['receipt_no'] == '6987' || repoArray[Number(keys)]['receipt_no'] == '6992') {
-													console.log("o ----", repoArray[Number(keys)]['receipt_no'], repoArray[Number(keys)], stuFeeHeadArray);	
-												}
+												
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 													// obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -3717,9 +3715,9 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['school_prefix'] : '-';
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
-											obj['stu_full_name'] = this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
-											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
-											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
+											obj['stu_full_name'] = (new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
+											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
@@ -3730,7 +3728,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['rpt_id'] : '-';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-												this.addNewlines(repoArray[Number(keys)]['fp_name'][0]) : '-';
+												(repoArray[Number(keys)]['fp_name'][0]) : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
@@ -3809,7 +3807,7 @@ export class CollectionReportComponent implements OnInit {
 												? 0 : obj['total'];
 											obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
 												this.addNewlines(repoArray[Number(keys)]['ftr_transaction_id']) : '-';
-											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? this.addNewlines(repoArray[Number(keys)]['created_by']) : '-';
+											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? (repoArray[Number(keys)]['created_by']) : '-';
 
 											k++;
 										}
@@ -3824,9 +3822,9 @@ export class CollectionReportComponent implements OnInit {
 									repoArray[Number(keys)]['school_prefix'] : '-';
 								obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 									repoArray[Number(keys)]['stu_admission_no'] : '-';
-								obj['stu_full_name'] = this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
-								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
-								obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? this.addNewlines(new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
+								obj['stu_full_name'] = (new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
+								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
+								obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
 								if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 										repoArray[Number(keys)]['stu_sec_name'];
@@ -3846,11 +3844,11 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 								obj['total'] = repoArray[Number(keys)]['invoice_amount']
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-								console.log("iiiiiiiiiiiiiiiiiiii", repoArray[Number(keys)]['invoice_no'],);
+								// console.log("iiiiiiiiiiiiiiiiiiii", repoArray[Number(keys)]['invoice_no'],);
 
 
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-									this.addNewlines(repoArray[Number(keys)]['pay_name']) : '-';
+									(repoArray[Number(keys)]['pay_name']) : '-';
 								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? this.addNewlines(repoArray[Number(keys)]['ftr_cheque_no']) : '-';
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
@@ -3858,7 +3856,7 @@ export class CollectionReportComponent implements OnInit {
 									this.addNewlines(repoArray[Number(keys)]['ftr_transaction_id']) : '-';
 								obj['adhoc_payment'] = repoArray[Number(keys)]['invoice_no']
 									? 0 : obj['total'];
-								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? this.addNewlines(repoArray[Number(keys)]['created_by']) : '-';
+								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? (repoArray[Number(keys)]['created_by']) : '-';
 							}
 							i++;
 							this.dataset.push(obj);
@@ -5820,10 +5818,10 @@ export class CollectionReportComponent implements OnInit {
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType === 'summary') {
 						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b></b>') {
-							arr.push(this.addNewlines(new IndianCurrency().transform(Number(json[key][item2.id]))));
+							arr.push((new IndianCurrency().transform(Number(json[key][item2.id]))));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
-							arr.push(this.common.htmlToText(this.addNewlines(json[key][item2.id])));
+							arr.push(this.common.htmlToText((json[key][item2.id])));
 						}
 					}
 					if (this.reportType !== 'mfr' && this.reportType !== 'summary') {
@@ -6623,15 +6621,17 @@ export class CollectionReportComponent implements OnInit {
 		this.draggableGroupingPlugin.setDroppedGroups('tb_name');
 	}
 	addNewlines(str) {
-		// let result = '';
-		// if (str) {
-		// 	while (str.length > 0) {
-		// 		result += str.substring(0, 15) + '\n';
-		// 		str = str.substring(15);
-		// 	}
-		// }
+		let result = '';
+		if (str) {
+			while (str.length > 0) {
+				result += str.substring(0, 15) + '\n';
+				str = str.substring(15);
+			}
+			if(result.length > 10) {
+				result = result.substring(0, result.length - 2)
+			}
+		}
 
-		// return this.common.htmlToText(result);
-		return str;
+		return this.common.htmlToText(result);
 	}
 }
