@@ -29,6 +29,7 @@ export class AttendanceComponent implements OnInit {
   selection = new SelectionModel<Element>(true, []);
   stopages: any = [];
   attendance_arr: any = [];
+  currentUser:any;
   constructor(
     private fbuild: FormBuilder,
     private transportService: TransportService,
@@ -39,6 +40,7 @@ export class AttendanceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // this.getAllTransportStaff();
     this.getAllTransportVehicle();
     this.getAllTrip();
@@ -96,9 +98,10 @@ export class AttendanceComponent implements OnInit {
   }
   async getTransportStudent() {
     if (this.paramform.valid) {
+      this.groupdataSource = [];
       this.transportstudent_arr = [];
-      this.ELEMENT_DATA = [];
-      this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+      this.stopages = [];
+      this.attendance_arr = [];
       const param: any = {};
       param.routeId = this.paramform.value.route_id;
       const param1: any = {};
@@ -192,6 +195,7 @@ export class AttendanceComponent implements OnInit {
         insertdata.ta_status = ta_status;
         insertdata.ta_login_id = user.au_login_id;
         insertdata.ta_id = user.ta_id ? user.ta_id : '';
+        insertdata.created_by = this.currentUser
         if (insertdata.ta_id) {
           this.transportService.updateTransportAttendance([insertdata]).subscribe((result: any) => {
             if (result) {
@@ -224,6 +228,7 @@ export class AttendanceComponent implements OnInit {
           insertdata.ta_status = ta_status;
           insertdata.ta_login_id = element.au_login_id;
           insertdata.ta_id = element.ta_id ? element.ta_id : '';
+          insertdata.created_by = this.currentUser;
           if(element.ta_id){
             updarr.push(insertdata)
           } else {

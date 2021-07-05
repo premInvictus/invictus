@@ -6,6 +6,7 @@ import { AdminService } from '../../user-type/admin/services/admin.service';
 import { appConfig } from '../../app.config';
 import { ActivatedRoute } from '@angular/router';
 import { BreadCrumbService, NotificationService, CommonAPIService } from '../../_services/index';
+import { saveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-bulkupload',
@@ -270,10 +271,17 @@ export class BulkuploadComponent implements OnInit {
 		if (this.bulkuploadform.valid) {
 			this.qelementService.generateExcelFile(this.bulkuploadform.value).subscribe(
 				(result: any) => {
-					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = appConfig.apiUrl + url;
-						window.location.href = url;
+					// if (result && result.status === 'ok') {
+					// 	let url: string = result.data;
+					// 	url = appConfig.apiUrl + url;
+					// 	window.location.href = url;
+					// }
+					if (result.status === 'ok') {
+						this.notif.showSuccessErrorMessage('Download Successfully', 'success');
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
+					} else {
+						this.notif.showSuccessErrorMessage('Error While Downloading File', 'error');
 					}
 				}
 			);
