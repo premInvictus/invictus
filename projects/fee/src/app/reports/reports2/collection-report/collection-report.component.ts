@@ -6624,12 +6624,10 @@ export class CollectionReportComponent implements OnInit {
 		let result = '';
 		if (str) {
 			while (str.length > 0) {
-				result += str.substring(0, 15) + '\n';
-				str = str.substring(15);
+				result += str.substring(0, 13) + ' ';
+				str = str.substring(13);
 			}
-			if(result.length > 10) {
-				result = result.substring(0, result.length - 1)
-			}
+			
 		}
 
 		return this.common.htmlToText(result);
