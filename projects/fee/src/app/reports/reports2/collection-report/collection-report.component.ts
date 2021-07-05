@@ -6628,7 +6628,7 @@ export class CollectionReportComponent implements OnInit {
 				str = str.substring(15);
 			}
 			if(result.length > 10) {
-				result = result.substring(0, result.length - 2)
+				result = result.substring(0, result.length - 1)
 			}
 		}
 
