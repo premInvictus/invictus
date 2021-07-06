@@ -2791,11 +2791,14 @@ export class CollectionReportComponent implements OnInit {
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						console.log("---------------------", result.data.reportData);
+						
 						repoArray = result.data.reportData;
 						var branchArray = this.reportFilterForm.value.school_branch;
 						var tempHeadArray = [];
 						var schoolArray = [];
 						var commonHeadsArray = [];
+						let inv_id_array = [];
 						var tempCommonHeadsArray = [];
 
 						for (var bi = 0; bi < repoArray.length; bi++) {
@@ -3046,7 +3049,7 @@ export class CollectionReportComponent implements OnInit {
 								let k = 0;
 								let tot = 0;
 								// console.log("i am here");
-
+								
 								let stuFeeHeadArray = [];
 								for (let fij = 0; fij < repoArray[Number(keys)]['fee_head_data'].length; fij++) {
 									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
@@ -3078,6 +3081,8 @@ export class CollectionReportComponent implements OnInit {
 											j++;
 										}
 										if (key2 === 'fh_name') {
+											
+											
 											obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 												repoArray[Number(keys)]['rpt_id'];
 											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
@@ -3175,8 +3180,8 @@ export class CollectionReportComponent implements OnInit {
 
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
-												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
+											
+												
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 
@@ -3188,12 +3193,18 @@ export class CollectionReportComponent implements OnInit {
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
 											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
-
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
+												
 											k++;
 										}
 									});
 								}
+								// if(repoArray[Number(keys)]['invoice_id']) {
+								// 	inv_id_array.push( repoArray[Number(keys)]['invoice_id'])
+								// }
 							} else {
+								
 								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 									repoArray[Number(keys)]['rpt_id'];
 								obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
@@ -3224,7 +3235,7 @@ export class CollectionReportComponent implements OnInit {
 								obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 									? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 								obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
-									? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
+									? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;									
 								obj['total'] = repoArray[Number(keys)]['invoice_amount']
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 
@@ -3236,7 +3247,16 @@ export class CollectionReportComponent implements OnInit {
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
+								
 
+							}
+							
+							let check = 0;
+							for(let i = 0; i < commonHeadsArray.length; i++) {
+								check += obj['fh_name'+i];
+							}
+							if(check == obj['total']) {
+								obj['invoice_fine_amount'] = 0;
 							}
 							i++;
 							this.dataset.push(obj);
