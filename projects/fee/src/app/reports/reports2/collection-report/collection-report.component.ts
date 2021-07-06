@@ -239,7 +239,7 @@ export class CollectionReportComponent implements OnInit {
 		// } else {
 		// 	elements.style.fontSize = '8px';
 		// }
-			
+
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
@@ -283,7 +283,6 @@ export class CollectionReportComponent implements OnInit {
 								this.schoolBranchArray.push(data.data[i]);
 							}
 						}
-						console.log('userSchoolMappedData', this.schoolBranchArray);
 					}
 				})
 			}
@@ -323,7 +322,6 @@ export class CollectionReportComponent implements OnInit {
 	}
 	buildForm() {
 		let tempArray = [];
-		console.log('this.currentUser', this.currentUser)
 		tempArray.push(this.currentUser.Prefix);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
@@ -366,7 +364,7 @@ export class CollectionReportComponent implements OnInit {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class') {
 				grid.onSort.subscribe((e, args) => {
-					console.log('in, args', args);
+					// console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
@@ -683,7 +681,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -775,7 +773,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 								// console.log(repoArray[Number(keys)]['stu_admission_no']);
 								//console.log(repoArray[Number(keys)], repoArray[Number(keys)]);
-								console.log('commonHeadsArray--', commonHeadsArray);
+								// console.log('commonHeadsArray--', commonHeadsArray);
 								commonHeadsArray.sort(function (a, b) { return a.fh_order - b.fh_order; });
 								for (const titem of commonHeadsArray) {
 
@@ -881,7 +879,7 @@ export class CollectionReportComponent implements OnInit {
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-												console.log('in opening balance');
+												// console.log('in opening balance');
 												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											}
@@ -901,6 +899,8 @@ export class CollectionReportComponent implements OnInit {
 
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+											obj['adhoc_payment'] = !repoArray[Number(keys)]['invoice_no']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['total'] = obj['total'] + (repoArray[Number(keys)]['additional_amt']
 												? Number(repoArray[Number(keys)]['additional_amt']) : 0);
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
@@ -916,7 +916,7 @@ export class CollectionReportComponent implements OnInit {
 								}
 
 							} else {
-								console.log('in add');
+								// console.log('in add');
 								if (repoArray[Number(keys)]['stu_admission_no']) {
 									let tot = 0;
 									obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
@@ -961,6 +961,8 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0);
 									obj['total'] = repoArray[Number(keys)]['invoice_amount']
 										? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+									obj['adhoc_payment'] = !repoArray[Number(keys)]['invoice_no']
+										? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 									obj['total'] = obj['total'] + (repoArray[Number(keys)]['additional_amt']
 										? Number(repoArray[Number(keys)]['additional_amt']) : 0);
 									obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
@@ -979,6 +981,16 @@ export class CollectionReportComponent implements OnInit {
 
 						});
 						this.columnDefinitions.push(
+							{
+								id: 'adhoc_payment', name: 'Adhoc (₹)', field: 'adhoc_payment',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								type: FieldType.number,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
 							{
 								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
 								filterable: true,
@@ -1092,10 +1104,11 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand_Total';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
+						obj3['tag_name'] = ''
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
@@ -1103,6 +1116,8 @@ export class CollectionReportComponent implements OnInit {
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+						obj3['adhoc_payment'] =
+							new IndianCurrency().transform(this.dataset.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -1119,10 +1134,11 @@ export class CollectionReportComponent implements OnInit {
 
 						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-						console.log('additional_amt--', additional_amt)
-						console.log('tamt--', tamt)
+						// console.log('additional_amt--', additional_amt)
+						// console.log('tamt--', tamt)
 						obj3['total'] = new IndianCurrency().transform(tamt);
 						obj3['receipt_mode_name'] = '';
+						obj3['ftr_cheque_no']
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
@@ -1259,7 +1275,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+								if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
@@ -1458,7 +1474,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
+						obj3['invoice_created_date'] = '<b></b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -1615,7 +1631,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -1799,7 +1815,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
+						obj3['invoice_created_date'] = '<b></b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -1953,7 +1969,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+								if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
@@ -2154,7 +2170,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand_Total</b>';
+						obj3['invoice_created_date'] = '<b></b>';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -2355,7 +2371,6 @@ export class CollectionReportComponent implements OnInit {
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['stu_opening_balance'] = repoArray[Number(index)] && repoArray[Number(index)]['stu_opening_balance'] && Number(repoArray[Number(index)]['stu_opening_balance']) ?
 								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
-							console.log(obj['stu_opening_balance'], " ----------------------------------------------- ");
 							if (obj['stu_opening_balance'] === undefined) {
 								obj['stu_opening_balance'] = 0;
 							}
@@ -2525,7 +2540,7 @@ export class CollectionReportComponent implements OnInit {
 						obj2['srno'] = '';
 						obj2['au_login_id'] = '';
 						obj2['stu_opening_balance'] = this.dataset.map(f => f.stu_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj2['stu_admission_no'] = this.common.htmlToText('<b>Grand_Total</b>');
+						obj2['stu_admission_no'] = this.common.htmlToText('<b></b>');
 						obj2['stu_full_name'] = this.dataset.length;
 						obj2['stu_class_name'] = '';
 						obj2['fp_name'] = '';
@@ -2551,7 +2566,7 @@ export class CollectionReportComponent implements OnInit {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						let repoArray = result.data;
 						var payModeArray = result.data.payment_mode_data;
-						console.log('repoArray', repoArray);
+						// console.log('repoArray', repoArray);
 
 						let i = 0;
 						let j = 0;
@@ -2624,7 +2639,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'invoice_created_date',
 									formatter: (g) => {
-										if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+										if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 										} else {
 											return `${''}`;
@@ -2732,7 +2747,7 @@ export class CollectionReportComponent implements OnInit {
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['stu_admission_no'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand_Total</b></div>');
+						obj3['stu_admission_no'] = this.common.htmlToText('<div class="_class"><b></b></div>');
 						obj3['stu_full_name'] = '';
 						obj3['class_name'] = '';
 						obj3['receipt_no'] = '';
@@ -2947,7 +2962,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
@@ -3087,6 +3102,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
+												
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 													// obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -3096,8 +3112,8 @@ export class CollectionReportComponent implements OnInit {
 													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
 														// console.log("i am here",(stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0) , k);
 
-														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
-															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														if ((repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1') && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? (Number(repoArray[Number(keys)]['invoice_amount']) < Number(stuFeeHeadArray[fi]['fh_amt']) ? Number(repoArray[Number(keys)]['invoice_amount']) : Number(stuFeeHeadArray[fi]['fh_amt'])) : 0;
 															tot = tot + obj[key2 + k];
 															// break;
 														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
@@ -3112,19 +3128,40 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 																? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															// break;
-														} else {
+														} 
+														else if ((repoArray[Number(keys)]['accd_opening_balance_paid_status'] == null) && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? (Number(repoArray[Number(keys)]['invoice_amount']) < Number(stuFeeHeadArray[fi]['fh_amt']) ? Number(repoArray[Number(keys)]['invoice_amount']) : Number(stuFeeHeadArray[fi]['fh_amt'])) : 0;
+															tot = tot + obj[key2 + k];
+															// break;
+														} 
+														else {
 															obj[key2 + k] = 0
 														}
 													} else {
-														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == null && stuFeeHeadArray[fi]['fh_id'] == 's1' && repoArray[Number(keys)]['invoice_no']) {
+															
+															obj[key2 + k] = Number(repoArray[Number(keys)]['invoice_amount']);
+
+															stuFeeHeadArray.forEach(element => {
+																if (element['fh_id'] != "s1") {
+																	if (element['fh_amt']) {
+																		obj[key2 + k] = 0;
+																	}
+																}
+
+															});
+
+														} else {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														}
 														// break;
 													}
 
 													if ((stuFeeHeadArray[fi]['fh_id'] == '0') && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-														console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 														// break;
 
 													}
@@ -3134,14 +3171,17 @@ export class CollectionReportComponent implements OnInit {
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											if (repoArray[Number(keys)]['stu_admission_no'] == "A - 5731")
-												console.log("i am here    ", repoArray[Number(keys)]);
+												// console.log("i am here    ", repoArray[Number(keys)]);
 
-											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
-												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
 												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+
+											obj['adhoc_payment'] = repoArray[Number(keys)]['invoice_no']
+												? 0 : obj['total'];
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
 											obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? this.addNewlines(repoArray[Number(keys)]['ftr_cheque_no']) : '-';
@@ -3187,6 +3227,9 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 								obj['total'] = repoArray[Number(keys)]['invoice_amount']
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+
+								obj['adhoc_payment'] = repoArray[Number(keys)]['invoice_no']
+									? 0 : obj['total'];
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 									repoArray[Number(keys)]['pay_name'] : '-';
 								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? this.addNewlines(repoArray[Number(keys)]['ftr_cheque_no']) : '-';
@@ -3201,6 +3244,16 @@ export class CollectionReportComponent implements OnInit {
 
 						this.columnDefinitions.push(
 							{
+								id: 'adhoc_payment', name: 'Adhoc (₹)', field: 'adhoc_payment',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								type: FieldType.number,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
 								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
 								filterable: true,
 								filterSearchType: FieldType.number,
@@ -3210,6 +3263,7 @@ export class CollectionReportComponent implements OnInit {
 								type: FieldType.number,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
+
 							{
 								id: 'total', name: 'Total (₹)', field: 'total',
 								filterable: true,
@@ -3306,13 +3360,18 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand_Total';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
+						obj3['ses_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['tag_name'] = '';
+						obj3['adhoc_payment'] =
+							new IndianCurrency().transform(this.dataset.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
@@ -3535,7 +3594,7 @@ export class CollectionReportComponent implements OnInit {
 									// 	grouping: {
 									// 		getter: 'invoice_created_date',
 									// 		formatter: (g) => {
-									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand_Total</b>') {
+									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b></b>') {
 									// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 									// 			} else {
 									// 				return `${''}`;
@@ -3630,7 +3689,7 @@ export class CollectionReportComponent implements OnInit {
 											const feeObj: any = {};
 											this.columnDefinitions.push({
 												id: 'fh_name' + j,
-												name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
+												name: new CapitalizePipe().transform(titem[key2] != 'Previous Session Data' ? titem[key2] : 'Prev. Ses. Data') + ' (₹)',
 												field: 'fh_name' + j,
 												cssClass: 'amount-report-fee',
 												sortable: true,
@@ -3656,9 +3715,9 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['school_prefix'] : '-';
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
-											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
-											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name']) : '-';
+											obj['stu_full_name'] = (new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
+											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
@@ -3669,7 +3728,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['rpt_id'] : '-';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-												repoArray[Number(keys)]['fp_name'] : '-';
+												(repoArray[Number(keys)]['fp_name'][0]) : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
@@ -3730,10 +3789,11 @@ export class CollectionReportComponent implements OnInit {
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											if (Number(repoArray[Number(keys)]['defaulter_inv_group_amount'] > 0)) {
-												console.log('in opening balance');
+												// console.log('in opening balance');
 												obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 													? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											}
+
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
 												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
@@ -3743,9 +3803,11 @@ export class CollectionReportComponent implements OnInit {
 											obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? this.addNewlines(repoArray[Number(keys)]['ftr_cheque_no']) : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
+											obj['adhoc_payment'] = repoArray[Number(keys)]['invoice_no']
+												? 0 : obj['total'];
 											obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
-												repoArray[Number(keys)]['ftr_transaction_id'] : '-';
-											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
+												this.addNewlines(repoArray[Number(keys)]['ftr_transaction_id']) : '-';
+											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? (repoArray[Number(keys)]['created_by']) : '-';
 
 											k++;
 										}
@@ -3760,9 +3822,9 @@ export class CollectionReportComponent implements OnInit {
 									repoArray[Number(keys)]['school_prefix'] : '-';
 								obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 									repoArray[Number(keys)]['stu_admission_no'] : '-';
-								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
-								obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name']) : '-';
+								obj['stu_full_name'] = (new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']));
+								obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name'])) : '-';
+								obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? (new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name'])) : '-';
 								if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 									obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 										repoArray[Number(keys)]['stu_sec_name'];
@@ -3782,20 +3844,35 @@ export class CollectionReportComponent implements OnInit {
 									? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 								obj['total'] = repoArray[Number(keys)]['invoice_amount']
 									? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+								// console.log("iiiiiiiiiiiiiiiiiiii", repoArray[Number(keys)]['invoice_no'],);
+
+
 								obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-									repoArray[Number(keys)]['pay_name'] : '-';
+									(repoArray[Number(keys)]['pay_name']) : '-';
 								obj['ftr_cheque_no'] = repoArray[Number(keys)]['ftr_cheque_no'] != 0 ? this.addNewlines(repoArray[Number(keys)]['ftr_cheque_no']) : '-';
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
-									repoArray[Number(keys)]['ftr_transaction_id'] : '-';
-								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
+									this.addNewlines(repoArray[Number(keys)]['ftr_transaction_id']) : '-';
+								obj['adhoc_payment'] = repoArray[Number(keys)]['invoice_no']
+									? 0 : obj['total'];
+								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? (repoArray[Number(keys)]['created_by']) : '-';
 							}
 							i++;
 							this.dataset.push(obj);
 
 						});
 						this.columnDefinitions.push(
+							{
+								id: 'adhoc_payment', name: 'Adhoc (₹)', field: 'adhoc_payment',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								type: FieldType.number,
+								formatter: this.checkFeeFormatter,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
 							{
 								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
 								filterable: true,
@@ -3912,13 +3989,15 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Grand_Total';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['adhoc_payment'] =
+							new IndianCurrency().transform(this.dataset.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
@@ -3969,7 +4048,7 @@ export class CollectionReportComponent implements OnInit {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						var payModeArray = result.data.payment_mode_data;
-						console.log('repoArray', repoArray);
+						// console.log('repoArray', repoArray);
 
 						let i = 0;
 						let j = 0;
@@ -4084,12 +4163,12 @@ export class CollectionReportComponent implements OnInit {
 								this.dataset.push(obj);
 							}
 
-							console.log('this.dataset--', this.dataset)
+							// console.log('this.dataset--', this.dataset)
 						});
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand_Total</b></div>');
+						obj3['fh_name'] = this.common.htmlToText('<div class="_class"><b></b></div>');
 
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
@@ -4177,12 +4256,12 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	onCellChanged(e, args) {
-		console.log(e);
-		console.log(args);
+		// console.log(e);
+		// console.log(args);
 	}
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
-		if (val != null && val != '-' && totals.group.rows[0].invoice_created_date !== '<b>Grand_Total</b>') {
+		if (val != null && val != '-' && totals.group.rows[0].invoice_created_date !== '<b></b>') {
 			if (new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100)))) {
 				return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
 			} else {
@@ -4226,7 +4305,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand_Total</b>' && value !== '-' && value !== '') {
+		if (value !== '<b></b>' && value !== '-' && value !== '') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
 			return value;
@@ -4379,7 +4458,7 @@ export class CollectionReportComponent implements OnInit {
 		// console.log(sessionEndDate);
 		// console.log(currentDate, (new Date(currentDate) >= new Date(sessionStartDate))), (new Date(currentDate) <= new Date(sessionEndDate));
 		if ((new Date(currentDate).getTime() >= new Date(sessionStartDate).getTime()) && (new Date(currentDate).getTime() <= new Date(sessionEndDate).getTime())) {
-			console.log('in');
+			// console.log('in');
 			var currentMonth = new Date().getMonth();
 			var currentSessionYear = '';
 			if (currentMonth >= 1 && currentMonth <= sessionEndMonth) {
@@ -4394,7 +4473,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': date
 			});
 		} else {
-			console.log('in1');
+			// console.log('in1');
 			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
 			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
 			this.reportFilterForm.patchValue({
@@ -4491,7 +4570,7 @@ export class CollectionReportComponent implements OnInit {
 	getMultiBranchFeeHeads() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('inputJson--', inputJson)
+		// console.log('inputJson--', inputJson)
 		this.feeService.getMultiBranchFeeHeads(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
@@ -4525,7 +4604,7 @@ export class CollectionReportComponent implements OnInit {
 	getGroupedFeeHeads() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('inputJson--', inputJson)
+		// console.log('inputJson--', inputJson)
 		this.feeService.getGroupFeeHeads(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchFeeHeads = result.data;
@@ -4568,7 +4647,7 @@ export class CollectionReportComponent implements OnInit {
 	getMultiBranchRoutes() {
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
-		console.log('multi branch route json', inputJson)
+		// console.log('multi branch route json', inputJson)
 		this.feeService.getMultiBranchRoutes(inputJson).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchRoutes = result.data;
@@ -4695,7 +4774,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	filtered(event) {
-		console.log('event-->', event)
+		// console.log('event-->', event)
 		let commonFilter: any = '';
 		for (const item of event.source.selected) {
 			commonFilter = commonFilter + item.viewValue + ',';
@@ -4725,12 +4804,12 @@ export class CollectionReportComponent implements OnInit {
 		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {
-		console.log("i am here");
+		// console.log("i am here");
 
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (' + groupItem.value + ')';
+			return 'Sub Total';
 		}
 	}
 	checkGroupLevel(item, worksheet) {
@@ -4766,15 +4845,19 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'headwise') {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						obj3['adhoc_payment'] =
+							(groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
@@ -4789,17 +4872,23 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+
 					}
 					if (this.reportType === 'cumulativeheadwise') {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
+						obj3['ses_name'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['tag_name'] = '';
+						obj3['adhoc_payment'] =
+							(groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -4877,8 +4966,8 @@ export class CollectionReportComponent implements OnInit {
 					}
 					if (this.reportType === 'dailyheadwise') {
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -5015,13 +5104,17 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'headwise') {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['adhoc_payment'] =
+							(groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
@@ -5108,7 +5201,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['receipt_id'] = '';
 						obj3['receipt_no'] = '';
 						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
-
+						obj3['adhoc_payment'] =
+							(groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
@@ -5141,13 +5235,18 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'cumulativeheadwise') {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['ses_name'] = '';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['adhoc_payment'] =
+							(groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0));
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -5388,8 +5487,8 @@ export class CollectionReportComponent implements OnInit {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
 					//console.log(item2, 'item2');
-					if (this.reportType === 'summary' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
-						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+					if (this.reportType === 'summary' && this.dataset[key][item2.id] !== '<b></b>') {
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b></b>') {
 							obj[item2.id] = new IndianCurrency().transform(Number(json[key][item2.id]));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
@@ -5397,22 +5496,22 @@ export class CollectionReportComponent implements OnInit {
 						}
 
 					}
-					if (this.reportType !== 'mfr' && this.reportType !== 'summary' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+					if (this.reportType !== 'mfr' && this.reportType !== 'summary' && this.dataset[key][item2.id] !== '<b></b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+							&& this.dataset[key][item2.id] !== '<b></b>') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& json[key][item2.id] === '<b>Grand_Total</b>') {
+							&& json[key][item2.id] === '<b></b>') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
-					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b></b>') {
 						if (item2.id.toString().match(/Q/)) {
 							obj[item2.id] = json[key][item2.id].status !== 'Not Generated' ? json[key][item2.id].status : '-';
 						} else {
@@ -5437,7 +5536,7 @@ export class CollectionReportComponent implements OnInit {
 		if (this.totalRow) {
 			worksheet.addRow(this.totalRow);
 		}
-		// style Grand_Total
+		// style 
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
 			this.columnDefinitions.forEach(element => {
 				cell.font = {
@@ -5671,11 +5770,11 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('Bank Charge report: ') + this.sessionName;
 		}
 		let doc: any;
-		if (this.reportType === "dailyheadwise" || this.reportType === 'cumulativeheadwise') {
-			doc = new jsPDF('l', 'mm', 'a0');
-		} else {
-			doc = new jsPDF('p', 'mm', 'a0');
-		}
+		// if (this.reportType === "dailyheadwise" || this.reportType === 'cumulativeheadwise') {
+		doc = new jsPDF('l', 'mm', 'a4');
+		// } else {
+		// 	doc = new jsPDF('p', 'mm', 'a4');
+		// }
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
@@ -5687,7 +5786,7 @@ export class CollectionReportComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 14,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5698,12 +5797,13 @@ export class CollectionReportComponent implements OnInit {
 			didDrawPage: function (data) {
 
 			},
+			startY: doc.previousAutoTable.finalY + 0.1,
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 12,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5717,23 +5817,23 @@ export class CollectionReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType === 'summary') {
-						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
-							arr.push(new IndianCurrency().transform(Number(json[key][item2.id])));
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b></b>') {
+							arr.push((new IndianCurrency().transform(Number(json[key][item2.id]))));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
-							arr.push(this.common.htmlToText(json[key][item2.id]));
+							arr.push(this.common.htmlToText((json[key][item2.id])));
 						}
 					}
 					if (this.reportType !== 'mfr' && this.reportType !== 'summary') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+							arr.push(this.addNewlines(this.common.htmlToText(this.dataset[key][item2.id])));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand_Total</b>') {
+							&& this.dataset[key][item2.id] !== '<b></b>') {
 							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] === '<b>Grand_Total</b>') {
+							&& this.dataset[key][item2.id] === '<b></b>') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
@@ -5798,20 +5898,20 @@ export class CollectionReportComponent implements OnInit {
 				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
 				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
-					if( data.row.raw.length < 10 ) {
-						doc.setFontSize('28');
-					} else if(data.row.raw.length < 12) {
-						doc.setFontSize('26');
-					} else if(data.row.raw.length < 14 ) {
-						doc.setFontSize('24');
-					} else if(data.row.raw.length < 16 ) {
-						doc.setFontSize('22');
-					} else if(data.row.raw.length < 18 ) {
-						doc.setFontSize('20');
+					if (data.row.raw.length < 10) {
+						doc.setFontSize('12');
+					} else if (data.row.raw.length < 12) {
+						doc.setFontSize('11');
+					} else if (data.row.raw.length < 14) {
+						doc.setFontSize('10');
+					} else if (data.row.raw.length < 16) {
+						doc.setFontSize('9');
+					} else if (data.row.raw.length < 18) {
+						doc.setFontSize('9');
 					} else {
-						doc.setFontSize('18');
+						doc.setFontSize('8');
 					}
-					
+
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(0, 62, 120);
 				}
@@ -5820,18 +5920,18 @@ export class CollectionReportComponent implements OnInit {
 				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
 				if (lsfIndex !== -1) {
 					doc.setFontStyle('bold');
-					if( data.row.raw.length < 10 ) {
-						doc.setFontSize('28');
-					} else if(data.row.raw.length < 12) {
-						doc.setFontSize('26');
-					} else if(data.row.raw.length < 14 ) {
-						doc.setFontSize('24');
-					} else if(data.row.raw.length < 16 ) {
-						doc.setFontSize('22');
-					} else if(data.row.raw.length < 18 ) {
-						doc.setFontSize('20');
+					if (data.row.raw.length < 10) {
+						doc.setFontSize('12');
+					} else if (data.row.raw.length < 12) {
+						doc.setFontSize('11');
+					} else if (data.row.raw.length < 14) {
+						doc.setFontSize('10');
+					} else if (data.row.raw.length < 16) {
+						doc.setFontSize('9');
+					} else if (data.row.raw.length < 18) {
+						doc.setFontSize('8');
 					} else {
-						doc.setFontSize('18');
+						doc.setFontSize('7');
 					}
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(229, 136, 67);
@@ -5841,39 +5941,40 @@ export class CollectionReportComponent implements OnInit {
 				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
 				if (lhIndex !== -1) {
 					doc.setFontStyle('bold');
-					if( data.row.raw.length < 10 ) {
-						doc.setFontSize('28');
-					} else if(data.row.raw.length < 12) {
-						doc.setFontSize('26');
-					} else if(data.row.raw.length < 14 ) {
-						doc.setFontSize('24');
-					} else if(data.row.raw.length < 16 ) {
-						doc.setFontSize('22');
-					} else if(data.row.raw.length < 18 ) {
-						doc.setFontSize('20');
-					} else {
-						doc.setFontSize('18');
-					}
+					// if (data.row.raw.length < 10) {
+					// 	doc.setFontSize('28');
+					// } else if (data.row.raw.length < 12) {
+					// 	doc.setFontSize('26');
+					// } else if (data.row.raw.length < 14) {
+					// 	doc.setFontSize('24');
+					// } else if (data.row.raw.length < 16) {
+					// 	doc.setFontSize('22');
+					// } else if (data.row.raw.length < 18) {
+					// 	doc.setFontSize('20');
+					// } else {
+					// 	doc.setFontSize('18');
+					// }
+					doc.setFontSize('6');
 					doc.setTextColor('#5e666d');
 					doc.setFillColor('#c8d6e5');
 				}
 
-				// Grand_Total
+				// 
 				if (data.row.index === rows.length - 1) {
 					doc.setFontStyle('bold');
-					
-					if( data.row.raw.length < 10 ) {
-						doc.setFontSize('28');
-					} else if(data.row.raw.length < 12) {
-						doc.setFontSize('26');
-					} else if(data.row.raw.length < 14 ) {
-						doc.setFontSize('24');
-					} else if(data.row.raw.length < 16 ) {
-						doc.setFontSize('22');
-					} else if(data.row.raw.length < 18 ) {
-						doc.setFontSize('20');
+
+					if (data.row.raw.length < 10) {
+						doc.setFontSize('12');
+					} else if (data.row.raw.length < 12) {
+						doc.setFontSize('11');
+					} else if (data.row.raw.length < 14) {
+						doc.setFontSize('10');
+					} else if (data.row.raw.length < 16) {
+						doc.setFontSize('9');
+					} else if (data.row.raw.length < 18) {
+						doc.setFontSize('8');
 					} else {
-						doc.setFontSize('18');
+						doc.setFontSize('7');
 					}
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(67, 160, 71);
@@ -5883,14 +5984,14 @@ export class CollectionReportComponent implements OnInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 12 : this.exportColumnDefinitions.length < 12 ? 11 : this.exportColumnDefinitions.length < 14 ? 10 : this.exportColumnDefinitions.length < 16 ? 9 : this.exportColumnDefinitions.length < 18 ? 8 : 7,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: this.exportColumnDefinitions.length < 10 ? 28: this.exportColumnDefinitions.length < 12 ? 26 :this.exportColumnDefinitions.length < 14 ? 24: this.exportColumnDefinitions.length < 16 ? 22 :this.exportColumnDefinitions.length < 18 ? 20:18,
+				fontSize: this.exportColumnDefinitions.length < 10 ? 12 : this.exportColumnDefinitions.length < 12 ? 11 : this.exportColumnDefinitions.length < 14 ? 10 : this.exportColumnDefinitions.length < 16 ? 9 : this.exportColumnDefinitions.length < 18 ? 8 : 7,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
@@ -5904,12 +6005,13 @@ export class CollectionReportComponent implements OnInit {
 				didDrawPage: function (data) {
 
 				},
+				startY: doc.previousAutoTable.finalY + 0.3,
 				headStyles: {
 					fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'left',
-					fontSize: 20,
+					fontSize: 10,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -5921,12 +6023,13 @@ export class CollectionReportComponent implements OnInit {
 			didDrawPage: function (data) {
 
 			},
+			startY: doc.previousAutoTable.finalY + 0.1,
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5937,12 +6040,13 @@ export class CollectionReportComponent implements OnInit {
 			didDrawPage: function (data) {
 
 			},
+			startY: doc.previousAutoTable.finalY + 0.1,
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5954,12 +6058,13 @@ export class CollectionReportComponent implements OnInit {
 			didDrawPage: function (data) {
 
 			},
+			startY: doc.previousAutoTable.finalY + 0.1,
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5970,12 +6075,13 @@ export class CollectionReportComponent implements OnInit {
 			didDrawPage: function (data) {
 
 			},
+			startY: doc.previousAutoTable.finalY + 0.1,
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 20,
+				fontSize: 10,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -5989,7 +6095,7 @@ export class CollectionReportComponent implements OnInit {
 		if (item.length > 0) {
 			for (const groupItem of item) {
 				// add and style for groupeditem level heading
-				this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+				this.pdfrowdata.push(['', '', groupItem.value]);
 				this.levelHeading.push(this.pdfrowdata.length - 1);
 
 				if (groupItem.groups) {
@@ -6000,13 +6106,15 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -6024,6 +6132,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+						obj3['tag_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6067,11 +6176,12 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
@@ -6085,8 +6195,8 @@ export class CollectionReportComponent implements OnInit {
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6105,16 +6215,19 @@ export class CollectionReportComponent implements OnInit {
 						}
 					}
 					if (this.reportType === 'dailyheadwise') {
-						levelArray.push('', '');
+						// levelArray.push('', '');
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
+						obj3['ses_name'] = '';
+						obj3['tag_name'] = '';
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
@@ -6160,7 +6273,46 @@ export class CollectionReportComponent implements OnInit {
 							});
 						}
 					}
+					if (this.reportType == 'cumulativeheadwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						obj3['ses_name'] = '';
+						obj3['tag_name'] = '';
+						obj3["receipt_mode_name"] = '';
+						obj3['ftr_cheque_no'] = '';
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
 
+
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+						obj3['fp_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+					}
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
@@ -6172,11 +6324,9 @@ export class CollectionReportComponent implements OnInit {
 				} else {
 
 					const rowData: any[] = [];
-					// console.log("-----------------------------------------------------",this.reportType, groupItem);
 
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						// console.log("i am keys------------------", groupItem.rows[key][item2.id]);
 
 						for (const item2 of this.exportColumnDefinitions) {
 
@@ -6210,16 +6360,17 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0); Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
 									Object.keys(groupItem.rows[key3]).forEach(key4 => {
@@ -6234,7 +6385,8 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
-						levelArray.push("");
+						obj3['tag_name'] = '';
+
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6242,13 +6394,14 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
+
 					}
 					if (this.reportType === 'modewise') {
 
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6281,11 +6434,12 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['tag_name'] = '';
 						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						for (const col of this.exportColumnDefinitions) {
@@ -6295,12 +6449,13 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
+
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['srno'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -6322,21 +6477,23 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
+						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['receipt_no'] = '';
-						// console.log("------------------------------------------", this.feeHeadJSON);
+						obj3['ses_name'] = '';
+						obj3['tag_name'] = '';
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
 
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 								Object.keys(groupItem.rows).forEach(key3 => {
 									Object.keys(groupItem.rows[key3]).forEach(key4 => {
 										if (key4 === key2) {
-
-
 											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
 										}
 									});
@@ -6345,13 +6502,9 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + (val != undefined && val != 'undefined' ? val : 0), 0);
 						obj3['fp_name'] = '';
-						// console.log("i am here -------------------------", this.exportColumnDefinitions);
-						levelArray.push("", "");
+
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
-								// console.log("i am here---------------------", key, col.id);
-
-
 								if (col.id === key) {
 									levelArray.push(obj3[key]);
 								}
@@ -6359,17 +6512,20 @@ export class CollectionReportComponent implements OnInit {
 						}
 					}
 					if (this.reportType === 'dailyheadwise') {
-						levelArray.push('', '');
+						// levelArray.push('', '');
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['ses_name'] = '';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['tag_name'] = '';
+						obj3['adhoc_payment'] = groupItem.rows.map(t => t.adhoc_payment).reduce((acc, val) => acc + val, 0);
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
@@ -6387,6 +6543,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
+
 						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
@@ -6416,7 +6573,6 @@ export class CollectionReportComponent implements OnInit {
 					}
 					// style row having total
 					if (groupItem.level === 0) {
-						// console.log("i am levelarray", levelArray);
 
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
@@ -6468,9 +6624,10 @@ export class CollectionReportComponent implements OnInit {
 		let result = '';
 		if (str) {
 			while (str.length > 0) {
-				result += str.substring(0, 15) + '\n';
-				str = str.substring(15);
+				result += str.substring(0, 13) + ' ';
+				str = str.substring(13);
 			}
+			
 		}
 
 		return this.common.htmlToText(result);
