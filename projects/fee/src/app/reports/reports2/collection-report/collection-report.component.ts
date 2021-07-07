@@ -973,8 +973,15 @@ export class CollectionReportComponent implements OnInit {
 									obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
 								}
 							}
+							let check = 0;
+							for(let i = 0; i < commonHeadsArray.length; i++) {
+								check += obj['fh_name'+i];
+							}
+							if(check == obj['total']) {
+								obj['invoice_fine_amount'] = 0;
+							}
 							i++;
-
+							
 							if (Object.keys(obj).length > 0 && obj.stu_admission_no) {
 								this.dataset.push(obj);
 							}
@@ -3080,9 +3087,7 @@ export class CollectionReportComponent implements OnInit {
 											this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
 											j++;
 										}
-										if (key2 === 'fh_name') {
-											
-											
+										if (key2 === 'fh_name') {											
 											obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 												repoArray[Number(keys)]['rpt_id'];
 											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
@@ -3247,10 +3252,7 @@ export class CollectionReportComponent implements OnInit {
 								obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 									repoArray[Number(keys)]['tb_name'] : '-';
 								obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
-								
-
 							}
-							
 							let check = 0;
 							for(let i = 0; i < commonHeadsArray.length; i++) {
 								check += obj['fh_name'+i];
