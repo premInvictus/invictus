@@ -48,3 +48,7 @@ tr.mat-row {
 .absent-color{
     color: #ff5a5a;
 }
+.mat-checkbox-disabled {
+    // background-color: #757a8461 !important;
+    opacity: 0.5;
+}

@@ -92,6 +92,23 @@
                                                             <mat-error>Please Name</mat-error>
                                                         </mat-form-field>
                                                     </div>
+                                                    <div class="col-12" *ngIf="formGroupArray[configValue-1].formGroup.value.type == 'type'">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Notification Message</mat-label>
+                                                            <input matInput placeholder="Notification Message"
+                                                                type="text"
+                                                                formControlName="notificationmsg"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                required>
+                                                            <mat-error>Please Notification Message</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-12" *ngIf="formGroupArray[configValue-1].formGroup.value.type == 'type'">
+                                                        <mat-checkbox formControlName="notificationenable"
+                                                            >
+                                                            Enable Notification
+                                                        </mat-checkbox>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -701,7 +718,8 @@
                                                                                     <span *ngIf="!item.name">-</span>
                                                                                 </td>
                                                                             </ng-container>
-                                                                            <ng-container *ngIf="configValue == '1' || configValue == '2'"
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '1' || configValue == '2'"
                                                                                 matColumnDef="type">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
@@ -710,6 +728,30 @@
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
                                                                                     {{ item.type | titlecase}}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '2'"
+                                                                                matColumnDef="notificationmsg">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Notificataioan Message
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    {{ item.notificationmsg}}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '2'"
+                                                                                matColumnDef="notificationenable">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Enable
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    {{ item.notificationenable}}
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '5'"

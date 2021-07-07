@@ -149,6 +149,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				ts_id: '',
 				name: '',
 				type: '',
+				notificationenable:true,
+				notificationmsg:'',
 				status: ''
 			})
 		},
@@ -299,6 +301,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							position: item.ts_id,
 							name: new TitleCasePipe().transform(item.name),
 							type: item.type,
+							notificationenable : item.notificationenable,
+							notificationmsg : item.notificationmsg,
 							action: item
 						});
 						pos++;
@@ -802,6 +806,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				ts_id: value.ts_id,
 				name: value.name,
 				type: value.type,
+				notificationenable:value.notificationenable,
+				notificationmsg:value.notificationmsg,
 				status: value.status
 			});
 		} else if (Number(this.configValue) === 3) {
@@ -875,7 +881,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getAllTransportSetup(this);
-			this.displayedColumns = ['position', 'name', 'type', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'type','notificationmsg','notificationenable', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSubjectType(this);
