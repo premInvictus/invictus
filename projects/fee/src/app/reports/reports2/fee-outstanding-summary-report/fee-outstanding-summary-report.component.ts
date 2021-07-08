@@ -421,6 +421,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 								name: 'Day',
 								field: 'day',
 								sortable: true,
+								formatter : this.checkDateFormatter
 
 							},
 						];
@@ -885,7 +886,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand Total</b>' && value !== '-' && value !== '') {
+		if (value !== '<b>Grand Total</b>'&& value !== 'Total' && value !== '-' && value !== '') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
 			return value;
