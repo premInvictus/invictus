@@ -3180,11 +3180,11 @@ export class CollectionReportComponent implements OnInit {
 											}
 											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
-											if (repoArray[Number(keys)]['stu_admission_no'] == "A - 5731")
+											// if (repoArray[Number(keys)]['stu_admission_no'] == "A - 5731")
 												// console.log("i am here    ", repoArray[Number(keys)]);
 
-												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
-													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											
 												
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']

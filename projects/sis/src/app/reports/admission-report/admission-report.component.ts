@@ -951,6 +951,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			blankTempObj['em_no'] = '';
 			blankTempObj['em_date'] = '';
 			blankTempObj['class_name'] = '';
+			blankTempObj['ces_enrollment_remark'] = '';
 			// this.dataset.push(blankTempObj);
 			this.totalRow = blankTempObj;
 			console.log('dataset  ', this.dataset);

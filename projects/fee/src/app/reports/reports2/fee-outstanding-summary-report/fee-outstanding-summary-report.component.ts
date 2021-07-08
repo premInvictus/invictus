@@ -28,9 +28,9 @@ declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 @Component({
-  selector: 'app-fee-outstanding-summary-report',
-  templateUrl: './fee-outstanding-summary-report.component.html',
-  styleUrls: ['./fee-outstanding-summary-report.component.css']
+	selector: 'app-fee-outstanding-summary-report',
+	templateUrl: './fee-outstanding-summary-report.component.html',
+	styleUrls: ['./fee-outstanding-summary-report.component.css']
 })
 export class FeeOutstandingSummaryReportComponent implements OnInit {
 	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
@@ -144,6 +144,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.getSchool();
 		this.getSession();
 		this.buildForm();
+		this.getFeeHeads();
 
 	}
 	getSchool() {
@@ -161,44 +162,44 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	parseRoman(s) {
-        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
-        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
-            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
-        }, 0);
+		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+		return s.toUpperCase().split('').reduce((r, a, i, aa) => {
+			return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+		}, 0);
 	}
 	isRoman(s) {
-        // http://stackoverflow.com/a/267405/1447675
-        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+		// http://stackoverflow.com/a/267405/1447675
+		return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
 	}
-	updateClassSort(grid:any,dataView:any) {
+	updateClassSort(grid: any, dataView: any) {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
-				grid.onSort.subscribe((e, args)=> {
-					
-				  
+				grid.onSort.subscribe((e, args) => {
+
+
 					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
-					var comparer = (a, b) =>{
+					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-							
-							
+
+
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-						
-						
+
+
 						} else {
-							
+
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-					
+
 					}
 					dataView.sort(comparer, args.sortAsc);
-				  });
+				});
 			}
 		}
 	}
@@ -207,8 +208,8 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			if (columnId) {
-			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+				const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 			}
 		}
 	}
@@ -259,7 +260,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			rowHeight:65,
+			rowHeight: 65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -369,33 +370,33 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			'downloadAll': true,
 			'month': value.month
 		};
-		this.feeService.getFeeSummaryPeriodWiseReport(collectionJSON).subscribe((res:any) => {
-			if(res.status) {
-				if(res.data.length > 0) {
-					if(this.reportType == "daily") {
+		this.feeService.getFeeSummaryPeriodWiseReport(collectionJSON).subscribe((res: any) => {
+			if (res.status) {
+				if (res.data.length > 0) {
+					if (this.reportType == "daily") {
 						this.columnDefinitions = [
-									{
-										id: 'id',
-										name: 'SNo.',
-										field: 'id',
-										sortable: true,
-										width: 4
-									},
-									{
-										id: 'fh_name',
-										name: 'Fee Head',
-										field: 'fh_name',
-										sortable: true,
-										width: 4
-									},
-									{
-										id: 'fh_amount',
-										name: 'Amount',
-										field: 'fh_amount',
-										sortable: true,
-										width: 4,
-										formatter: this.checkFeeFormatter,
-									},
+							{
+								id: 'id',
+								name: 'SNo.',
+								field: 'id',
+								sortable: true,
+								width: 4
+							},
+							{
+								id: 'fh_name',
+								name: 'Fee Head',
+								field: 'fh_name',
+								sortable: true,
+								width: 4
+							},
+							{
+								id: 'fh_amount',
+								name: 'Amount',
+								field: 'fh_amount',
+								sortable: true,
+								width: 4,
+								formatter: this.checkFeeFormatter,
+							},
 						];
 						let pos = 1;
 						res.data.forEach(element => {
@@ -407,154 +408,365 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							pos++;
 						});
 						this.tableFlag = true
-					} else if(this.reportType == "monthly") {
+					} else if (this.reportType == "monthly") {
 						this.columnDefinitions = [
-									// {
-									// 	id: 'id',
-									// 	name: 'SNo.',
-									// 	field: 'id',
-									// 	sortable: true,
-									// },
-									{
-										id: 'fh_name',
-										name: 'Fee Head',
-										field: 'fh_name',
-										sortable: true,
-										
-									},
+							{
+								id: 'id',
+								name: 'SNo.',
+								field: 'id',
+								sortable: true,
+							},
+							{
+								id: 'day',
+								name: 'Day',
+								field: 'day',
+								sortable: true,
+								formatter : this.checkDateFormatter
+
+							},
 						];
 						let aa = Object.keys(res.data[0]);
 						console.log(res.data);
-						
+						let month_days = [];
 
 						aa.forEach(element => {
-							if(element != "id" && element != "fh_id" && element != "fh_name") {
-								let obj = {
-									id: element,
-									name: element != 'Total' ? new DatePipe('en-in').transform(element, 'dd-MMM'): element,
-									field: element,
-									sortable: true,
-									formatter: this.checkFeeFormatter,
-								}
-								this.columnDefinitions.push(obj);
+							if (element != "id" && element != "fh_id" && element != "fh_name") {
+								month_days.push(element)
 							}
 						});
+						console.log("i am month", month_days);
 						
-						this.dataset = res.data;
+						res.data.forEach(element => {
+							
+							let obj = {
+								id: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString(): 'Total',
+								name: element.fh_name,
+								field: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString(): 'Total',
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+							}
+							this.columnDefinitions.push(obj);
+						
+					});
+					let i = 1
+					month_days.forEach(element => {
+						let obj = {}
+						obj['id'] = i;
+						obj['srno'] = i;
+						i += 1;
+						obj['day'] = element
+						res.data.forEach(element1 => {
+							console.log(element1, '------------------------------');
+							if(element1['fh_id']) {
+								obj[element1['fh_id'].toString()] = element1[element]
+							} else {
+								obj['Total'] = element1[element]
+							}
+							
+						});
+						this.dataset.push(obj)
+					});
+					console.log("i am here", this.columnDefinitions, this.dataset);
+					
+						// this.dataset = res.data;
 						this.tableFlag = true
-					} else if(this.reportType == "yearly") {
-						this.columnDefinitions = [
-									{
-										id: 'id',
-										name: 'SNo.',
-										field: 'id',
-										sortable: true,
-									},
-									{
-										id: 'fh_name',
-										name: 'Fee Head',
-										field: 'fh_name',
-										sortable: true,
-									},
-									{
-										id: 'April',
-										name:'April',
-										field: 'April',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'May',
-										name:'May',
-										field: 'May',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'June',
-										name:'June',
-										field: 'June',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'July',
-										name:'July',
-										field: 'July',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'August',
-										name:'August',
-										field: 'August',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'September',
-										name:'September',
-										field: 'September',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'October',
-										name:'October',
-										field: 'October',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'November',
-										name:'November',
-										field: 'November',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'December',
-										name:'December',
-										field: 'December',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'January',
-										name:'January',
-										field: 'January',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'Feburary',
-										name:'Feburary',
-										field: 'Feburary',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'March',
-										name:'March',
-										field: 'March',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									},
-									{
-										id: 'Total',
-										name:'Total',
-										field: 'Total',
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-									}
-						];
+					} else if (this.reportType == "yearly") {
+						this.columnDefinitions = this.valueArray;
+						let data_total = {};
+						data_total['id'] = 'grand';
+						let insert = false;
+						this.valueArray.forEach((e) => {
+							if (e.id == 'srno') {
+								data_total[e.id] = ''
+							} else if (e.id == "mnth") {
+								data_total[e.id] = 'Grand Total'
+							} else {
+								data_total[e.id.toString()] = 0
+							}
+						})
 						
+
+						let year1 = Number(this.sessionName.split('-')[0]) - 1;
+						let year2 = Number(this.sessionName.split('-')[0]);
+						let year3 = Number(this.sessionName.split('-')[1]);
+
+						let obj = {};
+						obj['id'] = 1
+						obj['srno'] = 1
+						obj['mnth'] = "October-" + year1
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						insert = false
+						obj = {};
+						obj['id'] = 2
+						obj['srno'] = 2
+						obj['mnth'] = "November-" + year1
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']]);
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						obj = {};
+						obj['id'] = 3
+						obj['srno'] = 3
+						obj['mnth'] = "December-" + year1
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']]);
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						obj = {};
+						obj['id'] = 4
+						obj['srno'] = 4
+						obj['mnth'] = "January-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']]);
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						obj = {};
+						obj['id'] = 5
+						obj['srno'] = 5
+						obj['mnth'] = "February-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']]);
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						obj = {};
+						obj['id'] = 6
+						obj['srno'] = 6
+						obj['mnth'] = "March-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']]);
+								data_total[element.fh_id] += Number(element[obj['mnth']]);
+								insert = true;
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						if(insert) {
+							this.dataset.push(obj);
+						}
+						obj = {};
+						obj['id'] = 7
+						obj['srno'] = 7
+						obj['mnth'] = "April-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 8
+						obj['srno'] = 8
+						obj['mnth'] = "May-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 9
+						obj['srno'] = 9
+						obj['mnth'] = "June-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 10
+						obj['srno'] = 10
+						obj['mnth'] = "July-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 11
+						obj['srno'] = 11
+						obj['mnth'] = "August-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 12
+						obj['srno'] = 12
+						obj['mnth'] = "September-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 13
+						obj['srno'] = 13
+						obj['mnth'] = "October-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 14
+						obj['srno'] = 14
+						obj['mnth'] = "November-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 15
+						obj['srno'] = 15
+						obj['mnth'] = "December-" + year2
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 16
+						obj['srno'] = 16
+						obj['mnth'] = "January-" + year3
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						obj = {};
+						obj['id'] = 17
+						obj['srno'] = 17
+						obj['mnth'] = "February-" + year3
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
 						
-						this.dataset = res.data;
+						obj = {};
+						obj['id'] = 19
+						obj['srno'] = 19
+						obj['mnth'] = "April-" + year3
+						res.data.forEach(element => {
+							if (element[obj['mnth']]) {
+								obj[element.fh_id] = Number(element[obj['mnth']])
+								data_total[element.fh_id] += Number(element[obj['mnth']])
+							} else {
+								obj[element.fh_id] = 0;
+							}
+						});
+
+						this.dataset.push(obj);
+						console.log("i am total", data_total, this.valueArray, this.dataset);
+						this.dataset.push(data_total);
 						this.tableFlag = true
 					}
 				}
-				
+
 			} else {
 				this.tableFlag = true;
 			}
@@ -628,11 +840,11 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
 			if (new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100)))) {
-				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';	
+				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
 			} else {
 				return '';
 			}
-			
+
 		}
 		return '';
 	}
@@ -670,12 +882,19 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			} else {
 				return '-';
 			}
-			
+
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand Total</b>' && value !== '-' && value !== '') {
+		if (value !== '<b>Grand Total</b>'&& value !== 'Total' && value !== '-' && value !== '') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return value;
+		}
+	}
+	checkDateFormatter2(row, cell, value, columnDef, dataContext) {
+		if (value !== 'Grand Total' && value !== '-' && value !== '') {
+			return new DatePipe('en-in').transform('01-'+value, 'MMM-yy');
 		} else {
 			return value;
 		}
@@ -720,16 +939,72 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 	}
 	getFeeHeads() {
 		this.valueArray = [];
+		this.valueArray.push({
+			id: 'srno',
+			name: "Sr. No",
+			field: 'srno',
+			sortable: true,
+			width: 4,
+		});
+		this.valueArray.push({
+			id: 'mnth',
+			name: "Month",
+			field: 'mnth',
+			sortable: true,
+			width: 4,
+			formatter: this.checkDateFormatter2
+		});
 		this.feeService.getFeeHeads({ fh_is_hostel_fee: '' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				for (const item of result.data) {
 					this.valueArray.push({
-						id: item.fh_id,
-						name: item.fh_name
+						id: Number(item.fh_id),
+						name: item.fh_name,
+						field: Number(item.fh_id),
+						sortable: true,
+						width: 4,
+						formatter: this.checkFeeFormatter,
 					});
 				}
+				this.valueArray.push({
+					id: -3,
+					name: "Transport",
+					field: -3,
+					sortable: true,
+					width: 4,
+					formatter: this.checkFeeFormatter,
+				});
+				this.valueArray.push({
+					id: -2,
+					name: "Adhoc",
+					field: -2,
+					sortable: true,
+					width: 4,
+					formatter: this.checkFeeFormatter,
+				});
+				this.valueArray.push({
+					id: -1,
+					name: "Fine",
+					field: -1,
+					sortable: true,
+					width: 4,
+					formatter: this.checkFeeFormatter,
+				});
+				this.valueArray.push({
+					id: 'fh_id',
+					name: "Total",
+					field: 'fh_id',
+					sortable: true,
+					width: 4,
+					formatter: this.checkFeeFormatter,
+				});
 			}
+
 		});
+
+		console.log("i am value----------", this.valueArray);
+
+
 	}
 	getClass() {
 		this.valueArray = [];
@@ -907,7 +1182,10 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.sisService.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
 				this.sessionArray = result2.data;
+
+
 				this.sessionName = this.getSessionName(this.session.ses_id);
+				console.log("i am session data", this.sessionName);
 			}
 		});
 	}
@@ -994,7 +1272,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('Monthly_Fee_Summary_Report_') + this.sessionName;
 		} else if (this.reportType === 'daily') {
 			reportType = new TitleCasePipe().transform('Daily_Fee_Summary_Report_') + this.sessionName;
-		} 
+		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'yearly') {
@@ -1003,8 +1281,8 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('Monthly Fee Summary Report: ') + this.sessionName;
 		} else if (this.reportType === 'daily') {
 			reportType2 = new TitleCasePipe().transform('Daily Fee Summary Report: ') + this.sessionName;
-		} 
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		}
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -1418,7 +1696,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('Monthly Fee Summary Report: ') + this.sessionName;
 		} else if (this.reportType === 'daily') {
 			reportType = new TitleCasePipe().transform('Daily Fee Summary Report: ') + this.sessionName;
-		} 
+		}
 		const doc = new jsPDF('l', 'mm', 'a4');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -1461,17 +1739,17 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined && this.dataset[key][item2.id] != 'undefined' ? this.dataset[key][item2.id] : 0));
 					}
 					if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 						item2.id === 'applicable_from' || item2.id === 'applicable_to')) {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined && this.dataset[key][item2.id] != 'undefined' ? this.dataset[key][item2.id] : 0));
 					}
 					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id] != undefined && this.dataset[key][item2.id] != 'undefined' ? this.dataset[key][item2.id] : 0));
 					}
 				}
 				rowData.push(arr);
