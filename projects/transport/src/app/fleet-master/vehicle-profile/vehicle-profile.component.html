@@ -55,9 +55,6 @@
                 <app-tyre-logs-tab [vehicle]="vehicleDetails"> </app-tyre-logs-tab>
               </div>
             </div>
-            <!-- <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly"
-                [configSetting]="settingsArray">
-              </app-parent-details-theme-two> -->
 
           </mat-expansion-panel>
           <mat-expansion-panel class="margin-top-10" [expanded]="'true'">
@@ -66,11 +63,25 @@
                 <span class="text-uppercase">ATTENDANCE</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-
-            <!-- <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly"
-                [configSetting]="settingsArray">
-              </app-parent-details-theme-two> -->
-
+            <div class="row">
+              <div class="col-12">
+                
+              </div>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="margin-top-10" [expanded]="'true'">
+            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+              <mat-panel-title>
+                <span class="text-uppercase">Live Location</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-12" *ngIf="vehicleDetailsFlag && mapvalue">
+                <mat-card>
+                  <app-googlemap [value]="mapvalue"></app-googlemap>
+               </mat-card>
+              </div>
+            </div>
           </mat-expansion-panel>
         </mat-accordion>
       </mat-card>

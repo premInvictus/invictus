@@ -1,3 +1,62 @@
-<p>
-  live-location works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="paramform">
+        <div class="row">
+          <div class="col-7 remove-col-padding-left margin-top-15">
+            <span class="font-size-24 ">Live Location</span>
+          </div>
+          <div class="col-5 remove-col-padding-right text-right">
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+       <app-googlemap [value]="mapvalue"></app-googlemap>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+        <ng-container matColumnDef="bus_number">
+          <th width="10%" mat-header-cell *matHeaderCellDef> Bus No </th>
+          <td mat-cell *matCellDef="let element">{{element.bus_number | titlecase}} </td>
+        </ng-container>
+        <ng-container matColumnDef="registration_no">
+          <th width="10%" mat-header-cell *matHeaderCellDef> Reg No </th>
+          <td mat-cell *matCellDef="let element"> {{element.registration_no}} </td>
+        </ng-container>
+        <ng-container matColumnDef="driver_name">
+          <th width="15%" mat-header-cell *matHeaderCellDef> Driver Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.driver_name | titlecase}} </td>
+        </ng-container>
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef> Location </th>
+          <td mat-cell *matCellDef="let element"> {{element.location | titlecase}} </td>
+        </ng-container>
+        <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef> Time </th>
+            <td mat-cell *matCellDef="let element"> {{element.time | date:'hh:mm:ss'}} </td>
+          </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <mat-card>
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'No record found'"></app-no-data>
+    </mat-card>
+  </div>
+</div>

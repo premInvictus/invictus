@@ -152,4 +152,40 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.get(environment.apiTransportUrl + '/transport-attendance/get/'+value.id);
 	}
+	insertVehicleChecklist(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/vehicle-checklist/insert', value);
+    }
+    updateVehicleChecklist(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/vehicle-checklist/update', value);
+    }
+    getAllVehicleChecklist(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/vehicle-checklist/getAll', value);
+    }
+    getVehicleChecklist(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/vehicle-checklist/get/'+value.id);
+	}
+	insertStartStopTrip(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/insert', value);
+    }
+    updateStartStopTrip(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/update', value);
+    }
+    getAllStartStopTrip(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getAll', value);
+    }
+    getStartStopTrip(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiTransportUrl + '/startstop-trip/get/'+value.id);
+	}
+	getLastPositionData(value) {
+		// this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getLastPositionData',value);
+	}
 }
