@@ -12,6 +12,8 @@ export class VehicleProfileComponent implements OnInit {
   selected = new FormControl(0);
   vehicleDetails:any = {};
   bus_number:number;
+  mapvalue:any;
+  vehicleDetailsFlag = false;
   constructor(
     private fbuild: FormBuilder,
     private transportService: TransportService,
@@ -36,8 +38,38 @@ export class VehicleProfileComponent implements OnInit {
     this.transportService.getAllTransportVehicle(param).subscribe((result: any) => {
       if(result && result.length > 0) {
         this.vehicleDetails = result[0];
+        this.getLastPositionData();
       }
     })
+  }
+  async getLastPositionData() {
+    this.vehicleDetailsFlag = false;
+    let param: any = {};
+    param.vehicleid = 'All';
+    await this.transportService.getLastPositionData(param).toPromise().then((result: any) => {
+      if (result) {
+        const location_arr = result;
+        const buslocationdet = location_arr.find(e => e.vehicle == this.vehicleDetails.registration_no);
+        if(buslocationdet){
+          this.mapvalue = {};
+          const markers = [];
+          markers.push(
+            {
+              lat: buslocationdet.latitude,
+              lng: buslocationdet.longitude,
+              label: buslocationdet.location
+            }
+          );
+          if(markers.length > 0){
+            this.mapvalue.lat = markers[0].lat;
+            this.mapvalue.long =markers[0].lng;
+            this.mapvalue.markers = markers
+          }
+        }
+      }
+      console.log('this.mapvalue',this.mapvalue);
+      this.vehicleDetailsFlag = true;
+    });
   }
 
 }

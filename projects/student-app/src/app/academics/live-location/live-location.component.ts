@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AxiomService, SisService, SmartService, CommonAPIService, TransportService } from '../../_services';
+import { TransportService } from 'projects/transport/src/app/_services/index';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
+
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './element.model';
 import { MatTableDataSource } from '@angular/material/table';
@@ -13,10 +15,11 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./live-location.component.scss']
 })
 export class LiveLocationComponent implements OnInit, OnDestroy {
-  // lat = 22.4064172;
-  // long = 69.0750171;
-  // zoom = 7;
-
+  
+  currentUser:any;
+  transportDet:any;
+  transportFlag= false;
+  routeDet:any;
   markers = [];
   mapvalue:any = {}
   tableDivFlag = false;
@@ -29,71 +32,35 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   route_arr: any[] = [];
   transportstudent_arr: any = [];
   paramform: FormGroup;
-  stopages: any = [];
-  stopage_arr: any = [];
   vehiclecheclist_arr: any = [];
   startstoptrip_arr: any = [];
-  currentUser: any;
-
-  imageArray = [];
-  viewOnly = false;
-  documentsArray: any[] = [];
-  currentFileChangeEvent: any;
-  multipleFileArray: any[] = [];
-  counter: any = 0;
-  currentImage: any;
-
   location_arr: any = [];
   refreshIntervalId:any;
-
   constructor(
     private fbuild: FormBuilder,
     private transportService: TransportService,
-    private sisService: SisService,
-    private smartService: SmartService,
     private commonAPIService: CommonAPIService,
-    public dialog: MatDialog,
+    private erp: ErpCommonService
   ) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.getAllTransportVehicle();
-    this.buildForm();
+    this.getFeeAccount();
   }
   ngOnDestroy(){
-    clearInterval(this.refreshIntervalId);
   }
-  addCheckList(item) {
-    if (item) {
-      this.documentsArray.push({
-        tv_id: item.tv_id,
-        type_id: item.type_id,
-        cl_id: item.cl_id,
-        cl_status: item.cl_status,
-        document: item.document
-      })
-    }
-  }
-  buildForm() {
-    this.paramform = this.fbuild.group({
-      date: new Date(),
-    })
-  }
+  getFeeAccount() {
+    const param: any = {};
+    param.au_process_type = this.currentUser.au_process_type
+    param.accd_login_id = this.currentUser.login_id
+    this.erp.getFeeAccount(param).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.transportDet=res.data[0];
+        if(this.transportDet.accd_is_transport == 'Y'){
+          this.transportFlag = true;
+          this.getAllTransportVehicle();
 
-  getStopages(list, route_id) {
-    const stopages: any[] = [];
-    list.forEach(item => {
-      if (item.tr_id == route_id) {
-        stopages.push({ tsp_id: item.tsp_id, tsp_name: item.tsp_name })
-      }
-    })
-    return stopages;
-  }
-  getAllChecklist() {
-    this.route_arr = [];
-    this.transportService.getAllChecklist({ status: '1' }).subscribe((result: any) => {
-      if (result && result.length > 0) {
-        this.route_arr = result;
+        }
       }
     });
   }
@@ -102,15 +69,27 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     if (true) {
+      const param2: any = {};
+      param2.status = '1';
+      param2.route_id = Number(this.transportDet.accd_tr_id);
+      await this.transportService.getAllRouteManagement(param2).toPromise().then((result: any) => {
+        if (result && result.length > 0) {
+          this.routeDet = result[0];
+        }
+      });
       const param: any = {};
       param.trip_status = 'start';
       param.date = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+      param.tv_id = this.routeDet.tv_id
       await this.transportService.getAllStartStopTrip(param).toPromise().then((result: any) => {
         if (result && result.length > 0) {
           this.startstoptrip_arr = result;
         }
       });
-      await this.transportService.getAllTransportVehicle({ status: '1' }).toPromise().then((result: any) => {
+      const param1:any = {};
+      param1.tv_id = this.routeDet.tv_id;
+      param1.status = '1';
+      await this.transportService.getAllTransportVehicle(param1).toPromise().then((result: any) => {
         if (result && result.length > 0) {
           this.bus_arr = result;
         }
@@ -124,7 +103,6 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     }
 
   }
-
   async getLastPositionData() {
     let param: any = {};
     param.vehicleid = 'All';
@@ -173,5 +151,4 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     this.tableDivFlag = true;
 
   }
-
 }

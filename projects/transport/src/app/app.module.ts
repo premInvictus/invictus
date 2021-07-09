@@ -11,6 +11,9 @@ import { LoadingModule } from 'ngx-loading';
 import { AuthGuard } from 'src/app/_guards';
 import { LoaderService, CommonAPIService, SisService, AxiomService,SmartService,TransportService } from './_services';
 import { TransportusertypeService } from './transportusertype/transportusertype.service';
+// import { GoogleMapsAngularModule } from 'google-maps-angular';
+// import { AgmCoreModule } from '@agm/core';
+
 const providers = [NotificationsService,
   AuthGuard,
   LoaderService,
@@ -33,7 +36,11 @@ const providers = [NotificationsService,
     LoadingModule,
     BrowserAnimationsModule,
     CookieModule.forRoot(),
-    SimpleNotificationsModule.forRoot(),
+    SimpleNotificationsModule.forRoot()
+    // GoogleMapsAngularModule.forRoot({googleMapsKey: 'AIzaSyACQCah_G7cHhuOJFHjMuKHSIJSVJ6VQqE'}),
+    // AgmCoreModule.forRoot({
+		// 	apiKey: 'AIzaSyACQCah_G7cHhuOJFHjMuKHSIJSVJ6VQqE'
+		// })
   ],
   providers: [],
   bootstrap: [AppComponent]

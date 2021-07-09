@@ -48,7 +48,9 @@ import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.
 import { ScheduleMessageComponent } from './schedule-message/schedule-message.component';
 import { TransportLogFilterComponent } from './transport-log-filter/transport-log-filter.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
-
+import { environment } from '../../../../../src/environments/environment';
+import { AgmCoreModule } from '@agm/core';
+import { GooglemapComponent } from './googlemap/googlemap.component'; 
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -98,7 +100,10 @@ export const MY_FORMATS = {
 		ImageCropperModule,
 		NgxMaskModule.forRoot(),
 		InvictusSharedModule,
-		PopoverModule.forRoot()
+		PopoverModule.forRoot(),
+		AgmCoreModule.forRoot({
+			apiKey: environment.googleMapsKey
+		})
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -128,6 +133,7 @@ export const MY_FORMATS = {
 		UploadFileModalComponent,
 		ScheduleMessageComponent,
 		TransportLogFilterComponent,
+		GooglemapComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -146,7 +152,7 @@ export const MY_FORMATS = {
 		CreateFolderComponent,
 		UploadFileModalComponent,
 		ScheduleMessageComponent,
-		TransportLogFilterComponent
+		TransportLogFilterComponent,
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -195,7 +201,9 @@ export const MY_FORMATS = {
 		CreateFolderComponent,
 		UploadFileModalComponent,
 		ScheduleMessageComponent,
-		TransportLogFilterComponent
+		TransportLogFilterComponent,
+		// AgmCoreModule,
+		GooglemapComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

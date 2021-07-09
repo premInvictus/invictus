@@ -1,0 +1,150 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="paramform">
+        <div class="row">
+          <div class="col-7 remove-col-padding-left margin-top-15">
+            <span class="font-size-24 ">Vehicle Checklist</span>
+          </div>
+          <div class="col-5 remove-col-padding-right text-right">
+            <div class="row" style="margin-top: 0px !important;">
+              <div class="col-4">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Date</mat-label>
+                  <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Checklist Type</mat-label>
+                  <mat-select formControlName="checklist_type" required placeholder="Checklist">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of type_arr" [value]="item.id">
+                      {{item.name | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" style="margin-top: 10px;">
+                <button mat-raised-button class="btn-primary btn-consolidate"
+                  (click)="getAllVehicleChecklist()">Generate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <!-- <div style="padding:10px 0">
+        <button mat-raised-button *ngIf="selection.selected.length > 0" class="btn-primary btn-consolidate"
+          (click)="markAttendance('p')">Submit</button>
+        <button mat-raised-button *ngIf="selection.selected.length > 0" class="btn-primary btn-delete-rec btn-spacer"
+          (click)="markAttendance('a')">Absent</button>
+      </div> -->
+      <mat-accordion multi="true" class="theme-accordion">
+        <ng-container *ngFor="let bus of bus_arr;let i = index">
+          <mat-expansion-panel [expanded]="'true'">
+            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+              <mat-panel-title>
+                <span class="text-uppercase">No-{{bus.bus_number}}, Reg.No-{{bus.registration_no}}, Driver Name-{{bus.driver.user_det.au_full_name}}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table mat-table [dataSource]="groupdataSource[bus.tv_id]" class="table-100 text-center">
+              <ng-container matColumnDef="select">
+                <th width="5%" mat-header-cell *matHeaderCellDef>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <i class="fa fa-check" aria-hidden="true" (click)="markChecklist('1',row.action)"
+                    [ngClass]="{'present-color':checkedChecklist('1',row.action)}" style="padding-right: 15px;"></i>
+                  <i class="fa fa-times" aria-hidden="true" (click)="markChecklist('2',row.action)"
+                    [ngClass]="{'absent-color':checkedChecklist('2',row.action)}" style="padding-right: 15px;"></i>
+                  <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                  </mat-checkbox> -->
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="document">
+                <th mat-header-cell *matHeaderCellDef> Document </th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="row" style="margin-top: 5px !important;margin-bottom: 5px !important;">
+                    <div class="col-2">
+                      <input type="file" class="form-control form-control-sm mv_top" multiple="true"
+                        (change)="fileChangeEvent($event,element.action)" [id]="element.tv_id +''+ element.cl_id"
+                        style="display: none !important">
+                      <button mat-raised-button class="btn-neutral" *ngIf="checkedChecklist('2',element.action)">
+                        <mat-icon class="btn-top-icon">cloud_upload</mat-icon><label class="btn-document-label"
+                          [for]="element.tv_id +''+ element.cl_id">Choose File</label>
+                      </button>
+                    </div>
+                    <ng-container *ngFor="let document of documentsArray">
+                      <ng-container *ngIf="document.tv_id == element.tv_id && document.cl_id == element.cl_id">
+                        <ng-container *ngFor="let img of document.document;let j = index">
+                          <div class="col-1 col-doc-img-3 custom-col-15">
+                            <div class="remove-col-padding">
+                              <div>
+                                <div style="float:right;">
+                                  <button mat-button class="upload-document-delete-btn"
+                                    (click)="deleteFile(j,document)">
+                                    <mat-icon class="btn-upload-icon">delete</mat-icon>
+                                  </button>
+                                </div>
+                                <div>
+                                  <img class="btn-doc-upload-preview margin-left-10" [src]="getuploadurl(img.file_url)"
+                                    (click)="previewImage(j,document)"><br>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="cl_name">
+                <th width="35%" mat-header-cell *matHeaderCellDef> Checklist Name </th>
+                <td mat-cell *matCellDef="let element">{{element.tv_id}} {{element.cl_name | titlecase}} </td>
+              </ng-container>
+              <ng-container matColumnDef="cl_type">
+                <th width="10%" mat-header-cell *matHeaderCellDef> Checklist Type </th>
+                <td mat-cell *matCellDef="let element"> {{element.cl_type | titlecase}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+            <br>
+            <div class="row" style="margin-bottom: 5px;">
+              <div class="col-2">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(bus.tv_id) : null"
+                  [checked]="selection.isSelected(bus.tv_id)">Fit for trip
+                </mat-checkbox>
+              </div>
+              <div class="col-2">
+                  <button mat-raised-button  class="btn-primary btn-consolidate"
+                  (click)="submit(bus)">Submit</button>
+              </div>
+            </div>           
+            
+          </mat-expansion-panel>
+        </ng-container>
+      </mat-accordion>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <mat-card>
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'No record found'"></app-no-data>
+    </mat-card>
+  </div>
+</div>
