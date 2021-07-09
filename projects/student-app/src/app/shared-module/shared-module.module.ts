@@ -65,6 +65,9 @@ import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/a
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import { MakePaymentPayuComponent } from '../student-fee/make-payment-payu/make-payment-payu.component';
 import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
+import { environment } from '../../../../../src/environments/environment';
+import { AgmCoreModule } from '@agm/core';
+import { GooglemapComponent } from './googlemap/googlemap.component';
 
 @NgModule({
 	imports: [
@@ -107,7 +110,10 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 		ImageViewerModule,
 		InfiniteScrollModule,
 		PopoverModule.forRoot(),
-		MatGridListModule
+		MatGridListModule,
+		AgmCoreModule.forRoot({
+			apiKey: environment.googleMapsKey
+		})
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -137,7 +143,8 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 		AdmitCodeConfirmationModalComponent,
 		//NotificationPageComponent,
 		AngularCalendarYearViewComponent,
-		AssignmentAttachmentDialogComponent
+		AssignmentAttachmentDialogComponent,
+		GooglemapComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -195,7 +202,8 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 		AdmitCodeConfirmationModalComponent,
 		AngularCalendarYearViewComponent,
 		MatGridListModule,
-		AssignmentAttachmentDialogComponent
+		AssignmentAttachmentDialogComponent,
+		GooglemapComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,

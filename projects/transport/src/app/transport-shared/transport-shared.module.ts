@@ -50,7 +50,7 @@ import { TransportLogFilterComponent } from './transport-log-filter/transport-lo
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 import { environment } from '../../../../../src/environments/environment';
 import { AgmCoreModule } from '@agm/core';
-import { GooglemapComponent } from './googlemap/googlemap.component';
+import { GooglemapComponent } from './googlemap/googlemap.component'; 
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -102,7 +102,7 @@ export const MY_FORMATS = {
 		InvictusSharedModule,
 		PopoverModule.forRoot(),
 		AgmCoreModule.forRoot({
-			apiKey: 'AIzaSyACQCah_G7cHhuOJFHjMuKHSIJSVJ6VQqE'
+			apiKey: environment.googleMapsKey
 		})
 	],
 	declarations: [
