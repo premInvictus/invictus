@@ -71,6 +71,8 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 		this.dataSource.filter = filterValue;
   }
   getStudents() {
+	this.ELEMENT_DATA = [];
+	this.dataSource = new MatTableDataSource<TestElement>(this.ELEMENT_DATA);
     this.qelementService.getExamAttendance({ es_id: this.data.es_id }).toPromise().then(
 			(result: any) => {
 				if (result && result.status === 'ok' ) {

@@ -33,7 +33,7 @@ export class ScheduleexamComponent implements OnInit {
 	@ViewChild('deleteModalRef') deleteModalRef;
 	@ViewChild('admitCodeModalRef') admitCodeModalRef;
 
-	displayedColumns = ['position', 'name', 'location', 'marks', 'duration', 'date', 'time', 'action'];
+	displayedColumns = ['position', 'name', 'section', 'marks', 'duration', 'date', 'time', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	verifyAdmitCodeStatus = false;
 	constructor(
@@ -127,7 +127,7 @@ export class ScheduleexamComponent implements OnInit {
 								const sliced = t.es_start_time.slice(0, -3);
 								this.ELEMENT_DATA.push({
 									position: ind, name: t.qp_name, duration: t.tp_time_alloted, marks: t.tp_marks,
-									location: t.lab_name, date: t.es_start_date, time: sliced, action: t
+									location: t.lab_name,section:t.sec_name, date: t.es_start_date, time: sliced, action: t
 								});
 								ind++;
 							}

@@ -6,6 +6,7 @@ export interface Element {
 		time: string;
 		duration: string;
 		location: string;
+		section:string;
 		date: string;
 		action: any;
 	}
