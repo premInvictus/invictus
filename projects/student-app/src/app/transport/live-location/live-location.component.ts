@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-live-location',
   templateUrl: './live-location.component.html',
-  styleUrls: ['./live-location.component.scss']
+  styleUrls: ['./live-location.component.css']
 })
 export class LiveLocationComponent implements OnInit, OnDestroy {
   
