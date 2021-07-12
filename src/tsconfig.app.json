@@ -143,7 +143,8 @@
     "../projects/transport/src/app/transport-reports/transport-reports.module.ts",
     "../projects/transport/src/app/transport-auxillaries/transport-auxillaries.module.ts",
     "../projects/transport/src/app/fleet-master/fleet-master.module.ts",
-    "../projects/transport/src/app/fleet-management/fleet-management.module.ts"
+    "../projects/transport/src/app/fleet-management/fleet-management.module.ts",
+    "../projects/student-app/src/app/transport/transport.module.ts",
 
   ]
 }
