@@ -7,7 +7,6 @@ import { TimetableComponent } from './timetable/timetable.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 import {MatStepperModule} from '@angular/material/stepper';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LiveLocationComponent } from './live-location/live-location.component'
 
 @NgModule({
   imports: [
@@ -17,6 +16,6 @@ import { LiveLocationComponent } from './live-location/live-location.component'
     MatStepperModule,
     ReactiveFormsModule
   ],
-  declarations: [ViewClassworkComponent, AssignmentComponent, TimetableComponent,LiveLocationComponent]
+  declarations: [ViewClassworkComponent, AssignmentComponent, TimetableComponent]
 })
 export class AcademicsModule { }

@@ -50,7 +50,8 @@ const routes: Routes = [
 			{
 				path : 'certificates',
 				loadChildren : '../down-certificate/down-certificate.module#DownCertificateModule'
-			}
+			},
+			{path:'transport',loadChildren: '../transport/transport.module#TransportModule'}
 		]
 	},
 	{
