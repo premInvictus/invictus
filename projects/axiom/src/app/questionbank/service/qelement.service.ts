@@ -621,9 +621,6 @@ export class QelementService {
 		if (value.au_admission_no) {
 			param.au_admission_no = value.au_admission_no;
 		}
-		if (value.fromaxion) {
-			param.fromaxion = value.fromaxion;
-		}
 		return this._http.post(environment.apiAxiomUrl + '/users/getUser', param);
 	}
 	// get class, section and subject from their respective global table

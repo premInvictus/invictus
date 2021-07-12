@@ -87,7 +87,6 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 				sec_id: this.scheduleExam.es_sec_id,
 				role_id: '4',
 				status: '1',
-				fromaxion: '1'
 			})
 			.toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
