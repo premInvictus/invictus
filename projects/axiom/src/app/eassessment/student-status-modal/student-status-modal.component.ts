@@ -71,6 +71,7 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 		this.dataSource.filter = filterValue;
   }
   getStudents() {
+	  
 	this.ELEMENT_DATA = [];
 	this.dataSource = new MatTableDataSource<TestElement>(this.ELEMENT_DATA);
     this.qelementService.getExamAttendance({ es_id: this.data.es_id }).toPromise().then(
@@ -80,12 +81,13 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 				}
 			}
 		);
-		this.qelementService
+	this.qelementService
 			.getUser({
 				class_id: this.scheduleExam.es_class_id,
 				sec_id: this.scheduleExam.es_sec_id,
 				role_id: '4',
-				status: '1'
+				status: '1',
+				fromaxion: '1'
 			})
 			.toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
