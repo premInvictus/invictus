@@ -137,6 +137,9 @@
                                                     <i style="font-size: 16px" class="fas fa-folder-open" aria-hidden="true" data-toggle="tooltip" data-placement="top" matTooltip="View Test Report" aria-hidden="true"></i>&nbsp;&nbsp;
                                                     <i *ngIf="currentUser.role_id == 2" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top" matTooltip="Delete" aria-hidden="true" (click)="openModal(template);setDeleteExam(item.action.es_id)"></i>
                                                 </a>
+                                                <a *ngIf="isExistUserAccessMenu('854') && item.action.es_status == '2'" (click)="restarttest(item)">
+                                                    <i  style="color: #1e9bb7; font-size: 16px; cursor: pointer; margin-left: 10px;" class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Re-start Test" aria-hidden="true"></i>&nbsp;&nbsp;
+                                                </a>
                                             </td>;
                                         </ng-container>
                                         <tr mat-header-row class="top_header" *matHeaderRowDef="displayedColumns">

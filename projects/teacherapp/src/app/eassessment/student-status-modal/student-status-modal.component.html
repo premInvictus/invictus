@@ -52,7 +52,7 @@
                      <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element"> 
-                           <i *ngIf="element.eva_details.eva_status == '1'" class="fas fa-undo" data-toggle="tooltip" data-placement="top" matTooltip="Retest" aria-hidden="true" (click)="changeStatus(element.eva_details.eva_id,'0');"></i>
+                           <i *ngIf="isExistUserAccessMenu('856') && (element.eva_details.eva_status == '0' || element.eva_details.eva_status == '1' || element.eva_details.eva_status == '2')" class="fas fa-undo" data-toggle="tooltip" data-placement="top" matTooltip="Retest" aria-hidden="true" (click)="changeStatus(element.eva_details.eva_id,'0');"></i>
                         </td>
                         
                      </ng-container>

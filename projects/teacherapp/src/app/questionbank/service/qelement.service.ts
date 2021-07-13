@@ -867,5 +867,9 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
+	teacherRestartSession(value) {
+		this.loaderService.startLoading();
+		return this._http.put(environment.apiAxiomUrl + '/evaluation/teacherRestartSession', value);
+	}
 }
 

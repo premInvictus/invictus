@@ -1830,7 +1830,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 				}
 			});
 		} else {
-			this.notif.showSuccessErrorMessage('Please add documents', 'error');
+			// this.notif.showSuccessErrorMessage('Please add documents', 'error');
 		}
 	}
 	getuploadurl(fileurl: string) {
