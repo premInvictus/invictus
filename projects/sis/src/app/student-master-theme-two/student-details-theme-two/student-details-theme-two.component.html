@@ -315,9 +315,9 @@
                           <tbody>
                             <tr>
                               <td valign="middle" width="35%" style="text-align: right;">
-                                <strong><img [src]="dom.bypassSecurityTrustResourceUrl(
+                                <strong><img [src]="
                                   'https://apisis.invictusdigisoft.com/createonfly.php?src=' + schoolInfo.school_logo
-                                  + '&h=70&w=70')" width="70"></strong></td>
+                                  + '&h=70&w=70'" width="70"></strong></td>
                               <td width="65%" valign="middle">
                                 <table border="0" cellpadding="0" cellspacing="0" style="color: #021b8f;font-family: Helvetica, Arial, sans-serif;border-collapse: collapse;
                                                               margin-left:12px; font-size: 8px;" width="100%">
@@ -325,31 +325,30 @@
                                     <tr>
                                       <td></td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                       <td class="affiliation" style="
                                                               color: #021b8f;
                                                               top: 0px;
                                                               ">
                                         Affliation&nbsp;No:&nbsp;3430231&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;School&nbsp;No:&nbsp;52089
                                       </td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                       <td class="school-head" style="font-size:20px">
                                         <strong>{{schoolInfo.school_name}}</strong>
                                       </td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                       <td class="info-text" style="
                                                               color: #021b8f;
                                                               ">
                                         Co-Education&nbsp;English&nbsp;Medium&nbsp;School&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Affiliated&nbsp;To&nbsp;C.B.S.E&nbsp;New&nbsp;Delhi
                                       </td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                       <td class="info-text" style="
                                                               color: #021b8f
-                                                              ">{{schoolInfo.school_city}},
-                                        {{schoolInfo.school_state}}</td>
+                                                              ">{{schoolInfo.school_address}}, {{schoolInfo.school_city}}, {{schoolInfo.school_state}}</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -555,7 +554,7 @@
                                             <td width="10%" style="padding-left:10px">
                                               :
                                             </td>
-                                            <td style="padding-left:10px">
+                                            <td style="padding-left:10px" nowrap="nowrap">
                                               {{p.epd_parent_name ? p.epd_parent_name : '-'}}
                                             </td>
                                           </tr>
