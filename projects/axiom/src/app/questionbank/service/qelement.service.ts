@@ -768,6 +768,10 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.put(environment.apiAxiomUrl + '/evaluation/teacherEndSession', value);
 	}
+	teacherRestartSession(value) {
+		this.loaderService.startLoading();
+		return this._http.put(environment.apiAxiomUrl + '/evaluation/teacherRestartSession', value);
+	}
 	getTeacherInputMark(value) {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/evaluation/getTeacherInputMark', value);

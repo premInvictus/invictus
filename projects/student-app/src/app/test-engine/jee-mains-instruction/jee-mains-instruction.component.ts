@@ -314,7 +314,7 @@ export class JeeMainsInstructionComponent implements OnInit {
 			this.conductExam();
 		} else {
 			this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
-			this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+			
 		}
 
 		

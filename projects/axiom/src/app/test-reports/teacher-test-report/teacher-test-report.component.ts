@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService } from '../../_services/index';
+import { NotificationService, UserAccessMenuService } from '../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Element } from './teacher-test-reportElement.model';
 
@@ -47,7 +47,8 @@ export class TeacherTestReportComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
-		private notif: NotificationService
+		private notif: NotificationService,
+		private userAccessMenuService: UserAccessMenuService,
 	) {}
 
 	ngOnInit() {
@@ -212,5 +213,22 @@ export class TeacherTestReportComponent implements OnInit {
 			}
 		);
 		}
+	}
+	restarttest(value) {
+		console.log("i am value", value);
+		
+		if (confirm('Do you really wish to end the test') === true) {
+			this.qelementService.teacherRestartSession({ es_id: value.action.es_id, eva_status: value.action.es_qt_status }).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.notif.showSuccessErrorMessage('Exam Restarted successfully', 'success');
+						this.getScheduleExam();
+					}
+				}
+			);
+		}
+	}
+	isExistUserAccessMenu(mod_id) {
+		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
 	}
 }

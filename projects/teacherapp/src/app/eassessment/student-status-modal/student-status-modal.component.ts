@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService, SocketService } from '../../_services/index';
+import { NotificationService, SocketService, UserAccessMenuService } from '../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort, MatInput } from '@angular/material';
 
 @Component({
@@ -43,6 +43,7 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 		private qelementService: QelementService,
 		private notif: NotificationService,
 		private socketService: SocketService,
+		private userAccessMenuService: UserAccessMenuService,
 		private router: Router
   ) { }
 
@@ -70,7 +71,62 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 		filterValue = filterValue.trim().toLowerCase();
 		this.dataSource.filter = filterValue;
   }
-  getStudents() {
+//   getStudents() {
+//     this.qelementService.getExamAttendance({ es_id: this.data.es_id }).toPromise().then(
+// 			(result: any) => {
+// 				if (result && result.status === 'ok' ) {
+// 					this.testArray = result.data;
+// 				}
+// 			}
+// 		);
+// 		this.qelementService
+// 			.getUser({
+// 				class_id: this.scheduleExam.es_class_id,
+// 				sec_id: this.scheduleExam.es_sec_id,
+// 				role_id: '4',
+// 				status: '1'
+// 			})
+// 			.toPromise().then((result: any) => {
+// 				if (result && result.status === 'ok') {
+// 					this.studentArray = result.data;
+// 					let position = 1;
+
+// 					for (const stu of this.studentArray) {
+//             let status = this.statusArr[0];
+//             let eva_details = {};
+//             const findex = this.testArray.findIndex(e => e.eva_login_id == stu.au_login_id);
+//             if(findex != -1){
+// 			eva_details = this.testArray[findex];
+//               if(this.testArray[findex].eva_status == 0){
+//                 status=this.statusArr[1];
+//               } else if(this.testArray[findex].eva_status == 1){
+//                 status=this.statusArr[2];
+//               } else if(this.testArray[findex].eva_status == 2){
+//                 status=this.statusArr[3];
+//               }
+//             }
+// 						this.ELEMENT_DATA.push({
+// 							position: position,
+// 							admission: stu.au_admission_no,
+// 							loginid: stu.au_login_id,
+// 							student: stu.au_full_name,
+// 							class: this.scheduleExam.class_name,
+// 							section: this.scheduleExam.sec_name,
+//               status: status,
+//               eva_details:eva_details
+// 						});
+// 						this.dataSource = new MatTableDataSource<TestElement>(
+// 							this.ELEMENT_DATA
+// 						);
+// 						position++;
+// 					}
+// 				}
+// 			});
+//   }
+getStudents() {
+	  
+	this.ELEMENT_DATA = [];
+	this.dataSource = new MatTableDataSource<TestElement>(this.ELEMENT_DATA);
     this.qelementService.getExamAttendance({ es_id: this.data.es_id }).toPromise().then(
 			(result: any) => {
 				if (result && result.status === 'ok' ) {
@@ -78,12 +134,12 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
 				}
 			}
 		);
-		this.qelementService
+	this.qelementService
 			.getUser({
 				class_id: this.scheduleExam.es_class_id,
 				sec_id: this.scheduleExam.es_sec_id,
 				role_id: '4',
-				status: '1'
+				status: '1',
 			})
 			.toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
@@ -135,7 +191,6 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
     this.dialogRef.close();
   }
   changeStatus(eva_id,eva_status) {
-	// console.log('chagestatus');
     this.qelementService.teacherFinalSubmit({ eva_id: eva_id, eva_status: eva_status }).subscribe(
       // tslint:disable-next-line:no-shadowed-variable
       (result: any) => {
@@ -146,6 +201,10 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  isExistUserAccessMenu(mod_id) {
+	return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
+}
+  
 
 }
 export interface TestElement {
