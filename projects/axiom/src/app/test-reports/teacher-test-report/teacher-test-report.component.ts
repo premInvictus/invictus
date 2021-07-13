@@ -217,11 +217,11 @@ export class TeacherTestReportComponent implements OnInit {
 	restarttest(value) {
 		console.log("i am value", value);
 		
-		if (confirm('Do you really wish to end the test') === true) {
+		if (confirm('Do you really wish to re-start the test') === true) {
 			this.qelementService.teacherRestartSession({ es_id: value.action.es_id, eva_status: value.action.es_qt_status }).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						this.notif.showSuccessErrorMessage('Exam Restarted successfully', 'success');
+						this.notif.showSuccessErrorMessage('Exam Re-started successfully', 'success');
 						this.getScheduleExam();
 					}
 				}

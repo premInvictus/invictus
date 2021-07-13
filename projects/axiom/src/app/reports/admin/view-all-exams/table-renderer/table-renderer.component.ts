@@ -40,7 +40,7 @@ export class TableRendererComponent implements OnInit , OnChanges , AfterViewIni
 		if (this.comingexamFlag) {
 			this.examJSon = {
 			role_id: this.currentUser.role_id,
-			es_status: '0'
+			es_status: 'both'
 			};
 			this.getScheduleExam(this.examJSon);
 		}
