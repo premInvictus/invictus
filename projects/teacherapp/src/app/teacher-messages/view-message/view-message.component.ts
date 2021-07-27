@@ -46,7 +46,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	attachmentArray: any[] = [];
 	currentRowIndex = 0;
 	filterValue = '';
-	defaultsrc:any;
+	defaultsrc: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -75,17 +75,17 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		}
 		this.getMsgFromDetails();
 	}
-	getMsgFromDetails(){
-		let inputJson:any = {};
+	getMsgFromDetails() {
+		let inputJson: any = {};
 		inputJson['login_id'] = this.reRenderForm.formData.action.msg_from;
 		this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]['au_login_id']) {
-				console.log('getMsgFromDetails--',result);
+				console.log('getMsgFromDetails--', result);
 				if (result.data[0].au_profile_pic) {
 					this.defaultsrc = result.data[0].au_profile_pic
-				  } else {
+				} else {
 					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
-				  }
+				}
 			}
 		});
 	}
@@ -341,11 +341,16 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	checkThumbnail(url: any) {
-		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
-			url.match(/gif/) || url.match(/jpeg/) ||
-			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
-			url.match(/GIF/) || url.match(/JPEG/)) {
-			return true;
+		
+		if (url) {
+			if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+				url.match(/gif/) || url.match(/jpeg/) ||
+				url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+				url.match(/GIF/) || url.match(/JPEG/)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
@@ -536,7 +541,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	back() {
-		var filterValue = this.filterValue ?  this.filterValue : '';
+		var filterValue = this.filterValue ? this.filterValue : '';
 		this.backToBroadcast.emit(filterValue);
 	}
 
@@ -566,7 +571,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		this.messagesData[i]['showReplyBox'] = false;
 	}
 
-	replyMessage(item) {		
+	replyMessage(item) {
 		this.erpCommonService.getLastMessageRecord({}).subscribe((result: any) => {
 			if (result) {
 				console.log('item--', item, result);
@@ -587,17 +592,17 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 					"status": { "status_id": "1", "status_name": "pending", "created_by": this.currentUser.login_id },
 					"msg_thread": [],
 					"msg_created_date": new Date(),
-					"is_replied" : true
+					"is_replied": true
 				};
 				this.reRenderForm.formData.action.msg_thread.push(msgThreadJson);
-				
+
 				//item.msg_thread = threadData;
 				item.msg_status = { "status_id": "1", "status_name": "unread" };
 				//this.reRenderForm.formData.action.msg_thread = threadData;
 				var replyJson = this.reRenderForm.formData.action;
 
 				//console.log('replyJson--', replyJson);
-				
+
 				this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Message has been Replied Successfully', 'success');

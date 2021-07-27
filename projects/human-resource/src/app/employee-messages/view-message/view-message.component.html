@@ -97,10 +97,10 @@
                         <div class="message-attachment">
                             <ul class="preview-attachment-base">
                                 <li *ngFor="let aitem of item?.msg_attachment" class="preview-attachment">
-                                    <img class="attachment-thumbnail" *ngIf="checkThumbnail(aitem.imgName)"
+                                    <img class="attachment-thumbnail" *ngIf="checkThumbnail(aitem.imgName?aitem.imgName : aitem.file_name)"
                                         [src]="aitem.imgUrl" (click)="previewImage(item?.attachment, i)" height="145px"
                                         width="150px">
-                                    <img class="attachment-thumbnail" *ngIf="!checkThumbnail(aitem.imgName)"
+                                    <img class="attachment-thumbnail" *ngIf="!checkThumbnail(aitem.imgName?aitem.imgName : aitem.file_name)"
                                         src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                         (click)="previewImage(item?.attachment, i)" height="100px" width="100px">
                                     <div class="overlay">
@@ -207,10 +207,10 @@
                                         <div class="col-12">
                                             <ul class="preview-attachment-base-reply">
                                                 <li *ngFor="let item of attachmentArray" class="preview-attachment">
-                                                    <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                                    <img *ngIf="checkThumbnail(item.imgName? item.imgName :  item.file_name)" [src]="item.imgUrl"
                                                         (click)="previewImage(attachmentArray, i)" height="145px"
                                                         width="150px">
-                                                    <img *ngIf="!checkThumbnail(item.imgName)"
+                                                    <img *ngIf="!checkThumbnail(item.imgName? item.imgName : item.file_name)"
                                                         src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                                         (click)="previewImage(attachmentArray, i)" height="145px"
                                                         width="150px">

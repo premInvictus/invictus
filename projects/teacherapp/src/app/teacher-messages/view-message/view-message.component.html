@@ -229,10 +229,10 @@
                                         <div class="col-12">
                                             <ul class="preview-attachment-base-reply">
                                                 <li *ngFor="let item of attachmentArray" class="preview-attachment">
-                                                    <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                                    <img *ngIf="checkThumbnail(item.imgName ? item.imgName : item.file_name)" [src]="item.imgUrl"
                                                         (click)="previewImage(attachmentArray, i)" height="145px"
                                                         width="150px">
-                                                    <img *ngIf="!checkThumbnail(item.imgName)"
+                                                    <img *ngIf="!checkThumbnail(item.imgName ? item.imgName : item.file_name )"
                                                         src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                                         (click)="previewImage(attachmentArray, i)" height="145px"
                                                         width="150px">
