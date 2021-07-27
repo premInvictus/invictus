@@ -103,7 +103,7 @@ export class ScheduleexamComponent implements OnInit {
 							const scheduleExamArrayTemp: any[] = result.data;
 							const today = new Date();
 							scheduleExamArrayTemp.forEach((element, index) => {
-								const examscheduledate = new Date(element.es_start_date + ' 00:00:01');
+								const examscheduledate = new Date(element.es_end_date + ' 00:00:01');
 								examscheduledate.setDate(examscheduledate.getDate() + 7);
 								if (examscheduledate.getTime() >= today.getTime()) {
 									this.scheduleExamArray.push(element);
