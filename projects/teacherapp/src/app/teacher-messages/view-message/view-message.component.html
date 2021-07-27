@@ -109,10 +109,10 @@
                         <div class="message-attachment">
                             <ul class="preview-attachment-base">
                                 <li *ngFor="let aitem of item?.msg_attachment" class="preview-attachment">
-                                    <img class="attachment-thumbnail" *ngIf="checkThumbnail(aitem.imgName)"
+                                    <img class="attachment-thumbnail" *ngIf="checkThumbnail(aitem.imgName ?aitem.imgName : aitem.file_name )"
                                         [src]="aitem.imgUrl" (click)="previewImage(item?.attachment, i)" height="145px"
                                         width="150px">
-                                    <img class="attachment-thumbnail" *ngIf="!checkThumbnail(aitem.imgName)"
+                                    <img class="attachment-thumbnail" *ngIf="!checkThumbnail(aitem.imgName ?aitem.imgName : aitem.file_name)"
                                         src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                         (click)="previewImage(item?.attachment, i)" height="100px" width="100px">
                                     <div class="overlay">
