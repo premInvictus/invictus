@@ -37,6 +37,7 @@ export class ReviewerMessagesComponent implements OnInit {
 	bookpagesize = 100;
 	bookpageindex = 0;
 	totalRecords = 0;
+	allstudent: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -46,12 +47,22 @@ export class ReviewerMessagesComponent implements OnInit {
 		private dialog: MatDialog
 	) { 
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		
 	}
 
 	ngOnInit() {
 		this.dataSource.sort = this.sort;
-		this.buildForm();
-		this.getMessages();
+		this.sisService.getMasterStudentDetail({}).subscribe((element:any) => {
+			// console.log("i am element", element);
+			this.allstudent =  element.data;
+			this.buildForm();
+			this.getMessages();
+			// console.log("in here");
+			
+		} )
+		
+		
+		
 	}
 	/** Whether the number of selected elements matches the total number of rows. */
 	isAllSelected() {
@@ -132,6 +143,10 @@ export class ReviewerMessagesComponent implements OnInit {
 			'subject',
 			// 'attachment',
 			'send_by',
+			'send_to',
+			'type',
+			'class_id',
+			'login_id',
 			'action'
 		];
 		var inputJson = {}; 
@@ -152,6 +167,18 @@ export class ReviewerMessagesComponent implements OnInit {
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
 			const tempObj = {};
+			// let objmain = this.sisService.getStudentInformation({'au_login_id': this.scheduleMessageData[i]['msg_created_by']['login_id']}).subscribe((e:any) => {
+			// 	tempObj['class_id'] = e[0]['class_name'] + '-'+ e[0]['sec_name'];
+			// 	tempObj['au_login'] = e[0]['au_login_id'];
+			// })
+			this.allstudent.map((e:any) => {
+				console.log("i am here", (e.au_login_id == this.scheduleMessageData[i]['msg_created_by']['login_id']), e.au_login_id , this.scheduleMessageData[i]['msg_created_by']['login_id']);
+				
+				if(e.au_login_id == this.scheduleMessageData[i]['msg_created_by']['login_id']) {
+						tempObj['class_id'] = e['class_name'] + '-'+ e['sec_name'];
+						tempObj['login_id'] = e['em_admission_no'];
+				}
+			})
 			tempObj['msg_id'] = this.scheduleMessageData[i]['msg_id'];
 			tempObj['no'] = counter;
 			tempObj['subject'] = this.scheduleMessageData[i]['msg_subject'];
@@ -165,6 +192,8 @@ export class ReviewerMessagesComponent implements OnInit {
 			} else if (this.scheduleMessageData[i]['msg_receivers'] === 'Staff') {
 				tempObj['user_type'] = 'Staff';
 			}
+			tempObj['type'] = this.scheduleMessageData[i]['msg_type1'] ? this.scheduleMessageData[i]['msg_type1'] : '-'
+			tempObj['send_to'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'][0]['au_full_name'] : '-'
 			tempObj['send_by'] = this.scheduleMessageData[i]['msg_created_by'] ? this.scheduleMessageData[i]['msg_created_by']['login_name'] : '';
 			tempObj['attachment'] = this.scheduleMessageData[i]['msg_attachment'] ? this.scheduleMessageData[i]['msg_attachment'] : '';
 			tempObj['status'] = this.scheduleMessageData[i]['status']['status_name'];
@@ -231,7 +260,6 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	deleteMessageFunc(element) {
-		console.log('element--',element);
 		if(element) {
 			this.updateMessage('delete',element);
 		} else {
@@ -261,7 +289,7 @@ export class ReviewerMessagesComponent implements OnInit {
 	}
 
 	resetComposeMessage(messageType) {
-		console.log('fgfj');
+		// console.log('fgfj');
 		this.showComposeMessage = false;
 		this.showViewMessage = false;
 		// }
@@ -299,7 +327,7 @@ export class ReviewerMessagesComponent implements OnInit {
 
 	}
 	updateMessage(action,element=null) {
-		console.log(this.selection.selected);
+		// console.log(this.selection.selected);
 		let msg_status;
 		if(action == 'approved') {
 			msg_status = { status_id: '2', status_name: 'approved' };

@@ -5,5 +5,9 @@ export interface Element {
 	schedule_date: any;
 	subject: any;
 	send_by: any;
+	send_to: any;
+	class_id:any;
+	login_id:any;
+	type: any;
 	action: any;
 }
