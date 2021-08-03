@@ -323,6 +323,8 @@ export class SkillsAwardsComponent extends DynamicComponent implements OnInit {
 				}
 			});
 		}
+		console.log("hi i am awards array");
+		console.log(this.finalAwardArray);
 	}
 	updateSkillsAwards(isview) {
 		if (this.context.studentdetails.studentdetailsform.valid) {

@@ -11,6 +11,7 @@ export const environment = {
 	 apiFaUrl: 'http://dev-api-fa.invictusprojects.in',
 	logoutUrl: 'http://uatlogin.invictusprojects.in',
 	socketUrl: 'http://13.127.2.18:8081',
+	googleMapsKey: '',
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',
 	testOngoingCode : 'T102',

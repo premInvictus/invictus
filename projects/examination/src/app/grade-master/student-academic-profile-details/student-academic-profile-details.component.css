@@ -37,3 +37,34 @@
     background-color: #1E88E5 !important;
     color: #ffffff;
 }
+.height-300{
+    display: block;
+    max-height: 300px;
+    overflow-y: scroll;
+    table-layout:fixed;
+}
+/* .seriol-no{
+    width: 30px;
+}*/
+.teachers-remarks{
+    overflow: hidden;
+    text-align: left;
+}
+.teachers-remarks i, .teachers-remarks-r i{
+    color: #18c0ec !important;
+    font-style: italic;
+}
+/*.remarks-doj{
+    width: 40px !important;
+}
+.remarks-auth-id{
+    width: 50px !important;
+}
+.remarks-ar-name{
+    width: 50px !important;
+} */
+.teachers-remarks-r{
+    width: 1275px;
+    display: block;
+    text-align: left;
+}
