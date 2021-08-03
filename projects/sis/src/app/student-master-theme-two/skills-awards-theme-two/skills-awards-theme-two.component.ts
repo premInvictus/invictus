@@ -321,6 +321,8 @@ export class SkillsAwardsThemeTwoComponent implements OnInit, OnChanges {
 				});
 			}
 		}
+		console.log("I am final awards")
+		console.log(this.finalAwardArray);
 	}
 	capitalizeRemarks($event) {
 		let remark: any = '';
