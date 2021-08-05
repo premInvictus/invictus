@@ -36,9 +36,62 @@
     </div>
 </form>
 <div *ngIf="tableFlag && dataset.length > 0">
-    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    <!-- <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
-    </angular-slickgrid>
+    </angular-slickgrid> -->
+
+    <table class="table table-borderd table-stripped custom-table mb-5 mt-5">
+        <thead class="table-skill__head text-center">
+            <tr class="custom-tr">
+                <th class="custom-th">Adm. No.</th>
+                <th class="custom-th">Student Name</th>
+                <th class="custom-th">Father's Name</th>
+                <th class="custom-th" > Mother's Name</th>
+                <th class="custom-th">Guardian Name</th>
+                <th class="custom-th" > Class</th>
+                <th class="custom-th">Gender</th>
+                <th class="custom-th" > Adm. Date</th>
+                <th class="custom-th">Left Date</th>
+                <th class="custom-th">Enrollment Status</th>
+                <th class="custom-th" > Email</th>
+                <th class="custom-th">Mobile</th>
+            </tr>
+        </thead>
+        <tbody class="table-skill__body text-center" *ngIf="htmlFinalGeneralRemarkArray?.length > 0 ">
+
+            <ng-container *ngFor="let item of htmlFinalGeneralRemarkArray;let i=index;">
+                <tr class="custom-tr" *ngFor="let rowItem of item; let j = index;">
+                    <td class="custom-td">{{rowItem?.au_admission_no}}</td>
+                    <td class="custom-td">{{rowItem?.au_full_name | titlecase}}</td>
+                    <td class="custom-td" *ngIf="j==0" [attr.rowspan]="item?.length">
+                        <span>{{rowItem?.student_parent_data[2].epd_parent_name | titlecase}}
+                        </span>
+                    </td>
+                    <td class="custom-td" *ngIf="j==0" [attr.rowspan]="item?.length">
+                        <span>{{rowItem?.student_parent_data[1].epd_parent_name | titlecase}}
+                        </span>
+                    </td>
+                    <!-- <td class="custom-td remarks-doj">{{rowItem?.student_parent_data[1].epd_parent_name}}</td> -->
+                    <td class="custom-td">{{rowItem?.student_parent_data[0].epd_parent_name | titlecase}}</td>
+                    <td class="custom-td">{{rowItem?.class_name}}</td>
+                    <td class="custom-td">{{rowItem?.upd_gender}}</td>
+                    <td class="custom-td">{{rowItem?.em_admission_date | date:'d-MMM-y'}}</td>
+                    <td class="custom-td">{{rowItem?.em_alumini_date | date:'d-MMM-y'}}</td>
+                    <td class="custom-td">{{rowItem?.au_enrollment_status | titlecase}}</td>
+                    <td class="custom-td">{{rowItem?.au_email}}</td>
+                    <td class="custom-td">{{rowItem?.au_mobile}}</td>                    
+                </tr>
+            </ng-container>
+
+
+        </tbody>
+        <tbody *ngIf="!(htmlFinalGeneralRemarkArray?.length > 0) ">
+            <tr>
+                <td colspan="12" class="text-center">No Record Found</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
     <div class="text-center margin-top-20" style="margin-bottom:20px !important">

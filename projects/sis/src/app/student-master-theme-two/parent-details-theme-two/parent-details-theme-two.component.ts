@@ -18,6 +18,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@ViewChild('picker') picker;
 	@Input() parentDet: any[];
 	@Input() configSetting: any;
+	@Input() siblings = null;
 	cropIndex: any;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	formArray: any[] = [{ formId: 1, formHeader: 'Father\'s', formInfo: 'Father\'s' },
@@ -102,7 +103,39 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 		if (this.viewOnly) {
 			this.getParentDetails(this.parentDet);
+			console.log(this.getParentDetails(this.parentDet));
 		}
+		console.log("this is from parent details");
+		console.log(this.siblings[1]);
+		this.parentDet = this.siblings[1];
+		console.log("this sibling : "+this.siblings);
+		if(this.siblings[0]){
+			if(this.parentDet){
+				console.log("i am trying to get the parent details");
+				console.log(this.parentDet);
+				this.getParentDetails(this.parentDet);
+				this.viewOnly = true;
+			}else{
+				this.parentDet = null;
+				this.parentDetailsArray = [];
+				this.viewOnly = false;
+				for (const item of this.formGroupArray) {
+					item.formGroup.reset();
+					item.ea_office_address.reset();
+					item.ea_res_address.reset();
+				}
+			}
+		}else if(this.siblings[1] == 0 && !this.siblings[0]){
+			this.parentDet = null;
+			this.parentDetailsArray = [];
+			this.viewOnly = false;
+			for (const item of this.formGroupArray) {
+				item.formGroup.reset();
+				item.ea_office_address.reset();
+				item.ea_res_address.reset();
+			}
+		}
+		console.log(this.parentDet);
 	}
 	buildForm() {
 		this.formGroupArray = [{
