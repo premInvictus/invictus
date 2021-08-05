@@ -20,6 +20,7 @@ import {
 	FileType
 } from 'angular-slickgrid';
 import { find } from 'rxjs/operators';
+import { E } from '@angular/core/src/render3';
 
 @Component({
 	selector: 'app-sibling-details-report',
@@ -40,6 +41,7 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 	totalRow: any;
 	groupColumns: any[] = [];
 	aggregatearray: any[] = [];
+	htmlFinalGeneralRemarkArray: any[] = [];
 	selectedGroupingFields: string[] = [];
 	draggableGroupingPlugin: any;
 	groupLength: any;
@@ -1036,6 +1038,7 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 				if (result.status === 'ok') {
 					this.studentSiblingData = result.data;
 					this.prepareDataSource();
+					this.prepareGroupSiblingData(this.studentSiblingData);
 				} else {
 					this.notif.showSuccessErrorMessage(result.data, 'error');
 					this.resetGrid();
@@ -1236,6 +1239,7 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
+		console.log(this.aggregatearray);
 	}
 
 	exportAsExcel() {
@@ -1259,6 +1263,33 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 		popupWin.document.close();
 	}
 
+	prepareGroupSiblingData(formData) {
+		console.log("this is from prepare group siblings data");
+		console.log(formData);
+		const groupedArr = [];
+		const newAuthority = {};
+		Object.keys(formData).forEach(e => 
+			// console.log(`key=${e}  value=${formData[e]}`)
+			// console.log(formData[e].student_parent_data[2].epd_parent_name)
+			newAuthority[formData[e].student_parent_data[2].epd_parent_name] ?
+				newAuthority[formData[e].student_parent_data[2].epd_parent_name].push(formData[e]) :
+				(
+					newAuthority[formData[e].student_parent_data[2].epd_parent_name] = [],
+					newAuthority[formData[e].student_parent_data[2].epd_parent_name].push(formData[e])
+				)
+			
+			);
+			console.log("auth array");
+			console.log(newAuthority);
+		for (let i = 0; i < Object.keys(newAuthority).length; i++) {
+			const col = Object.keys(newAuthority)[i];
+			const result = newAuthority[col];
+			groupedArr.push(result);
+		}
+		this.htmlFinalGeneralRemarkArray = groupedArr;
 
+    console.log("i am grouped array");
+    console.log(this.htmlFinalGeneralRemarkArray);
+	}
 
 }

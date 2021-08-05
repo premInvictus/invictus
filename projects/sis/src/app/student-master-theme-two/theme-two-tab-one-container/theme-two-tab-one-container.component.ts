@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, EventEmitter, Output, Input } from '@angular/core';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { ChildDetailsThemeTwoComponent } from '../child-details-theme-two/child-details-theme-two.component';
@@ -15,6 +15,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ThemeTwoTabOneContainerComponent extends DynamicComponent implements OnInit, OnChanges {
 
+	siblings = false;
 	panelOpenState = true;
 	addOnly = false;
 	disabledApiCall = false;
@@ -110,6 +111,12 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		// this.getConfigureSetting();
 	}
 	ngOnChanges() {
+	}
+
+	hasSibling(data){
+		console.log("data from has siblings parent container");
+		console.log(data);
+		this.siblings = data;
 	}
 
 	saveForm() {
