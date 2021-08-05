@@ -1,7 +1,7 @@
 export const environment = {
 	production: true,
 	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
-	apiSisUrl: 'http://localhost',
+	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
 	apiSmartUrl: 'http://dev-api-smart.invictusprojects.in',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
