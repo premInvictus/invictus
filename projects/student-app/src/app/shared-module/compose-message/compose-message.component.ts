@@ -60,6 +60,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		//this.getUser();
+		// this.erpCommonService.getAllEmployeeByClassSectionForStaff().subscribe((res:any) => {
+		// 	console.log("i am res", );
+
+		// })
 	}
 
 	ngOnChanges() {
@@ -103,7 +107,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						email: this.formData['user_data'][i]['email'],
 						au_full_name: this.formData['user_data'][i]['au_full_name'],
 						mobile: this.formData['user_data'][i]['mobile'],
-						au_admission_no : this.formData['user_data'][i]['au_admission_no']
+						au_admission_no: this.formData['user_data'][i]['au_admission_no']
 					};
 					this.selectedUserArr.push(inputJson);
 				}
@@ -138,39 +142,58 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	generateUserList() {
-		var checkedClassIds = [];		
+		var checkedClassIds = [];
 		const inputJson = {};
 		inputJson['role_id'] = '3';
 		inputJson['class_id'] = this.currentUser.class_id ? this.currentUser.class_id : '';
 		this.userDataArr = [];
 		this.finUserDataArr = [];
-		console.log('this.showUserContextMenu--',this.showUserContextMenu);
-		this.showUserContextMenu =!this.showUserContextMenu; 
+		console.log('this.showUserContextMenu--', this.showUserContextMenu);
+		this.showUserContextMenu = !this.showUserContextMenu;
+		console.log("i am here--------------", this.currentUser);
 		if (this.showUserContextMenu) {
-			const param:any = {};
-			param.emp_cat_id=1;
-			param.class_id=this.currentUser.class_id ? parseInt(this.currentUser.class_id) : '';
-			this.erpCommonService.getAllEmployeeByClassSection(param).subscribe((result: any) => {
+			const param: any = {};
+			console.log("i am here--------------", this.currentUser);
+
+			param.sec_id = this.currentUser.section_id ? parseInt(this.currentUser.section_id) : '';
+			param.class_id = this.currentUser.class_id ? parseInt(this.currentUser.class_id) : '';
+			this.erpCommonService.getAllEmployeeByClassSectionForStudent(param).subscribe((result: any) => {
 				var userData = [];
-				if (result) {				
-					for (var i = 0; i < result.length; i++) {
+				if (result) {
+					// console.log("i am here", result.data);
+					
+					for (var i = 0; i < result.data.length; i++) {
+
+						let deviceId: any = '';
+						// console.log("i am res", result.data[i]['device_id']);
+
+						const devices: any[] = JSON.parse(result.data[i]['device_id']);
+						console.log("i am devices-----------", i);
+						
+						for (const item of devices) {
+							if (item.last_login === 'true') {
+								deviceId = item.device_id
+							}
+						}
 						var inputJson = {
-							au_login_id: result[i].emp_login_id,
-							au_full_name: result[i].emp_name,
-							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-							au_profileimage: result[i].emp_profile_pic,
-							au_role_id: '3',
+							device_id: deviceId ? deviceId : '',
+							au_login_id: result.data[i].au_login_id,
+							au_full_name: result.data[i].au_full_name,
+							au_email: result.data[i].au_email ? result.data[i].au_email : '',
+							au_mobile: result.data[i].au_mobile ? result.data[i].au_mobile : '',
+							au_profileimage: result.data[i].emp_profile_pic,
+							au_role_id: result.data[i].au_role_id,
 							checked: false,
 							class_name: '',
 							sec_name: '',
 							class_id: '',
 							sec_id: '',
 							au_admission_no: '',
+							name: result.data[i].name
 						}
-						userData.push(inputJson);						
+						userData.push(inputJson);
 					}
-	
+
 					this.userDataArr = this.uniqueUserArray(userData);
 					this.finUserDataArr = this.uniqueUserArray(userData);
 					this.showUser = true;
@@ -206,7 +229,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			// 			}
 			// 			userData.push(inputJson);						
 			// 		}
-	
+
 			// 		this.userDataArr = this.uniqueUserArray(userData);
 			// 		this.finUserDataArr = this.uniqueUserArray(userData);
 			// 		this.showUser = true;
@@ -218,7 +241,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			// 	}
 			// });
 		}
-		
+
 
 	}
 
@@ -310,7 +333,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				item.checked = false;
 			});
 			this.selectedUserCount = 0;
-			
+
 		}
 		this.finUserDataArr = JSON.parse(JSON.stringify(this.userDataArr));
 	}
@@ -336,10 +359,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		}
 	}
 
-	setSelectedUserData(userDataArr) {		
+	setSelectedUserData(userDataArr) {
 		if (userDataArr) {
 			var flag = false;
-			for (var i=0; i<this.selectedUserArr.length;i++) {
+			for (var i = 0; i < this.selectedUserArr.length; i++) {
 				if (Number(this.selectedUserArr[i]['login_id']) === Number(userDataArr['au_login_id'])) {
 					flag = true;
 					break;
@@ -356,6 +379,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					au_full_name: userDataArr['au_full_name'],
 					mobile: userDataArr['au_mobile'],
 					role_id: userDataArr['au_role_id'],
+					device_id: userDataArr['device_id']
 				};
 				this.tempSelectedUserArr.push(inputJson);
 			}
@@ -392,15 +416,15 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	// 				this.selectedUserArr.push(inputJson);
 	// 			}
 	// 		}
-			
+
 	// 	}
 	// 	this.showUserContextMenu = false;
 	// }
 
 	checkAlreadyExists(item) {
 		var flag = false;
-		for (var i=0; i<this.selectedUserArr.length;i++) {
-			if(this.selectedUserArr[i]['login_id'] === item.au_login_id) {
+		for (var i = 0; i < this.selectedUserArr.length; i++) {
+			if (this.selectedUserArr[i]['login_id'] === item.au_login_id) {
 				flag = true;
 				break;
 			}
@@ -410,18 +434,18 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	uniqueUserArray(userDataArr) {
 		var distinctUserArr = [];
-		for(var i=0; i<userDataArr.length;i++) {	
-			if (!(this.checkForDuplicateUser(distinctUserArr,userDataArr[i]))) {
+		for (var i = 0; i < userDataArr.length; i++) {
+			if (!(this.checkForDuplicateUser(distinctUserArr, userDataArr[i]))) {
 				distinctUserArr.push(userDataArr[i]);
-			}			
+			}
 		}
 		return distinctUserArr;
 	}
 
 	checkForDuplicateUser(distinctArr, item) {
 		var flag = false;
-		for (var i=0; i< distinctArr.length;i++) {
-			if (distinctArr[i]['au_login_id'] === item['au_login_id']) {
+		for (var i = 0; i < distinctArr.length; i++) {
+			if (distinctArr[i]['name'] === item['name']) {
 				flag = true;
 				break;
 			}
@@ -438,7 +462,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		var validationFlag = this.checkValidation();
 		if (validationFlag) {
 			var msgToArr = [];
+			let devices: any[] = [];
 			for (var i = 0; i < this.selectedUserArr.length; i++) {
+				devices.push(this.selectedUserArr[i]['device_id']);
 				var userJson = {
 					"login_id": this.selectedUserArr[i]['login_id'],
 					"au_full_name": this.selectedUserArr[i]['au_full_name'],
@@ -454,18 +480,31 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 				msgToArr.push(userJson);
 			}
+			console.log("-------------------------------------1");
 
 			var inputJson = {
 				"msg_from": this.currentUser.login_id,
 				"msg_to": msgToArr,
-				"msg_type": 'C',
+				'message_to': devices,
+				"msg_type": 'notification',
 				"msg_template_id": '',
+				"notification_type": {
+					"type": "push",
+					"module": 'inbox'
+				},
+				"message_type": {
+					"type": "push",
+					"module": 'inbox'
+				},
+				'user_type' : 'school',
 				"msg_receivers": this.currentReceivers,
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
-				// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
-				"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
+				"message_title": this.messageForm.value.messageSubject,
+				"message_content": this.commonAPIService.htmlToText(this.messageForm.value.messageBody),
+				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				// "status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 				"msg_status": { "status_id": 1, "status_name": "pending" },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
@@ -562,12 +601,12 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.selectedUserCount = 0;
 	}
 
-	
+
 	showSearchByUser() {
 		this.showSearchByUserFlag = !this.showSearchByUserFlag;
 	}
 
-	
+
 
 	cancelSearchByUser() {
 		this.showSearchByUserFlag = false;

@@ -346,7 +346,7 @@ export class ReviewerMessagesComponent implements OnInit {
 		} else {
 			let isCommunication = true;
 			this.selection.selected.forEach(element => {
-				if(element.action.msg_type != 'C') {
+				if(element.action.msg_type != 'C' && element.action.msg_type != 'notification') {
 					isCommunication = false;
 				}
 			});

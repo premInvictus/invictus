@@ -4,7 +4,7 @@
             <mat-card class="card-top-title__container">
                 <div class="row">
                     <div class="col-6">
-                        <h1 class="remove-bottom-margin font-size-24">New Message </h1>
+                        <h1 class="remove-bottom-margin font-size-24">New Message 4</h1>
                     </div>
                     <div class="col-6">
                         <button mat-raised-button class="float-right btn-danger btn-consolidate btn-spacer"
@@ -20,6 +20,36 @@
             <mat-card class="mat-card" style="min-height: 700px;">
                 <form [formGroup]="messageForm">
                     <div class="message-container">
+                        <div class="row">
+    
+                            <div class="col-2">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label> Message Type </mat-label>
+                                    <mat-select formControlName="messageType" (selectionChange)="resetFormValues();getTemplate()">
+                                        <mat-option value="E" placeholder="Message Type">Mail</mat-option>
+                                        <mat-option value="S" placeholder="Message Type">SMS</mat-option>
+                                        <mat-option value="notification" placeholder="Message Type">In App</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label> Select Template </mat-label>
+                                    <mat-select formControlName="messageTemplate" (selectionChange)="editTemplate($event)">
+                                        <mat-option value="0">Please Select Template</mat-option>
+                                        <mat-option *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">
+                                            {{item?.tpl_title}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label> Title </mat-label>
+                                    <input matInput placeholder="Title" type="input" formControlName="messageTitle"
+                                        autocomplete="false" />
+                                </mat-form-field>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12 border-bottom">
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->

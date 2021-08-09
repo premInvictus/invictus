@@ -168,4 +168,7 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
 	}
+	getSlcTcFormConfig(value) {
+		return this.http.post(environment.apiSisUrl + '/slctc/getSlcTcFormConfig', value);
+	}
 }
