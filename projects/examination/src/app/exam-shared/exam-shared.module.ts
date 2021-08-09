@@ -17,6 +17,7 @@ import {
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { AddModalComponent } from './add-modal/add-modal.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -87,6 +88,7 @@ export const MY_FORMATS = {
 	],
 	declarations: [
 		DeleteModalComponent,
+		AddModalComponent,
 		ImagecropComponent,
 		CapitalizePipe,
 		TruncatetextPipe,
@@ -102,6 +104,7 @@ export const MY_FORMATS = {
 	],
 	entryComponents: [
 		DeleteModalComponent,
+		AddModalComponent,
 		ImagecropComponent,
 		ImageViewerComponent,
 		PreviewDocumentComponent
@@ -137,7 +140,7 @@ export const MY_FORMATS = {
 		CommonDynamicChartComponent,
 		CKEditorModule,
 		MatSortModule,
-		RouterModule, DeleteModalComponent, ImagecropComponent,
+		RouterModule, DeleteModalComponent, AddModalComponent, ImagecropComponent,
 		NgxMaskModule, CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		NumberToWordPipe,
 		ZerodashPipe,

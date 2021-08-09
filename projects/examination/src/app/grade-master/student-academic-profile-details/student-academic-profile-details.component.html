@@ -56,11 +56,109 @@
   <div class="col-5 remove-col-padding-left">
     <mat-card class="card-height-400">
       <mat-card-title>
-        <span class="font-bold font-size-20">Skills & Rewards</span><i
-          class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"></i>
+        <span class="font-bold font-size-20">Skills & Rewards</span>
+        <i class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"
+           data-toggle="tooltip" 
+           data-placement="top"
+           matTooltip="Add" 
+           aria-hidden="true" 
+           (click)="openAddModal('skills')"
+        ></i>
       </mat-card-title>
       <mat-card-content *ngIf="defaultskill">
-        <div class="row">
+
+        <div *ngIf="finalAwardArray.length > 0 " class="row">
+          <div class="col-12">
+
+            <table class="table table-borderd table-stripped custom-table height-300">
+              <thead class="table-skill__head text-center">
+                 <tr class="custom-tr">
+                    <th class="custom-th">Sr. No.</th>
+                    <th class="custom-th">Activity Name</th>
+                    <!-- <th class="custom-th">Session</th> -->
+                    <th class="custom-th" >Awarding Authority</th>
+                    <th class="custom-th">Level of Interest</th>
+                    <th class="custom-th">Event Level</th>
+                    <th class="custom-th table-remark-width" >Remarks</th>
+                 </tr>
+              </thead>
+              <tbody class="table-skill__body text-center">
+                 <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                    <ng-container *ngIf="item.act_name === item.details[0].act_name">
+                       <ng-container>
+                          <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                             <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td>
+                             <td class="custom-td" *ngIf="j == 0"
+                                [attr.rowspan]="item.details.length">{{getActivityName(item.act_name)}}</td>
+                             <!-- <td class="custom-td">
+                                {{getSessionName(det.eaw_ses_id)}}
+                             </td> -->
+                             <td class="custom-td">
+                                {{getAuthorityName(det.eaw_authority)}}
+                             </td>
+                             <td class="custom-td">
+                                {{getLevelofInterestName(det.eaw_level_of_interest)}}
+                             </td>
+                             <td class="custom-td">
+                                {{getEventLevelName(det.eaw_event_level)}}
+                             </td>
+                             <td class="custom-td teachers-remarks"  *ngIf="det.eaw_teacher_remark.length < 20; else teachers_remarks_long">
+                                {{det.eaw_teacher_remark}}  
+                             </td>
+                             <ng-template #teachers_remarks_long>
+                              <td class="custom-td teachers-remarks" >
+                                {{(det.eaw_teacher_remark | slice:0:16)+'..'}}
+                                <i class="fa fa-info-circle" data-toggle="tooltip" 
+                                data-placement="top"
+                                position="above"
+                                matTooltip="{{det.eaw_teacher_remark}}" 
+                                aria-hidden="true"></i>
+                              </td>
+                            </ng-template>
+                          </tr>
+                       </ng-container>
+                    </ng-container>
+                 </ng-container>
+              </tbody>
+           </table>
+
+             <!-- <table class="table table-borderd table-stripped custom-table height-300">
+                <thead class="table-skill__head text-center">
+                   <tr class="custom-tr">
+                      <th class="custom-th">Sr.No</th>
+                      <th class="custom-th">Activity Name</th>
+                      <th class="custom-th">Level of Interest</th>
+                      <th class="custom-th">Authority</th>
+                      <th class="custom-th">Event Level</th>
+                      <th class="custom-th">Teacher Remark</th>
+                   </tr>
+                </thead>
+                <tbody class="table-skill__body text-center">
+                   <tr class="custom-tr" *ngFor="let item of finalAwardArray;let i=index">
+                      <td class="custom-td">{{i+1}}</td>
+                      <td class="custom-td">{{getActivityName(item.eaw_activity_name)}}</td>
+                      <td class="custom-td">{{getLevelofInterestName(item.eaw_level_of_interest)}}</td>
+                      <td class="custom-td">{{getAuthorityName(item.eaw_authority)}}</td>
+                      <td class="custom-td">{{getEventLevelName(item.eaw_event_level)}}</td>
+                      <td class="custom-td teachers-remarks" *ngIf="item.eaw_teacher_remark.length < 10; else teachers_remarks_long">{{item.eaw_teacher_remark}}  </td>
+                      <ng-template #teachers_remarks_long>
+                        <td class="custom-td teachers-remarks" >
+                          {{(item.eaw_teacher_remark | slice:0:7)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{item.eaw_teacher_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+                </tbody>
+             </table> -->
+          </div>
+       </div>
+
+
+
+        <!-- <div class="row" *ngIf="getbadges(currentExam?.eaw_created_date) != null">
           <div class="col-5">
             <span class="font-size-14">Updated on</span> <span class="float-right">:</span>
           </div>
@@ -108,7 +206,7 @@
             <span class="font-bold font-size-14">{{currentExam?.eaw_teacher_remark}}</span>
           </div>
         </div>
-        <div class="row margin-top-10">
+        <div class="row margin-top-10" *ngIf="getbadges(currentExam?.eaw_event_level) != null">
           <div class="col-12 remove-col-padding">
             <span class="font-size-14 font-bold">Badges</span>
             <div class="text-left margin-top-15">
@@ -126,7 +224,7 @@
               </button>
             </span>
           </div>
-        </div>
+        </div> -->
 
       </mat-card-content>
       <ng-container *ngIf="!defaultskill">
@@ -147,10 +245,95 @@
   <div class="col-12">
     <mat-card>
       <span class="font-bold font-size-20">Remarks</span><i
-        class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"></i>
+        class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"
+        data-toggle="tooltip" 
+        data-placement="top"
+        matTooltip="Add" 
+        aria-hidden="true" 
+        (click)="openAddModal('remarks')"
+     ></i>
 
-      <div class="row margin-top-15" *ngIf="principalArray.length > 0">
+     <div *ngIf="remarkArray?.length > 0 " class="row">
+      <div class="col-12">
+         <!-- <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+               <tr class="custom-tr">
+                  <th class="custom-th">Sr.No</th>
+                  <th class="custom-th" >Date</th>
+                  <th class="custom-th" >Authority</th>
+                  <th class="custom-th" >Area</th>
+                  <th class="custom-th" >Remarks</th>
+               </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+               <tr class="custom-tr" *ngFor="let item of remarkArray;let i=index">
+                  <td class="custom-td seriol-no">{{i+1}}</td>
+                  <td class="custom-td remarks-doj">{{item.era_doj | date}}</td>
+                  <td class="custom-td remarks-auth-id">{{getAuthorityName(item.era_aut_id)}}</td>
+                  <td class="custom-td remarks-ar-name">{{item.era_ar_name}}</td>
+                  <td class="custom-td teachers-remarks-r" *ngIf="item.era_teachers_remark.length < 15; else teachers_remarks_long_rem">{{item.era_teachers_remark}}  </td>
+                      <ng-template #teachers_remarks_long_rem>
+                        <td class="custom-td teachers-remarks" >{{(item.era_teachers_remark.trim() | slice:0:163)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{item.era_teachers_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+            </tbody>
+         </table> -->
+
+         <table class="table table-borderd table-stripped custom-table">
+          <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                  <th class="custom-th">Sr. No.</th>
+                  <th class="custom-th">Authority</th>
+                  <th class="custom-th" > Date</th>
+                  <th class="custom-th">Area</th>
+                  <th class="custom-th table-remark-width">
+                      Remarks</th>
+              </tr>
+          </thead>
+          <tbody class="table-skill__body text-center" *ngIf="remarkArray?.length > 0 ">
+
+              <ng-container *ngFor="let item of htmlFinalGeneralRemarkArray;let i=index;">
+                  <tr class="custom-tr" *ngFor="let rowItem of item; let j = index;">
+                      <td class="custom-td seriol-no" *ngIf="j==0" [attr.rowspan]="item?.length">{{i+1}}</td>
+                      <td class="custom-td remarks-auth-id" *ngIf="j==0" [attr.rowspan]="item?.length">
+                          <span>{{getAuthorityName(rowItem?.era_aut_id)}}
+                          </span>
+                      </td>
+                      <td class="custom-td remarks-doj">{{rowItem?.era_doj | date : 'd-MMM-y'}}</td>
+                      <td class="custom-td remarks-ar-name">{{getAreaName(rowItem?.era_ar_id)}}</td>
+                      <td class="custom-td teachers-remarks-r" *ngIf="rowItem?.era_teachers_remark.length < 15; else teachers_remarks_long_rem">{{rowItem?.era_teachers_remark}}</td>
+                      <ng-template #teachers_remarks_long_rem>
+                        <td class="custom-td teachers-remarks-r">{{(rowItem?.era_teachers_remark.trim() | slice:0:163)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{rowItem?.era_teachers_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+                  </tr>
+              </ng-container>
+
+
+          </tbody>
+          <tbody *ngIf="!(remarkArray?.length > 0) ">
+              <tr>
+                  <td colspan="6" class="text-center">No Record Found</td>
+              </tr>
+          </tbody>
+      </table>
+
+      </div>
+   </div>
+
+      <!-- <div class="row margin-top-15" *ngIf="principalArray.length > 0">
         <div class="col-12 remove-col-padding">
+
           <mat-accordion>
             <mat-expansion-panel class="exam-dash-exp-panel">
               <mat-expansion-panel-header>
@@ -279,7 +462,8 @@
             No Record Found
           </span>
         </div>
-      </ng-container>
+      </ng-container> -->
     </mat-card>
   </div>
 </div>
+<app-add-modal #addModal (addOk)="addOk($event)"></app-add-modal>

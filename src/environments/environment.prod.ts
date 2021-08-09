@@ -15,6 +15,7 @@ export const environment = {
 	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
 	helpDeskAgentUrl: "https://support.invictusprojects.com/scp/login.php",
 	payuApi : 'https://secure.payu.in/_payment',
+	googleMapsKey: '',
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',
 	testOngoingCode : 'T102',

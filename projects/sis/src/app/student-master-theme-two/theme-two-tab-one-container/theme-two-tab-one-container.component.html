@@ -30,7 +30,7 @@
                 <span class="text-uppercase">Personal details</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-child-details-theme-two [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly"
+            <app-child-details-theme-two [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly" (hasSibling)="hasSibling($event)"
               [configSetting]="settingsArray">
             </app-child-details-theme-two>
           </mat-expansion-panel>
@@ -43,7 +43,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly"
+            <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly" [siblings]="siblings"
               [configSetting]="settingsArray">
             </app-parent-details-theme-two>
 

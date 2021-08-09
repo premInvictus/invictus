@@ -11,9 +11,13 @@ import { StudentAcademicProfileComponent } from '../student-academic-profile/stu
 })
 export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges {
   @ViewChild(StudentAcademicProfileComponent) studentAcademicProfile: StudentAcademicProfileComponent;
+  @ViewChild('addModal') addModal;
+
   activityform: FormGroup;
+	generalRemarkForm: FormGroup;
   awardsform: FormGroup;
   activityArray: any[] = [];
+  areaArray: any[] = [];
   activityClubArray: any[] = [];
   levelOfIntrestArray: any[] = [];
   eventLevelArray: any[] = [];
@@ -24,12 +28,20 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   finalAwardArray2: any[] = [];
   skillAwardsArray: any[] = [];
   remarkArray: any[] = [];
+	sessionArray: any[] = [];
+	finalSpannedArray: any[] = [];
+	finalGeneralRemarkArray: any[] = [];
+	htmlFinalGeneralRemarkArray: any[] = [];
+	generalRemarkUpdateFlag = false;
+	generalAddToList = false;
+	generalRemarkValue: any;
   currentExam: any;
   currentExamIndex: number;
   examPre = true;
   examNext = true;
   defaultRemark = false;
   defaultskill = false;
+	updateFlag = false;
   currentUser: any;
   principalArray: any[] = [];
   vicePrincipalArray: any[] = [];
@@ -42,6 +54,9 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   termId = '1';
   termindex = 0;
   session: any = {};
+  param: any = {};
+	savedSettingsArray: any[] = [];
+	settingsArray: any[] = [];
   performanceNoRecord = true;
   sessionwisePerformanceData: any = {};
   yearwisePerformanceData: any = {};
@@ -68,6 +83,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.getLevelOfInterest();
     this.getEventLevel();
     this.getAuthority();
+    this.getArea();
     this.getStudentLastRecordPerProcessType();
   }
   ngOnChanges() {
@@ -99,6 +115,14 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
       eaw_event_level: '0',
       eaw_teacher_remark: '',
     });
+    this.generalRemarkForm = this.fbuild.group({
+			era_type: 'general',
+			era_doj: new Date(),
+			era_aut_id: '',
+			era_ar_id: '',
+			era_teachers_remark: '',
+			era_login_id: ''
+		});
   }
   tabChanged(event) {
     console.log('tabChanged', event);
@@ -318,6 +342,23 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
       }
     }
   }
+
+	getArea() {
+		this.sisService.getArea().subscribe((result: any) => {
+			if (result) {
+				this.areaArray = result.data;
+			}
+		});
+	}
+
+	getAreaName(value) {
+		for (const item of this.areaArray) {
+			if (item.ar_id === value) {
+				return item.ar_name;
+			}
+		}
+	}
+
   getbadges(value) {
     for (const item of this.eventLevelArray) {
       if (Number(item.el_id) === Number(value)) {
@@ -355,6 +396,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
 
             }
           }
+          this.renderData();
         } else {
           this.finalAwardArray = [];
           this.finalActivityArray = [];
@@ -395,6 +437,9 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
         if (result.status === 'ok') {
           this.defaultRemark = true;
           this.remarkArray = result.generalRemarks ? result.generalRemarks : [];
+          console.log("remarks array");
+          console.log(this.remarkArray);
+          this.prepareGroupAuthorityData(this.remarkArray);
           for (const item of this.remarkArray) {
             if (Number(item.era_aut_id) === 1) {
               this.principalArray.push(item);
@@ -461,5 +506,180 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.sessionWisePerformance(this.currentUserDetails);
     this.getClassTerm(this.currentUserDetails.au_class_id);
   }
+
+	openAddModal(value) {
+		this.param.module = value;
+		this.param.text = value;
+		this.param.eventLevelArray = this.eventLevelArray;
+		this.param.authorityArray = this.authorityArray;
+		this.param.levelOfIntrestArray = this.levelOfIntrestArray;
+		this.param.activityArray = this.activityArray;
+		this.param.areaArray = this.areaArray;
+		this.addModal.openModal(this.param);
+	}
+
+  prepareRemarksForUpdate(value){
+    // console.log(this.remarkArray);
+    this.remarkArray.push(value.value);
+}
+prepareSkillsForUpdate(value){
+    this.skillAwardsArray[0].push(value.value);
+}
+
+	addOk(data) { 
+		console.log("Hi add me has been clicked");
+    console.log("add ok "+data.controls['form_name'].value);
+    if (data) {
+			if(data.controls['form_name'].value == 'remarks'){
+        data.controls['era_login_id'].setValue(this.loginId);
+        // console.log("add ok "+data.controls['era_login_id'].value);
+        this.prepareRemarksForUpdate(data);
+        this.sisService.addRemarks({
+          au_login_id: this.loginId ,remarksGeneral: this.remarkArray
+        }).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
+            this.buildForm();
+          } else {
+            this.commonAPIService.showSuccessErrorMessage(res.message, 'error');
+          }
+        });
+      }else{
+        data.controls['eaw_login_id'].setValue(this.loginId);
+        console.log("add ok "+data.controls['eaw_login_id'].value);
+        this.prepareSkillsForUpdate(data);
+        // console.log(this.skillAwardsArray[0].push(data.value));
+        // console.log(data.value);
+        this.sisService.addSkills({
+          au_login_id: this.loginId ,awardsDetails: this.skillAwardsArray[0]
+        }).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
+            this.buildForm();
+          } else {
+            this.commonAPIService.showSuccessErrorMessage(res.message, 'error');
+          }
+        });
+      }
+      this.updateFlag = true;
+      this.ngOnInit();
+    }
+	}
+	updateGeneralRemarkList() {
+		this.finalGeneralRemarkArray[this.generalRemarkValue] = this.generalRemarkForm.value;
+		this.commonAPIService.showSuccessErrorMessage('General Remark List Updated', 'success');
+		this.generalRemarkForm.reset();
+		this.generalRemarkUpdateFlag = false;
+		this.generalAddToList = false;
+	}
+
+
+	prepareGroupAuthorityData(formData) {
+		const groupedArr = [];
+		const newAuthority = {};
+
+		formData.forEach(item => {
+			newAuthority[item.era_aut_id] ?
+				newAuthority[item.era_aut_id].push(item) :
+				(
+					newAuthority[item.era_aut_id] = [],
+					newAuthority[item.era_aut_id].push(item)
+				);
+		}
+		);
+		for (let i = 0; i < Object.keys(newAuthority).length; i++) {
+			const col = Object.keys(newAuthority)[i];
+			const result = newAuthority[col];
+			groupedArr.push(result);
+		}
+		this.htmlFinalGeneralRemarkArray = groupedArr;
+
+    console.log("i am grouped array");
+    console.log(this.htmlFinalGeneralRemarkArray);
+	}
+
+	getConfigureSetting() {
+		this.sisService.getConfigureSetting({
+			cos_process_type: this.processtypeService.getProcesstype()
+		}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.savedSettingsArray = result.data;
+				for (const item of this.savedSettingsArray) {
+					if (item.cos_tb_id === '7') {
+						this.settingsArray.push({
+							cos_tb_id: item.cos_tb_id,
+							cos_ff_id: item.cos_ff_id,
+							cos_status: item.cos_status,
+							ff_field_name: item.ff_field_name
+						});
+					}
+				}
+			}
+		});
+	}
+	checkIfFieldExist(value) {
+		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
+		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
+			return true;
+		} else if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'N') {
+			return false;
+		} else {
+			return false;
+		}
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result: any) => {
+			if ((result.status === 'ok')) {
+				this.sessionArray = result.data;
+			}
+		});
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+
+  // Display Skills and Awards in Grouped Set
+  renderData() {
+    console.log("i am in render data ");
+    console.log(this.finalAwardArray);
+		for (let i = 0; i < this.finalAwardArray.length; i++) {
+      console.log("length of final award array "+this.finalAwardArray.length);
+			const spannArray: any[] = [];
+			spannArray.push({
+				act_name: this.finalAwardArray[i].eaw_activity_name,
+				eaw_id: this.finalAwardArray[i].eaw_id,
+				eaw_ses_id: this.finalAwardArray[i].eaw_ses_id,
+				eaw_level_of_interest: this.finalAwardArray[i].eaw_level_of_interest,
+				eaw_authority: this.finalAwardArray[i].eaw_authority,
+				eaw_event_level: this.finalAwardArray[i].eaw_event_level,
+				eaw_teacher_remark: this.finalAwardArray[i].eaw_teacher_remark,
+			});
+			for (let j = i + 1; j < this.finalAwardArray.length; j++) {
+				if (this.finalAwardArray[i].eaw_activity_name === this.finalAwardArray[j].eaw_activity_name) {
+					spannArray.push({
+						act_name: this.finalAwardArray[i].eaw_activity_name,
+						eaw_id: this.finalAwardArray[j].eaw_id,
+						eaw_ses_id: this.finalAwardArray[j].eaw_ses_id,
+						eaw_level_of_interest: this.finalAwardArray[j].eaw_level_of_interest,
+						eaw_authority: this.finalAwardArray[j].eaw_authority,
+						eaw_event_level: this.finalAwardArray[j].eaw_event_level,
+						eaw_teacher_remark: this.finalAwardArray[j].eaw_teacher_remark,
+					});
+				}
+			}
+			const findex = this.finalSpannedArray.findIndex(f => f.act_name === this.finalAwardArray[i].eaw_activity_name);
+			if (findex === -1) {
+				this.finalSpannedArray.push({
+					act_name: this.finalAwardArray[i].eaw_activity_name,
+					details: spannArray
+				});
+			}
+		}
+		console.log("I am final awards array");
+		console.log(this.finalAwardArray);
+	}
 
 }

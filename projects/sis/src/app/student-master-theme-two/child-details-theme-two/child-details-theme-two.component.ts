@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { FormEnabledTwoService } from '../../sharedmodule/dynamic-content-theme-two/formEnabledTwo.service';
 import { SisService, CommonAPIService, ProcesstypeService, SmartService } from '../../_services/index';
@@ -14,6 +14,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	@Input() editOnly: boolean;
 	@Input() viewOnly: boolean;
 	@Input() configSetting: any;
+	@Output() hasSibling = new EventEmitter<any>();
 	childdetialsform: FormGroup;
 	baseform: FormGroup;
 	paddressform: FormGroup;
@@ -185,12 +186,14 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.siblingStaus = 'Yes';
 			this.getSchool();
 			this.getClass();
-
 		} else {
 			this.siblingdetailsdiv = false;
 			this.siblingStaus = 'No';
+			this.hasSibling.emit([false,0]);
 		}
 	}
+
+
 	isMinority_change(event) {
 		if (event.checked) {
 			this.isMinority = true;
@@ -477,6 +480,9 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.sisService.getStudent(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetailForSibling = result.data[0].personalDetails[0].studentDetails;
+					const hasSiblingArray = [true,result.data[0].parentDetails];
+					this.hasSibling.emit(hasSiblingArray);
+					console.log(result.data[0]);
 					this.siblingform.patchValue({
 						'esd_is_have_sibling': 'Y',
 						'esd_student_of_same_school': 'Y',

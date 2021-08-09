@@ -103,4 +103,20 @@ export class SisService {
 	getGeneralRemarks(value) {
 		return this.http.post(environment.apiSisUrl + '/remarks/getGeneralRemarks', value);
 	}
+	getArea() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/area');
+	}
+	addRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addRemarks',value);
+	}
+	addSkills(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addAdditionalDetails',value);
+	}
+	getConfigureSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/configure/getConfigureSetting', value);
+	}
 }
