@@ -160,6 +160,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
+		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	parseRoman(s) {
 		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
@@ -205,11 +206,22 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
+		// console.log("-------------------------",grid.getColumns(), columnIdx, grid.getColumns()[columnIdx]);
+		
 		while (columnIdx--) {
+			
 			const columnId = grid.getColumns()[columnIdx].id;
-			if (columnId) {
-				const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			// console.log("-------------------------",this.totalRow[columnId], grid.getColumns(),columnId, columnIdx, grid.getColumns()[columnIdx]);
+			if (columnId && (grid.getFooterRowColumn(columnId) || grid.getFooterRowColumn(columnId.toString()))) {
+				console.log("--___", grid.getFooterRowColumn(columnId), columnId, this.totalRow[columnId]);
+				if(grid.getFooterRowColumn(columnId)) {
+					const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+					columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+				} else {
+					const columnElement: HTMLElement = grid.getFooterRowColumn(columnId.toString());
+					columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+				}
+				
 			}
 		}
 	}
@@ -407,6 +419,12 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							this.dataset.push(obj);
 							pos++;
 						});
+						this.totalRow = this.dataset[this.dataset.length - 1];
+						console.log("i am total roe", this.totalRow);
+						
+						this.dataset.pop();
+						// this.aggregatearray.push(new Aggregators.Sum('fh_amount'));
+						
 						this.tableFlag = true
 					} else if (this.reportType == "monthly") {
 						this.columnDefinitions = [
@@ -421,7 +439,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 								name: 'Day',
 								field: 'day',
 								sortable: true,
-								formatter : this.checkDateFormatter
+								formatter: this.checkDateFormatter
 
 							},
 						];
@@ -435,39 +453,42 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 						console.log("i am month", month_days);
-						
+
 						res.data.forEach(element => {
-							
+
 							let obj = {
-								id: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString(): 'Total',
+								id: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString() : 'Total',
 								name: element.fh_name,
-								field: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString(): 'Total',
+								field: element.fh_id != "null" && element.fh_id != null ? element.fh_id.toString() : 'Total',
 								sortable: true,
 								formatter: this.checkFeeFormatter,
 							}
 							this.columnDefinitions.push(obj);
-						
-					});
-					let i = 1
-					month_days.forEach(element => {
-						let obj = {}
-						obj['id'] = i;
-						obj['srno'] = i;
-						i += 1;
-						obj['day'] = element
-						res.data.forEach(element1 => {
-							console.log(element1, '------------------------------');
-							if(element1['fh_id']) {
-								obj[element1['fh_id'].toString()] = element1[element]
-							} else {
-								obj['Total'] = element1[element]
-							}
-							
+
 						});
-						this.dataset.push(obj)
-					});
-					console.log("i am here", this.columnDefinitions, this.dataset);
-					
+						let i = 1
+						month_days.forEach(element => {
+							let obj = {}
+							obj['id'] = i;
+							obj['srno'] = i;
+							i += 1;
+							obj['day'] = element
+							res.data.forEach(element1 => {
+								// console.log(element1, '------------------------------');
+								if (element1['fh_id']) {
+									obj[element1['fh_id'].toString()] = element1[element]
+								} else {
+									obj['Total'] = element1[element]
+								}
+
+							});
+							this.dataset.push(obj)
+						});
+						console.log("i am here", this.columnDefinitions, this.dataset);
+						this.totalRow = this.dataset[this.dataset.length - 1];
+						console.log("i am total roe", this.totalRow);
+						// this.dataset.pop();
+						// this.aggregatearray.push(new Aggregators.Sum('fh_amount'));
 						// this.dataset = res.data;
 						this.tableFlag = true
 					} else if (this.reportType == "yearly") {
@@ -484,7 +505,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 								data_total[e.id.toString()] = 0
 							}
 						})
-						
+
 
 						let year1 = Number(this.sessionName.split('-')[0]) - 1;
 						let year2 = Number(this.sessionName.split('-')[0]);
@@ -503,7 +524,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 								obj[element.fh_id] = 0;
 							}
 						});
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						insert = false
@@ -521,7 +542,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						obj = {};
@@ -538,7 +559,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						obj = {};
@@ -555,7 +576,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						obj = {};
@@ -572,7 +593,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						obj = {};
@@ -589,7 +610,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 							}
 						});
 
-						if(insert) {
+						if (insert) {
 							this.dataset.push(obj);
 						}
 						obj = {};
@@ -746,7 +767,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 						});
 
 						this.dataset.push(obj);
-						
+
 						obj = {};
 						obj['id'] = 19
 						obj['srno'] = 19
@@ -761,8 +782,11 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 						});
 
 						this.dataset.push(obj);
-						console.log("i am total", data_total, this.valueArray, this.dataset);
 						this.dataset.push(data_total);
+						console.log("i am total", data_total, this.valueArray, this.dataset);
+						// this.totalRow = data_total;
+						this.totalRow = data_total
+						// console.log("i am total roe", this.totalRow);
 						this.tableFlag = true
 					}
 				}
@@ -886,7 +910,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand Total</b>'&& value !== 'Total' && value !== '-' && value !== '') {
+		if (value !== '<b>Grand Total</b>' && value !== 'Total' && value !== '-' && value !== '') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
 			return value;
@@ -894,7 +918,7 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 	}
 	checkDateFormatter2(row, cell, value, columnDef, dataContext) {
 		if (value !== 'Grand Total' && value !== '-' && value !== '') {
-			return new DatePipe('en-in').transform('01-'+value, 'MMM-yy');
+			return new DatePipe('en-in').transform('01-' + value, 'MMM-yy');
 		} else {
 			return value;
 		}
@@ -967,25 +991,25 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 					});
 				}
 				this.valueArray.push({
-					id: -3,
+					id: 'transport',
 					name: "Transport",
-					field: -3,
+					field: 'transport',
 					sortable: true,
 					width: 4,
 					formatter: this.checkFeeFormatter,
 				});
 				this.valueArray.push({
-					id: -2,
+					id: 'adhoc',
 					name: "Adhoc",
-					field: -2,
+					field: 'adhoc',
 					sortable: true,
 					width: 4,
 					formatter: this.checkFeeFormatter,
 				});
 				this.valueArray.push({
-					id: -1,
+					id: 'fine',
 					name: "Fine",
-					field: -1,
+					field: 'fine',
 					sortable: true,
 					width: 4,
 					formatter: this.checkFeeFormatter,
@@ -1052,24 +1076,29 @@ export class FeeOutstandingSummaryReportComponent implements OnInit {
 		this.filterResult = [];
 		this.sortResult = [];
 		this.tableFlag = false;
-		this.reportType = $event.value,
-			this.reportFilterForm.patchValue({
-				'admission_no': '',
-				'studentName': '',
-				'fee_value': '',
-				'feeHeadId': '',
-				'classId': '',
-				'secId': '',
-				'from_date': '',
-				'to_date': '',
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'collection',
-				'login_id': '',
-				'orderBy': '',
-				'downloadAll': true
-			});
+		this.reportType = $event.value;
+		this.reportFilterForm.patchValue({
+			'admission_no': '',
+			'studentName': '',
+			'fee_value': '',
+			'feeHeadId': '',
+			'classId': '',
+			'secId': '',
+			'from_date': '',
+			'to_date': '',
+			'pageSize': '10',
+			'pageIndex': '0',
+			'filterReportBy': 'collection',
+			'login_id': '',
+			'orderBy': '',
+			'downloadAll': true
+		});
 		if ($event.value) {
+			if($event.value) {
+				this.reportFilterForm.patchValue({
+					'from_date': new Date()
+				})
+			}
 			this.displyRep.emit({ report_index: 15, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'routewisecoll' || $event.value === 'routewiseout') {
 				this.valueLabel = 'Routes';
