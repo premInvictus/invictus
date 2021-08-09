@@ -80,7 +80,7 @@
                                                 <section class="example-section">
                                                     <mat-checkbox [checked]="ing.checked"
                                                         (change)="updateUserCheck(i, $event)">
-                                                        {{ing.au_full_name | titlecase}}
+                                                        {{ing.name | titlecase}}
                                                         <span *ngIf="ing?.au_admission_no">, {{ing?.au_admission_no}},
                                                         </span>
                                                         <span *ngIf="ing?.class_name && ing?.sec_name">

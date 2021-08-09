@@ -49,6 +49,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	selectedUserCount = 0;
 	showSearchByUserFlag = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
+	templateDataArr: any[];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -83,7 +84,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.messageForm = this.fbuild.group({
 			messageTo: '',
 			messageSubject: '',
-			messageBody: ''
+			messageBody: '',
+			messageType: this.reRenderForm && this.reRenderForm.messageType ? this.reRenderForm.messageType : '',
+			messageTemplate: '',
+			messageTitle: '',
 		});
 	}
 
@@ -91,7 +95,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.messageForm = this.fbuild.group({
 			messageTo: '',
 			messageSubject: '',
-			messageBody: ''
+			messageBody: '',
 		});
 		this.editMode = true;
 		this.formData = formData;
@@ -100,7 +104,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		setTimeout(() => {
 			if (this.formData && this.formData['user_data']) {
 				for (var i = 0; i < this.formData['user_data'].length; i++) {
+					console.log("----------------------", this.formData['user_data'][i]['device_id']);
+					
 					var inputJson = {
+						device_id:this.formData['user_data'][i]['device_id'],
 						login_id: this.formData['user_data'][i]['login_id'],
 						class_id: this.formData['user_data'][i]['class_id'],
 						sec_id: this.formData['user_data'][i]['sec_id'],
@@ -326,12 +333,22 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						let tempau_admission_no = '';
+						let deviceId: any = '';
+						if (result.data[i]['device_details']) {
+							const devices: any[] = JSON.parse(result.data[i]['device_details']);
+							for (const item of devices) {
+								if (item.type === 'android') {
+									deviceId = item.device_id
+								}
+							}
+						}
 						if(result.data[i]['au_process_type'] == '3') {
 							tempau_admission_no = 'P.A.'+result.data[i]['em_provisional_admission_no'];
 						} else if(result.data[i]['au_process_type'] == '4'){
 							tempau_admission_no = 'A.'+result.data[i]['em_admission_no'];
 						}
 						var inputJson = {
+							device_id: deviceId ? deviceId : '',
 							au_login_id: result.data[i]['au_login_id'],
 							au_full_name: result.data[i]['au_full_name'],
 							au_profileimage: result.data[i]['au_profileimage'],
@@ -573,6 +590,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					au_full_name: userDataArr['au_full_name'],
 					mobile: userDataArr['au_mobile'],
 					role_id: userDataArr['au_role_id'],
+					device_id: userDataArr['device_id']
 				};
 				this.tempSelectedUserArr.push(inputJson);
 			}
@@ -659,7 +677,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		var validationFlag = this.checkValidation();
 		if (validationFlag) {
 			var msgToArr = [];
+			let devices: any[] = [];
 			for (var i = 0; i < this.selectedUserArr.length; i++) {
+				console.log("i am here", this.selectedUserArr[i]['device_id']);
+				
+				devices.push(this.selectedUserArr[i]['device_id']);
 				var userJson = {
 					"login_id": this.selectedUserArr[i]['login_id'],
 					"au_full_name": this.selectedUserArr[i]['au_full_name'],
@@ -675,19 +697,31 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 				msgToArr.push(userJson);
 			}
-
+			console.log("-------------------------------------12", devices);
 			var inputJson = {
 				"msg_from": this.currentUser.login_id,
 				"msg_to": msgToArr,
-				"msg_type": 'C',
+				'message_to': devices,
+				"msg_type": 'notification',
 				"msg_template_id": '',
+				'user_type': 'student',
+				"notification_type": {
+					"type": "push",
+					"module": 'inbox'
+				},
+				"message_type": {
+					"type": "push",
+					"module": 'inbox'
+				},
 				"msg_receivers": this.currentReceivers,
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
+				"message_title": this.messageForm.value.messageSubject,
+				"message_content": this.commonAPIService.htmlToText(this.messageForm.value.messageBody),
 				"msg_attachment": this.attachmentArray,
 				"msg_status": { "status_id": 1, "status_name": "pending" },
-				// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
-				"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
+				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				// "status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
 			}
@@ -804,5 +838,86 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	back() {
 		this.backToBroadcast.emit(this.messageForm.value.messageType);
+	}
+	editTemplate(event) {
+		
+		(event && event.value != '0') ? this.editTemplateFlag = true : this.editTemplateFlag = false;
+		const templateData = this.templateDataArr.filter((tplObj) => {
+			return tplObj.tpl_id.toString() === event.value.toString();
+		});
+
+		this.selectedUserArr = [];
+		this.messageForm.patchValue({tpl_id: (event && event.value != '0') ? event.value : ''});
+		if (templateData && templateData.length > 0) {
+			if (this.editMode) {
+				this.messageForm.patchValue({
+					//tpl_id: event && event.value ? event.value : '',
+					messageTemplate: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'].toString() : '',
+					messageType: this.formData && this.formData['messageType'] ? this.formData['messageType'] : '',
+					messageTitle: templateData[0]['tpl_title'],
+					messageTo: '',
+					messageSubject: this.formData && this.formData['subject'] ? this.formData['subject'] : '',
+					messageBody: this.formData && this.formData['body'] ? this.formData['body'] : '',
+				});
+				if (this.formData && this.formData['user_data']) {
+					for (var i = 0; i < this.formData['user_data'].length; i++) {
+
+						var inputJson = {
+							login_id: this.formData['user_data'][i]['login_id'],
+							class_id: this.formData['user_data'][i]['class_id'],
+							sec_id: this.formData['user_data'][i]['sec_id'],
+							email: this.formData['user_data'][i]['email'],
+							au_full_name: this.formData['user_data'][i]['au_full_name'],
+							mobile: this.formData['user_data'][i]['mobile'],
+						};
+						this.selectedUserArr.push(inputJson);
+					}
+				}
+			} else {
+				this.messageForm.patchValue({
+					//tpl_id: event && event.value ? event.value : '',
+					messageTitle: templateData ? templateData[0]['tpl_title'] : '',
+					messageSubject: templateData ? templateData[0]['tpl_subject'] : '',
+					messageBody: templateData ? templateData[0]['tpl_body'] : '',
+				});
+			}
+
+		} else if (this.editMode) {
+			this.messageForm.patchValue({
+				//tpl_id: event && event.value ? event.value : '',
+				messageTemplate: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '',
+				messageType: this.formData && this.formData['messageType'] ? this.formData['messageType'] : '',
+				messageTitle: this.formData && this.formData['tpl_title'] ? this.formData['tpl_title'] : '',
+				messageTo: '',
+				messageSubject: this.formData && this.formData['subject'] ? this.formData['subject'] : '',
+				messageBody: this.formData && this.formData['body'] ? this.formData['body'] : '',
+			});
+			if (this.formData && this.formData['user_data']) {
+				for (var i = 0; i < this.formData['user_data'].length; i++) {
+					var inputJson = {
+						login_id: this.formData['user_data'][i]['login_id'],
+						class_id: this.formData['user_data'][i]['class_id'],
+						sec_id: this.formData['user_data'][i]['sec_id'],
+						email: this.formData['user_data'][i]['email'],
+						au_full_name: this.formData['user_data'][i]['au_full_name'],
+						mobile: this.formData['user_data'][i]['mobile'],
+					};
+
+					this.selectedUserArr.push(inputJson);
+				}
+			}
+		}
+	}
+
+	getTemplate() {
+		this.templateDataArr = [];
+		const inputJson = {
+			tpl_type: this.messageForm.value.messageType
+		};
+		this.sisService.getTemplate(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				this.templateDataArr = result.data;
+			}
+		});
 	}
 }
