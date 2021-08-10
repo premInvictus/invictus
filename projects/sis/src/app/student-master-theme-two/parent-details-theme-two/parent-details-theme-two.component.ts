@@ -7,25 +7,6 @@ import { MatDatepickerInputEvent, ErrorStateMatcher } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
-
-// import { Pipe, PipeTransform } from '@angular/core';
-// @Pipe({  name: 'orderBy' })
-// export class OrderrByPipe implements PipeTransform {
-
-//     transform(records: Array<any>, args?: any): any {
-//         return records.sort(function(a, b){
-//             if(a[args.property] < b[args.property]){
-//                 return -1 * args.direction;
-//             }
-//             else if( a[args.property] > b[args.property]){
-//                 return 1 * args.direction;
-//             }
-//             else{
-//                 return 0;
-//             }
-//         });
-//     };
-// }
 @Component({
 	selector: 'app-parent-details-theme-two',
 	templateUrl: './parent-details-theme-two.component.html',
@@ -33,13 +14,11 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 	encapsulation: ViewEncapsulation.None
 })
 export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
-	// @Pipe({  name: 'orderBy' })
 	@ViewChild('cropModal') cropModal;
 	@ViewChild('picker') picker;
 	@Input() parentDet: any[];
 	@Input() configSetting: any;
 	@Input() siblings = null;
-	value = 'Clear me';
 	cropIndex: any;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	formArray: any[] = [{ formId: 1, formHeader: 'Father\'s', formInfo: 'Father\'s' },
@@ -61,7 +40,6 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	currentUser: any;
 	userDetail: any;
 	flagOccupation = false;
-	flagQualification = false;
 	checkReadOnlyStatus = false;
 	sameSchoolArray: any[] = [];
 	diffSchoolArray: any[] = [];
@@ -512,23 +490,11 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 
 	changeFlafOcc(val) {
-		console.log("selection changed to", val);
-		if(val == 78 || val == 81 ) {
+
+		if(val == 81 ) {
 			this.flagOccupation = true;
-		}else{
-			this.flagOccupation = false;
 		}
-		console.log("flagOccupation", this.flagOccupation);
 	}
-
-	changeFlagQual(val){
-		console.log("selection changed to", val);
-		if(val == 0 ) {
-			this.flagQualification = true;
-		}
-		console.log("flagQualification", this.flagQualification);
-	}
-
 	setActiveParent(index, $event) {
 		if (Number($event.value) === 1) {
 			this.formGroupArray[index].formGroup.value.epd_status = $event.value;

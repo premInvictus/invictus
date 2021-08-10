@@ -165,17 +165,10 @@
                                        {{item.ocpt_name}}</mat-option>
                                  </mat-select>
                               </mat-form-field>
-                              <!-- <mat-form-field *ngIf="flagOccupation" class="form-field" appearance="outline">
-                                 <mat-label>Add New Occupation</mat-label>
-                                 <input matInput [readonly]="viewOnly" formControlName="epd_parent_occupation_type" value='' (keyup.enter)='blurValue(epd_parent_occupation_type)' placeholder="Your Occupation ">                                 
-                              </mat-form-field> -->
                               <mat-form-field *ngIf="flagOccupation" class="form-field" appearance="outline">
                                  <mat-label>Add New Occupation</mat-label>
                                  <input matInput [readonly]="viewOnly" formControlName="epd_parent_occupation_type" value='' (keyup.enter)='blurValue(epd_parent_occupation_type)' placeholder="Your Occupation ">
-                                 <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="flagOccupation=false">
-                                   <mat-icon>close</mat-icon>
-                                 </button>
-                               </mat-form-field>
+                              </mat-form-field>
                            </div>
                            <div class="col-12 " *ngIf="checkIfFieldExist('epd_organisation')">
                               <mat-form-field class="form-field" appearance="outline">
@@ -229,30 +222,18 @@
                      <fieldset class="col-12 fieldset_invoice" *ngIf="checkIfFieldExist('epd_qualification')">
                         <legend class="invoice_legend"> <b>Education Details</b></legend>
                         <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_qualification')">
-                           <mat-form-field *ngIf="!flagQualification"  class="form-field" appearance="outline">
+                           <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Choose Qualification</mat-label>
-                              <mat-select placeholder="Choose Qualification.." formControlName="epd_qualification" (selectionChange)="changeFlagQual($event.value)"
+                              <mat-select placeholder="Choose Qualification.." formControlName="epd_qualification"
                                  [disabled]="viewOnly" multiple [errorStateMatcher]="confirmValidParentMatcher">
                                  <mat-option *ngFor="let item of qualificationArray" [value]="item.qlf_id">
                                     {{item.qlf_name}}
                                  </mat-option>
-                                 <mat-option value="0">Others</mat-option>
                               </mat-select>
                               <mat-error>
                                  Please Choose Qualification
                               </mat-error>
                            </mat-form-field>
-                           <!-- <mat-form-field *ngIf="flagQualification" class="form-field" appearance="outline">
-                              <mat-label>Add New Qualification</mat-label>
-                              <input matInput [readonly]="viewOnly" formControlName="epd_qualification" value='' (keyup.enter)='blurValue(epd_qualification)' placeholder="Your Qualification">
-                           </mat-form-field> -->
-                           <mat-form-field *ngIf="flagQualification" class="form-field" appearance="outline">
-                              <mat-label>Add New Qualification</mat-label>
-                              <input matInput [readonly]="viewOnly" formControlName="epd_qualification" value='' (keyup.enter)='blurValue(epd_qualification)' placeholder="Your Qualification">
-                              <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="flagQualification=false">
-                                <mat-icon>close</mat-icon>
-                              </button>
-                            </mat-form-field>
                         </div>
                      </fieldset>
                      <div class="col-12 ">
