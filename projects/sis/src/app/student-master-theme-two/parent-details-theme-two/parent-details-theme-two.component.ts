@@ -19,6 +19,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() parentDet: any[];
 	@Input() configSetting: any;
 	@Input() siblings = null;
+	value = 'Clear me';
 	cropIndex: any;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	formArray: any[] = [{ formId: 1, formHeader: 'Father\'s', formInfo: 'Father\'s' },
@@ -40,6 +41,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	currentUser: any;
 	userDetail: any;
 	flagOccupation = false;
+	flagQualification = false;
 	checkReadOnlyStatus = false;
 	sameSchoolArray: any[] = [];
 	diffSchoolArray: any[] = [];
@@ -491,8 +493,14 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 
 	changeFlafOcc(val) {
 
-		if(val == 81 ) {
+		if(val == 81 || val == 78) {
 			this.flagOccupation = true;
+		}
+	}
+	changeFlagQual(val) {
+
+		if(val == 0 ) {
+			this.flagQualification = true;
 		}
 	}
 	setActiveParent(index, $event) {
