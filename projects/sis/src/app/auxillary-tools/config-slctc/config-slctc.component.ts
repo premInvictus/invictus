@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Location} from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -28,11 +29,14 @@ export class ConfigSlctcComponent implements OnInit {
 	dialogRef: MatDialogRef<ViewSlctcPrintComponent>;
 	finalArray: any[] = [];
 	req_date: any;
-	constructor(private router: Router,
+	constructor(
+		private commonService: CommonAPIService,
+		private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
 		private fbuild: FormBuilder,
-		private dialog: MatDialog) { }
+		private dialog: MatDialog,
+		private _location: Location) { }
 
 	ngOnInit() {
 		this.buildForm();
@@ -43,6 +47,10 @@ export class ConfigSlctcComponent implements OnInit {
 			}
 		});
 	}
+
+	backClicked() {
+		this._location.back();
+	  }
 
 	getConfigForm() {
 		this.printmechanism = false;
@@ -79,11 +87,13 @@ export class ConfigSlctcComponent implements OnInit {
 			adate: new DatePipe('en-in').transform(this.dateform.value.adate, 'yyyy-MM-dd'),
 		};
 		this.sisService.insertSlcTcPrintSetting(customJSON).subscribe((result: any) => {
+			console.log("insertSLC status", result.status);
 			if (result.status === 'ok') {
 				//   this.router.navigate(['../../auxilliarytool/slc'],
 				// { queryParams: { issue_status: true}, relativeTo: this.route });
 				//   const url = result.data;
 				//   window.open(url, 'Download');
+				// console.log("insertSLC", result.data);
 				if (result.data) {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
@@ -91,6 +101,37 @@ export class ConfigSlctcComponent implements OnInit {
 						{ queryParams: { issue_status: true }, relativeTo: this.route });
 				}
 
+			}
+		});
+	}
+
+	save() {
+		for (const item of this.formGroupArray) {
+			this.valueArray.push({ usps_values: item.value.cust_val });
+		}
+		for (const item of this.ffIdArray) {
+			this.finalArray.push({ usps_sff_id: item.usps_sff_id, usps_values: '' });
+		}
+		let i = 0;
+		for (const item of this.valueArray) {
+			this.finalArray[i].usps_values = item.usps_values;
+			i++;
+		}
+		const customJSON = {
+			preview_flag: '0',
+			usps_tc_id: this.tc_id,
+			usts_name: 'slctc',
+			usts_id: '1',
+			configRelation: this.finalArray,
+			ackFlag: this.ackFlag,
+			pdate: new DatePipe('en-in').transform(this.dateform.value.pdate, 'yyyy-MM-dd'),
+			adate: new DatePipe('en-in').transform(this.dateform.value.adate, 'yyyy-MM-dd'),
+		};
+		this.sisService.savePrintProgress(customJSON).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.commonService.showSuccessErrorMessage("Data Saved", 'success');
+			}else{
+				this.commonService.showSuccessErrorMessage('Sorry Error saving data', 'error');
 			}
 		});
 	}
@@ -105,7 +146,8 @@ export class ConfigSlctcComponent implements OnInit {
 			if (result.status === 'ok') {
 				this.printSettings = result.data[0];
 				this.dateform.patchValue({
-					adate: new DatePipe('en-in').transform(new Date(this.printSettings['tc_request_date']), 'yyyy-MM-dd')
+					adate: new DatePipe('en-in').transform(new Date(this.printSettings['tc_request_date']), 'yyyy-MM-dd'),
+					pdate: new DatePipe('en-in').transform(new Date(this.printSettings['tc_approval_date']), 'yyyy-MM-dd')
 				});
 				this.req_date2 = this.dateform.value.adate
 				const subjArr: any[] = result.data;

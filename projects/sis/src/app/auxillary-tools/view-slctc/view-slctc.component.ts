@@ -95,6 +95,7 @@ export class ViewSlctcComponent implements OnInit {
 		this.sisService.getReason({ reason_type: 10 }).subscribe((result: any) => {
 			if (result) {
 				this.reasonDataArray = result.data;
+				console.log("Reasons Data",this.reasonDataArray);
 			}
 		});
 	}
@@ -133,6 +134,7 @@ export class ViewSlctcComponent implements OnInit {
 				}
 			});
 		}
+		console.log("TC Details",this.studentdetials.tc_remark);
 	}
 	previewImage(imgArray) {
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {

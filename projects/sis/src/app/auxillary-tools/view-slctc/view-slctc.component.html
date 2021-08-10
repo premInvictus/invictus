@@ -111,7 +111,7 @@
               <mat-label>Reason For Change</mat-label>
           <mat-select placeholder="Reason For Change" formControlName="tc_reason" required disabled>
               <mat-option value="">Please Select</mat-option>
-            <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item.reason_id}}">{{item.reason_title}}</mat-option>
+            <mat-option value="Select" *ngFor="let item of reasonDataArray" [value]="item.reason_id">{{item.reason_title}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
