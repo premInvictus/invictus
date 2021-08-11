@@ -916,6 +916,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/insertSlcTcPrintSetting', value);
 	}
+	savePrintProgress(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/savePrintProgress', value);
+	}
 	generateReportClassWise(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/generateReportClasswise', value);
