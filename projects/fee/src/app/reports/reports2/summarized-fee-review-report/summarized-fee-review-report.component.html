@@ -4,12 +4,40 @@
 
   <div class="row">
     <div class="col-2">
+      <mat-form-field  appearance="outline" class="form-field">
+      <mat-label>Report</mat-label>
+      <mat-select formControlName="report_type">
+        <mat-option value="A">
+          Till Date Review
+        </mat-option>
+        <mat-option value="B">
+            Summarized Fee Review
+        </mat-option>
+        <mat-option value="C">
+          Detailed Fee Review
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="reportFilterForm.value.report_type === 'A'">
       <mat-form-field appearance="outline" class="form-field">
       <mat-label>To Date</mat-label>
       <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="to_date"
         (blur)="getFromDate($event.target.value)" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="reportFilterForm.value.report_type !== 'A'">
+      <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Month</mat-label>
+          <mat-select formControlName="month" >
+            <mat-option value="">Please Select</mat-option>
+            <mat-option *ngIf="reportFilterForm.value.report_type === 'C'" value="all">All</mat-option>
+            <mat-option *ngFor="let item of monthArray" [value]="item.value">
+              {{item.name_1}}
+            </mat-option>
+          </mat-select>
     </mat-form-field>
     </div>
     <div *ngIf="filterFlag" class="col-4">
@@ -45,7 +73,8 @@
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
-    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+    >
   </angular-slickgrid>
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">

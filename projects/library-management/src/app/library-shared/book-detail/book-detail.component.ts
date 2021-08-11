@@ -98,11 +98,15 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								let prefix = '';
 								if (Number(item.user_role_id) === 2) {
 									prefix = 'A-';
+									
 								} else if (Number(item.user_role_id) === 3) {
 									prefix = 'T-';
+								
 								} else {
 									prefix = 'S-';
 								}
+
+								// delay(500);
 								let classSec = '';
 								if (Number(item.user_role_id) === 4) {
 									if (Number(item.user_sec_id) !== 0) {
@@ -114,15 +118,38 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 									classSec = '-';
 								}
 
-								this.BOOK_LOGS.push({
-									sr_no: i + 1,
-									enrollment_no: prefix + item.user_login_id,
-									issued_to: item.user_full_name,
-									class_sec: classSec,
-									role_id: item.user_role_id,
-									issued_on: item.reserv_user_logs[0].issued_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].issued_on,  'd-MMM-y') : '-',
-									return_on: item.reserv_user_logs[0].returned_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].returned_on, 'd-MMM-y') : '-'
-								});
+								if(Number(item.user_role_id) !== 4) {
+									this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: item.user_login_id }).subscribe((res:any) => {
+										if(res) {
+											this.BOOK_LOGS.push({
+												sr_no: i + 1,
+												enrollment_no: prefix + res[0].emp_code_no,
+												issued_to: item.user_full_name,
+												class_sec: classSec,
+												role_id: item.user_role_id,
+												issued_on: item.reserv_user_logs[0].issued_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].issued_on,  'd-MMM-y') : '-',
+												return_on: item.reserv_user_logs[0].returned_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].returned_on, 'd-MMM-y') : '-'
+											});
+										}
+										this.datasource = new MatTableDataSource<any>(this.BOOK_LOGS);
+										this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+										this.datasource.sort = this.sort;
+										this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+										this.datasource.paginator = this.paginator;
+										
+									})
+									
+								} else {
+									this.BOOK_LOGS.push({
+										sr_no: i + 1,
+										enrollment_no: prefix + item.user_admission_no,
+										issued_to: item.user_full_name,
+										class_sec: classSec,
+										role_id: item.user_role_id,
+										issued_on: item.reserv_user_logs[0].issued_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].issued_on,  'd-MMM-y') : '-',
+										return_on: item.reserv_user_logs[0].returned_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].returned_on, 'd-MMM-y') : '-'
+									});
+								}
 								i++;
 							}
 						}
@@ -139,6 +166,14 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 				this.bookData = {};
 			}
 		});
+	}
+	getcode(code) {
+		this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: code }).subscribe((res:any) => {
+			if(res) {
+				return res[0].emp_code_no;
+			}
+			
+		})
 	}
 	getBookDetail2(book_no) {
 		this.BOOK_LOGS = [];
@@ -164,8 +199,23 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								let prefix = '';
 								if (Number(item.user_role_id) === 2) {
 									prefix = 'A-';
+									this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: item.user_login_id }).subscribe((res:any) => {
+										if(res) {
+											console.log("--------");
+											
+											item.au_admission_no = res[0].emp_code_no;
+										}
+										
+									})
 								} else if (Number(item.user_role_id) === 3) {
 									prefix = 'T-';
+									this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: item.user_login_id }).subscribe((res:any) => {
+										if(res) {
+											console.log("--------");
+											item.au_admission_no = res[0].emp_code_no;
+										}
+										console.log("----+----");
+									})
 								} else {
 									prefix = 'S-';
 								}
@@ -181,7 +231,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								}
 								this.BOOK_LOGS.push({
 									sr_no: i + 1,
-									enrollment_no: prefix + item.user_login_id,
+									enrollment_no: prefix + item.au_admission_no,
 									issued_to: item.user_full_name,
 									class_sec: classSec,
 									role_id: item.user_role_id,
@@ -230,15 +280,29 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 						let prefix = '';
 						if (Number(item.user_role_id) === 2) {
 							prefix = 'A-';
+							this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: item.user_login_id }).subscribe((res:any) => {
+								if(res) {
+									item.au_admission_no = res[0].emp_code_no;
+								}
+								
+							})
 						} else if (Number(item.user_role_id) === 3) {
 							prefix = 'T-';
+							this.erpCommonService.getAllEmployee({emp_code_no: { $ne: '' },emp_login_id: item.user_login_id }).subscribe((res:any) => {
+								if(res) {
+									console.log("+--------");
+									item.au_admission_no = res[0].emp_code_no;
+								}
+								console.log("--------+");
+								
+							})
 						} else {
 							prefix = 'S-';
 						}
 
 						this.BOOK_LOGS.push({
 							sr_no: i + 1,
-							enrollment_no: prefix + item.user_login_id,
+							enrollment_no: prefix + item.au_admission_no,
 							issued_to: item.user_full_name,
 							class_sec: '',
 							role_id: item.user_role_id,

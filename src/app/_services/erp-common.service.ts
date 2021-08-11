@@ -793,7 +793,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateClosingBalance', value);
 	}
 	getAllEmployee(value) { 
-		this.service.startLoading();
+		// this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
 	}
 	getFilterData(value) {
@@ -885,6 +885,10 @@ export class ErpCommonService {
 	getAllEmployeeByClassSectionForStudent(val) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getAllEmployeeByClassSectionForStudent', val)
+	}
+	getAllUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
 	}
 
 }
