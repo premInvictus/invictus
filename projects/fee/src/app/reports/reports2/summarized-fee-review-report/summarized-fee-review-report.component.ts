@@ -1109,9 +1109,22 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 
 		if (this.reportFilterForm.value.report_type == 'C') {
+			let m = ''
+			this.monthArray.forEach((e:any) => {
+				if(e.value == this.reportFilterForm.value.month) {
+					m = e.name_1;
+				}	
+			});
+			let y = '';
+			
+			if(parseInt(this.reportFilterForm.value.month) >= parseInt(this.schoolInfo.session_start_month)) {
+				y = this.currentSession.ses_name.split("-")[0];
+			} else {
+				y = this.currentSession.ses_name.split("-")[1];
+			}
 			console.log("in here", this.alphabetJSON[this.columnLength + 7], this.alphabetJSON[this.columnLength + 8], this.alphabetJSON[this.columnLength * 2 + 13]);
 			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-			worksheet.getCell('A2').value = 'Detailed Fee Review Report';
+			worksheet.getCell('A2').value = 'Detailed Fee Review Report - ' + m + ', '+ y ;
 			worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 			worksheet.mergeCells('A3:E3');
 			worksheet.getCell('A3').value = 'Student Details';
