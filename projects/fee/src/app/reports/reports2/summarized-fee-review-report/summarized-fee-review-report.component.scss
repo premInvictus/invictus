@@ -1,3 +1,23 @@
+#slickGridContainer-mygrid {
+  .slickgrid-container .slick-header-columns {
+      .slick-header-column {
+          height: 100px;
+
+          .slick-sort-indicator, .slick-sort-indicator-numbered {
+              top: 60px;
+          }
+      }
+  }
+}
+.slick-row .slick-cell.frozen:last-child,
+.slick-headerrow-column.frozen:last-child,
+.slick-footerrow-column.frozen:last-child {
+border-right: 1px solid #969696 !important;
+}
+
+.slick-pane-bottom {
+border-top: 1px solid #969696 !important;
+}
 ::-webkit-scrollbar {
     display: none !important;
     }
@@ -61,4 +81,3 @@
     :host ::ng-deep .slick-row {
       height:auto !important;
     }
-    

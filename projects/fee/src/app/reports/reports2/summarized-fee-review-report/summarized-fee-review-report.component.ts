@@ -5,6 +5,7 @@ import {
 	Filters,
 	Formatters
 } from 'angular-slickgrid';
+
 import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
@@ -19,12 +20,14 @@ import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details
 import * as Excel from 'exceljs/dist/exceljs';
 
 declare var require;
+declare var slickgroup: any;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { element } from 'protractor';
 @Component({
 	selector: 'app-summarized-fee-review-report',
 	templateUrl: './summarized-fee-review-report.component.html',
-	styleUrls: ['./summarized-fee-review-report.component.css']
+	styleUrls: ['./summarized-fee-review-report.component.scss']
 })
 export class SummarizedFeeReviewReportComponent implements OnInit {
 	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
@@ -66,6 +69,56 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	schoolInfo: any;
 	activeReport = 1;
 	currentSession;
+	columnLength = 0;
+	monthArray = [
+		{
+			value: '01',
+			name_1: 'January'
+		},
+		{
+			value: '02',
+			name_1: 'Feburary'
+		}, {
+			value: '03',
+			name_1: 'March'
+		},
+		{
+			value: '04',
+			name_1: 'April'
+		},
+		{
+			value: '05',
+			name_1: 'May'
+		},
+		{
+			value: '06',
+			name_1: 'June'
+		},
+		{
+			value: '07',
+			name_1: 'July'
+		},
+		{
+			value: '08',
+			name_1: 'August'
+		},
+		{
+			value: '09',
+			name_1: 'September'
+		},
+		{
+			value: '10',
+			name_1: 'October'
+		},
+		{
+			value: '11',
+			name_1: 'November'
+		},
+		{
+			value: '12',
+			name_1: 'December'
+		}
+	];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -129,6 +182,11 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		this.getClassData();
 		this.filterFlag = true;
 		// this.getSummarizedFeeReviewReport(this.reportFilterForm.value);
+		console.log(slickgroup);
+		if (new slickgroup.ColGroup()) {
+			console.log(new slickgroup.ColGroup());
+			this.gridOptions['registerPlugins'] = [new slickgroup.ColGroup()];
+		}
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -139,50 +197,50 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	}
 
 	parseRoman(s) {
-        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
-        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
-            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
-        }, 0);
+		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+		return s.toUpperCase().split('').reduce((r, a, i, aa) => {
+			return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+		}, 0);
 	}
 	isRoman(s) {
-        // http://stackoverflow.com/a/267405/1447675
-        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+		// http://stackoverflow.com/a/267405/1447675
+		return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
 	}
-	updateClassSort(grid:any,dataView:any) {
+	updateClassSort(grid: any, dataView: any) {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
-				grid.onSort.subscribe((e, args)=> {
+				grid.onSort.subscribe((e, args) => {
 					console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
-				  
+
 					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
-					var comparer = (a, b) =>{
+					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-							
-							
+
+
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-						
-						
+
+
 						} else {
-							
+
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-					
+
 					}
-				  
+
 					// Delegate the sorting to DataView.
 					// This will fire the change events and update the grid.
 					dataView.sort(comparer, args.sortAsc);
-				  });
+				});
 			}
 		}
 	}
@@ -198,7 +256,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
-			'sd_type_value' : '1',
+			'sd_type_value': '1',
 			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
@@ -214,11 +272,14 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'order_by': '',
+			'month': ''
 		});
 		this.reportFilterForm.patchValue({
 			to_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd')
 		});
+		console.log("i m here", this.reportFilterForm.value);
+
 	}
 
 	getSummarizedFeeReviewReport(value: any) {
@@ -244,7 +305,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			enableAutoTooltip: true,
 
 			enableCellNavigation: true,
-			rowHeight:65,
+			rowHeight: 65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -324,6 +385,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
+
 		};
 		let repoArray = [];
 		this.columnDefinitions = [];
@@ -392,12 +454,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'au_enrollment_status', 
-				name: 'Enrollment Status', 
+				id: 'au_enrollment_status',
+				name: 'Enrollment Status',
 				field: 'au_enrollment_status',
-				 filterable: true, 
-				 width: 6,
-				 sortable: true,
+				filterable: true,
+				width: 6,
+				sortable: true,
 				grouping: {
 					getter: 'au_enrollment_status',
 					formatter: (g) => {
@@ -414,7 +476,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'opening_outstanding',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'opening_advances',
@@ -422,7 +484,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'opening_advances',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'due_for_period',
@@ -430,7 +492,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'due_for_period',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'total_receivables',
@@ -438,7 +500,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'total_receivables',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'receipt_during_the_period',
@@ -446,7 +508,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'receipt_during_the_period',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'balance',
@@ -454,7 +516,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'balance',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'outstanding_end_of_period',
@@ -462,7 +524,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'outstanding_end_of_period',
 				sortable: true,
 				filterable: true,
-				
+
 			},
 			{
 				id: 'adv_end_of_period',
@@ -470,9 +532,9 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				field: 'adv_end_of_period',
 				sortable: true,
 				filterable: true,
-				
+
 			}
-			];
+		];
 		this.feeService.getSummarizedFeeReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -486,25 +548,25 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						(index + 1);
 					obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 						(index + 1);
-						obj['opening_advances'] = 0;
-						obj['opening_outstanding'] = 0;
-						obj['adv_end_of_period'] = 0;
-						obj['outstanding_end_of_period']=0;
+					obj['opening_advances'] = 0;
+					obj['opening_outstanding'] = 0;
+					obj['adv_end_of_period'] = 0;
+					obj['outstanding_end_of_period'] = 0;
 					if (repoArray[Number(index)]['inv_opening_balance'] > 0)
 						obj['opening_outstanding'] = Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
-					else 
+					else
 						obj['opening_advances'] = -Number(repoArray[Number(index)]['inv_opening_balance'] ? repoArray[Number(index)]['inv_opening_balance'] : 0);
-					
+
 					obj['due_for_period'] = Number(repoArray[Number(index)]['defaulter_inv_group_amount']);
-					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0 );
+					obj['total_receivables'] = (repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0);
 					obj['receipt_during_the_period'] = repoArray[Number(index)]['rpt_net_amount'] ? Number(repoArray[Number(index)]['rpt_net_amount']) : 0;
-					obj['balance'] = ((repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance']  ?  Number(repoArray[Number(index)]['inv_opening_balance'])  : 0)+ (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0) - (repoArray[Number(index)]['rpt_net_amount'] ? Number(repoArray[Number(index)]['rpt_net_amount']) : 0));
-					if(Number(obj['balance']) > 0)
+					obj['balance'] = ((repoArray[Number(index)]['defaulter_inv_group_amount'] ? Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0) + (repoArray[Number(index)]['inv_opening_balance'] ? Number(repoArray[Number(index)]['inv_opening_balance']) : 0) + (repoArray[Number(index)]['opening_advances'] ? Number(repoArray[Number(index)]['opening_advances']) : 0) - (repoArray[Number(index)]['rpt_net_amount'] ? Number(repoArray[Number(index)]['rpt_net_amount']) : 0));
+					if (Number(obj['balance']) > 0)
 						obj['outstanding_end_of_period'] = Number(obj['balance']);
-					else 
+					else
 						obj['adv_end_of_period'] = -Number(obj['balance']);
-					
-					
+
+
 					obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 						repoArray[Number(index)]['stu_admission_no'] : '-';
 					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -523,7 +585,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				const obj3: any = {};
 				obj3['id'] = 'footer';
 				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
-				
+
 				obj3['stu_admission_no'] = '';
 				obj3['stu_full_name'] = '';
 				obj3['stu_class_name'] = '';
@@ -535,7 +597,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
 				obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
 				obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
-				
+
 				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
 				//this.dataset.push(obj3);
 
@@ -558,7 +620,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		});
 	}
 
-	
+
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
 		this.clearGrouping();
@@ -620,7 +682,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			} else {
 				return '';
 			}
-			
+
 		}
 		return '';
 	}
@@ -633,7 +695,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			} else {
 				return '-';
 			}
-			
+
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
@@ -656,7 +718,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			} else {
 				return '-';
 			}
-			
+
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -665,7 +727,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		} else {
 			return "-";
 		}
-		
+
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		return '<b class="total-footer-report">Total</b>';
@@ -932,7 +994,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				head: [['Generated On: '
 					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
 				didDrawPage: function (data) {
-	
+
 				},
 				headStyles: {
 					fontStyle: 'bold',
@@ -948,7 +1010,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				// tslint:disable-next-line:max-line-length
 				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
 				didDrawPage: function (data) {
-	
+
 				},
 				headStyles: {
 					fontStyle: 'bold',
@@ -1036,7 +1098,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				key: item.id,
 				width: 8
 			});
-			
+
 			columValue.push(item.name);
 		}
 		const workbook = new Excel.Workbook();
@@ -1045,9 +1107,50 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-		worksheet.getCell('A2').value = 'Summarized Fee Review Report';
-		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+
+		if (this.reportFilterForm.value.report_type == 'C') {
+			let m = ''
+			this.monthArray.forEach((e:any) => {
+				if(e.value == this.reportFilterForm.value.month) {
+					m = e.name_1;
+				}	
+			});
+			let y = '';
+			
+			if(parseInt(this.reportFilterForm.value.month) >= parseInt(this.schoolInfo.session_start_month)) {
+				y = this.currentSession.ses_name.split("-")[0];
+			} else {
+				y = this.currentSession.ses_name.split("-")[1];
+			}
+			console.log("in here", this.alphabetJSON[this.columnLength + 7], this.alphabetJSON[this.columnLength + 8], this.alphabetJSON[this.columnLength * 2 + 13]);
+			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+			worksheet.getCell('A2').value = 'Detailed Fee Review Report - ' + m + ', '+ y ;
+			worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells('A3:E3');
+			worksheet.getCell('A3').value = 'Student Details';
+			worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells('F3:' + this.alphabetJSON[this.columnLength + 7] + '3');
+			worksheet.getCell('F3').value = 'Due';
+			worksheet.getCell(`F3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 8] + '3:' + this.alphabetJSON[this.columnLength * 2 + 11] + '3');
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 8] + '3').value = 'Receipt';
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 8] + `3`).alignment = { horizontal: 'left' };
+		} else if (this.reportFilterForm.value.report_type == 'B') {
+			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+			worksheet.getCell('A2').value = 'Summarized Fee Review Report';
+			worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+			console.log("in here", this.alphabetJSON[this.columnLength + 4], this.alphabetJSON[this.columnLength + 5], this.alphabetJSON[this.columnLength * 2 + 10], this.columnLength);
+			worksheet.mergeCells('A3:B3');
+			worksheet.getCell('A3').value = '';
+			worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells('C3:' + this.alphabetJSON[this.columnLength + 4] + '3');
+			worksheet.getCell('C3').value = 'Due';
+			worksheet.getCell(`C3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 5] + '3:' + this.alphabetJSON[this.columnLength * 2 + 8] + '3');
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 5] + '3').value = 'Receipt';
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 5] + `3`).alignment = { horizontal: 'left' };
+		}
+
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
 
@@ -1094,7 +1197,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					size: 12,
 					bold: true
 				};
-			} else if (rowNum === 4) {
+			} else if (rowNum === 4 || rowNum === 3) {
 				row.eachCell((cell) => {
 					cell.font = {
 						name: 'Arial',
@@ -1113,6 +1216,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
+					cell.rowHeight = '25'
 					cell.alignment = { horizontal: 'center', wrapText: true };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
@@ -1183,7 +1287,14 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 
 		workbook.xlsx.writeBuffer().then(data => {
 			const blob = new Blob([data], { type: 'application/octet-stream' });
-			saveAs(blob, 'Summarized_fee_review.xlsx');
+			if(this.reportFilterForm.value.report_type == "C") {
+				saveAs(blob, 'Detailed_fee_review.xlsx');
+			} else if(this.reportFilterForm.value.report_type == "B") {
+				saveAs(blob, 'Summarized_fee_review.xlsx');
+			} else {
+				saveAs(blob, 'Summarized_fee_review.xlsx');
+			}
+			
 		});
 	}
 
@@ -1192,6 +1303,13 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
 				console.log(this.schoolInfo);
+				let month_sp = parseInt(this.schoolInfo.session_start_month);
+				let spliceArray = this.monthArray.slice(0, month_sp - 1);
+				this.monthArray = this.monthArray.slice(month_sp - 1, this.monthArray.length);
+
+				this.monthArray.push(...spliceArray);
+				console.log("i am month array ", this.monthArray);
+
 			}
 		});
 	}
@@ -1207,7 +1325,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	}
 
 
-	
+
 
 	getSession() {
 		this.sisService.getSession().subscribe((result2: any) => {
@@ -1224,6 +1342,626 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	}
 
 	generate() {
-		this.getSummarizedFeeReviewReport(this.reportFilterForm.value);
+		if (this.reportFilterForm.value.report_type == 'A') {
+			this.getSummarizedFeeReviewReport(this.reportFilterForm.value);
+		} else if (this.reportFilterForm.value.report_type == 'C') {
+			this.getDetailReport(this.reportFilterForm.value);
+		} else if (this.reportFilterForm.value.report_type == 'B') {
+			this.getSummarizedReport(this.reportFilterForm.value);
+		}
+
+	}
+	getDetailReport(value: any) {
+		this.dataArr = [];
+		this.aggregatearray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		this.tableFlag = false;
+		this.gridOptions = {
+			enableAutoResize: false,
+			enableCellNavigation: true,
+			enableSorting: true,
+			createPreHeaderPanel: true,
+			showPreHeaderPanel: true,
+			explicitInitialization: true,
+			enableDraggableGrouping: false,
+			enableHeaderMenu: true,
+			preHeaderPanelHeight: 40,
+			enableFiltering: true,
+			enableColumnReorder: true,
+			createFooterRow: true,
+			showFooterRow: true,
+			footerRowHeight: 21,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
+			enableAutoTooltip: true,
+			rowHeight: 65,
+
+			headerMenu: {
+				iconColumnHideCommand: 'fas fa-times',
+				iconSortAscCommand: 'fas fa-sort-up',
+				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
+			},
+			exportOptions: {
+				sanitizeDataExport: true,
+				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'toggle-preheader') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel();
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+			}
+
+		};
+		// console.log(slickgroup);
+
+		// if (new slickgroup.ColGroup()) {
+		// 	console.log(new slickgroup.ColGroup());
+		// 	this.gridOptions['registerPlugins'] = [new slickgroup.ColGroup()];
+		//   }
+		let repoArray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		const collectionJSON: any = {
+			'from_date': new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd'),
+			'to_date': new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd'),
+			'pageSize': value.pageSize,
+			'pageIndex': value.pageIndex,
+			'classId': value.fee_value,
+			'secId': value.hidden_value,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
+			'downloadAll': true,
+			'month': value.month
+		};
+		this.columnDefinitions = [
+			{
+				id: 'srno',
+				name: 'SNo.',
+				field: 'srno',
+				sortable: true,
+				width: 1,
+				columnGroup: 'Student_Detail'
+			},
+			{
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+				width: 4, columnGroup: 'Student_Detail'
+			},
+			{
+				id: 'au_full_name', name: 'Student Name', field: 'au_full_name', filterable: true, width: 6, columnGroup: 'Student_Detail'
+				// grouping: {
+				// 	getter: 'stu_full_name',
+				// 	formatter: (g) => {
+				// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				// 	},
+				// 	aggregators: this.aggregatearray,
+				// 	aggregateCollapsed: true,
+				// 	collapsed: false
+				// },
+			},
+			{
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
+				filterable: true, columnGroup: 'Student_Detail'
+				// grouping: {
+				// 	getter: 'stu_class_name',
+				// 	formatter: (g) => {
+				// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				// 	},
+				// 	aggregators: this.aggregatearray,
+				// 	aggregateCollapsed: true,
+				// 	collapsed: false,
+				// },
+			},
+			{
+				id: 'au_enrollment_status',
+				name: 'Enrollment Status',
+				field: 'au_enrollment_status',
+				filterable: true,
+				width: 6,
+				sortable: true,
+				// grouping: {
+				// 	getter: 'au_enrollment_status',
+				// 	formatter: (g) => {
+				// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				// 	},
+				// 	aggregators: this.aggregatearray,
+				// 	aggregateCollapsed: true,
+				// 	collapsed: false,
+				// },
+				columnGroup: 'Student_Detail'
+			},
+
+		];
+		this.feeService.getDetailedFeeReport(collectionJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				console.log("i am here", result.data.fee_head);
+				this.columnLength = result.data.fee_head.length;
+				if (result.data.fee_head) {
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
+								filterable: true, columnGroup: "Due"
+							})
+						}
+					});
+					this.columnDefinitions.push({
+						id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+					this.columnDefinitions.push({
+						id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+					// this.columnDefinitions.push({
+					// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
+					// 	filterable: true, columnGroup: "Due"
+					// })
+					this.columnDefinitions.push({
+						id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+								filterable: true, columnGroup: "Receipt"
+							})
+						}
+					});
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+								filterable: true, columnGroup: "Receipt"
+							})
+						}
+					});
+					this.columnDefinitions.push({
+						id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					this.columnDefinitions.push({
+						id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					// this.columnDefinitions.push({
+					// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
+					// 	filterable: true, columnGroup: "Receipt"
+					// })
+					this.columnDefinitions.push({
+						id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					this.columnDefinitions.push({
+						id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+
+					this.columnDefinitions.push({
+						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
+						filterable: true,
+					})
+				}
+				console.log("one more", this.columnDefinitions);
+
+				if (result.data.reportData) {
+					this.totalRecords = Number(result.data.reportData.length);
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					let index = 0;
+					result.data.reportData.forEach(element => {
+						index += 1;
+						let obj = element;
+						obj.id = index
+						obj.srno = index;
+						obj.stu_class_name = (element.class_name ? element.class_name : '') + (element.sec_name ? "-" + element.sec_name : '')
+						console.log("i am obj", obj);
+						obj.total = element.total_inv - element.total_rpt
+
+						this.dataset.push(obj)
+					});
+
+				}
+				let obj3 = {};
+				this.columnDefinitions.forEach((element: any) => {
+					if (element.id == 'stu_admission_no') {
+						obj3[element.id] = "Grand Total"
+					} else if (element.id == 'srno' || element.id == 'stu_class_name' || element.id == "au_full_name" || element.id == 'au_enrollment_status') {
+						obj3[element.id] = ''
+					} else {
+						obj3[element.id] = this.dataset.map(t => t[element.id]).reduce((acc, val) => acc + val, 0)
+					}
+				})
+
+				// obj3['stu_admission_no'] = '';
+				// obj3['stu_full_name'] = '';
+				// obj3['stu_class_name'] = '';
+				// obj3['opening_outstanding'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_outstanding).reduce((acc, val) => acc + val, 0));
+				// obj3['opening_advances'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_advances).reduce((acc, val) => acc + val, 0));
+				// obj3['due_for_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.due_for_period).reduce((acc, val) => acc + val, 0));
+				// obj3['total_receivables'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total_receivables).reduce((acc, val) => acc + val, 0));
+				// obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
+				// obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
+				// obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
+				// obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+
+				// obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+				// //this.dataset.push(obj3);
+
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+
+				// console.log(obj3);
+				this.tableFlag = true;
+			} else {
+				this.tableFlag = true;
+			}
+		});
+	}
+	getSummarizedReport(value: any) {
+		this.dataArr = [];
+		this.aggregatearray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		this.tableFlag = false;
+		this.gridOptions = {
+			enableAutoResize: false,
+			enableCellNavigation: true,
+			enableSorting: true,
+			createPreHeaderPanel: true,
+			showPreHeaderPanel: true,
+			explicitInitialization: true,
+			enableDraggableGrouping: false,
+			enableHeaderMenu: true,
+			preHeaderPanelHeight: 40,
+			enableFiltering: true,
+			enableColumnReorder: true,
+			createFooterRow: true,
+			showFooterRow: true,
+			footerRowHeight: 21,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
+			enableAutoTooltip: true,
+			rowHeight: 65,
+
+			headerMenu: {
+				iconColumnHideCommand: 'fas fa-times',
+				iconSortAscCommand: 'fas fa-sort-up',
+				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
+			},
+			exportOptions: {
+				sanitizeDataExport: true,
+				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [
+					{
+						title: 'excel',
+						titleKey: 'Export Excel',
+						command: 'exportAsExcel',
+						iconCssClass: 'fas fa-download'
+					},
+					{
+						title: 'expand',
+						titleKey: 'Expand Groups',
+						command: 'expandGroup',
+						iconCssClass: 'fas fa-expand-arrows-alt'
+					},
+					{
+						title: 'collapse',
+						titleKey: 'Collapse Groups',
+						command: 'collapseGroup',
+						iconCssClass: 'fas fa-compress'
+					},
+					{
+						title: 'cleargroup',
+						titleKey: 'Clear Groups',
+						command: 'cleargroup',
+						iconCssClass: 'fas fa-eraser'
+					}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'toggle-preheader') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel();
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+			}
+
+		};
+		// console.log(slickgroup);
+
+		// if (new slickgroup.ColGroup()) {
+		// 	console.log(new slickgroup.ColGroup());
+		// 	this.gridOptions['registerPlugins'] = [new slickgroup.ColGroup()];
+		//   }
+		let repoArray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		const collectionJSON: any = {
+			'from_date': new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd'),
+			'to_date': new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd'),
+			'pageSize': value.pageSize,
+			'pageIndex': value.pageIndex,
+			'classId': value.fee_value,
+			'secId': value.hidden_value,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
+			'downloadAll': true,
+			'month': value.month
+		};
+		this.columnDefinitions = [
+			{
+				id: 'srno',
+				name: 'SNo.',
+				field: 'srno',
+				sortable: true,
+				width: 1
+			},
+			{
+				id: 'date', name: 'Date', field: 'date', filterable: true,
+				width: 4
+			},
+
+
+		];
+		this.feeService.getSumFeeReport(collectionJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				console.log("i am here", result.data.fee_head);
+
+				if (result.data.fee_head) {
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
+								filterable: true, columnGroup: "Due"
+							})
+						}
+					});
+					this.columnLength = result.data.fee_head.length;
+					this.columnDefinitions.push({
+						id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+					this.columnDefinitions.push({
+						id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+					// this.columnDefinitions.push({
+					// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
+					// 	filterable: true, columnGroup: "Due"
+					// })
+					this.columnDefinitions.push({
+						id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
+						filterable: true, columnGroup: "Due"
+					})
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+								filterable: true, columnGroup: "Receipt"
+							})
+						}
+					});
+					result.data.fee_head.forEach(element => {
+						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+							this.columnDefinitions.push({
+								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+								filterable: true, columnGroup: "Receipt"
+							})
+						}
+					});
+					this.columnDefinitions.push({
+						id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					this.columnDefinitions.push({
+						id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					// this.columnDefinitions.push({
+					// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
+					// 	filterable: true, columnGroup: "Receipt"
+					// })
+					this.columnDefinitions.push({
+						id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+					this.columnDefinitions.push({
+						id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
+						filterable: true, columnGroup: "Receipt"
+					})
+
+					this.columnDefinitions.push({
+						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
+						filterable: true,
+					})
+				}
+				console.log("one more", this.columnDefinitions);
+
+				if (result.data.reportData) {
+					this.totalRecords = Number(result.data.reportData.length);
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					let index = 0;
+					result.data.reportData.forEach(element => {
+						index += 1;
+						let obj = element;
+						obj.id = index
+						obj.srno = index;
+						obj.date = this.common.dateConvertion(element.date, 'd-MMM-yyyy')
+						obj.total = element.total_inv - element.total_rpt
+
+						this.dataset.push(obj)
+					});
+
+				}
+				let obj3 = {};
+				this.columnDefinitions.forEach((element: any) => {
+					if (element.id == 'date') {
+						obj3[element.id] = "Grand Total"
+					} else if (element.id == 'srno') {
+						obj3[element.id] = ''
+					} else {
+						obj3[element.id] = this.dataset.map(t => t[element.id]).reduce((acc, val) => acc + val, 0)
+					}
+				})
+				// obj3['stu_admission_no'] = '';
+				// obj3['stu_full_name'] = '';
+				// obj3['stu_class_name'] = '';
+				// obj3['opening_outstanding'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_outstanding).reduce((acc, val) => acc + val, 0));
+				// obj3['opening_advances'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_advances).reduce((acc, val) => acc + val, 0));
+				// obj3['due_for_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.due_for_period).reduce((acc, val) => acc + val, 0));
+				// obj3['total_receivables'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total_receivables).reduce((acc, val) => acc + val, 0));
+				// obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
+				// obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
+				// obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
+				// obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+
+				// obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+				// //this.dataset.push(obj3);
+
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+
+				// console.log(obj3);
+				this.tableFlag = true;
+			} else {
+				this.tableFlag = true;
+			}
+		});
+	}
+	renderDifferentColspan(item: any) {
+		if (item.id % 2 === 1) {
+			return {
+				columns: {
+					duration: {
+						colspan: 3 // "duration" will span over 3 columns
+					}
+				}
+			};
+		} else {
+			return {
+				columns: {
+					0: {
+						colspan: '*' // starting at column index 0, we will span accross all column (*)
+					}
+				}
+			};
+		}
 	}
 }
