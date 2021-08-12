@@ -11,8 +11,13 @@ import { SisService} from '../../_services/index';
 })
 export class SetupComponent implements OnInit {
     paramform: FormGroup;
+    bestOfForm: FormGroup;
+    subjectArray: any[] = [];
+    bestOfStatus: boolean = true;
+    subSubjectArray: any[] = [];
     currentGsetup: string;
     GRADE_CARD_SETTINS: any[] = [];
+    BEST_OF_SETTINGS: any[] = [];
     classNamegr: any = '';
     secNamegr: any = '';
     termNamegr: any = '';
@@ -130,6 +135,11 @@ export class SetupComponent implements OnInit {
     sig_positionArray = ['first','last'];
     hrattendanceArray = ['biometric','daily manual','manual'];
     accession_typeArray = ['single','multiple'];
+    total_subject_in_the_class : any = [];
+    scholastic_subject: any[] = [];
+    coscholastic_subject: any[] = [];
+
+
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
@@ -971,6 +981,7 @@ export class SetupComponent implements OnInit {
         this.sisService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid() }).subscribe((result: any) => {
             if (result && result.status === 'ok') {
                 this.examArray = result.data;
+                console.log("Exam array",this.examArray);
             } else {
                 // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
@@ -1278,6 +1289,11 @@ export class SetupComponent implements OnInit {
             eme_term_id: '',
             eme_exam_id: '',
             eme_subexam_id: ''
+        });
+        this.bestOfForm = this.fbuild.group({
+            bo_status : 1,
+            bo_class_id: '',
+            bo_no_of_subjects: 0
         });
         this.payForm = this.fbuild.group({
             format: ''
@@ -1816,6 +1832,11 @@ export class SetupComponent implements OnInit {
 
             })
         }
+        if(this.BEST_OF_SETTINGS.length > 0) {
+            console.log('this.BEST_OF_SETTINGS---',this.BEST_OF_SETTINGS);
+            this.settingForm.value.gradecard_best_of_calculation = this.bestOfStatus? JSON.stringify(this.BEST_OF_SETTINGS): 0;
+            this.bestOfForm.reset();
+        }
 
         console.log(this.settingForm.value, this.currentGsetup);
         if(this.settingForm.value && this.settingForm.value.reset_physical_verification != ''){
@@ -1826,6 +1847,7 @@ export class SetupComponent implements OnInit {
                 }
             })
         }
+        
         this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
             if (result && result.status === 'ok') {
                 this.disabledApiButton = false;
@@ -2378,4 +2400,116 @@ export class SetupComponent implements OnInit {
         };
         reader.readAsDataURL(file);
     }
+    getSubjectsOfAClass($event){
+        if ($event.value) {
+            setTimeout(() => {
+                this.classNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+            this.getSubjectsByClass($event.value);
+        }
+        console.log("total subject", this.subjectArray);
+        console.log("element", this.scholastic_subject);
+        // this.subjectArray.forEach(element => {
+        //     console.log("element", element);
+        //     if(element.sub_type == "1"){
+        //         this.total_subject_in_the_class.push(element);
+        //     }
+        // });
+        this.total_subject_in_the_class= this.scholastic_subject;
+        console.log("total subject", this.total_subject_in_the_class);
+        // this.total_subject_in_the_class = this.subjectArray;
+    }
+    
+    addBestOf() {
+        if (this.bestOfForm.value.bo_class_id && this.bestOfForm.value.bo_no_of_subjects) {
+            const findex = this.BEST_OF_SETTINGS.findIndex(f => Number(f.class_id) === Number(this.bestOfForm.value.bo_class_id)
+                && Number(f.no_of_subjects) === Number(this.bestOfForm.value.bo_no_of_subjects)
+            );
+
+            if (findex === -1) {
+                this.BEST_OF_SETTINGS.push({
+                    class_id: this.bestOfForm.value.bo_class_id,
+                    class_name: this.classNamegr ? this.classNamegr : '',
+                    no_of_subjects: this.bestOfForm.value.bo_no_of_subjects,
+                    status: '1'
+                });
+            } else {
+                this.BEST_OF_SETTINGS[findex].no_of_subjects = this.bestOfForm.value.bo_no_of_subjects ? this.bestOfForm.value.bo_no_of_subjects : '';
+                this.BEST_OF_SETTINGS[findex].status = this.BEST_OF_SETTINGS[findex].status ? this.BEST_OF_SETTINGS[findex].status : '1';
+            }
+        } else {
+            this.commonService.showSuccessErrorMessage('Please select class and no of subjects', 'error');
+        }
+
+    }
+
+    deleteBest(index) {
+        this.BEST_OF_SETTINGS.splice(index, 1);
+        console.log("BEST_OF_SETTINGS",this.BEST_OF_SETTINGS);
+    }
+    switchBestOff(value){
+        console.log(value);
+        // alert(value.checked);
+        this.bestOfStatus = value.checked;
+        this.bestOfForm.reset();
+    }
+
+  getSubjectsByClass(value) {
+    this.subjectArray = [];
+    this.paramform.patchValue({
+      eme_sub_id: ''
+    });
+    this.sisService.getSubjectsByClass({ class_id: value }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.subSubjectArray = result.data;
+        const temp = result.data;
+        if (temp.length > 0) {
+            this.scholastic_subject = [];
+            this.coscholastic_subject = [];
+          temp.forEach(element => {
+            // if (element.sub_parent_id && element.sub_parent_id === '0') {
+            //   const childSub: any[] = [];
+            //   for (const item of temp) {
+            //     if (element.sub_id === item.sub_parent_id) {
+            //       childSub.push(item);
+            //     }
+            //   }
+            //   element.childSub = childSub;
+            //   this.subjectArray.push(element);
+            // }
+            if (element.sub_type === '1' || element.sub_type === '3') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                this.scholastic_subject.push(element);
+              }
+            } else if (element.sub_type === '2' || element.sub_type === '4') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                this.coscholastic_subject.push(element);
+              }
+            }
+          });
+        }
+
+        for (var i = 0; i < this.scholastic_subject.length; i++) {
+          this.subjectArray.push(this.scholastic_subject[i]);
+        }
+        for (var i = 0; i < this.coscholastic_subject.length; i++) {
+          this.subjectArray.push(this.coscholastic_subject[i]);
+        }
+      }
+    });
+  }
 }
