@@ -69,6 +69,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 	schoolInfo: any;
 	activeReport = 1;
 	currentSession;
+	isopeningbalance = 1;
 	columnLength = 0;
 	monthArray = [
 		{
@@ -1096,7 +1097,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			// console.log("i am item --------------", item);
 			columns.push({
 				key: item.id,
-				width: 8
+				width: 20
 			});
 
 			columValue.push(item.name);
@@ -1129,12 +1130,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			worksheet.mergeCells('A3:E3');
 			worksheet.getCell('A3').value = 'Student Details';
 			worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
-			worksheet.mergeCells('F3:' + this.alphabetJSON[this.columnLength + 7] + '3');
+			worksheet.mergeCells('F3:' + this.alphabetJSON[this.columnLength + 7 + this.isopeningbalance] + '3');
 			worksheet.getCell('F3').value = 'Due';
 			worksheet.getCell(`F3`).alignment = { horizontal: 'left' };
-			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 8] + '3:' + this.alphabetJSON[this.columnLength * 2 + 11] + '3');
-			worksheet.getCell(this.alphabetJSON[this.columnLength + 8] + '3').value = 'Receipt';
-			worksheet.getCell(this.alphabetJSON[this.columnLength + 8] + `3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 8 + this.isopeningbalance] + '3:' + this.alphabetJSON[this.columnLength * 2 + 11 + + this.isopeningbalance] + '3');
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 8 + this.isopeningbalance] + '3').value = 'Receipt';
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 8 + this.isopeningbalance] + `3`).alignment = { horizontal: 'left' };
 		} else if (this.reportFilterForm.value.report_type == 'B') {
 			worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
 			worksheet.getCell('A2').value = 'Summarized Fee Review Report';
@@ -1143,12 +1144,12 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			worksheet.mergeCells('A3:B3');
 			worksheet.getCell('A3').value = '';
 			worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
-			worksheet.mergeCells('C3:' + this.alphabetJSON[this.columnLength + 4] + '3');
+			worksheet.mergeCells('C3:' + this.alphabetJSON[this.columnLength + 4 + + this.isopeningbalance] + '3');
 			worksheet.getCell('C3').value = 'Due';
 			worksheet.getCell(`C3`).alignment = { horizontal: 'left' };
-			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 5] + '3:' + this.alphabetJSON[this.columnLength * 2 + 8] + '3');
-			worksheet.getCell(this.alphabetJSON[this.columnLength + 5] + '3').value = 'Receipt';
-			worksheet.getCell(this.alphabetJSON[this.columnLength + 5] + `3`).alignment = { horizontal: 'left' };
+			worksheet.mergeCells(this.alphabetJSON[this.columnLength + 5 + this.isopeningbalance] + '3:' + this.alphabetJSON[this.columnLength * 2 + 8 + this.isopeningbalance] + '3');
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 5  + this.isopeningbalance] + '3').value = 'Receipt';
+			worksheet.getCell(this.alphabetJSON[this.columnLength + 5 + this.isopeningbalance] + `3`).alignment = { horizontal: 'left' };
 		}
 
 		worksheet.getRow(4).values = columValue;
@@ -1470,6 +1471,10 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 			'downloadAll': true,
 			'month': value.month
 		};
+		this.gridOptions.defaultColumnWidth = 1200;
+							this.gridOptions.forceFitColumns = false;
+							this.gridOptions.enableAutoResize = true;
+							this.gridOptions.autoFitColumnsOnFirstLoad = false;
 		this.columnDefinitions = [
 			{
 				id: 'srno',
@@ -1564,7 +1569,8 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
 								filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
-							})
+							});
+							this.isopeningbalance = 0;
 						}
 					});
 					result.data.fee_head.forEach(element => {
@@ -1596,10 +1602,10 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 					})
 
-					this.columnDefinitions.push({
-						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
-						filterable: true, formatter: this.checkFeeFormatter
-					})
+					// this.columnDefinitions.push({
+					// 	id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
+					// 	filterable: true, formatter: this.checkFeeFormatter
+					// })
 				}
 				console.log("one more", this.columnDefinitions);
 
@@ -1798,139 +1804,281 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 
 
 		];
-		this.feeService.getSumFeeReport(collectionJSON).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
-				console.log("i am here", result.data.fee_head);
-
-				if (result.data.fee_head) {
-					result.data.fee_head.forEach(element => {
-						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
-							this.columnDefinitions.push({
-								id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
-								filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
-							})
-						}
-					});
-					this.columnLength = result.data.fee_head.length;
-					this.columnDefinitions.push({
-						id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
-					})
-					this.columnDefinitions.push({
-						id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
-					})
-					// this.columnDefinitions.push({
-					// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
-					// 	filterable: true, columnGroup: "Due"
-					// })
-					this.columnDefinitions.push({
-						id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
-					})
-					result.data.fee_head.forEach(element => {
-						if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
-							this.columnDefinitions.push({
-								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-							})
-						}
-					});
-					result.data.fee_head.forEach(element => {
-						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
-							this.columnDefinitions.push({
-								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-							})
-						}
-					});
-					this.columnDefinitions.push({
-						id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-					})
-					this.columnDefinitions.push({
-						id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-					})
-					// this.columnDefinitions.push({
-					// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
-					// 	filterable: true, columnGroup: "Receipt"
-					// })
-					this.columnDefinitions.push({
-						id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-					})
-					this.columnDefinitions.push({
-						id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
-					})
-
-					this.columnDefinitions.push({
-						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
-						filterable: true,formatter: this.checkFeeFormatter
-					})
-				}
-				console.log("one more", this.columnDefinitions);
-
-				if (result.data.reportData) {
-					this.totalRecords = Number(result.data.reportData.length);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
-					result.data.reportData.forEach(element => {
-						index += 1;
-						let obj = element;
-						obj.id = index
-						obj.srno = index;
-						obj.date = this.common.dateConvertion(element.date, 'd-MMM-yyyy')
-						obj.total = element.total_inv - element.total_rpt
-
-						this.dataset.push(obj)
-					});
-
-				}
-				let obj3 = {};
-				this.columnDefinitions.forEach((element: any) => {
-					if (element.id == 'date') {
-						obj3[element.id] = "Grand Total"
-					} else if (element.id == 'srno') {
-						obj3[element.id] = ''
-					} else {
-						obj3[element.id] = this.dataset.map(t => t[element.id]).reduce((acc, val) => acc + val, 0)
+		this.gridOptions.defaultColumnWidth = 900;
+							this.gridOptions.forceFitColumns = false;
+							this.gridOptions.enableAutoResize = true;
+							this.gridOptions.autoFitColumnsOnFirstLoad = false;
+		if(value.month != 'all') {
+			this.feeService.getSumFeeReport(collectionJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					console.log("i am here", result.data.fee_head);
+	
+					if (result.data.fee_head) {
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
+									filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+								})
+							}
+						});
+						this.columnLength = result.data.fee_head.length;
+						this.columnDefinitions.push({
+							id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						// this.columnDefinitions.push({
+						// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
+						// 	filterable: true, columnGroup: "Due"
+						// })
+						this.columnDefinitions.push({
+							id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+									filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+								})
+								this.isopeningbalance = 0;
+							}
+						});
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+									filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+								})
+							}
+						});
+						this.columnDefinitions.push({
+							id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						// this.columnDefinitions.push({
+						// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
+						// 	filterable: true, columnGroup: "Receipt"
+						// })
+						this.columnDefinitions.push({
+							id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+	
+						// this.columnDefinitions.push({
+						// 	id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
+						// 	filterable: true,formatter: this.checkFeeFormatter
+						// })
 					}
-				})
-				// obj3['stu_admission_no'] = '';
-				// obj3['stu_full_name'] = '';
-				// obj3['stu_class_name'] = '';
-				// obj3['opening_outstanding'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_outstanding).reduce((acc, val) => acc + val, 0));
-				// obj3['opening_advances'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_advances).reduce((acc, val) => acc + val, 0));
-				// obj3['due_for_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.due_for_period).reduce((acc, val) => acc + val, 0));
-				// obj3['total_receivables'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total_receivables).reduce((acc, val) => acc + val, 0));
-				// obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
-				// obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
-				// obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
-				// obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
-
-				// obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
-				// //this.dataset.push(obj3);
-
-				this.totalRow = obj3;
-				if (this.dataset.length <= 5) {
-					this.gridHeight = 300;
-				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-					this.gridHeight = 400;
-				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-					this.gridHeight = 550;
-				} else if (this.dataset.length > 20) {
-					this.gridHeight = 750;
+					console.log("one more", this.columnDefinitions);
+	
+					if (result.data.reportData) {
+						this.totalRecords = Number(result.data.reportData.length);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let index = 0;
+						result.data.reportData.forEach(element => {
+							index += 1;
+							let obj = element;
+							obj.id = index
+							obj.srno = index;
+							obj.date = this.common.dateConvertion(element.date, 'd-MMM-yyyy')
+							obj.total = element.total_inv - element.total_rpt
+	
+							this.dataset.push(obj)
+						});
+	
+					}
+					let obj3 = {};
+					this.columnDefinitions.forEach((element: any) => {
+						if (element.id == 'date') {
+							obj3[element.id] = "Grand Total"
+						} else if (element.id == 'srno') {
+							obj3[element.id] = ''
+						} else {
+							obj3[element.id] = this.dataset.map(t => t[element.id]).reduce((acc, val) => acc + val, 0)
+						}
+					})
+					// obj3['stu_admission_no'] = '';
+					// obj3['stu_full_name'] = '';
+					// obj3['stu_class_name'] = '';
+					// obj3['opening_outstanding'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_outstanding).reduce((acc, val) => acc + val, 0));
+					// obj3['opening_advances'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_advances).reduce((acc, val) => acc + val, 0));
+					// obj3['due_for_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.due_for_period).reduce((acc, val) => acc + val, 0));
+					// obj3['total_receivables'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total_receivables).reduce((acc, val) => acc + val, 0));
+					// obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
+					// obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
+					// obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
+					// obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+	
+					// obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+					// //this.dataset.push(obj3);
+	
+					this.totalRow = obj3;
+					if (this.dataset.length <= 5) {
+						this.gridHeight = 300;
+					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+						this.gridHeight = 400;
+					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+						this.gridHeight = 550;
+					} else if (this.dataset.length > 20) {
+						this.gridHeight = 750;
+					}
+	
+					// console.log(obj3);
+					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
-
-				// console.log(obj3);
-				this.tableFlag = true;
-			} else {
-				this.tableFlag = true;
-			}
-		});
+			});
+		} else {
+			this.feeService.getSumAllFeeReport(collectionJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					console.log("i am here", result.data.fee_head);
+	
+					if (result.data.fee_head) {
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
+									filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+								})
+							}
+						});
+						this.columnLength = result.data.fee_head.length;
+						this.columnDefinitions.push({
+							id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						// this.columnDefinitions.push({
+						// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
+						// 	filterable: true, columnGroup: "Due"
+						// })
+						this.columnDefinitions.push({
+							id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
+							filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
+						})
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+									filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+								})
+								this.isopeningbalance = 0;
+							}
+						});
+						result.data.fee_head.forEach(element => {
+							if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
+								this.columnDefinitions.push({
+									id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
+									filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+								})
+							}
+						});
+						this.columnDefinitions.push({
+							id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						// this.columnDefinitions.push({
+						// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
+						// 	filterable: true, columnGroup: "Receipt"
+						// })
+						this.columnDefinitions.push({
+							id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+						this.columnDefinitions.push({
+							id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
+							filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
+						})
+	
+						// this.columnDefinitions.push({
+						// 	id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
+						// 	filterable: true,formatter: this.checkFeeFormatter
+						// })
+					}
+					console.log("one more", this.columnDefinitions);
+	
+					if (result.data.reportData) {
+						this.totalRecords = Number(result.data.reportData.length);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let index = 0;
+						result.data.reportData.forEach(element => {
+							index += 1;
+							let obj = element;
+							obj.id = index
+							obj.srno = index;
+							obj.date = this.common.dateConvertion(element.date, 'MMM-yyyy')
+							obj.total = element.total_inv - element.total_rpt
+	
+							this.dataset.push(obj)
+						});
+	
+					}
+					let obj3 = {};
+					this.columnDefinitions.forEach((element: any) => {
+						if (element.id == 'date') {
+							obj3[element.id] = "Grand Total"
+						} else if (element.id == 'srno') {
+							obj3[element.id] = ''
+						} else {
+							obj3[element.id] = this.dataset.map(t => t[element.id]).reduce((acc, val) => acc + val, 0)
+						}
+					})
+					// obj3['stu_admission_no'] = '';
+					// obj3['stu_full_name'] = '';
+					// obj3['stu_class_name'] = '';
+					// obj3['opening_outstanding'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_outstanding).reduce((acc, val) => acc + val, 0));
+					// obj3['opening_advances'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.opening_advances).reduce((acc, val) => acc + val, 0));
+					// obj3['due_for_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.due_for_period).reduce((acc, val) => acc + val, 0));
+					// obj3['total_receivables'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total_receivables).reduce((acc, val) => acc + val, 0));
+					// obj3['receipt_during_the_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.receipt_during_the_period).reduce((acc, val) => acc + val, 0));
+					// obj3['outstanding_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.outstanding_end_of_period).reduce((acc, val) => acc + val, 0));
+					// obj3['adv_end_of_period'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.adv_end_of_period).reduce((acc, val) => acc + val, 0));
+					// obj3['balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+	
+					// obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.balance).reduce((acc, val) => acc + val, 0));
+					// //this.dataset.push(obj3);
+	
+					this.totalRow = obj3;
+					if (this.dataset.length <= 5) {
+						this.gridHeight = 300;
+					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+						this.gridHeight = 400;
+					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+						this.gridHeight = 550;
+					} else if (this.dataset.length > 20) {
+						this.gridHeight = 750;
+					}
+	
+					// console.log(obj3);
+					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
+				}
+			});
+		}
 	}
 	renderDifferentColspan(item: any) {
 		if (item.id % 2 === 1) {
