@@ -1547,17 +1547,17 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
-								filterable: true, columnGroup: "Due"
+								filterable: true, columnGroup: "Due", formatter: this.checkFeeFormatter
 							})
 						}
 					});
 					this.columnDefinitions.push({
 						id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due", formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due", formatter: this.checkFeeFormatter
 					})
 					// this.columnDefinitions.push({
 					// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
@@ -1565,14 +1565,14 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					// })
 					this.columnDefinitions.push({
 						id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due", formatter: this.checkFeeFormatter
 					})
 
 					result.data.fee_head.forEach(element => {
 						if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt"
+								filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 							})
 						}
 					});
@@ -1580,17 +1580,17 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt"
+								filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 							})
 						}
 					});
 					this.columnDefinitions.push({
 						id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 					})
 					// this.columnDefinitions.push({
 					// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
@@ -1598,16 +1598,16 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					// })
 					this.columnDefinitions.push({
 						id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt", formatter: this.checkFeeFormatter
 					})
 
 					this.columnDefinitions.push({
 						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
-						filterable: true,
+						filterable: true, formatter: this.checkFeeFormatter
 					})
 				}
 				console.log("one more", this.columnDefinitions);
@@ -1821,18 +1821,18 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_inv", name: element.fh_name, field: element.fh_id + "_inv", sortable: true, width: 4,
-								filterable: true, columnGroup: "Due"
+								filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
 							})
 						}
 					});
 					this.columnLength = result.data.fee_head.length;
 					this.columnDefinitions.push({
 						id: "0_inv", name: 'Transport', field: "0_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "fine_inv", name: 'Fine', field: "fine_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
 					})
 					// this.columnDefinitions.push({
 					// 	id: "open_inv", name: 'Opening', field: "open_inv", sortable: true, width: 4,
@@ -1840,13 +1840,13 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					// })
 					this.columnDefinitions.push({
 						id: "total_inv", name: 'Total', field: "total_inv", sortable: true, width: 4,
-						filterable: true, columnGroup: "Due"
+						filterable: true, columnGroup: "Due",formatter: this.checkFeeFormatter
 					})
 					result.data.fee_head.forEach(element => {
 						if (element.fh_name == 'Opening Balance' || element.fh_name == "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt"
+								filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 							})
 						}
 					});
@@ -1854,17 +1854,17 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 						if (element.fh_name != 'Opening Balance' && element.fh_name != "Op Balance") {
 							this.columnDefinitions.push({
 								id: element.fh_id + "_rpt", name: element.fh_name, field: element.fh_id + "_rpt", sortable: true, width: 4,
-								filterable: true, columnGroup: "Receipt"
+								filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 							})
 						}
 					});
 					this.columnDefinitions.push({
 						id: "0_rpt", name: 'Transport', field: "0_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "fine_rpt", name: 'Fine', field: "fine_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 					})
 					// this.columnDefinitions.push({
 					// 	id: "open_rpt", name: 'Opening', field: "open_rpt", sortable: true, width: 4,
@@ -1872,16 +1872,16 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					// })
 					this.columnDefinitions.push({
 						id: "adhoc", name: 'Adhoc', field: "adhoc", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 					})
 					this.columnDefinitions.push({
 						id: "total_rpt", name: 'Total', field: "total_rpt", sortable: true, width: 4,
-						filterable: true, columnGroup: "Receipt"
+						filterable: true, columnGroup: "Receipt",formatter: this.checkFeeFormatter
 					})
 
 					this.columnDefinitions.push({
 						id: "total", name: 'Balance', field: "total", sortable: true, width: 4,
-						filterable: true,
+						filterable: true,formatter: this.checkFeeFormatter
 					})
 				}
 				console.log("one more", this.columnDefinitions);
