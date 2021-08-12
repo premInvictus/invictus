@@ -493,6 +493,47 @@
                                         </ng-container>
                                       </ng-container>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'communication_management_detail'">
+                                      <ng-container [formArrayName]="control.gs_alias">
+                                        <ng-container
+                                          *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;"
+                                          [formGroupName]="i">
+                                          <div class="row">
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Position Name</mat-label>
+                                                <input type="text" matInput formControlName="name">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Login Id</mat-label>
+                                                <input type="text" matInput formControlName="au_login_id">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Email Id</mat-label>
+                                                <input type="text" matInput formControlName="au_email_id">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>User Name</mat-label>
+                                                <input type="text" matInput formControlName="au_full_name">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-3">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Role Id</mat-label>
+                                                <input type="text" matInput formControlName="roll_id">
+                                              </mat-form-field>
+                                            </div>
+                                            
+                                          </div>
+                                        </ng-container>
+                                      </ng-container>
+                                    </ng-container>
                                     <ng-container *ngIf="control.gs_alias == 'mis_report_setting_data'">
                                       <ng-container [formArrayName]="control.gs_alias">
                                         <ng-container
