@@ -1388,12 +1388,7 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 				exportWithFormatter: true
 			},
 			gridMenu: {
-				customItems: [{
-					title: 'pdf',
-					titleKey: 'Export as PDF',
-					command: 'exportAsPDF',
-					iconCssClass: 'fas fa-download'
-				},
+				customItems: [
 				{
 					title: 'excel',
 					titleKey: 'Export Excel',
@@ -1423,10 +1418,6 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
-					}
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -1740,10 +1731,6 @@ export class SummarizedFeeReviewReportComponent implements OnInit {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
-					}
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
