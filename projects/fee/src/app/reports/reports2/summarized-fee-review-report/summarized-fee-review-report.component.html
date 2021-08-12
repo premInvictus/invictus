@@ -33,7 +33,7 @@
           <mat-label>Month</mat-label>
           <mat-select formControlName="month" >
             <mat-option value="">Please Select</mat-option>
-            <mat-option *ngIf="reportFilterForm.value.report_type === 'C'" value="all">All</mat-option>
+            <mat-option  value="all">All</mat-option>
             <mat-option *ngFor="let item of monthArray" [value]="item.value">
               {{item.name_1}}
             </mat-option>
