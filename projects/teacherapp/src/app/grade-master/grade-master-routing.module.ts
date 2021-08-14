@@ -12,7 +12,9 @@ import { CommonAttendanceComponent } from './common-attendance/common-attendance
 import { MarksInputComponent } from './marks-input/marks-input.component';
 import { ResultEntryComponent } from './result-entry/result-entry.component';
 import { StudentVerificationComponent } from './student-verification/student-verification.component';
-import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component'
+import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component';
+import { StudentAcademicProfileComponent } from './student-academic-profile/student-academic-profile.component';
+import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
 
 
 const routes: Routes = [
@@ -51,6 +53,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'grade-card', component: GradecardPrintingComponent,
+	},
+	{
+		path: 'student', component: StudentAcademicProfileDetailsComponent,
 	}
 ];
 

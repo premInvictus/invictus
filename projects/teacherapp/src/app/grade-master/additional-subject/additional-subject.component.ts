@@ -84,11 +84,13 @@ export class AdditionalSubjectComponent implements OnInit {
 		this.datareset();
 		this.sectionArray = [];
 		const classParam: any = {};
-		classParam.role_id = this.currentUser.role_id;
+		// classParam.role_id = this.currentUser.role_id;
+		classParam.role_id = 2;
 		classParam.login_id = this.currentUser.login_id;
 		this.smartService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
+					console.log("classes", result);
 					if (result && result.status === 'ok') {
 						this.classArray = result.data; 
 					}
@@ -129,7 +131,7 @@ export class AdditionalSubjectComponent implements OnInit {
 						this.subjectArray.forEach(element => {
 							this.displayedColumns.push('sub'+element.sub_id);
 						});
-						console.log(this.subjectArray);
+						console.log("Subject Array",this.subjectArray);
 					}
 				}
 			);
@@ -150,6 +152,7 @@ export class AdditionalSubjectComponent implements OnInit {
 					} else {
 						this.sectionArray = [];
 					}
+					console.log("get section by class", result);
 				}
 			);
 	}
@@ -183,6 +186,7 @@ export class AdditionalSubjectComponent implements OnInit {
 			studentParam.au_status = '1';
 			this.examService.getClassStudentSubjects(studentParam).subscribe(
 				(result: any) => {
+					console.log("all details", result);
 					if (result && result.status === 'ok') {
 						this.studentArray = result.data;
 						for (const item of this.studentArray) {
@@ -201,6 +205,7 @@ export class AdditionalSubjectComponent implements OnInit {
 							}
 						}
 						this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+						console.log("rollNoDataSource", this.rollNoDataSource);
 						if(this.firstForm.value.syl_mapping_id === '0') {
 							this.subjectFlag = true;
 						} else {
@@ -345,7 +350,7 @@ export class AdditionalSubjectComponent implements OnInit {
 		// this.firstForm.patchValue({
 		// 	syl_class_id: '',
 		// 	syl_section_id: ''
-		// })
+		// });
 		this.fetchDetails();
 	}
 

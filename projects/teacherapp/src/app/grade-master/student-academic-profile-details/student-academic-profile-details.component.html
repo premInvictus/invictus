@@ -1,0 +1,469 @@
+<app-student-academic-profile [loginId]="lastRecordId" (next)="next($event)" (prev)="prev($event)"
+  (first)="first($event)" (last)="last($event)" (key)="key($event)"></app-student-academic-profile>
+<div class="row">
+  <div class="col-7">
+    <mat-card class="card-height-400 mat-card-p-b-0">
+      <mat-card-title>
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Performance</span>
+          </div>
+          <div class="col-6 text-right">
+            <button mat-button [ngClass]="{'performance-active-tab' : performanceTab == 'year'}" (click)="getPerformance('year')"><span>Year Wise</span></button>
+            <button mat-button [ngClass]="{'performance-active-tab' : performanceTab == 'session'}" (click)="getPerformance('session')"><span>Current Session</span></button>
+          </div>
+        </div>
+      </mat-card-title>
+      <mat-card-content *ngIf="!performanceNoRecord && performanceTab == 'session'">
+        <div class="row">
+          <div class="col-12">
+            <mat-tab-group (selectedTabChange)="tabChanged($event)" [(selectedIndex)]="termindex">
+              <mat-tab *ngFor="let tab of termsArray; let index = index" [label]="tab.name">
+                <ng-template matTabContent>
+                  <div class="container-outline__dashyellow background-white">
+                    <app-common-dynamic-chart [options]="sessionwisePerformanceData">
+                    </app-common-dynamic-chart>
+                  </div>
+                </ng-template>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-content *ngIf="!performanceNoRecord && performanceTab == 'year'">
+        <div class="row">
+          <div class="col-12">
+            <div class="container-outline__dashyellow background-white">
+              <app-common-dynamic-chart [options]="sessionwisePerformanceData">
+              </app-common-dynamic-chart>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-content *ngIf="performanceNoRecord">
+        <div class="text-center">
+          <img
+            [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-5 remove-col-padding-left">
+    <mat-card class="card-height-400">
+      <mat-card-title>
+        <span class="font-bold font-size-20">Skills & Rewards</span>
+        <i class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"
+           data-toggle="tooltip" 
+           data-placement="top"
+           matTooltip="Add" 
+           aria-hidden="true" 
+           (click)="openAddModal('skills')"
+        ></i>
+      </mat-card-title>
+      <mat-card-content *ngIf="defaultskill">
+
+        <div *ngIf="finalAwardArray.length > 0 " class="row">
+          <div class="col-12">
+
+            <table class="table table-borderd table-stripped custom-table height-300">
+              <thead class="table-skill__head text-center">
+                 <tr class="custom-tr">
+                    <th class="custom-th">Sr. No.</th>
+                    <th class="custom-th">Activity Name</th>
+                    <!-- <th class="custom-th">Session</th> -->
+                    <th class="custom-th" >Awarding Authority</th>
+                    <th class="custom-th">Level of Interest</th>
+                    <th class="custom-th">Event Level</th>
+                    <th class="custom-th table-remark-width" >Remarks</th>
+                 </tr>
+              </thead>
+              <tbody class="table-skill__body text-center">
+                 <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                    <ng-container *ngIf="item.act_name === item.details[0].act_name">
+                       <ng-container>
+                          <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                             <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td>
+                             <td class="custom-td" *ngIf="j == 0"
+                                [attr.rowspan]="item.details.length">{{getActivityName(item.act_name)}}</td>
+                             <!-- <td class="custom-td">
+                                {{getSessionName(det.eaw_ses_id)}}
+                             </td> -->
+                             <td class="custom-td">
+                                {{getAuthorityName(det.eaw_authority)}}
+                             </td>
+                             <td class="custom-td">
+                                {{getLevelofInterestName(det.eaw_level_of_interest)}}
+                             </td>
+                             <td class="custom-td">
+                                {{getEventLevelName(det.eaw_event_level)}}
+                             </td>
+                             <td class="custom-td teachers-remarks"  *ngIf="det.eaw_teacher_remark.length < 20; else teachers_remarks_long">
+                                {{det.eaw_teacher_remark}}  
+                             </td>
+                             <ng-template #teachers_remarks_long>
+                              <td class="custom-td teachers-remarks" >
+                                {{(det.eaw_teacher_remark | slice:0:16)+'..'}}
+                                <i class="fa fa-info-circle" data-toggle="tooltip" 
+                                data-placement="top"
+                                position="above"
+                                matTooltip="{{det.eaw_teacher_remark}}" 
+                                aria-hidden="true"></i>
+                              </td>
+                            </ng-template>
+                          </tr>
+                       </ng-container>
+                    </ng-container>
+                 </ng-container>
+              </tbody>
+           </table>
+
+             <!-- <table class="table table-borderd table-stripped custom-table height-300">
+                <thead class="table-skill__head text-center">
+                   <tr class="custom-tr">
+                      <th class="custom-th">Sr.No</th>
+                      <th class="custom-th">Activity Name</th>
+                      <th class="custom-th">Level of Interest</th>
+                      <th class="custom-th">Authority</th>
+                      <th class="custom-th">Event Level</th>
+                      <th class="custom-th">Teacher Remark</th>
+                   </tr>
+                </thead>
+                <tbody class="table-skill__body text-center">
+                   <tr class="custom-tr" *ngFor="let item of finalAwardArray;let i=index">
+                      <td class="custom-td">{{i+1}}</td>
+                      <td class="custom-td">{{getActivityName(item.eaw_activity_name)}}</td>
+                      <td class="custom-td">{{getLevelofInterestName(item.eaw_level_of_interest)}}</td>
+                      <td class="custom-td">{{getAuthorityName(item.eaw_authority)}}</td>
+                      <td class="custom-td">{{getEventLevelName(item.eaw_event_level)}}</td>
+                      <td class="custom-td teachers-remarks" *ngIf="item.eaw_teacher_remark.length < 10; else teachers_remarks_long">{{item.eaw_teacher_remark}}  </td>
+                      <ng-template #teachers_remarks_long>
+                        <td class="custom-td teachers-remarks" >
+                          {{(item.eaw_teacher_remark | slice:0:7)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{item.eaw_teacher_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+                </tbody>
+             </table> -->
+          </div>
+       </div>
+
+
+
+        <!-- <div class="row" *ngIf="getbadges(currentExam?.eaw_created_date) != null">
+          <div class="col-5">
+            <span class="font-size-14">Updated on</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{currentExam?.eaw_created_date | date: 'd-MMM-y' }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Activity Name</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getActivityName(currentExam?.eaw_activity_name) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Authority Name</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getAuthorityName(currentExam?.eaw_authority) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Level of Interest</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getLevelofInterestName(currentExam?.eaw_level_of_interest) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Event Level</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getEventLevelName(currentExam?.eaw_event_level)}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Remarks</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{currentExam?.eaw_teacher_remark}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-10" *ngIf="getbadges(currentExam?.eaw_event_level) != null">
+          <div class="col-12 remove-col-padding">
+            <span class="font-size-14 font-bold">Badges</span>
+            <div class="text-left margin-top-15">
+              <img [src]="getbadges(currentExam?.eaw_event_level)" height="55px">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right">
+            <span><button mat-button class="side" [disabled]="examPre" (click)="examNavigate(currentExamIndex-1)">
+                <i class="fas fa-chevron-left cursor-pointer"></i>
+              </button>
+              <button mat-button class="side" [disabled]="examNext" (click)="examNavigate(currentExamIndex+1)">
+                <i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+              </button>
+            </span>
+          </div>
+        </div> -->
+
+      </mat-card-content>
+      <ng-container *ngIf="!defaultskill">
+        <div class="text-center">
+          <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
+      </ng-container>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <span class="font-bold font-size-20">Remarks</span><i
+        class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"
+        data-toggle="tooltip" 
+        data-placement="top"
+        matTooltip="Add" 
+        aria-hidden="true" 
+        (click)="openAddModal('remarks')"
+     ></i>
+
+     <div *ngIf="remarkArray?.length > 0 " class="row">
+      <div class="col-12">
+         <!-- <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+               <tr class="custom-tr">
+                  <th class="custom-th">Sr.No</th>
+                  <th class="custom-th" >Date</th>
+                  <th class="custom-th" >Authority</th>
+                  <th class="custom-th" >Area</th>
+                  <th class="custom-th" >Remarks</th>
+               </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+               <tr class="custom-tr" *ngFor="let item of remarkArray;let i=index">
+                  <td class="custom-td seriol-no">{{i+1}}</td>
+                  <td class="custom-td remarks-doj">{{item.era_doj | date}}</td>
+                  <td class="custom-td remarks-auth-id">{{getAuthorityName(item.era_aut_id)}}</td>
+                  <td class="custom-td remarks-ar-name">{{item.era_ar_name}}</td>
+                  <td class="custom-td teachers-remarks-r" *ngIf="item.era_teachers_remark.length < 15; else teachers_remarks_long_rem">{{item.era_teachers_remark}}  </td>
+                      <ng-template #teachers_remarks_long_rem>
+                        <td class="custom-td teachers-remarks" >{{(item.era_teachers_remark.trim() | slice:0:163)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{item.era_teachers_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+            </tbody>
+         </table> -->
+
+         <table class="table table-borderd table-stripped custom-table">
+          <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                  <th class="custom-th">Sr. No.</th>
+                  <th class="custom-th">Authority</th>
+                  <th class="custom-th" > Date</th>
+                  <th class="custom-th">Area</th>
+                  <th class="custom-th table-remark-width">
+                      Remarks</th>
+              </tr>
+          </thead>
+          <tbody class="table-skill__body text-center" *ngIf="remarkArray?.length > 0 ">
+
+              <ng-container *ngFor="let item of htmlFinalGeneralRemarkArray;let i=index;">
+                  <tr class="custom-tr" *ngFor="let rowItem of item; let j = index;">
+                      <td class="custom-td seriol-no" *ngIf="j==0" [attr.rowspan]="item?.length">{{i+1}}</td>
+                      <td class="custom-td remarks-auth-id" *ngIf="j==0" [attr.rowspan]="item?.length">
+                          <span>{{getAuthorityName(rowItem?.era_aut_id)}}
+                          </span>
+                      </td>
+                      <td class="custom-td remarks-doj">{{rowItem?.era_doj | date : 'd-MMM-y'}}</td>
+                      <td class="custom-td remarks-ar-name">{{getAreaName(rowItem?.era_ar_id)}}</td>
+                      <td class="custom-td teachers-remarks-r" *ngIf="rowItem?.era_teachers_remark.length < 15; else teachers_remarks_long_rem">{{rowItem?.era_teachers_remark}}</td>
+                      <ng-template #teachers_remarks_long_rem>
+                        <td class="custom-td teachers-remarks-r">{{(rowItem?.era_teachers_remark.trim() | slice:0:163)+'..'}}
+                          <i class="fa fa-info-circle" data-toggle="tooltip" 
+                          data-placement="top"
+                          position="above"
+                          matTooltip="{{rowItem?.era_teachers_remark}}" 
+                          aria-hidden="true"></i>
+                        </td>
+                      </ng-template>
+                  </tr>
+              </ng-container>
+
+
+          </tbody>
+          <tbody *ngIf="!(remarkArray?.length > 0) ">
+              <tr>
+                  <td colspan="6" class="text-center">No Record Found</td>
+              </tr>
+          </tbody>
+      </table>
+
+      </div>
+   </div>
+
+      <!-- <div class="row margin-top-15" *ngIf="principalArray.length > 0">
+        <div class="col-12 remove-col-padding">
+
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Principal</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of principalArray">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <div class="row margin-top-15" *ngIf="vicePrincipalArray.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Vice Principal</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of vicePrincipalArray">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="schoolAdmin.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">School Admin</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of schoolAdmin">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="classTeacher.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Class Teacher</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of classTeacher">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="subjectTeacher.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Subject Teacher</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of subjectTeacher">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <ng-container *ngIf="!defaultRemark">
+        <div class="text-center">
+          <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
+      </ng-container> -->
+    </mat-card>
+  </div>
+</div>
+<app-add-modal #addModal (addOk)="addOk($event)"></app-add-modal>
