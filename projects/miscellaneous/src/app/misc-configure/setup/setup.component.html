@@ -648,6 +648,197 @@
                                   </ng-container>
                                 </div>
                               </ng-container>
+                              <ng-container *ngIf="control.gs_alias=='gradecard_best_of_calculation'">
+                                <div class="col-12">
+                                  <!-- <form [formGroup]="paramform">
+                                    <div class="row">
+                                      <div class="col-4">
+                                        <mat-form-field appearance="outline" class="form-field">
+                                          <mat-label>Class</mat-label>
+                                          <mat-select placeholder="Class" formControlName="eme_class_id"
+                                            (selectionChange)="getSectionsByClass($event);getClassTerm();" required>
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                              {{item.class_name}}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-4">
+                                        <mat-form-field appearance="outline" class="form-field">
+                                          <mat-label>Section</mat-label>
+                                          <mat-select placeholder="Section" formControlName="eme_sec_id" multiple
+                                            (selectionChange)="sectionChange($event)" >
+                                           
+                                            <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                              {{item.sec_name}}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-4">
+                                        <mat-form-field appearance="outline" class="form-field">
+                                          <mat-label>Term</mat-label>
+                                          <mat-select placeholder="Term" formControlName="eme_term_id"
+                                            (selectionChange)="getExamDetails($event)" required>
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of termsArray" [value]="item.id">
+                                              {{item.name}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-4">
+                                        <mat-form-field appearance="outline" class="form-field"
+                                          *ngIf="paramform.value.eme_term_id != 'comulative'">
+                                          <mat-label>Exam</mat-label>
+                                          <mat-select placeholder="Exam" formControlName="eme_exam_id"
+                                            (selectionChange)="getSubExam($event)">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of examArray" [value]="item.exam_id">
+                                              {{item.exam_name}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-4">
+                                        <mat-form-field appearance="outline" class="form-field"
+                                          *ngIf="paramform.value.eme_term_id != 'comulative'">
+                                          <mat-label>Sub-Exam</mat-label>
+                                          <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id"
+                                            (selectionChange)="getSubExamName($event)" multiple>
+
+                                            <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">
+                                              {{item.sexam_name | titlecase}}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-2">
+                                        <button mat-button class="add-repo-settings"
+                                          (click)="addSetting()">Add</button>
+                                      </div>
+                                    </div>
+                                  </form>
+                                  <br>
+                                  <div class="row" *ngIf="GRADE_CARD_SETTINS.length === 0">
+                                    <div class="col-12">
+                                      <div class="text-center">
+                                        No Record Found
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row" *ngIf="GRADE_CARD_SETTINS.length > 0">
+                                    <div class="col-12">
+
+                                      <table class="table-100 text-center">
+                                        <thead>
+                                          <th class="custom-th">#</th>
+                                          <th class="custom-th">Class</th>
+                                          <th class="custom-th">Section</th>
+                                          <th class="custom-th">Term</th>
+                                          <th class="custom-th">Exam</th>
+                                          <th class="custom-th">Sub Exam</th>
+                                          <th class="custom-th">Actions</th>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let item of GRADE_CARD_SETTINS;let i=index">
+                                            <td class="custom-td">{{i + 1}}</td>
+                                            <td class="custom-td">{{item.class_name}}</td>
+                                            <td class="custom-td">{{item.sec_name}}</td>
+                                            <td class="custom-td">{{item.term_name}}</td>
+                                            <td class="custom-td">{{item.exam_name}}</td>
+                                            <td class="custom-td">{{item.sub_exam_name}}</td>
+                                            <td class="custom-td">
+                                              <div style="display: inline-flex;">
+                                                <span class="margin-right-15">
+                                                  <mat-slide-toggle (change)="changeStat($event, item)"
+                                                    [checked]="item.status === '1'">
+                                                  </mat-slide-toggle>
+                                                </span>
+                                                <span><i class="fas fa-trash font-color-grey margin-right-15"
+                                                    (click)="deleteStep(i)"></i></span>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+
+                                      </table>
+
+                                    </div>
+                                  </div> -->
+                                  <form [formGroup]="bestOfForm">
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      <mat-slide-toggle formControlName="bo_status" (change)="switchBestOff($event)"></mat-slide-toggle>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="bestOfStatus">
+                                      <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Class</mat-label>
+                                        <mat-select placeholder="Class" formControlName="bo_class_id"
+                                          (selectionChange)="getSubjectsOfAClass($event);" required>
+                                          <mat-option value="">Please select</mat-option>
+                                          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                            {{item.class_name}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4"  *ngIf="bestOfStatus">
+                                      <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Best of</mat-label>
+                                        <mat-select placeholder="No of subjects" formControlName="bo_no_of_subjects" required>
+                                          <mat-option value="">No of Subjects</mat-option>
+                                          <mat-option *ngFor="let n of total_subject_in_the_class;
+                                          let i = index;" [value]="i+1">
+                                            {{i+1}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-md-2" *ngIf="bestOfStatus">
+                                      <button mat-button class="add-repo-settings"
+                                          (click)="addBestOf()">Add</button>
+                                    </div>
+                                  </div>
+                                  </form>
+                                  <div class="row" *ngIf="BEST_OF_SETTINGS.length === 0">
+                                    <div class="col-12">
+                                      <div class="text-center">
+                                        No Record Found
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row" *ngIf="BEST_OF_SETTINGS.length > 0">
+                                    <div class="col-12">
+
+                                      <table class="table-100 text-center">
+                                        <thead>
+                                          <th class="custom-th">#</th>
+                                          <th class="custom-th">Class</th>
+                                          <th class="custom-th">No of Subjects</th>
+                                          <th class="custom-th">Action</th>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let item of BEST_OF_SETTINGS;let i=index">
+                                            <td class="custom-td">{{i + 1}}</td>
+                                            <td class="custom-td">{{item.class_name}}</td>
+                                            <td class="custom-td">{{item.no_of_subjects}}</td>
+                                            <td class="custom-td">
+                                              <div style="display: inline-flex;">
+                                                <span class="margin-right-15">
+                                                  <mat-slide-toggle (change)="changeStat($event, item)"
+                                                    [checked]="item.status === '1'">
+                                                  </mat-slide-toggle>
+                                                </span>
+                                                <span><i class="fas fa-trash font-color-grey margin-right-15"
+                                                    (click)="deleteBest(i)"></i></span>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+
+                                      </table>
+
+                                    </div>
+                                  </div> 
+                                </div>
+                              </ng-container>
                               <div class="row" *ngIf="control.gs_alias === 'deduction_config'">
                                 <div class="col-12">
                                   <ng-container *ngIf="control.gs_alias == 'deduction_config'">

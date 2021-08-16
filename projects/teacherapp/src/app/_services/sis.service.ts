@@ -16,6 +16,7 @@ export class SisService {
 			]
 		});
 	}
+
 	/* updated in smart with getClassData
 	getClass(value) {
 		const param: any = {};
@@ -25,6 +26,7 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
 	} */
+
 	getSectionsByClass(value) {
 		const param: any = {};
 		param.class_id = value.class_id;
@@ -125,8 +127,53 @@ export class SisService {
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
 	}
 
-	getTemplate(value) {
+	getStudentInformation(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
+		value.fromFee = 'fee';
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
+	}
+
+	getActivity() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/activity');
+	}
+	getActivityClub() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/activityClub');
+	}
+	getLevelOfInterest() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/levelOfInterest');
+	}
+	getEventLevel() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/eventLevel');
+	}
+	getAuthority() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/authority');
+	}
+	getSkillAwards(value) {
+		return this.http.post(environment.apiSisUrl + '/skillsAwards/getSkillsAwards', value);
+	}
+	getGeneralRemarks(value) {
+		return this.http.post(environment.apiSisUrl + '/remarks/getGeneralRemarks', value);
+	}
+	addRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addRemarks',value);
+	}
+	addSkills(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/addAdditionalDetails',value);
+	}
+
+	getConfigureSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/configure/getConfigureSetting', value);
+	}
+	getArea() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/area');
 	}
 }

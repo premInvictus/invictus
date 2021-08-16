@@ -20,7 +20,9 @@ import { StudentVerificationComponent } from './student-verification/student-ver
 import { StudentVerificationModalComponent } from './student-verification/student-verification-modal/student-verification-modal.component';
 import { GradecardPrintingComponent} from './gradecard-printing/gradecard-printing.component';
 import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
-import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pagesetup.component'
+import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pagesetup.component';
+import { StudentAcademicProfileComponent } from './student-academic-profile/student-academic-profile.component';
+import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
 
 @NgModule({
   imports: [
@@ -28,7 +30,7 @@ import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pag
     GradeMasterRoutingModule,
     SharedModule
   ],
-  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent, StudentVerificationComponent,StudentVerificationModalComponent,GradecardPrintingComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent],
-  entryComponents: [StudentVerificationModalComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent],
+  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent, StudentVerificationComponent,StudentVerificationModalComponent,GradecardPrintingComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent,StudentAcademicProfileComponent, StudentAcademicProfileDetailsComponent],
+  entryComponents: [StudentVerificationModalComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent,StudentAcademicProfileComponent],
 })
 export class GradeMasterModule { }

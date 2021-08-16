@@ -223,4 +223,9 @@ export class SisService {
 	resetAdmitCode(value) {
 		return this.http.post(environment.apiSisUrl + '/users/resetAdmitCode', value);
 	}
+
+	getSubjectsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
+	}
 }

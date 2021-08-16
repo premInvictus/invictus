@@ -55,6 +55,7 @@ import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-s
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
+import { AddModalComponent } from './add-modal/add-modal.component';
 import * as _moment from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
@@ -113,7 +114,7 @@ export const MY_FORMATS = {
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
-		ImageCropperModule,
+		ImageCropperModule
 	],
 	declarations: [
 		DeleteModalComponent,
@@ -140,6 +141,7 @@ export const MY_FORMATS = {
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
+		AddModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		EmpCommonProfileComponent,
@@ -198,6 +200,7 @@ export const MY_FORMATS = {
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
+		AddModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		EmpCommonProfileComponent,
@@ -212,6 +215,7 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
+		AddModalComponent,
 		ComposeMessageComponent,
 		SalarySlipModalComponent,
 		MessagesAdvancedSearchModalComponent],
