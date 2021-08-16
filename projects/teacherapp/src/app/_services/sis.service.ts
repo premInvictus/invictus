@@ -16,6 +16,7 @@ export class SisService {
 			]
 		});
 	}
+	
 	/* updated in smart with getClassData
 	getClass(value) {
 		const param: any = {};
@@ -25,6 +26,7 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
 	} */
+
 	getSectionsByClass(value) {
 		const param: any = {};
 		param.class_id = value.class_id;
