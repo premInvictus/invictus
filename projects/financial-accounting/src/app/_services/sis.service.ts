@@ -1067,4 +1067,16 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
+	changeStatus(val) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/changeStatus', val)
+	}
+	getTemplate2(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate2', value);
+	}
+	addAndUpdateTemplate(val) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/addAndUpdateTemplate', val);
+	}
 }

@@ -200,11 +200,12 @@ export class StudentDashboardComponent implements OnInit {
 					this.erpCommonService.getStudentInformation({ login_id: currentUser.login_id, enrollment_type: this.userDetail.au_process_type }).subscribe((resutl1: any) => {
 						if (resutl1 && resutl1.status === 'ok') {
 							this.studentdetails = resutl1.data[0];
-							console.log('this.studentdetails', this.studentdetails);
+							console.log('this.studentdetails---------------------', this.studentdetails);
 							this.className = resutl1.data[0].class_name;
 							this.secName = resutl1.data[0].sec_name;
 							this.dob = resutl1.data[0].au_dob;
 							this.phoneNumber = resutl1.data[0].au_mobile;
+							this.currentUser['section_id'] = resutl1.data[0] && resutl1.data[0]['sec_id'] ? resutl1.data[0]['sec_id'] : '';
 							this.currentUser['class_id'] = resutl1.data[0] && resutl1.data[0]['class_id'] ? resutl1.data[0]['class_id'] : '';
 							localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
 							const class_name = this.studentdetails.class_name;

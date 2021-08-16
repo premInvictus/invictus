@@ -63,11 +63,12 @@ export class TableRendererComponent implements OnInit , OnChanges , AfterViewIni
 						const scheduleExamArrayTemp: any[] = result.data;
 						const today = new Date();
 						scheduleExamArrayTemp.forEach((element, index) => {
-							const examscheduledate = new Date(element.es_start_date + ' 00:00:01');
-							examscheduledate.setDate(examscheduledate.getDate() + 7);
-							if (examscheduledate.getTime() >= today.getTime()) {
-								this.scheduleExamArray.push(element);
-							}
+							// const examscheduledate = new Date(element.es_start_date + ' 00:00:01');
+							// examscheduledate.setDate(examscheduledate.getDate() + 7);
+							// if (examscheduledate.getTime() >= today.getTime()) {
+							// 	this.scheduleExamArray.push(element);
+							// }
+							this.scheduleExamArray.push(element);
 						});
 					}
 					if (this.pastexamFlag) {

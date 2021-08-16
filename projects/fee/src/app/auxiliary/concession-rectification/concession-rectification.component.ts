@@ -96,7 +96,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 						enrollment: element.accd_login_id,
 						class_sec: classSecName,
 						remarks: element.tucc_remarks,
-						admno: element.au_admission_no,
+						admno: element.au_process_type == '3' ? ("Pr. Adm. - " + element.au_admission_no) : element.au_process_type == '4' ? ("A - " + element.au_admission_no): element.au_admission_no,
 						name: element.au_full_name,
 						concession: element.fcg_name,
 						proposed_by: element.tucc_created_by,

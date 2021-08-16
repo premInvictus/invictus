@@ -15,7 +15,7 @@ import { UsertypeModule } from './fausertype/usertype.module';
 import { routing } from './app.routing';
 
 // import service
-import {CommonAPIService, SisService, ProcesstypeService, RoutingStateService, SmartService, FaService, FeeService } from './_services/index';
+import {CommonAPIService, SisService,HtmlToTextService, ProcesstypeService, RoutingStateService, SmartService, FaService, FeeService } from './_services/index';
 import {ResolverService} from './_services/resolver.service';
 
 // import component
@@ -23,7 +23,7 @@ import { AppComponent } from './app.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { LoaderService } from './_services/loader.service';
 const providers = [CommonAPIService,
-	SisService,
+	SisService,HtmlToTextService,
 	ProcesstypeService,
 	NotificationsService,
 	RoutingStateService,

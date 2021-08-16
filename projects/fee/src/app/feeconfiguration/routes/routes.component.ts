@@ -127,7 +127,7 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 		let counter = 1;
 		for (let i = 0; i < this.transportRoutesData.length; i++) {
 			const tempObj = {};
-			let stoppages_arr;
+			let stoppages_arr = [];
 			if (this.transportRoutesData[i]['route_stoppages']) {
 				stoppages_arr = this.transportRoutesData[i]['route_stoppages'].split(',');
 			}

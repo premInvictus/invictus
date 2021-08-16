@@ -113,7 +113,7 @@
         <div class="text-center">
             <br>
    
-            <button mat-raised-button class="btn-success" (click)="$event.preventDefault();submitReceipt($event);">Submit</button>&nbsp;
+            <button *ngIf="showTable" mat-raised-button class="btn-success" (click)="$event.preventDefault();submitReceipt($event);">Submit</button>&nbsp;
             <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
          </div>
         </form>

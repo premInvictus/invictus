@@ -569,6 +569,54 @@ export class SetupComponent implements OnInit {
                 console.log("i am form build ", jsontemp);
                 
                 return this.fbuild.array(jsontemp);
+            }  
+            if (element.gs_alias === 'communication_management_detail') {
+                const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
+                const jsontemp = [];
+                temp.forEach(element => {
+                    const tempPermission: any[] = [];
+                    const tempReport: any [] = [];
+                    // if (element.permission.length > 0) {
+                    //     element.permission.forEach(element1 => {
+                    //         tempPermission.push(this.fbuild.group({
+                    //             section_name: element1.section_name,
+                    //             status: element1.status
+                    //         }));
+                    //     });
+                    // }
+                    // if (element.report_assigned.length > 0) {
+                    //     element.report_assigned.forEach(element1 => {
+                    //         let normaldata: any[] = [];
+                    //         element1.permission.forEach(element => {
+                    //             normaldata.push(this.fbuild.group({
+                    //                 section_name: element.section_name,
+                    //                 status: element.status
+                    //             }));
+                    //         });
+                            
+                    //         tempReport.push(this.fbuild.group({
+                    //             report_name: element1.report_name,
+                    //             status: element1.status,
+                    //             permission: this.fbuild.array(normaldata)
+                    //         }));
+                    //     });
+                    // }
+
+                    jsontemp.push(this.fbuild.group({
+                     
+                        name: element.name,
+                        au_login_id: element.au_login_id,
+                        au_full_name: element.au_full_name,
+                        roll_id: element.roll_id,
+                        au_email_id: element.au_email_id,
+                        // permission: this.fbuild.array(tempPermission),
+                    }));
+
+
+                });
+                console.log("i am form build ", jsontemp);
+                
+                return this.fbuild.array(jsontemp);
             } 
         }
         if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez' || element.gs_alias === 'fa_monthwise_freez') {
@@ -1506,6 +1554,9 @@ export class SetupComponent implements OnInit {
         }
         if (this.settingForm.value && this.settingForm.value.onlne_session_key) {
             this.settingForm.value.onlne_session_key = JSON.stringify(this.settingForm.value.onlne_session_key);
+        }
+        if (this.settingForm.value && this.settingForm.value.communication_management_detail) {
+            this.settingForm.value.communication_management_detail = JSON.stringify(this.settingForm.value.communication_management_detail);
         }
 
         if (this.settingForm.value && this.settingForm.value.mis_report_setting_data) {

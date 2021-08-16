@@ -345,11 +345,16 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	checkThumbnail(url: any) {
-		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
-			url.match(/gif/) || url.match(/jpeg/) ||
-			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
-			url.match(/GIF/) || url.match(/JPEG/)) {
-			return true;
+		console.log("----------2------------", url);
+		if (url) {
+			if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+				url.match(/gif/) || url.match(/jpeg/) ||
+				url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+				url.match(/GIF/) || url.match(/JPEG/)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

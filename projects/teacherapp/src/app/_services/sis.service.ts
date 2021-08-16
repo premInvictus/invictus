@@ -16,7 +16,7 @@ export class SisService {
 			]
 		});
 	}
-	
+
 	/* updated in smart with getClassData
 	getClass(value) {
 		const param: any = {};

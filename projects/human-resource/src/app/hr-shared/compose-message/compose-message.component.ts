@@ -7,6 +7,10 @@ import { MatDialog } from '@angular/material';
 import { ckconfig } from './../config/ckeditorconfig';
 import { PreviewDocumentComponent } from '../preview-document/preview-document.component';
 import { ErpCommonService } from 'src/app/_services';
+import {environment} from 'src/environments/environment';
+
+declare var CKEDITOR: any;
+
 @Component({
 	selector: 'app-compose-message',
 	templateUrl: './compose-message.component.html',
@@ -52,6 +56,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	finUserDataArr: any[] = [];
 	selectedUserCount = 0;
 	showSearchByUserFlag = false;
+	loadConfig: boolean;
+	configArray: any[];
 
 	constructor(
 		private fbuild: FormBuilder,
@@ -67,6 +73,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getSLCTCFormConfig();
 	}
 
 	ngOnChanges() {
@@ -653,7 +660,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 				msgToArr.push(userJson);
 			}
-
+			console.log("-------------------------------------2");
 			var inputJson = {
 				"msg_from": this.currentUser.login_id,
 				"msg_to": msgToArr,
@@ -709,7 +716,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	sendSMS(inputJson) {
-		this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
+		this.commonAPIService.insertMessage2(inputJson).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
 				this.back();
@@ -859,5 +866,108 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		} else {
 			this.userDataArr = this.finUserDataArr;
 		}
+	}
+
+	getSLCTCFormConfig() {
+		this.configArray = [];
+		this.sisService.getSlcTcFormConfig({ tmap_usts_id: "18" }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				for (const item of result.data) {
+					this.configArray.push({
+						sff_label: item.sff_label,
+						sff_ff_id: item.sff_ff_id,
+						sff_id: item.sff_id,
+						sff_field_tag: item.sff_field_tag,
+						sff_field_type: item.sff_field_type
+					});
+				}
+				this.loadPlugin();
+			}
+		});
+	}
+
+	loadPlugin() {
+		console.log('load plugin');
+		let array2 = [];
+		array2 = this.configArray;
+		console.log(this.configArray, ' ----------------------');
+		// tslint:disable-next-line:forin
+		console.log(CKEDITOR.plugins);
+		delete CKEDITOR.plugins.registered['strinsertExt'];
+		if (!(CKEDITOR.plugins.registered['strinsertExt'])) {
+			console.log('inside plugin');
+			CKEDITOR.plugins.add('strinsertExt', {
+				requires: ['richcombo'],
+				init: editor => {
+					// array of strings to choose from that'll be inserted into the editor
+					const strings2: any = [];
+					for (const item of array2) {
+						if (item.sff_field_type === 'prefetch') {
+							strings2.push(['{{' + item.sff_field_tag + '}}', item.sff_label, 'Choose ' + item.sff_label, item.sff_ff_id]);
+						}
+					}
+					for (const item of array2) {
+						if (item.sff_field_type === 'custom') {
+							strings2.push(['((' + item.sff_field_tag + '))', item.sff_label, 'Choose ' + item.sff_label, item.sff_ff_id]);
+						}
+					}
+					// add the menu to the editor
+					editor.ui.addRichCombo('strinsertExt', {
+						label: 'Choose Label',
+						title: 'Choose Label',
+						voiceLabel: 'Choose Label',
+						className: 'Choose Label',
+						multiSelect: false,
+						panel: {
+							css: [editor.config.contentsCss, CKEDITOR.skin.getPath('editor')],
+							voiceLabel: editor.lang.panelVoiceLabel
+						},
+						init: function () {
+							this.startGroup('Choose Labels');
+							// tslint:disable-next-line:forin
+							for (const i in strings2) {
+								this.add(strings2[i][0], strings2[i][1], strings2[i][2]);
+							}
+						},
+						onClick: function (value) {
+							editor.focus();
+							editor.fire('saveSnapshot');
+							editor.insertHtml(value);
+							editor.fire('saveSnapshot');
+						}
+					});
+				}
+
+			});
+
+			this.ckeConfig = {
+				allowedContent: true,
+				pasteFromWordRemoveFontStyles: false,
+				contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+				disallowedContent: 'm:omathpara',
+				height: '263px',
+				width: '100%',
+				// tslint:disable-next-line:max-line-length 
+				extraPlugins: 'strinsertExt,language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
+
+				scayt_multiLanguageMod: true,
+				filebrowserUploadMethod: 'form',
+				uploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+				imageUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+				filebrowserUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+				toolbar: [
+					// tslint:disable-next-line:max-line-length
+					['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+						{ name: 'strinsertExt', items: ['strinsertExt'] },
+						{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
+					]
+				],
+				removeDialogTabs: 'image:advanced;image:Link'
+			};
+
+			this.loadConfig = true;
+		}
+
+		// this.loadCkEditorConfiguration();
 	}
 }
