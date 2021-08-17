@@ -127,6 +127,12 @@ export class SisService {
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
 	}
 
+
+	getTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
+	}
+
 	getStudentInformation(value) {
 		this.service.startLoading();
 		value.fromFee = 'fee';
