@@ -11,6 +11,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 })
 export class SubjectSubexamModalComponent implements OnInit {
 
+	hintColor = '#ff0000';
   mappingForm: FormGroup;
   submarkForm: FormGroup;
   submarkFormArr: any[] = [];
@@ -21,6 +22,7 @@ export class SubjectSubexamModalComponent implements OnInit {
   NoncceClassArray: any[] = [];
   subjectArray: any[] = [];
   submarkDivFlag = false;
+  isExamAvailable: boolean = true;
   constructor(
     public dialogRef: MatDialogRef<SubjectSubexamModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -127,8 +129,10 @@ export class SubjectSubexamModalComponent implements OnInit {
             ssm_exam_id: this.data[0].ssm_exam_id
           });
           this.getSubexam();
+          this.isExamAvailable = true;
         }
       } else {
+				this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });

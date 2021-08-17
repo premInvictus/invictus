@@ -50,6 +50,9 @@
             <button mat-raised-button class="btn-primary-100" style="margin-top: 10px; width: 100px !important;margin-left: 15px;" (click)="displayData()">Submit</button>
           </div>
         </div>
+        <div class="row">
+          <mat-hint *ngIf="!isExamAvailable" [ngStyle]="{color: hintColor}">{{isExamAvailableMessage}}</mat-hint>
+        </div>
       </form>
     </mat-card>
   </div>

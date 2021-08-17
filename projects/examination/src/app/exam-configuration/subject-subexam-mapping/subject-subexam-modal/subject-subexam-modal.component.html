@@ -36,6 +36,7 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
+                    <mat-hint *ngIf="!isExamAvailable" [ngStyle]="{color: hintColor}" align="end">No Exams Configured for this Session</mat-hint>
                   </div>
                 </div>
                 <div class="row">

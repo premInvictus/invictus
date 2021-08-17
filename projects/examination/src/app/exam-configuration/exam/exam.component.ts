@@ -24,6 +24,7 @@ export class ExamComponent implements OnInit {
 	ELEMENT_DATA: Element[] = [];
 	disableApiCall = false;
 	termArray: any[] = [];
+	tableDivFlag = false;
 	categoryArray: any[] = [];
 	classArray: any[] = [];
 	gradeSetArray: any[] = [];
@@ -358,6 +359,7 @@ export class ExamComponent implements OnInit {
 						this.ELEMENT_DATA.push(pushitem);
 					});
 					this.examDataSource = new MatTableDataSource(this.ELEMENT_DATA);
+					if(result.data.length > 0) this.tableDivFlag = true;
 				}
 			}
 			this.resetForm();

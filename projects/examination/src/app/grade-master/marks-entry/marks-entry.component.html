@@ -88,6 +88,9 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="row">                    
+                    <mat-hint *ngIf="!isExamAvailable" [ngStyle]="{color: hintColor}" align="end">No Exams Configured for this Session</mat-hint>
+                </div>
             </form>
         </mat-card>
     </div>

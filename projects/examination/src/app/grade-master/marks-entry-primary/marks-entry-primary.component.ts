@@ -11,7 +11,7 @@ import { MarkEntrySubmitDialogComponent } from '../mark-entry-submit-dialog/mark
   styleUrls: ['./marks-entry-primary.component.css']
 })
 export class MarksEntryPrimaryComponent implements OnInit {
-
+	hintColor = '#ff0000';
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -35,6 +35,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
     { "egs_grade_name": "NAD", "egs_grade_value": "NAD", "egs_range_start": "0", "egs_range_end": "0" },
     { "egs_grade_name": "ML", "egs_grade_value": "ML", "egs_range_start": "0", "egs_range_end": "0" }
   ];
+  isExamAvailable: boolean = true;
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -81,7 +82,9 @@ export class MarksEntryPrimaryComponent implements OnInit {
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(), term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+				if(this.examArray.length > 0) this.isExamAvailable = true;
       } else {
+        this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
@@ -277,7 +280,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
         } else {
-          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+          // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
         }
       });
     }

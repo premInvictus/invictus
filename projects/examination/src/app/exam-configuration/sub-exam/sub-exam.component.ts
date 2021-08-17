@@ -18,6 +18,7 @@ export class SubExamComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	disableApiCall = false;
+	tableDivFlag = false;
 	ckeConfig: any = {};
 	subExamArray: any[] = [];
 	ELEMENT_DATA: Element[] = [];
@@ -98,6 +99,7 @@ export class SubExamComponent implements OnInit {
 					});
 				}
 				this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				if(result.data.length > 0) this.tableDivFlag = true;
 			}
 		});
 	}

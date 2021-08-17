@@ -183,6 +183,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.view = '1';
     console.log("printGradecard ok");
     this.examService.printGradecard(param).subscribe((result: any) => {
+      console.log("params", param);
       if (result && result.status === 'ok') {
         this.printData = result.data;
         console.log("printGradecard", this.printData);

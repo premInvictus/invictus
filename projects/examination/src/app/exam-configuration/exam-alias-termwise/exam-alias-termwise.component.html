@@ -56,6 +56,7 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+                <mat-hint *ngIf="!isExamAvailable" [ngStyle]="{color: hintColor}">No Exams Configured for this Session</mat-hint>
               </div>
             </div>
             <div class="row">
@@ -97,7 +98,7 @@
         </div>
 
         <div class="col-9">
-          <div class="row">
+          <div class="row" *ngIf="tableDivFlag">
             <div class="col-12 remove-col-padding">
               <table mat-table #table [dataSource]="subExamDataSource" matSort class="table-100 text-center">
 
@@ -158,6 +159,15 @@
               </table>
             </div>
           </div>
+          <div class="row" *ngIf="!tableDivFlag">
+            <div class="col-12 text-center">
+                <mat-card>
+                    <app-no-data 
+                    [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" 
+                    [noDataText]="" [subText]="'No record found'"></app-no-data>
+                </mat-card>
+            </div>
+        </div>
         </div>
       </div>
     </mat-card>

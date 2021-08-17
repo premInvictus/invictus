@@ -15,6 +15,7 @@ export class ExamAliasTermwiseComponent implements OnInit {
 
 	displayedColumns: string[] = ['class', 'term', 'alias', 'action'];
 	@ViewChild('deleteModal') deleteModal;
+	hintColor = '#ff0000';
 	examAliasForm: FormGroup;
 	currentUser: any;
 	session: any;
@@ -24,6 +25,8 @@ export class ExamAliasTermwiseComponent implements OnInit {
 	ELEMENT_DATA: Element[] = [];
 	UpdateFlag = false;
 	viewOnly = true;
+	tableDivFlag = false;
+	isExamAvailable = true;
 	param: any = {};
 	subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	classArray: any[] = [];
@@ -109,6 +112,11 @@ export class ExamAliasTermwiseComponent implements OnInit {
 		this.examService.getExamDetails({ exam_class: classId, term_id: termId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
+				console.log("exam array", this.examArray);
+				console.log("exam array", this.examArray.length);
+				if(this.examArray.length > 0) this.isExamAvailable = true;
+			}else{
+				this.isExamAvailable = false;
 			}
 		});
 	}
@@ -193,6 +201,7 @@ export class ExamAliasTermwiseComponent implements OnInit {
 					});
 				});
 				this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				if(result.data.length > 0) this.tableDivFlag = true;
 			}
 		})
 	}
@@ -208,6 +217,8 @@ export class ExamAliasTermwiseComponent implements OnInit {
 		this.resetAliasData();
 		this.getClassTerm(value.eat_class_id);
 		this.getExamDetails(value.eat_class_id, value.eat_term_id_from);
+		console.log("exam array",this.examArray.length);
+		if(this.examArray.length > 0) this.isExamAvailable = true;
 		this.UpdateFlag = true;
 		this.viewOnly = false;
 		this.examAliasForm.patchValue({

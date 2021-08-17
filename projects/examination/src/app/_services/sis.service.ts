@@ -15,6 +15,10 @@ export class SisService {
 			]
 		});
 	}
+	getTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
+	}
 	getSectionsByClass(value) {
 		const param: any = {};
 		param.class_id = value.class_id;
@@ -118,5 +122,9 @@ export class SisService {
 	getConfigureSetting(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/configure/getConfigureSetting', value);
+	}
+	getAdditionalDetails(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getAdditionalDetails',value);
 	}
 }
