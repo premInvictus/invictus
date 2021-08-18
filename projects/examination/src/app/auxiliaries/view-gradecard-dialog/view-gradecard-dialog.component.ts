@@ -24,6 +24,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   examArray: any[] = [];
   sexamArray: any[] = [];
   cexamArray: any[] = [];
+  isPreparingCard : Boolean = true ;
   gradeCardMarkArray: any[] = [];
   sflag = false;
   eflag = false;
@@ -89,6 +90,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   gradecard_mettings_present:any;
   gradecard_show_scholastic_gradescale:any;
   gradecard_scholastic_abbreviation:any;
+	showLoadingFlag = false;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -97,7 +99,11 @@ export class ViewGradecardDialogComponent implements OnInit {
     private smartService: SmartService,
     private commonAPIService: CommonAPIService,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {
+    this.commonAPIService.showLoading.subscribe((flag: boolean) => {
+			this.showLoadingFlag = flag;
+		});
+   }
 
   ngOnInit() {
     this.printGradecard();
@@ -182,19 +188,45 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.se_id = this.data.param.eme_subexam_id;
     param.view = '1';
     console.log("printGradecard ok");
-    this.examService.printGradecard(param).subscribe((result: any) => {
-      console.log("params", param);
-      if (result && result.status === 'ok') {
-        this.printData = result.data;
-        console.log("printGradecard", this.printData);
-        this.printData.so_printData.forEach(element => {
-          this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
-          this.all_term_student_total_mark += element.term_student_total_mark['A'];
-        });
-        this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
+    // this.examService.printGradecard(param).subscribe((result: any) => {
+    //   console.log("params", param);
+    //   if (result && result.status === 'ok') {
+    //     this.printData = result.data;
+    //     console.log("printGradecard", this.printData);
+    //     this.printData.so_printData.forEach(element => {
+    //       this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
+    //       this.all_term_student_total_mark += element.term_student_total_mark['A'];
+    //     });
+    //     this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
+    //     this.printDataFlag = true;
+    //   }
+    // })
+    this.examService.printGradecard(param).subscribe(
+      (response : any) => {
+          this.showLoadingFlag = true;
+           if (response && response.status === 'ok') {
+                this.printData = response.data;
+                console.log("printGradecard", this.printData);
+                this.printData.so_printData.forEach(element => {
+                  this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
+                  this.all_term_student_total_mark += element.term_student_total_mark['A'];
+                });
+                this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
+              }
+      },
+      err => {
+           console.log(err);
+           console.log("error prepared grade card");
+           this.isPreparingCard = false;
+           this.showLoadingFlag = false;
+      },
+      () => {
+        console.log("prepared grade card");
+        this.isPreparingCard = false;
         this.printDataFlag = true;
+        this.showLoadingFlag = false;
       }
-    })
+ )
 
   }
   getClassTermDate() {
