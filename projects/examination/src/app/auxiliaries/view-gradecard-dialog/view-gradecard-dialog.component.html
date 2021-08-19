@@ -148,7 +148,10 @@
                     </table>
                 </div>
             </div>
-            <ng-container *ngIf="data.param.eme_term_id != 'comulative' && printDataFlag">
+            <div class="row mt-5 mb-5 text-center" *ngIf="isPreparingCard">
+                <h2 class="text-success">Preparing grade card ..........</h2>
+            </div>
+            <ng-container *ngIf="data.param.eme_term_id != 'comulative' && printDataFlag && !isPreparingCard">
                 <ng-container *ngFor="let term of termArray">
                     <ng-container *ngFor="let eachterm of printData.so_printData">
                         <ng-container *ngFor="let sub_category of eachterm.so_sub_category_arr">
@@ -947,7 +950,7 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
-            <ng-container *ngIf="data.param.eme_term_id == 'comulative' && printDataFlag">
+            <ng-container *ngIf="data.param.eme_term_id == 'comulative' && printDataFlag && !isPreparingCard">
                 <ng-container *ngIf="printData.so_printData.length > 0">
                     <ng-container *ngFor="let sub_category of printData.so_printData[0].so_sub_category_arr">
                         <ng-template [ngIf]="data.ect_exam_type == 2">

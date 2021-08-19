@@ -11,6 +11,7 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
   styleUrls: ['./marks-register.component.css']
 })
 export class MarksRegisterComponent implements OnInit { 
+	hintColor = '#ff0000';
   reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   paramform: FormGroup
   classArray: any[] = [];
@@ -32,6 +33,7 @@ export class MarksRegisterComponent implements OnInit {
   student_sub_exam_data_arr: any[] = [];
   thead_data: any[] = [];
   classterm: any;
+  isExamAvailable: boolean = true;
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   tableWidth = '100%';
   ect_grade_avg_highest: any = {grade: false}
@@ -43,6 +45,7 @@ export class MarksRegisterComponent implements OnInit {
     this.buildForm();
     this.getClass();
     this.getExamActivityCategory();
+    console.log("Menu Exist",this.commonAPIService.isExistUserAccessMenu('677'));
     if(this.commonAPIService.isExistUserAccessMenu('677')) {
 			this.reportTypeArray.push({id: 'marksinput', name: 'Marks Input'});
     }
@@ -153,7 +156,10 @@ export class MarksRegisterComponent implements OnInit {
             }
           }
         }
-      } 
+				result.data.length > 0 ? this.isExamAvailable = true : this.isExamAvailable = false;
+      }else{
+				this.isExamAvailable = false;
+      }
     });  
   }
   getGradeSet(param) {

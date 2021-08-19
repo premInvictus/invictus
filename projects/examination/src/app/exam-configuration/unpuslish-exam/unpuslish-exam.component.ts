@@ -9,6 +9,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 })
 export class UnpuslishExamComponent implements OnInit {
   @ViewChild('deleteModal')deleteModal;
+	hintColor = '#ff0000';
   paramform: FormGroup
   classArray: any[] = [];
   reviewValue = '';
@@ -23,6 +24,7 @@ export class UnpuslishExamComponent implements OnInit {
 		{ rt_id: 1, rt_name: 'Internal Type' },
 		{ rt_id: 2, rt_name: 'External Type' }
 	];
+  isExamAvailable: boolean = true;
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -79,7 +81,9 @@ export class UnpuslishExamComponent implements OnInit {
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+				if(this.examArray.length > 0) this.isExamAvailable = true;
       } else {
+				this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });

@@ -10,6 +10,8 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 	styleUrls: ['./remarks-entry.component.css']
 })
 export class RemarksEntryComponent implements OnInit {
+	hintColor = '#ff0000';
+	isExamAvailable = true;
 	paramform: FormGroup;
 	subjectWiseRemark = false;
 	classArray: any[] = [];
@@ -235,8 +237,10 @@ export class RemarksEntryComponent implements OnInit {
 		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
+				if(this.examArray.length > 0) this.isExamAvailable = true;
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				this.isExamAvailable = false;
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}

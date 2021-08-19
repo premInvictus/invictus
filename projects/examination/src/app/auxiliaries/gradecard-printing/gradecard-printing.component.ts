@@ -17,7 +17,8 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./gradecard-printing.component.css']
 })
 export class GradecardPrintingComponent implements OnInit {
-
+	hintColor = '#ff0000';
+  isExamAvailableMessage = "No Exams Configured for this Session";
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('deleteModalUnlock') deleteModalUnlock;
   paramform: FormGroup
@@ -35,6 +36,7 @@ export class GradecardPrintingComponent implements OnInit {
   selection = new SelectionModel<Element>(true, []);
   classterm: any;
   subexamArray: any[] = [];
+  isExamAvailable: boolean = true;
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -234,7 +236,9 @@ export class GradecardPrintingComponent implements OnInit {
     this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.getTermid()}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+				if(result.data.length > 0) this.isExamAvailable = true;
       } else {
+				this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });

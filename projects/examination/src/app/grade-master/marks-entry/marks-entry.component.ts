@@ -34,6 +34,8 @@ export class MarksEntryComponent implements OnInit {
   ];
   editFlag = false;
   disabledApiButton = false;
+  isExamAvailable: boolean = true;
+	hintColor = '#ff0000';
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -101,7 +103,9 @@ export class MarksEntryComponent implements OnInit {
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(), term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+				if(this.examArray.length > 0) this.isExamAvailable = true;
       } else {
+        this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
@@ -273,7 +277,7 @@ export class MarksEntryComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
         } else {
-          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+          // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
         }
       });
     }
