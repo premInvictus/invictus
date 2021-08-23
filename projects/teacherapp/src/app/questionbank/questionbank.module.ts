@@ -25,6 +25,10 @@ import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
 import { EssayDialogsComponent } from './essay-dialogs/essay-dialogs.component';
 import { QuestionPaperDialogComponent } from './question-paper-dialog/question-paper-dialog.component';
 import { ViewqComponent } from './viewq/viewq.component';
+import { ReviewqComponent} from './reviewq/reviewq.component'
+import { ReviewoComponent } from './reviewo/reviewo.component';
+import { ReviewEssayComponent } from './review-essay/review-essay.component';
+import { ReviewsComponent } from './reviews/reviews.component';
 declare var CKEDITOR: any;
 @NgModule({
 	imports: [
@@ -52,7 +56,7 @@ declare var CKEDITOR: any;
 	entryComponents: [],
 
 	// tslint:disable-next-line:max-line-length
-	declarations: [ViewqComponent],
+	declarations: [ViewqComponent, ReviewqComponent, ReviewoComponent, ReviewEssayComponent,ReviewsComponent ],
 
 	// tslint:disable-next-line:max-line-length
 	providers: [QbankService, QelementService, AuthGuard, NotificationsService, ReportService, { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' }]

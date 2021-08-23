@@ -148,7 +148,7 @@ export class ViewProfileComponent implements OnInit {
 	tsecArr: any[] = [];
 	aparamform: FormGroup;
 	workingDay = 0;
-	holidayArr: any[];
+	holidayArr: any[] = [];
 	sessionLeave: any;
 	sessionValue = 4;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
@@ -290,7 +290,7 @@ export class ViewProfileComponent implements OnInit {
 								let count = 0;
 								let present = 0;
 								for (let i = 0; i < t.getDate(); i++) {
-									// console.log("sssssssss");
+									console.log("sssssssss", result);
 
 									// console.log("i am here", new Date(resp[i - count].entrydate).getDate(),resp[i - count] );
 
@@ -388,6 +388,8 @@ export class ViewProfileComponent implements OnInit {
 				} else {
 					this.commonAPIService.getShiftAttendance(inputJson).subscribe(
 						(result: any) => {
+							console.log("i m here", result);
+							
 							if (result != undefined && result.length != 0) {
 								let arr = [];
 								var t = new Date();
@@ -396,7 +398,7 @@ export class ViewProfileComponent implements OnInit {
 								for (let i = 0; i < t.getDate(); i++) {
 									if (i + 1 == new Date(result[i - count].created_on).getDate()) {
 										let stat = [];
-										stat = result[i - count].employeeList.find(element => (element.emp_code_no == this.userDetails.emp_id));
+										stat = result[i - count].employeeList.find(element => (element.emp_code_no == this.userDetails.emp_code_no));
 										if (stat != undefined) {
 											present += 1
 											arr.push({
@@ -440,11 +442,13 @@ export class ViewProfileComponent implements OnInit {
 										})
 									}
 								}
-								for (let i = 0; i < this.holidayArr.length; i++) {
-									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838";
-									arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
-
+								if(this.holidayArr && this.holidayArr.length > 0) {
+									for (let i = 0; i < this.holidayArr.length; i++) {
+										// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
+										arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838";
+										arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
+	
+									}
 								}
 								this.monthDays = this.monthDays.concat(arr);
 
@@ -524,7 +528,14 @@ export class ViewProfileComponent implements OnInit {
 							console.log("i am sessionLeave", res);
 
 							this.sessionLeave = res;
-							this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
+							// this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
+							if(this.sessionLeave.length > this.workingDay ) {
+								console.log("i am here");
+								
+								this.dataSession = 100
+							} else {
+								this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
+							}
 							this.HighChartOption(this.dataMonth, this.dataSession);
 						})
 					}
@@ -585,7 +596,7 @@ export class ViewProfileComponent implements OnInit {
 		this.getClassByTeacherId();
 		this.getScheduler();
 		// this.HighChartOption()
-		this.erpCommonService.getUser({ login_id: this.currentUser.login_id, role_id: '3' }).subscribe(
+		this.erpCommonService.getUser({ login_id: this.currentUser.login_id, role_id: '2' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
