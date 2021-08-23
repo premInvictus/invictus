@@ -363,10 +363,12 @@ export class TeacherDashboardComponent implements OnInit {
 										colorV:"#000"
 									})
 								}
-								for (let i = 0; i < this.holidayArr.length; i++) {
-									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838"
-
+								if(this.holidayArr && this.holidayArr.length > 0) {
+									for (let i = 0; i < this.holidayArr.length; i++) {
+										// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
+										arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838"
+	
+									}
 								}
 								this.monthDays = this.monthDays.concat(arr);
 							}
@@ -386,7 +388,7 @@ export class TeacherDashboardComponent implements OnInit {
 								for (let i = 0; i < t.getDate(); i++) {
 									if (i + 1 == new Date(result[i - count].created_on).getDate()) {
 										let stat = [];
-										stat = result[i - count].employeeList.find(element => (element.emp_code_no == this.userDetails.emp_id));
+										stat = result[i - count].employeeList.find(element => (element.emp_code_no == this.userDetails.emp_code_no));
 										if (stat != undefined) {
 											present += 1
 											arr.push({
@@ -430,11 +432,13 @@ export class TeacherDashboardComponent implements OnInit {
 										})
 									}
 								}
-								for (let i = 0; i < this.holidayArr.length; i++) {
-									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838",
-									arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
-
+								if(this.holidayArr && this.holidayArr.length > 0) {
+									for (let i = 0; i < this.holidayArr.length; i++) {
+										// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
+										arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838",
+										arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
+	
+									}
 								}
 								this.monthDays = this.monthDays.concat(arr);
 
@@ -511,8 +515,17 @@ export class TeacherDashboardComponent implements OnInit {
 							console.log("i am sessionLeave", res);
 
 							this.sessionLeave = res;
-							this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
-							if(this.dataSession > 100) {
+							if(this.sessionLeave.length > this.workingDay ) {
+								console.log("i am here");
+								
+								this.dataSession = 100
+							} else {
+								this.dataSession = Math.round(this.sessionLeave.length * 100 / this.workingDay);
+							}
+							
+							console.log("-------------", this.dataSession);
+							
+							if(this.dataSession >= 100) {
 								this.dataSession = 100
 							}
 							this.HighChartOption(this.dataMonth, this.dataSession);
