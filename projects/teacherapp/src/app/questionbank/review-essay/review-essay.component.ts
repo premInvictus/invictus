@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, TemplateRef, AfterViewChecked, AfterViewI
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QbankService } from '../service/qbank.service';
 import { QelementService } from '../service/qelement.service';
-import {AdminService} from 'projects/axiom/src/app/user-type/admin/services/admin.service';
-import { BreadCrumbService, HtmlToTextService, NotificationService, UserAccessMenuService } from 'projects/axiom/src/app/_services/index';
+import {AdminService} from '../../_services/admin.service';
+import { BreadCrumbService, HtmlToTextService, NotificationService, UserAccessMenuService } from '../../_services/index';
 import { ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, Sort, PageEvent } from '@angular/material';
 import { BsModalService } from 'ngx-bootstrap/modal';

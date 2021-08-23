@@ -14,11 +14,11 @@ import {
 	UserAccessMenuService,
 	HtmlToTextService,
 	CommonAPIService
-} from 'projects/axiom/src/app/_services/index';
+} from '../../../_services/index';
 import { QbankService } from '../../service/qbank.service';
 import { QelementService } from '../../service/qelement.service';
 import { ckconfig } from '../../ckeditorconfig';
-import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
+import { AdminService } from '../../../_services/admin.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
