@@ -19,7 +19,9 @@ import {
 	Filters,
 	Formatters,
 	DelimiterType,
-	FileType
+	FileType,
+	Sorters,
+	SortDirectionNumber
 } from 'angular-slickgrid';
 
 @Component({
@@ -204,6 +206,11 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				getter: 'class_name',
 				formatter: (g) => {
 					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				comparer: (a, b) => {
+					// (optional) comparer is helpful to sort the grouped data
+					// code below will sort the grouped value in ascending order
+					return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
 				},
 				aggregators: this.aggregatearray,
 				aggregateCollapsed: true,
@@ -1186,105 +1193,113 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		// } else {
 		// 	this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
 		// }
+		console.log("Process wise report",this.reportProcessWiseData);
 		for (let i = 0; i < Object.keys(this.reportProcessWiseData).length; i++) {
 			const tempObj = {};
 			const key = Object.keys(this.reportProcessWiseData)[i];
-			tempObj['id'] = key + counter;
-			tempObj['counter'] = counter;
 
-			tempObj['class_name'] = this.reportProcessWiseData[key]['sec_name'] ?
-			this.reportProcessWiseData[key]['class_name'] + '-' + this.reportProcessWiseData[key]['sec_name'] :
-			this.reportProcessWiseData[key]['class_name'];
+			if(this.reportProcessWiseData[key]['au_status'] == '1'){
 
-			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
-			tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[key]['dob']);
-			tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
-			tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
-			tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
-			tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority'] == "n" ? 'No' : 'Yes');
-			tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? (this.reportProcessWiseData[key]['upd_is_ews'] =="Y"? "Yes":'No'): 'No');
-			tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need'] == "Y" ? "Yes": "No");
-			tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
-			tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);
+				tempObj['id'] = key + counter;
+				tempObj['counter'] = counter;
 
-			const father_honorific = this.getParentHonorific((this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][0]) ?
-			this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific'] : '');
+				tempObj['class_name'] = this.reportProcessWiseData[key]['sec_name'] ?
+				this.reportProcessWiseData[key]['class_name'] + '-' + this.reportProcessWiseData[key]['sec_name'] :
+				this.reportProcessWiseData[key]['class_name'];
 
-			const mother_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][1] ?
-			this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_honorific'] : '');
+				tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
+				tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[key]['dob']);
+				tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
+				tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
+				tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
+				tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority'] == "n" ? 'No' : 'Yes');
+				tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? (this.reportProcessWiseData[key]['upd_is_ews'] =="Y"? "Yes":'No'): 'No');
+				tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need'] == "Y" ? "Yes": "No");
+				tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
+				tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);
 
-			const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
-			this.reportProcessWiseData[key]['student_parent_data'][2] ?
-			this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
-			let fdetail = {
-				name: '-',
-				contact: '-',
-				email: '-'
+				const father_honorific = this.getParentHonorific((this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][0]) ?
+				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific'] : '');
+
+				const mother_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][1] ?
+				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_honorific'] : '');
+
+				const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][2] ?
+				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
+				let fdetail = {
+					name: '-',
+					contact: '-',
+					email: '-'
+				}
+				let mdetail = {
+					name: '-',
+					contact: '-',
+					email: '-'
+				}
+				if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
+					this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
+						if(element.epd_parent_type == "M") {
+							mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
+							mdetail.contact = element.epd_contact_no;
+							mdetail.email = element.epd_email ? element.epd_email: '-';
+						} else if(element.epd_parent_type == "F") {
+							fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
+							fdetail.contact = element.epd_contact_no;
+							fdetail.email = element.epd_email ? element.epd_email : '-';
+						}
+					});
+				}
+				tempObj['father_name'] = fdetail.name;
+				tempObj['father_contact'] = fdetail.contact;
+				tempObj['father_email'] = fdetail.email;
+				tempObj['mother_name'] = mdetail.name;
+				tempObj['mother_contact'] = mdetail.contact;
+				tempObj['mother_email'] = mdetail.email;
+				tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
+					guardian_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] : '-');
+				tempObj['guardian_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] ?
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] : '-';
+				tempObj['gender'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_gender']);
+				tempObj['tag_name'] = this.valueAndDash(this.reportProcessWiseData[key]['tag_name']);
+				
+				tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
+				tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[key]['em_admission_date']);
+				tempObj['email'] = this.valueAndDash(this.reportProcessWiseData[key]['au_email']);
+				tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[key]['au_mobile']);
+				tempObj['category'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['category']));
+				tempObj['rel_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['rel_name']));
+				tempObj['emergency_name'] =
+				new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_name']));
+				tempObj['emergency_contact'] = this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_no']);
+				tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']) + " - " + (new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']))) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name'])) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name'])) + " - " + this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']) ;
+				// tempObj['cit_name'] = ;
+				// tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
+				// tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
+				// tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
+				tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
+				tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
+				tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
+				tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
+				console.log("process type", process_type);
+				if(process_type == '1'|| process_type == '2' || process_type == '4') {
+					tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
+					tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
+				}else if(process_type == '3'){
+					tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
+				}
+				
+				console.log("status",this.reportProcessWiseData[key]['au_status']);
+				this.dataset.push(tempObj);
+
+				counter++;
 			}
-			let mdetail = {
-				name: '-',
-				contact: '-',
-				email: '-'
-			}
-			if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
-				this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
-					if(element.epd_parent_type == "M") {
-						mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
-						mdetail.contact = element.epd_contact_no;
-						mdetail.email = element.epd_email ? element.epd_email: '-';
-					} else if(element.epd_parent_type == "F") {
-						fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
-						fdetail.contact = element.epd_contact_no;
-						fdetail.email = element.epd_email ? element.epd_email : '-';
-					}
-				});
-			}
-			tempObj['father_name'] = fdetail.name;
-			tempObj['father_contact'] = fdetail.contact;
-			tempObj['father_email'] = fdetail.email;
-			tempObj['mother_name'] = mdetail.name;
-			tempObj['mother_contact'] = mdetail.contact;
-			tempObj['mother_email'] = mdetail.email;
-			tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
-				guardian_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] : '-');
-			tempObj['guardian_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2] &&
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] ?
-				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] : '-';
-			tempObj['gender'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_gender']);
-			tempObj['tag_name'] = this.valueAndDash(this.reportProcessWiseData[key]['tag_name']);
-			
-			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
-			tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[key]['em_admission_date']);
-			tempObj['email'] = this.valueAndDash(this.reportProcessWiseData[key]['au_email']);
-			tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[key]['au_mobile']);
-			tempObj['category'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['category']));
-			tempObj['rel_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['rel_name']));
-			tempObj['emergency_name'] =
-			new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_name']));
-			tempObj['emergency_contact'] = this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_no']);
-			tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']) + " - " + (new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']))) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name'])) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name'])) + " - " + this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']) ;
-			// tempObj['cit_name'] = ;
-			// tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
-			// tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
-			// tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
-			tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
-			tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
-			tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
-			tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
-			if(process_type == '1'|| process_type == '2' || process_type == '4') {
-				tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
-				tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
-			}
-			
-
-			this.dataset.push(tempObj);
-
-			counter++;
 		}
 		const blankTempObj = {};
 		this.columnDefinitions.forEach(element => {
@@ -1308,6 +1323,24 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
+		setTimeout(() => this.groupByClass(), 2);
+	}
+	groupByClass() {
+		this.dataviewObj.setGrouping({
+			getter: 'class_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('class_name');
 	}
 	exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
