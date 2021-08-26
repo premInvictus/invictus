@@ -721,4 +721,12 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getBankChargeReport', value);
 	}
+	uploadBulkDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/uploadBulkDocuments', value);
+	}
+	downloadBulkUpdateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/downloadBulkUpdateTemplate', value);
+	}
 }
