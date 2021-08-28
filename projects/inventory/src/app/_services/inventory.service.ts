@@ -270,4 +270,8 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/bundle/getall', value);
   }
+  deleteAssign(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/delete-store-incharge', value);
+  }
 }

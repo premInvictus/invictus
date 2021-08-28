@@ -18,7 +18,7 @@
         <td class="custom-td text-left font-size-14"><span class="margin-left-15">{{item.emp_name}}</span>
         </td>        
         <td class="custom-td text-center font-size-14"><i (click)="viewData(item)" class="fas fa-eye"></i>&nbsp;
-          <i (click)="bundleList(item)" class="fas fa-list"></i>
+          <i (click)="bundleList(item)" class="fas fa-list"></i>&nbsp;<i (click)="deleteEntry(item)" class="far fa-trash-alt table-delete-icon"></i>
         </td>
       </tr>
     </tbody>
