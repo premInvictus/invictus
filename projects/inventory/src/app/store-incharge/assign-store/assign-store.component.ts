@@ -27,10 +27,12 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   locationId: any;
   assignEmpArray: any = {};
   tableDataArray: any[] = [];
+  tableDataArrayMain: any[] = [];
   showDefaultData = false;
   currentChildTab='';
   bundleArray: any[] = [];
   edit = false;
+  bundleArrayMain: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -88,6 +90,73 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     });
     this.formGroupArray = [];
   }
+  applyFilter(filterValue: string) {
+		// this.bundleArray
+    // console.log("i am here", filterValue, this.bundleArrayMain, this.formGroupArray);
+    // if(this.bundleArrayMain.length > 0) {
+    //   this.bundleArray = this.bundleArrayMain.filter((el) => {
+    //     return el.item_name.includes(filterValue) || el.item_code == (filterValue)
+    //   })
+    //   this.formGroupArray = this.formGroupArray.filter((el) => {
+    //     return el.formGroup.value.item_name.includes(filterValue) || el.item_code == (filterValue)
+    //   })
+    // }
+    // this.formGroupArray = [];
+    // this.tableDataArrayMain = [];
+    let carr = [];
+    let frr = [];
+    console.log("i am here", filterValue.toLowerCase(), this.tableDataArrayMain);
+    if(this.bundleArrayMain.length > 0 ){
+      this.bundleArrayMain.map((el) => {
+        if(el.item_name.toLowerCase().includes(filterValue.toLowerCase()) ) {
+          console.log("i am here", el.item_name, filterValue);
+          
+          carr.push(el);
+          frr.push({
+            formGroup: this.fbuild.group({
+              item_code: el.item_code,
+              item_name: el.item_name,
+              item_quantity: el.item_quantity,
+              item_selling_price: el.item_selling_price
+            })
+          });
+        }
+        
+      });
+      if(frr.length > 0 ) {
+        this.bundleArray = carr;
+        this.formGroupArray = frr;
+      }
+      
+    }
+    carr = [];
+    frr = [];
+    console.log("i am here", filterValue.toLowerCase(), this.tableDataArrayMain);
+    if(this.tableDataArrayMain.length > 0 ){
+      this.tableDataArrayMain.map((el) => {
+        if(el.item_name.toLowerCase().includes(filterValue.toLowerCase()) ) {
+          console.log("i am here", el.item_name, filterValue);
+          
+          carr.push(el);
+          // frr.push({
+          //   formGroup: this.fbuild.group({
+          //     item_code: el.item_code,
+          //     item_name: el.item_name,
+          //     item_quantity: el.item_quantity,
+          //     item_selling_price: el.item_selling_price
+          //   })
+          // });
+        }
+        
+      });
+      if(carr.length > 0 ) {
+        this.tableDataArray = carr;
+        // this.formGroupArray = frr;
+      }
+      
+    }
+    
+	}
   editstoreincharge(){
     this.edit = true;
     if(this.assignEmpArray){
@@ -171,11 +240,13 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   }
   getBundle(){
     this.bundleArray = [];
+    this.bundleArrayMain = [];
     const param:any = {};
     param.item_location =  this.assignEmpArray.location_id.location_id,
     this.inventory.getAllBundle(param).subscribe((result:any) => {
       if(result && result.length > 0) {
         this.bundleArray = result;
+        this.bundleArrayMain = result;
         this.bundleArray.forEach(element => {
           let itemNameArr:any[]=[];
           element.item_assign.forEach(e => {
@@ -245,6 +316,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   getItemList() {
     if (this.assignStoreForm.valid) {
       this.tableDataArray = [];
+      this.tableDataArrayMain = [];
           this.formGroupArray = [];
           this.itemArray = [];
           var filterJson = {
@@ -255,14 +327,19 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
                 "type": "autopopulate"
               }
             ],
-            "page_index": 0,
-            "page_size": 500
+            "page_index": 0
           };
           this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
             if (result && result.status === 'ok') {
               this.itemArray = result.data;
               for (let item of this.itemArray) {
                 this.tableDataArray.push({
+                  item_code: item.item_code,
+                  item_name: item.item_name,
+                  item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
+                  item_selling_price: ''
+                });
+                this.tableDataArrayMain.push({
                   item_code: item.item_code,
                   item_name: item.item_name,
                   item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
@@ -307,7 +384,12 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     }
     this.inventory.insertStoreIncharge(finalJson).subscribe((result: any) => {
       if (result) {
-        this.commonService.showSuccessErrorMessage('Price added Successfully', 'success');
+        if(result != "User is already assigned the store"){
+          this.commonService.showSuccessErrorMessage('Price added Successfully', 'success');
+        } else {
+          this.commonService.showSuccessErrorMessage('User is already assigned the store', 'error');
+        }
+        
         this.finalCancel();
       } else {
         this.commonService.showSuccessErrorMessage(result, 'error');
@@ -346,6 +428,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     this.formGroupArray = [];
     this.assignEmpArray = [];
     this.tableDataArray = [];
+    this.tableDataArrayMain = [];
     this.itemArray = [];
     this.assignStoreForm.patchValue({
       'emp_id': '',
@@ -365,8 +448,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
           "type": "autopopulate"
         }
       ],
-      "page_index": 0,
-      "page_size": 100
+      "page_index": 0
     };
     this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {

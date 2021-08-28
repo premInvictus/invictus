@@ -134,8 +134,7 @@ export class BranchTransferComponent implements OnInit {
                 "type": "text"
               }
             ],
-            page_index: 0,
-            page_size: ''
+            page_index: 0
           }
         ).subscribe((result: any) => {
           if (result && result.status === 'ok') {

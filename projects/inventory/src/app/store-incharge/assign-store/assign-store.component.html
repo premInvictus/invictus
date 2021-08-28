@@ -98,8 +98,13 @@
     </table>
   </div>
 </ng-container>
+<mat-form-field *ngIf="tableDataArrayMain.length > 0 || bundleArrayMain.length > 0" style="width: 60%;margin-left: 20%;margin-bottom: -10%;">
+  <input class="margin-left-10" matInput (input)="applyFilter($event.target.value)" placeholder="Filter">
+  <mat-icon matPrefix>filter_list</mat-icon>
+</mat-form-field>
 <div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0 && inventory.getcurrentChildTab() != 'bundlelist'">
   <br><br>
+  
   <table class="custom-table">
     <thead>
       <tr class="custom-tr">
@@ -140,6 +145,7 @@
 </div>
 <div class="text-center" *ngIf="bundleArray.length > 0 && inventory.getcurrentChildTab() == 'bundlelist'">
   <br><br>
+  
   <table class="custom-table">
     <thead>
       <tr class="custom-tr">

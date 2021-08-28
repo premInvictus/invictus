@@ -46,4 +46,11 @@ export class StoreAssignListComponent implements OnInit {
     this.inventory.setAssignEmp(item);
     this.inventory.receipt.next({ 'currentTab': 0, currentChildTab:'bundlelist'});
   }
+  deleteEntry(item) {
+    console.log("i am item", item);
+    this.inventory.deleteAssign(item).subscribe((res:any) => {
+      this.allStoreIncharge();
+    })
+    
+  }
 }
