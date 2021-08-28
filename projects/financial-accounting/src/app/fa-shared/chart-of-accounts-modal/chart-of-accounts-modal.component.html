@@ -1,0 +1,41 @@
+<div class="row">
+
+  <table class="table" style="margin-top:5px;">
+    <tr *ngIf="accountData.length == 0">
+      <td colspan="8">No Record Found</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Account Code</th>
+      <td>{{accountData.coa_code}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Account Name</th>
+      <td>{{accountData.coa_acc_name}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Account Group</th>
+      <td>{{accountData.coa_acc_group.group_name}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Account Type</th>
+      <td>{{accountData.coa_acc_type.acc_type_name}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Dependencies Type</th>
+      <td>{{accountData.dependencies_type}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Opening Balance</th>
+      <td>{{openingBalance}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Closing Balance</th>
+      <td>{{closingBalance}}</td>
+    </tr>
+    <tr *ngIf="accountData.length != 0">
+      <th>Opening Date</th>
+      <td>{{accountData.coa_opening_balance_data[0].opening_balance_date}}</td>
+    </tr>
+  </table>
+
+</div>
