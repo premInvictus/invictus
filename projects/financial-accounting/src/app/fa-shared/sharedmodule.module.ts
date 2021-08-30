@@ -34,6 +34,7 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 import { ChartOfAccountsCreateComponent } from './chart-of-accounts-create/chart-of-accounts-create.component';
+import { ChartOfAccountsModalComponent } from './chart-of-accounts-modal/chart-of-accounts-modal.component';
 import { LedgerEntryModelComponent } from './ledger-entry-model/ledger-entry-model.component';
 import { IndianCurrency } from '../_pipes/ indianCurrency.pipe';
 import { TrialBalanceModalComponent } from './trial-balance-modal/trial-balance-modal.component';
@@ -108,6 +109,7 @@ export const MY_FORMATS = {
 		SearchViaNameComponent,
 		PreviewDocumentComponent,
 		ChartOfAccountsCreateComponent,
+		ChartOfAccountsModalComponent,
 		IndianCurrency,
 		LedgerEntryModelComponent,
 		TrialBalanceModalComponent,
@@ -159,6 +161,7 @@ export const MY_FORMATS = {
 		MatChipsModule,
 		PreviewDocumentComponent,
 		ChartOfAccountsCreateComponent,
+		ChartOfAccountsModalComponent,
 		IndianCurrency,
 		LedgerEntryModelComponent,
 		TrialBalanceModalComponent,
@@ -176,6 +179,7 @@ export const MY_FORMATS = {
 		SearchViaNameComponent,
 		PreviewDocumentComponent,
 		ChartOfAccountsCreateComponent,
+		ChartOfAccountsModalComponent,
 		LedgerEntryModelComponent,
 		TrialBalanceModalComponent,
 		BalanceSheetModalComponent,
