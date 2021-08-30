@@ -1,41 +1,55 @@
-<div class="row">
+<div class="modal-header">
+  <h5 class="modal-title">Account Details</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+<div class="row mt-5">
+  <div class="col-12 text-right remove-col-padding-right">
+    <!-- <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
+      <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i> -->
 
-  <table class="table" style="margin-top:5px;">
-    <tr *ngIf="accountData.length == 0">
-      <td colspan="8">No Record Found</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Account Code</th>
-      <td>{{accountData.coa_code}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Account Name</th>
-      <td>{{accountData.coa_acc_name}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Account Group</th>
-      <td>{{accountData.coa_acc_group.group_name}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Account Type</th>
-      <td>{{accountData.coa_acc_type.acc_type_name}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Dependencies Type</th>
-      <td>{{accountData.dependencies_type}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Opening Balance</th>
-      <td>{{openingBalance}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Closing Balance</th>
-      <td>{{closingBalance}}</td>
-    </tr>
-    <tr *ngIf="accountData.length != 0">
-      <th>Opening Date</th>
-      <td>{{accountData.coa_opening_balance_data[0].opening_balance_date}}</td>
-    </tr>
+    <div class="inline-flex btn-spacer text-right margin-bottom-5">
+      <div>
+        <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+          matTooltip="Download as Pdf" (click)="exportPdf()" [matTooltipPosition]="'left'" />
+      </div>
+    </div>
+    <div class="inline-flex btn-spacer text-right margin-bottom-5">
+      <div>
+        <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+          matTooltip="Export as excel" (click)="exportExcel()" [matTooltipPosition]="'left'" />
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+  <table class="table table-striped  table-borderd text-center empty-same-height">
+    <thead>
+      <tr>
+        <th>Account Code</th>
+        <th>Account Name</th>
+        <th>Group</th>
+        <th>Account Type</th>
+        <th>Dependencies Type</th>
+        <th>Closing Balance</th>
+        <th>Opening Balance</th>
+        <th>Opening Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{accountData.ac_code}}</td>
+        <td>{{accountData.ac_name}}</td>
+        <td>{{accountData.ac_group}}</td>
+        <td>{{accountData.ac_type}}</td>
+        <td>{{accountData.dependencies_type | titlecase}}</td>
+        <td>{{accountData.ac_cloosingbalance + accountData?.opening_balance_cal | indianCurrency}}</td>
+        <td>{{accountData.opening_balance | indianCurrency}} {{accountData.opening_balance_type | titlecase}}</td>
+        <td>{{accountData.opening_date | date: 'd-MMM-yyyy'}}</td>
+      </tr>
+    </tbody>
   </table>
-
+</div>
+</div>
 </div>

@@ -9,8 +9,10 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
 import {IndianCurrency} from '../../_pipes';
 import * as Excel from 'exceljs/dist/exceljs';
 import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx'; 
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-chart-of-accounts-modal',
   templateUrl: './chart-of-accounts-modal.component.html',
@@ -54,8 +56,9 @@ export class ChartOfAccountsModalComponent implements OnInit, AfterViewInit {
   session:any;
   schoolInfo: any;
   currentUser: any;
-  openingBalance: any;
-  closingBalance : any;
+  openingBalance = 0;
+  closingBalance = 0;
+  opening_balance_type : any;
   notFormatedCellArray: any[] = [];
   alphabetJSON = {
     1: 'A',
@@ -169,9 +172,7 @@ export class ChartOfAccountsModalComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    console.log(' view loaded');
-    console.log($("#liabilities_side tr").length);
-    console.log($("#assets_side tr").length);
+
   }
 
   ngOnInit() {
@@ -180,19 +181,42 @@ export class ChartOfAccountsModalComponent implements OnInit, AfterViewInit {
     this.buildForm();
     this.getSchool();
     this.getSession();
+    this.getAccounts();
     console.log("the data passed is ",this.data.accountCode);
-    this.faService.getChartsOfAccount({"coa_id":this.data.accountCode}).subscribe((result:any)=>{
-			if(result) {
-        console.log(result);
-        this.accountData = result;
-        if(result.coa_opening_balance_data){
-          this.openingBalance = result.coa_opening_balance_data[2].coa_opening_balance;
-          for(let i = result.coa_opening_balance_data.length; i > 0; i++){
-            this.closingBalance += result.coa_opening_balance_data[i-1].coa_opening_balance;
-          }
-        }
-      }
-    });
+    this.accountData = this.data.accountCode;
+    // this.accountsArray.forEach(e=>{
+    //   if(e.coa_id == this.data.accountCode){
+    //     this.accountData = e;
+    //   }
+    // });
+    console.log("account data : ",this.accountData);
+    // this.faService.getChartsOfAccount({"coa_id":this.data.accountCode}).subscribe((result:any)=>{
+		// 	if(result) {
+    //     console.log(result);
+    //     this.accountData = result;
+    //     if(result.coa_opening_balance_data){
+    //       this.opening_balance_type = result.coa_opening_balance_data[2].opening_balance_type ? result.coa_opening_balance_data[2].opening_balance_type : 0;
+    //       this.openingBalance = result.coa_opening_balance_data[2].opening_balance ? result.coa_opening_balance_data[2].opening_balance : 0;
+    //       for(let i = result.coa_opening_balance_data.length; i > 0; i--){
+    //         let index = i-1;
+    //         console.log("balance "+index,result.coa_opening_balance_data[index].opening_balance);
+    //         this.closingBalance += result.coa_opening_balance_data[index].opening_balance;
+    //       }
+    //       console.log("closing balance is : "+this.closingBalance);
+    //     }
+    //   }
+    // });
+  }
+
+
+  getAccounts() {
+		this.faService.getAllChartsOfAccount({}).subscribe((data:any)=>{
+			if(data) {
+        this.accountsArray = data;        
+			} else {
+				this.accountsArray = [];
+			}
+		})
   }
 
   getSession() {
@@ -901,6 +925,46 @@ export class ChartOfAccountsModalComponent implements OnInit, AfterViewInit {
       theme: 'striped'
     });
     doc.save('Balance_Sheet_Report' + ".pdf");
+  }
+  fileName= 'Chart_of_Accounts_report.xlsx';  
+
+  exportExcel(): void 
+  {
+       /* table id is passed over here */   
+       let element = document.getElementById('excel-table'); 
+       const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+
+       /* generate workbook and add the worksheet */
+       const wb: XLSX.WorkBook = XLSX.utils.book_new();
+       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+       /* save to file */
+       XLSX.writeFile(wb, this.fileName);
+			
+  }
+
+
+  exportPdf() {
+    console.log(this.accountsArray);
+    var prepare=[];
+    this.accountsArray.forEach(e=>{
+      var tempObj =[];
+      tempObj.push(e.coa_code);
+      tempObj.push(e.coa_acc_name);
+      tempObj.push( e.coa_acc_group.group_name);
+      tempObj.push( e.coa_acc_type.acc_type_name);
+      tempObj.push( e.dependencies_type);
+      tempObj.push(e.total && e.total['deviation'] ? e.total[0]['deviation'] + e.coa_opening_balance_data.opening_balance : e.coa_opening_balance_data.opening_balance);
+      tempObj.push(e.coa_opening_balance_data.opening_balance + " " + e.coa_opening_balance_data.opening_balance_type);
+      tempObj.push(e.coa_opening_balance_data.opening_balance_date);
+      prepare.push(tempObj);
+    });
+    const doc = new jsPDF();
+    autoTable(doc,{
+        head: [['Account Code','Account Name','Account Group','Account Type','Dependency Type','Closing Balance','Opening Balance','Opening Balance Date']],
+        body: prepare
+    });
+    doc.save('Chart_of_Account' + '.pdf');
   }
 
   openLedgerModal(value) {

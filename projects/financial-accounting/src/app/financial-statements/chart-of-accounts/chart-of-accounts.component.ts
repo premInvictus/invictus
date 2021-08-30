@@ -210,7 +210,7 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
   viewAccountModal(value){
     const dialogRef = this.dialog.open(ChartOfAccountsModalComponent, {
 			height: '520px',
-			width: '800px',
+			width: '960px',
 			data: {
         title: 'View Account',
         accountCode: value
@@ -218,7 +218,7 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
 			console.log(dresult);
-			this.getAccounts();
+			// this.getAccounts();
 		});
   }
 
