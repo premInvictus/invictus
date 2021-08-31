@@ -138,14 +138,26 @@ export class ChangeStatusComponent implements OnInit {
       //   current1.push(next1);
       //   return current1;
       // },[]);
+      // console.log('++++++++++++++++++++++++',next.item_location);
+      
       const location = next.item_location.reduce((current1, next1, index1) => {
-        next1.location_name = next.locs[index1].location_name;
-        next1.location_hierarchy = next.locs[index1].location_hierarchy;
-        next1.location_status = next.locs[index1].location_status;
-        next1.location_type_id = next.locs[index1].location_type_id;
-        current1.push(next1);
+      //  console.log("i am current", current1, next1, index1);
+       
+        next.locs.forEach(element => {
+          // console.log("-------------", element);
+          
+          if(next1.location_id == element.location_id) {
+            next1.location_name = element.location_name;
+            next1.location_hierarchy = element.location_hierarchy;
+            next1.location_status = element.location_status;
+            next1.location_type_id = element.location_type_id;
+            current1.push(next1);
+          }
+        });
         return current1;
       }, []);
+      // console.log("---------------------------", location);
+      
       location.forEach(element => {
         this.locationArray.push({ location_id: element.location_id, location_name: element.location_hierarchy });
         current.push({
@@ -195,8 +207,8 @@ export class ChangeStatusComponent implements OnInit {
         }
         return current;
       }, []);
-     // console.log('sourceLocationFilteredData', sourceLocationFilteredData);
-      const param: any = {};
+      // console.log('sourceLocationFilteredData', sourceLocationFilteredData);
+      const param: any = { };
       param.filter = this.changeStatusForm.value;
       param.filterData = sourceLocationFilteredData;
       this.inventoryService.itemChangeStatus(param).subscribe((result: any) => {
@@ -233,11 +245,13 @@ export class ChangeStatusComponent implements OnInit {
   }
   setLocationId(locationDetails, i) {
     if (locationDetails) {
-      console.log(locationDetails);
+      console.log(locationDetails, locationDetails.location_hierarchy);
       this.changeStatusForm.patchValue({
         change_location_id: locationDetails.location_id,
         change_location_name: locationDetails.location_hierarchy
-      })
+      });
+      console.log("i am here", this.changeStatusForm);
+      
     }
   }
 

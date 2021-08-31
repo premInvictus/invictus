@@ -104,7 +104,7 @@
                       (keyup)="getFilterLocation($event)" formControlName="change_location_name" />
                   </mat-form-field>
                   <mat-autocomplete flex #auto="matAutocomplete">
-                    <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
+                    <mat-option *ngFor="let item of allLocationData" [value]="item.location_hierarchy"
                       (onSelectionChange)="setLocationId(item, i)">
                       <!-- <small>{{item.location_hierarchy | capitalize}}</small> -->
                       <span [innerHTML]="item.location_hierarchy | capitalize | highlight: toHighlight"></span>

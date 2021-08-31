@@ -29,6 +29,8 @@ import { ReviewqComponent} from './reviewq/reviewq.component'
 import { ReviewoComponent } from './reviewo/reviewo.component';
 import { ReviewEssayComponent } from './review-essay/review-essay.component';
 import { ReviewsComponent } from './reviews/reviews.component';
+import { EditobjectiveComponent } from './reviewo/editobjective/editobjective.component';
+import {EditSubjectiveDialog} from "./reviews/reviews.component"
 declare var CKEDITOR: any;
 @NgModule({
 	imports: [
@@ -53,10 +55,10 @@ declare var CKEDITOR: any;
 	],
 
 	// tslint:disable-next-line:max-line-length
-	entryComponents: [],
+	entryComponents: [EditobjectiveComponent, EditSubjectiveDialog, EssayDialogsComponent],
 
 	// tslint:disable-next-line:max-line-length
-	declarations: [ViewqComponent, ReviewqComponent, ReviewoComponent, ReviewEssayComponent,ReviewsComponent ],
+	declarations: [ViewqComponent, ReviewqComponent, ReviewoComponent, ReviewEssayComponent,ReviewsComponent, EditSubjectiveDialog ],
 
 	// tslint:disable-next-line:max-line-length
 	providers: [QbankService, QelementService, AuthGuard, NotificationsService, ReportService, { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' }]
