@@ -1,0 +1,42 @@
+.ledger-head{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* table tbody td.empty-same-height{
+    height: 40px;
+} */
+
+table tbody.header td {
+    background: #C8D6E5;
+}
+
+ table tbody tr:nth-child(even) {
+     background: #FAFAFA;
+ }
+
+ .row {
+     margin-top:0 !important
+ }
+
+ .cursor-pointer b{
+     cursor: pointer !important;
+ }
+
+ .m-lr-2{
+     margin: 0px 2px;
+ }
+ .modal-header{
+     background-color: #007d9e;
+     color: #fff;
+ }
+ .close {
+    color: #fff;
+    border: 0px solid #fff !important;
+    padding: 0;
+    margin: 0;
+    font-size: 22px;
+}
+.modal-body{
+    padding: 1rem 0 1rem 0;
+}
