@@ -12,7 +12,6 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx'; 
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
-import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-chart-of-accounts-modal',
   templateUrl: './chart-of-accounts-modal.component.html',
@@ -959,8 +958,8 @@ export class ChartOfAccountsModalComponent implements OnInit, AfterViewInit {
       tempObj.push(e.coa_opening_balance_data.opening_balance_date);
       prepare.push(tempObj);
     });
-    const doc = new jsPDF();
-    autoTable(doc,{
+    const doc = new new jsPDF('p', 'mm', 'a0');
+    doc.autoTable({
         head: [['Account Code','Account Name','Account Group','Account Type','Dependency Type','Closing Balance','Opening Balance','Opening Balance Date']],
         body: prepare
     });
