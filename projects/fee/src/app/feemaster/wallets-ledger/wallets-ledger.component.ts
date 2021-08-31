@@ -106,6 +106,13 @@ export class WalletsLedgerComponent implements OnInit {
 			maxWidth: 900
 		},
 		{
+			id: 'created_by',
+			name: 'Created By',
+			field: 'created_by',
+			sortable: true,
+			maxWidth: 200
+		},
+		{
 			id: 'deposit',
 			name: 'Deposit',
 			field: 'deposit',
@@ -128,6 +135,16 @@ export class WalletsLedgerComponent implements OnInit {
 			sortable: true,
 			maxWidth: 140,
 			formatter: this.checkFeeFormatter
+		},
+		
+		{
+			id: 'action',
+			name: 'Action',
+			field: 'action',
+			sortable: true,
+			formatter: this.getImageCheck
+			// maxWidth: 140,
+			// formatter: this.checkFeeFormatter
 		},
 	];
 	length: any;
@@ -405,6 +422,7 @@ export class WalletsLedgerComponent implements OnInit {
 					element = {
 						id: pos,
 						srno: pos,
+						created_by: item.au_full_name,
 						particulars: '',
 						subparticulars: '',
 						date: new DatePipe('en-in').transform(item.w_transaction_date, 'd-MMM-y'),
@@ -477,18 +495,21 @@ export class WalletsLedgerComponent implements OnInit {
 					this.footerRecord.balancetype = '';
 				}
 				this.commonStu.wallet_balance = this.footerRecord.balancetotal;
-				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-				console.log('this.ELEMENT_DATA', this.ELEMENT_DATA);
-				this.totalRow = {
+				// this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				// console.log('this.ELEMENT_DATA', this.ELEMENT_DATA);
+				let obj4:any = {
 					'id': 'aa',
 					'srno':'',
 					'date': '',
 					'txn_id': '',
 					'particulars': 'Total',
+					'created_by':'',
 					'deposit': total_credit,
 					'withdrawal': total_debit,
-					'current': ''
+					'current': '',
+					
 				};
+				this.ELEMENT_DATA.push(obj4);
 
 
 
@@ -600,13 +621,16 @@ export class WalletsLedgerComponent implements OnInit {
 				dialogRef.afterClosed().subscribe(result => {
 				});
 			} else if (element.w_amount_status == 'purchase') {
-				this.feeService.allStoreBill({ bill_no: parseInt(element.txn_id) }).subscribe((result: any) => {
+				this.feeService.allStoreBill({ bill_no: parseInt(check.txn_id) }).subscribe((result: any) => {
 					if (result && result.length > 0) {
 						this.billDetailsModal.openModal(result[result.length - 1]);
 
 					}
 				})
 			}
+		} else if(args.cell === args.grid.getColumnIndex('action')) {
+			let check = args.grid.getDataItem(args.row);
+			this.deleteConfirm(check);
 		}
 
 		console.log(element);
@@ -653,11 +677,14 @@ export class WalletsLedgerComponent implements OnInit {
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
 		for (const item of this.exportColumnDefinitions) {
-			columns.push({
-				key: item.id,
-				width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);
+			if(item.id != "action") {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);
+			}
+			
 		}
 		worksheet.properties.defaultRowHeight = 60;
 		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
@@ -892,25 +919,32 @@ export class WalletsLedgerComponent implements OnInit {
 		}
 	}
 
+	getImageCheck(row, cell, value, columnDef, dataContext){ 
+		if(value)
+	 		return '<i class="material-icons icon-danger icon-spacer">delete</i>'
+		else 
+			return ''
+	 }
+
 
 }
 
-export interface Element {
-	w_rpt_no: number;
-	rpt_type: string;
-	w_transaction_date: string;
-	w_amount: number;
-	w_amount_type: string;
-	w_amount_status: string;
-	w_amount_sign: string;
-	w_pay_id: string;
-	w_cheque_no: string;
-	w_bnk_id: string;
-	w_branch: string;
-	w_transaction_id: string;
-	w_remarks: string;
-	w_cheque_date: string;
-	w_opening: number;
-	particulars: string;
-	subparticulars: string;
-}
+// export interface Element {
+// 	w_rpt_no: number;
+// 	rpt_type: string;
+// 	w_transaction_date: string;
+// 	w_amount: number;
+// 	w_amount_type: string;
+// 	w_amount_status: string;
+// 	w_amount_sign: string;
+// 	w_pay_id: string;
+// 	w_cheque_no: string;
+// 	w_bnk_id: string;
+// 	w_branch: string;
+// 	w_transaction_id: string;
+// 	w_remarks: string;
+// 	w_cheque_date: string;
+// 	w_opening: number;
+// 	particulars: string;
+// 	subparticulars: string;
+// }
