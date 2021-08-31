@@ -62,6 +62,7 @@ import { ComposeMessageComponent } from './compose-message/compose-message.compo
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { EmpCommonProfileComponent } from '../../../../human-resource/src/app/employee-master/emp-common-profile/emp-common-profile.component';
 import { SortDirective} from '../_directive/sort';
+import { EditobjectiveComponent} from "../questionbank/reviewo/editobjective/editobjective.component"
 import { SalarySlipModalComponent } from './salary-slip-modal/salary-slip-modal.component';
 export const MY_FORMATS = {
 	parse: {
@@ -123,6 +124,7 @@ export const MY_FORMATS = {
 		PublishUnpublishDialogComponent,
 		SalarySlipModalComponent,
 		MathJaxDirective,
+		EditobjectiveComponent,
 		OngoingTestInstructionComponent,
 		EssayDialogsComponent,
 		QuestionPaperDialogComponent,
@@ -176,6 +178,7 @@ export const MY_FORMATS = {
 		MatCardModule,
 		MatExpansionModule,
 		MatAutocompleteModule,
+		EditobjectiveComponent,
 		LayoutModule,
 		MatTooltipModule,
 		MatMenuModule,

@@ -23,6 +23,7 @@ import { LoadingModule } from 'ngx-loading';
 import { InvoiceSearchModalComponent } from './invoice-search-modal/invoice-search-modal.component';
 import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.component';
 import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.component';
+import { AngularSlickgridModule } from 'angular-slickgrid';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -30,7 +31,8 @@ import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.compo
 		SharedmoduleModule,
 		CommonFilterModule,
 		LoadingModule,
-		BarecodeScannerLivestreamModule
+		BarecodeScannerLivestreamModule,
+		AngularSlickgridModule.forRoot()
 	],
 	entryComponents: [InvoiceDetailsModalComponent, InvoiceSearchModalComponent],
 	declarations: [StudentProfileComponent,
