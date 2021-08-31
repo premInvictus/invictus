@@ -5,6 +5,7 @@ import { SharedModule } from '../shared-module/share-module.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
 import { QuestionPaperListComponent } from './question-paper-list/question-paper-list.component';
+import { QuesPaperReviewComponent } from './ques-paper-review/ques-paper-review.component';
 import { TeacherCopyComponent } from './teacher-copy/teacher-copy.component';
 @NgModule({
 	imports: [
@@ -18,6 +19,7 @@ import { TeacherCopyComponent } from './teacher-copy/teacher-copy.component';
 	declarations: [
 		QuestionPaperListComponent,
 		TeacherCopyComponent,
+		QuesPaperReviewComponent,
 	]
 })
 export class QuestionpaperModule { }
