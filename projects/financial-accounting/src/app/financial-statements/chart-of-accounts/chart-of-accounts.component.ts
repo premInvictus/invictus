@@ -12,8 +12,8 @@ import { ChartOfAccountsModalComponent } from '../../fa-shared/chart-of-accounts
 import * as Excel from 'exceljs/dist/exceljs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx'; 
-import * as jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 // declare var jsPDF: any;
 
 @Component({
@@ -643,8 +643,8 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
       tempObj.push(e.coa_opening_balance_data.opening_balance_date);
       prepare.push(tempObj);
     });
-    const doc = new jsPDF();
-    autoTable(doc,{
+    const doc = new jsPDF('p', 'mm', 'a0');
+    doc.autoTable({
         head: [['Account Code','Account Name','Account Group','Account Type','Dependency Type','Closing Balance','Opening Balance','Opening Balance Date']],
         body: prepare
     });
