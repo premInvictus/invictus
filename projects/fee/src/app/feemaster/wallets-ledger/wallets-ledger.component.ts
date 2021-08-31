@@ -11,6 +11,8 @@ import { WalletReceiptDetailsModalComponent } from '../../sharedmodule/wallet-re
 import { BillDetailsModalComponent } from '../../sharedmodule/bill-details-modal/bill-details-modal.component';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import * as Excel from 'exceljs/dist/exceljs';
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -201,6 +203,11 @@ export class WalletsLedgerComponent implements OnInit {
 	totalRow: any;
 	gridObj: any;
 	exportColumnDefinitions: any[];
+	pdfrowdata: any;
+	levelHeading: any;
+	levelTotalFooter: any;
+	levelSubtotalFooter: any;
+	dataset: any[];
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -249,7 +256,12 @@ export class WalletsLedgerComponent implements OnInit {
 				exportWithFormatter: true
 			},
 			gridMenu: {
-				customItems: [
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
 					{
 						title: 'excel',
 						titleKey: 'Export Excel',
@@ -281,6 +293,7 @@ export class WalletsLedgerComponent implements OnInit {
 						this.clearGrouping();
 					}
 					if (args.command === 'exportAsPDF') {
+						this.exportAsPDF(this.ELEMENT_DATA)
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 					}
 					if (args.command === 'expandGroup') {
@@ -925,7 +938,199 @@ export class WalletsLedgerComponent implements OnInit {
 		else 
 			return ''
 	 }
+	 exportAsPDF(json: any[]) {
+		 this.dataset = json;
+		const headerData: any[] = [];
+		this.pdfrowdata = [];
+		this.levelHeading = [];
+		this.levelTotalFooter = [];
+		this.levelSubtotalFooter = [];
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		let reportType: any = 'Wallet Ledger Report';
+		
+		
+		const doc = new jsPDF('p', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
 
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
+		for (const item of this.exportColumnDefinitions) {
+			if(item.id != 'action')
+			headerData.push(item.name);
+		}
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(this.dataset).forEach((key: any) => {
+				const arr: any[] = [];
+				for (const item2 of this.exportColumnDefinitions) {
+					if (this.dataset[key][item2.id] !== 'action' ) {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					} 
+				}
+				rowData.push(arr);
+				this.pdfrowdata.push(arr);
+			});
+		} 
+		// if (this.totalRow) {
+		// 	const arr: any[] = [];
+		// 	for (const item of this.exportColumnDefinitions) {
+		// 		arr.push(this.totalRow[item.id]);
+		// 	}
+		// 	rowData.push(arr);
+		// 	this.pdfrowdata.push(arr);
+		// }
+		doc.levelHeading = this.levelHeading;
+		doc.levelTotalFooter = this.levelTotalFooter;
+		doc.levelSubtotalFooter = this.levelSubtotalFooter;
+		doc.autoTable({
+			head: [headerData],
+			body: this.pdfrowdata,
+			startY: doc.previousAutoTable.finalY + 0.5,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
+				doc.setFontStyle('bold');
+
+			},
+			willDrawCell: function (data) {
+				// tslint:disable-next-line:no-shadowed-variable
+				const doc = data.doc;
+				const rows = data.table.body;
+
+				// level 0
+				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+				if (lfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(0, 62, 120);
+				}
+
+				// level more than 0
+				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+				if (lsfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(229, 136, 67);
+				}
+
+				// group heading
+				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+				if (lhIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#5e666d');
+					doc.setFillColor('#c8d6e5');
+				}
+
+				// grand total
+				if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(67, 160, 71);
+				}
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 18,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 22,
+				// cellWidth: 50,
+				textColor: 'black',
+				lineColor: '#89a8c8',
+			},
+			theme: 'grid'
+		});
+		
+		
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + json.length]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		// doc.autoTable({
+		// 	// tslint:disable-next-line:max-line-length
+		// 	head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+		// 	didDrawPage: function (data) {
+
+		// 	},
+		// 	headStyles: {
+		// 		fontStyle: 'bold',
+		// 		fillColor: '#ffffff',
+		// 		textColor: 'black',
+		// 		halign: 'left',
+		// 		fontSize: 20,
+		// 	},
+		// 	useCss: true,
+		// 	theme: 'striped'
+		// });
+		doc.save('wallet_ledger_report: ' + this.sessionName + '_' + this.commonStu.studentdetails.au_full_name + '_' + this.commonStu.studentdetails.em_admission_no + '.pdf');
+	}
 
 }
 
