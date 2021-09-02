@@ -729,4 +729,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/securityDeposit/downloadBulkUpdateTemplate', value);
 	}
+	getReceiptLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getReceiptLog', value);
+	}
 }
