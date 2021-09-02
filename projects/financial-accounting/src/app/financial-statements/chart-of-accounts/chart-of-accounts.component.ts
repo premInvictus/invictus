@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx'; 
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { LedgerEntryModelComponent } from '../../fa-shared/ledger-entry-model/ledger-entry-model.component';
 // declare var jsPDF: any;
 
 @Component({
@@ -220,6 +221,32 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
 			console.log(dresult);
 			// this.getAccounts();
 		});
+  }
+
+  openLedgerModal(value) {
+    this.faService.getChartsOfAccount({"coa_id":value.ac_id}).subscribe((result:any)=>{
+			if(result) {
+        console.log('trial balance coa_id', result, [
+          "01","02","03","04","05","06",
+          "07",
+          "08","09","10","11","12"
+      ]);
+        const dialogRef = this.dialog.open(LedgerEntryModelComponent, {
+          height: '520px',
+          width: '1400px',
+          data: {
+            title: result.coa_acc_name,
+            showtitle: true,
+            coa_id: result.coa_id,
+            date: [
+              "01","02","03","04","05","06",
+              "07",
+              "08","09","10","11","12"
+          ]
+          }
+        });
+      }
+    });
   }
 
   getAccounts() {

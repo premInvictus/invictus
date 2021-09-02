@@ -84,7 +84,7 @@ export class TrialBalanceComponent implements OnInit {
           }
           if (data.ledger_data && data.ledger_data.length > 0) {
           for (var i =0;  i < data.ledger_data.length; i++) {
-            if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
+            if (data.ledger_data[i]['coa_dependencies'] && data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );
 
               var opening_balance = 0;
@@ -95,7 +95,7 @@ export class TrialBalanceComponent implements OnInit {
               var receipt_value = receipt_data[index]['receipt_amt'];
               if (receipt_value > 0) {
                 var iJson:any = {
-                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ? data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] : '',
                       "vc_credit" : receipt_value + opening_balance
                                           
                 }
@@ -104,7 +104,7 @@ export class TrialBalanceComponent implements OnInit {
               }
               if (receipt_value < 0) {
                 var iJson:any = {
-                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ? data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] : '',
                       "vc_debit" : receipt_value + opening_balance
                                           
                 }
@@ -171,7 +171,7 @@ export class TrialBalanceComponent implements OnInit {
           }
           if (data.ledger_data.length > 0) {
             for (var i = 0; i < data.ledger_data.length; i++) {
-              if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
+              if (data.ledger_data[i]['coa_dependencies'] && data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
                 var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']);
 
                 var opening_balance = 0;
@@ -182,7 +182,7 @@ export class TrialBalanceComponent implements OnInit {
                 var receipt_value = receipt_data[index]['receipt_amt'];
                 if (receipt_value > 0) {
                   var iJson: any = {
-                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ? data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] : '',
                     "vc_credit": receipt_value + opening_balance
 
                   }
@@ -191,7 +191,7 @@ export class TrialBalanceComponent implements OnInit {
                 }
                 if (receipt_value < 0) {
                   var iJson: any = {
-                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ? data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] : '',
                     "vc_debit": receipt_value + opening_balance
 
                   }
