@@ -594,6 +594,20 @@ export class FeeLedgerReportComponent implements OnInit {
 				formatter: this.checkFeeFormatter
 			},
 			{
+				id: 'inv_net_payable',
+				name: 'Net Payable',
+				field: 'inv_net_payable',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				type:FieldType.number,
+				sortable: true,
+				filterable: true,
+				width: 1,
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
+			},
+			{
 				id: 'flgr_receipt',
 				name: 'Amt. Rec.',
 				field: 'flgr_receipt',
@@ -767,6 +781,7 @@ export class FeeLedgerReportComponent implements OnInit {
 								obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 									stu_arr['flgr_inv_id'] : '-';
 								obj['flgr_amount'] = stu_arr['flgr_amount'] ? Number(stu_arr['flgr_amount']) : 0;
+								obj['inv_net_payable'] = stu_arr['net_payable_amount'] ? Number(stu_arr['net_payable_amount']) : 0;
 								obj['flgr_concession'] = stu_arr['flgr_concession'] ?
 									Number(stu_arr['flgr_concession']) : 0;
 								obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
@@ -813,6 +828,7 @@ export class FeeLedgerReportComponent implements OnInit {
 									obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 										stu_arr['flgr_inv_id'] : '-';
 									obj['flgr_amount'] = 0;
+									obj['inv_net_payable'] = 0;
 									obj['flgr_concession'] = 0;
 									obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
 										Number(stu_arr['flgr_receipt']) : 0;
@@ -862,12 +878,14 @@ export class FeeLedgerReportComponent implements OnInit {
 				obj3['flgr_particulars'] = '';
 				obj3['flgr_inv_id'] = '';
 				obj3['flgr_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0));
+				obj3['inv_net_payable'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['inv_net_payable']).reduce((acc, val) => acc + val, 0));
 				obj3['flgr_concession'] =
 					new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0));
 				obj3['flgr_receipt'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0));
 				obj3['receipt_id'] = '';
 				obj3['flgr_balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0));
 				this.totalRow = obj3;
+				this.aggregatearray.push(new Aggregators.Sum('inv_net_payable'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_amount'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_concession'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
@@ -1431,6 +1449,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					obj3['flgr_particulars'] = '';
 					obj3['flgr_inv_id'] = '';
 					obj3['flgr_amount'] = groupItem.rows.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['inv_net_payable'] = groupItem.rows.map(t => t['inv_net_payable']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_concession'] = groupItem.rows.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_receipt'] = groupItem.rows.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0);
 					obj3['receipt_id'] = '';
@@ -1487,6 +1506,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					obj3['flgr_particulars'] = '';
 					obj3['flgr_inv_id'] = '';
 					obj3['flgr_amount'] = groupItem.rows.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['inv_net_payable'] = groupItem.rows.map(t => t['inv_net_payable']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_concession'] = groupItem.rows.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_receipt'] = groupItem.rows.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0);
 					obj3['receipt_id'] = '';
@@ -1857,6 +1877,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					obj3['flgr_particulars'] = '';
 					obj3['flgr_inv_id'] = '';
 					obj3['flgr_amount'] = groupItem.rows.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['inv_net_payable'] = groupItem.rows.map(t => t['inv_net_payable']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_concession'] = groupItem.rows.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_receipt'] = groupItem.rows.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0);
 					obj3['receipt_id'] = '';
@@ -1939,6 +1960,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					obj3['flgr_particulars'] = '';
 					obj3['flgr_inv_id'] = '';
 					obj3['flgr_amount'] = groupItem.rows.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['inv_net_payable'] = groupItem.rows.map(t => t['inv_net_payable']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_concession'] = groupItem.rows.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0);
 					obj3['flgr_receipt'] = groupItem.rows.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0);
 					obj3['receipt_id'] = '';
