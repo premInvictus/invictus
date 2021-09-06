@@ -423,15 +423,16 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			await this.feeService.getFeeAccount({ accd_login_id: this.feeLoginId }).toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
 					const accountdet:any = result.data[0];
-					if(accountdet.accd_is_hostel == 'Y') {
-						this.commonStu.showWalletLedger=true;
-					} else {
-						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
-						if(findex != -1) {
-							this.entryModes.splice(findex,1);
+					// if(accountdet.accd_is_hostel == 'Y') {
+						// this.commonStu.showWalletLedger=true;
+					// } else {
+					// 	const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
+					// 	if(findex != -1) {
+					// 		this.entryModes.splice(findex,1);
 
-						}
-					}
+					// 	}
+					// }
+					this.commonStu.showWalletLedger=true;
 				}
 			});
 		}

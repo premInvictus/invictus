@@ -36,9 +36,9 @@
         <span class="btn-spacer">{{!showMissingInvoice? 'Missing Invoice' :'Fee Ledger'}}</span></span>
     </button>
   </div>
-  
+
   <div *ngIf="!showMissingInvoice" class="row">
-    
+
     <div class="col-12 ">
       <mat-card class="card-top-title__container card-height-677 card-height-795">
         <!-- <div class="row margin-bottom-10">
@@ -47,14 +47,13 @@
         </div> -->
         <div style="margin-top:15px !important" class="text-right">
           <div class="classwise-container">
-            <img 
-              style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg" matTooltip="Download Receipt Ledger PDF"
-              (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
-            <img 
-              style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg" matTooltip="Download Receipt Ledger Excel"
-              (click)="downloadExcel()" [matTooltipPosition]="'left'" />
+            <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+              matTooltip="Download Receipt Ledger PDF" (click)="downloadPdf()"
+              [matTooltipPosition]="'left'" />&nbsp;&nbsp;
+            <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+              matTooltip="Download Receipt Ledger Excel" (click)="downloadExcel()" [matTooltipPosition]="'left'" />
           </div>
-      </div>
+        </div>
         <div style="margin-top:15px !important" class="col-12 text-right">
           <!-- <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-receiptMod"
             (click)="openReciptModificationDialog()">Receipt Modification</button> -->
@@ -75,6 +74,9 @@
           <button *ngIf="actionFlag.deleteinvoice && isExistUserAccessMenu('774')" mat-raised-button
             class="btn-primary btn-delete-rec btn-spacer" (click)="openDeleteDialog(fetchInvId())">Delete
             Invoice</button>
+          <button *ngIf="actionFlag.cancelreceipt && isExistUserAccessMenu('870')" mat-raised-button
+            class="btn-primary btn-cancel-rec btn-spacer" (click)="cancelDeleteReciptDialog(fetchRecId())">Cancel
+            Receipt</button>
           <button *ngIf="actionFlag.deletereceipt && isExistUserAccessMenu('775')" mat-raised-button
             class="btn-primary btn-delete-rec btn-spacer" (click)="openDeleteReciptDialog(fetchRecId())">Delete
             Receipt</button>
@@ -506,7 +508,7 @@
         </mat-card>
       </div>
     </div>
-    <div *ngIf="datasource.length < 1" class="row margin-top-10"  style="margin-left: 0.7%; width: 98.5%;">
+    <div *ngIf="datasource.length < 1" class="row margin-top-10" style="margin-left: 0.7%; width: 98.5%;">
       <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container ">
           <div class="text-center font-size-20 font-bold font-color-brown">No Data Available</div>
@@ -519,6 +521,8 @@
 </app-delete-modal>
 <app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete?'"
   (deleteOk)="deleteReciptConfirm($event)">
+  <app-delete-modal #cancelReceiptModal [deleteMessage]="'Are you sure want to cancel?'"
+  (deleteOk)="cancelReciptConfirm($event)">
 </app-delete-modal>
 <app-delete-modal #recalculateModal [deleteMessage]="'On re-calculation all adjustments/remarks if any, will be removed!<br>
 Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
@@ -536,4 +540,7 @@ Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-
 </app-delete-with-reason>
 <app-delete-with-reason #deleteReceiptWithReasonModal
   [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete receipt'" (deleteOk)="deleteReceiptFinal($event)">
+</app-delete-with-reason>
+<app-delete-with-reason #cancelReceiptWithReasonModal
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete receipt'" (deleteOk)="cancelReceiptFinal($event)">
 </app-delete-with-reason>
