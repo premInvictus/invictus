@@ -48,6 +48,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	opening_balance_paid_status = 0;
 	bnk_charge =  0;
 	bnk_charge_per = 0;
+	readonlymodeforinvoice = false;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -119,6 +120,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'walletProcess':''
 			});
 			this.selectedMode = '1';
+			this.readonlymodeforinvoice = true;
 			this.currentInvoiceId  = invDet2.inv_id;
 			this.getInvoices(invDet2.inv_id);
 		}
@@ -423,16 +425,15 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			await this.feeService.getFeeAccount({ accd_login_id: this.feeLoginId }).toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
 					const accountdet:any = result.data[0];
-					// if(accountdet.accd_is_hostel == 'Y') {
-						// this.commonStu.showWalletLedger=true;
-					// } else {
-					// 	const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
-					// 	if(findex != -1) {
-					// 		this.entryModes.splice(findex,1);
+					if(accountdet.accd_is_hostel == 'Y') {
+						this.commonStu.showWalletLedger=true;
+					} else {
+						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
+						if(findex != -1) {
+							this.entryModes.splice(findex,1);
 
-					// 	}
-					// }
-					this.commonStu.showWalletLedger=true;
+						}
+					}
 				}
 			});
 		}
@@ -454,6 +455,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 				}
 				this.selectedMode = '1';
+				this.readonlymodeforinvoice = true;
 				if (this.studentInfo.last_invoice_number) {
 					this.currentInvoiceId = this.studentInfo.last_invoice_number;
 					this.getInvoices(this.studentInfo.last_invoice_number);
@@ -940,6 +942,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
+		console.log("i ma here", $event.value, $event);
+		if($event.value == '1') {
+			this.readonlymodeforinvoice = true;
+		} else {
+			this.readonlymodeforinvoice = false;
+		}
+		
 		if (this.selectedMode !== '1') {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.fee_amount,
@@ -1038,6 +1047,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					'saveAndPrint': ''
 				});
 				this.selectedMode = '1';
+				this.readonlymodeforinvoice = true;
 				this.getInvoices(invDet2.inv_id);
 			}
 
