@@ -51,9 +51,9 @@
                   <thead>
                     <tr>
                       <th width="18%">Date</th>
-                      <th width="47%">Particulars</th>
+                      <th width="43%">Particulars</th>
                       <th width="20%">Folio</th>
-                      <th width="15%">Amount (₹)</th>
+                      <th width="20%">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -64,7 +64,7 @@
                             *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
 
                         <td class="text-left"><span
-                            *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
+                            *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}  &nbsp;</span></td>
                         <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
                         <td class="text-right"><span
                             *ngIf="par?.vc_credit < 0">{{getTwoDecimalValue(-par?.vc_credit) | indianCurrency}}</span><span
@@ -80,7 +80,7 @@
                             *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
 
                         <td class="text-left"><span
-                            *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
+                            *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}  &nbsp;</span></td>
                         <td><a href="javascript:void(0)" (click)="openVoucherModal(par)"><span
                               *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></a></td>
                         <td class="text-right">
@@ -140,9 +140,9 @@
 
                     <tr>
                       <th width="18%">Date</th>
-                      <th width="47%">Particulars</th>
+                      <th width="43%">Particulars</th>
                       <th width="20%">Folio</th>
-                      <th width="15%">Amount (₹)</th>
+                      <th width="20%">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -154,9 +154,9 @@
                             *ngIf="par?.vc_debit > 0 && par?.vc_mode=='consolidate'">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;
                         </td>
                         <td class="text-left"><span
-                            *ngIf="par?.vc_debit > 0">{{par?.vc_account_type | titlecase}}</span></td>
+                            *ngIf="par?.vc_debit > 0">{{par?.vc_account_type | titlecase}} &nbsp;</span></td>
                         <td class="text-left"><a href="javascript:void(0)" (click)="openVoucherModal(par)"><span
-                              *ngIf="par?.vc_debit > 0">{{par?.vc_number?.vc_name}}</span></a></td>
+                              *ngIf="par?.vc_debit > 0">{{par?.vc_number?.vc_name}} &nbsp;</span></a></td>
                         <td class="text-right"><span
                             *ngIf="par?.vc_debit > 0">{{getTwoDecimalValue(par?.vc_debit) | indianCurrency}}</span></td>
                       </tr>

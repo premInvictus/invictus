@@ -140,10 +140,10 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   }
   getLedger() {
     if (this.data.coa_id) {
-      console.log(this.data.date);
+      console.log("passed ledger data ",this.data.date);
       this.faService.getTrialBalance({ coa_id: [this.data.coa_id], monthId: this.data.date}).subscribe((data: any) => {
+        console.log(">>>>>>>>>>>>>>>>>>> Get Trail Balance >>>>>>>>>>>>>>>>>>>>",data);
         if (data) {
-          console.log(data);
           // this.param = data;
           var receipt_data = data.receipt_data;
           var receiptArr = [];
@@ -152,8 +152,9 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
           }
 
           
+        console.log(">>>>>>>>>>>>>>>>>>> Get ledger_data >>>>>>>>>>>>>>>>>>>>",data.ledger_data);
           for (var i = 0; i < data.ledger_data.length; i++) {
-            if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
+            if (data.ledger_data[i]['coa_dependencies'] && data.ledger_data[i]['coa_dependencies'].length > 0 && data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']);
 
 
@@ -176,6 +177,20 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
                 data.ledger_data[i]['credit_data'].push(iJson);
                 data.ledger_data[i]['debit_data'].push({});
               }
+            }else if(data.ledger_data[i]['coa_dependencies'] == undefined || data.ledger_data[i]['coa_dependencies'].length <= 0){
+              let open_year = data.ledger_data[0].coa_opening_balance_data.opening_balance_date.split('-');
+              var y: number = +open_year[0];
+              let new_open_year = y + 1;
+              let new_open_date = new_open_year + "-01-01";
+              let closing_date = open_year[0] + "12-31";
+              var iJson: any = {
+                "vc_account_type": "Opening Balance",
+                "vc_debit": data.ledger_data[0].coa_opening_balance_data.opening_balance,
+                "vc_date" : new_open_date,
+                "vc_closing_date" : closing_date
+              }
+              data.ledger_data[i]['credit_data'].push(iJson);
+              data.ledger_data[i]['debit_data'].push({});
             }
             if (i === data.ledger_data.length - 1) {
               this.param = data;
