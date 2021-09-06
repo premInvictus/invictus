@@ -955,10 +955,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	 encode(str) {
 		var encoded = "";
-		for (var i=0; i<str.length;i++) {
-		  var a = str.charCodeAt(i);
-		  var b = a ^ 51;    // bitwise XOR with any number, e.g. 123
-		  encoded = encoded+String.fromCharCode(b);
+		if(str != null){
+			for (var i=0; i<str.length;i++) {
+			  var a = str.charCodeAt(i);
+			  var b = a ^ 51;    // bitwise XOR with any number, e.g. 123
+			  encoded = encoded+String.fromCharCode(b);
+			}
 		}
 		return encoded;
 	  }

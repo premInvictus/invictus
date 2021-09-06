@@ -487,6 +487,90 @@ export class ReceiptModeWiseComponent1 implements OnInit {
               }
             }
           }
+        }else{
+          console.log("COA  coa_dependencies no >>>>>>>>>>>>> ",this.chartsOfAccount);
+            if (action != 'update') {
+              let vFormJson = {};
+              vFormJson = {
+                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_grno: '',
+                vc_invoiceno: '',
+                vc_debit: receiptHeadArr[i]['receipt_amt'],
+                vc_credit: 0
+              };
+              feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
+              voucherEntryArray.push(vFormJson);
+              break;
+
+            } else {
+              console.log("COA  coa_dependencies no >>>>>>>>>>>>> ",this.chartsOfAccount);
+              var mathchedFlag = 0;
+              var deviation = 0;
+              var accountDebitSum = 0;
+              var accountCreditSum = 0;
+              var totalPrevHeadAmt = 0;
+              if (this.currentVoucherData && this.currentVoucherData.vc_records) {
+              for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+                for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                  if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
+                    mathchedFlag = 1;
+
+                    accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                    accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                  }
+                }
+              }}
+              if (!mathchedFlag) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: receiptHeadArr[i]['receipt_amt'],
+                  vc_credit: 0
+                };
+                feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
+                voucherEntryArray.push(vFormJson);
+              } else {
+                totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+                deviation = receiptHeadArr[i]['receipt_amt'] - totalPrevHeadAmt;
+                feeReceivableAmt = feeReceivableAmt + deviation;
+                if (deviation < 0) {
+                  let vFormJson = {};
+                  vFormJson = {
+                    vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                    vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_grno: '',
+                    vc_invoiceno: '',
+                    vc_debit: 0,
+                    vc_credit: -deviation
+                  };
+                  voucherEntryArray.push(vFormJson);
+                }
+                if (deviation > 0) {
+                  let vFormJson = {};
+                  vFormJson = {
+                    vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                    vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_grno: '',
+                    vc_invoiceno: '',
+                    vc_debit: deviation,
+                    vc_credit: 0
+                  };
+                  voucherEntryArray.push(vFormJson);
+                }
+              }
+            }
         }
       }
     }
