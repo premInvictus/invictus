@@ -380,7 +380,9 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   createVoucher(item, action) {
-    console.log('item--', item);
+    console.log('item-->>>>>>>>>', item);
+    console.log('this.currentVoucherData-->>>>>>>>>', this.currentVoucherData);
+    console.log('this.apiReceiptData -->>>>>>>>>', this.apiReceiptData);
     this.currentVoucherData = item;
     for (var i = 0; i < this.apiReceiptData.length; i++) {
       if (this.apiReceiptData[i]['date'] === item.date) {
@@ -397,12 +399,15 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   checkForHeadData(receiptHeadArr, action) {
-    console.log(receiptHeadArr, this.chartsOfAccount);
+    console.log("check for header data >>>>>>>>>>>>> ",receiptHeadArr);
+    console.log("COA >>>>>>>>>>>>> ",this.chartsOfAccount);
     var feeReceivableAmt = 0;
     var voucherEntryArray = [];
     for (var i = 0; i < receiptHeadArr.length; i++) {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
         if ((this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']+' Collection') || (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) ) {
+         
+          console.log("COA  dependency_name yes >>>>>>>>>>>>> ",this.chartsOfAccount);
           if (action != 'update') {
             let vFormJson = {};
             vFormJson = {
@@ -419,6 +424,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             break;
 
           } else {
+            console.log("COA  dependency_name no >>>>>>>>>>>>> ",this.chartsOfAccount);
             var mathchedFlag = 0;
             var deviation = 0;
             var accountDebitSum = 0;
@@ -484,6 +490,90 @@ export class ReceiptModeWiseComponent implements OnInit {
               }
             }
           }
+        }else{
+          console.log("COA  coa_dependencies no >>>>>>>>>>>>> ",this.chartsOfAccount);
+            if (action != 'update') {
+              let vFormJson = {};
+              vFormJson = {
+                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_grno: '',
+                vc_invoiceno: '',
+                vc_debit: receiptHeadArr[i]['receipt_amt'],
+                vc_credit: 0
+              };
+              feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
+              voucherEntryArray.push(vFormJson);
+              break;
+
+            } else {
+              console.log("COA  coa_dependencies no >>>>>>>>>>>>> ",this.chartsOfAccount);
+              var mathchedFlag = 0;
+              var deviation = 0;
+              var accountDebitSum = 0;
+              var accountCreditSum = 0;
+              var totalPrevHeadAmt = 0;
+              if (this.currentVoucherData && this.currentVoucherData.vc_records) {
+              for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+                for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                  if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
+                    mathchedFlag = 1;
+
+                    accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                    accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                  }
+                }
+              }}
+              if (!mathchedFlag) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: receiptHeadArr[i]['receipt_amt'],
+                  vc_credit: 0
+                };
+                feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
+                voucherEntryArray.push(vFormJson);
+              } else {
+                totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+                deviation = receiptHeadArr[i]['receipt_amt'] - totalPrevHeadAmt;
+                feeReceivableAmt = feeReceivableAmt + deviation;
+                if (deviation < 0) {
+                  let vFormJson = {};
+                  vFormJson = {
+                    vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                    vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_grno: '',
+                    vc_invoiceno: '',
+                    vc_debit: 0,
+                    vc_credit: -deviation
+                  };
+                  voucherEntryArray.push(vFormJson);
+                }
+                if (deviation > 0) {
+                  let vFormJson = {};
+                  vFormJson = {
+                    vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                    vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                    vc_grno: '',
+                    vc_invoiceno: '',
+                    vc_debit: deviation,
+                    vc_credit: 0
+                  };
+                  voucherEntryArray.push(vFormJson);
+                }
+              }
+            }
         }
       }
     }
@@ -773,6 +863,8 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   getVcName(vcData, voucherEntryArray) {
+    console.log("vc data", vcData);
+    console.log("voucher entry array >>>>>>>>>>>", voucherEntryArray);
     let vcType = 'RV';
     // const vcTypeArr = this.currentVcType.split(" ");
     // if (vcTypeArr.length > 0) {
