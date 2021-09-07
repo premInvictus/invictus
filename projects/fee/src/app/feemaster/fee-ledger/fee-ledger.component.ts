@@ -1773,7 +1773,7 @@ export class FeeLedgerComponent implements OnInit {
 				if (this.selection.selected.length == 1) {
 					console.log("in here");
 					
-					if (item.action.ftr_status == '3' || item.action.ftr_status == '2') {
+					if (item.action.ftr_status == '6' || item.action.ftr_status == '2') {
 						tempactionFlag.deletereceipt = true;
 						tempactionFlag.cancelreceipt = false;
 					}
