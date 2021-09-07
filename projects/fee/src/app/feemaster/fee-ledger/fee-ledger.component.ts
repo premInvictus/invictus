@@ -1166,7 +1166,7 @@ export class FeeLedgerComponent implements OnInit {
 
 
 
-					if (item.ftr_status !== "2") {
+					if (item.ftr_status !== "2" && item.ftr_status !== "6") {
 						this.footerRecord.receipttotal += Number(element.reciept);
 					}
 
