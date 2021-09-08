@@ -393,9 +393,14 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     return false;
   }
   getChartsOfAccount() {
+    this.commonAPIService.startLoading();
+    this.showLoadingFlag = true;
     this.chartsOfAccount = [];
-    this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
-      // this.commonAPIService.startLoading();
+    this.faService.getAllChartsOfAccount({}).subscribe(
+      (result: any) => {
+        this.showLoadingFlag = true;
+      // this.commonAPIService.stopLoading();
+      this.commonAPIService.startLoading();
       console.log("COA for COA function ", result);
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
@@ -413,8 +418,15 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         }
         
       }
-      // this.commonAPIService.stopLoading();
-    });
+    },
+    function(error) { console.log("Error happened" + error)},
+    function() { console.log("the subscription is completed"); 
+      this.commonAPIService.stopLoading();
+      this.showLoadingFlag = false;
+    } 
+    
+    
+    );
   }
 
   createVoucher(item, action) {
@@ -426,7 +438,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
       this.voucherDate = item.date;
       this.checkForHeadData(item['value'], action, true);
     } else {
-      console.log(this.apiInvoiceData[0].date);
+      console.log(this.apiInvoiceData);
       for (var i = 0; i < this.apiInvoiceData.length; i++) {
         if (this.apiInvoiceData[i].date === item.date) {
           this.voucherDate = item.date;
@@ -441,7 +453,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
   checkForHeadData(invoiceHeadArr, action,prev_balance_voucher) {
     //invoiceHeadArr[0]['total_amt']=5500;
     // invoiceHeadArr[6]['total_amt']=3500;
-    console.log("COA ",this.chartsOfAccount);
+    console.log("COA  from create for head data ",this.chartsOfAccount);
     console.log("invoice Head array", invoiceHeadArr);
     var voucherEntryArray = [];
     var feeReceivableAmt = 0;
@@ -539,6 +551,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
               vc_debit: 0,
               vc_credit: invoiceHeadArr[i]['total_amt']
             };
+            console.log(vFormJson);
             feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
             voucherEntryArray.push(vFormJson);
           } else {
@@ -550,7 +563,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
             for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
               for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
                 
-                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
+                if (this.chartsOfAccount[j]['coa_acc_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
                   mathchedFlag = 1;
                   
                   accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];

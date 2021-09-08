@@ -515,7 +515,7 @@ export class ReceiptModeWiseComponent1 implements OnInit {
               for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
                 for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
 
-                  if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
+                  if (this.chartsOfAccount[j]['coa_acc_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
                     mathchedFlag = 1;
 
                     accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
