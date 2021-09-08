@@ -205,6 +205,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     this.previousBalanceObject = {};
     this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
       // this.commonAPIService.startLoading();
+      console.log("invoice due data ", data);
       if (data && data.invoice_due_data.length > 0) {
         this.displayedColumns = [];
         if (Number(this.param.month)==4) {
@@ -395,6 +396,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       // this.commonAPIService.startLoading();
+      console.log("COA for COA function ", result);
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
@@ -406,6 +408,8 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
           //this.chartsOfAccount.push(result[i]);
           this.feeReceivableAccountId = result[i]['coa_id'];
           this.feeReceivableAccountName = result[i]['coa_acc_name'];
+        }else{
+          this.chartsOfAccount.push(result[i]);
         }
         
       }
@@ -414,7 +418,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
   }
 
   createVoucher(item, action) {
-    console.log('item--', item);
+    console.log('item-- create voucher', item);
     console.log('this.apiInvoiceData--',this.apiInvoiceData)
     this.currentVoucherData = item;
     console.log('this.currentvoucherData', this.currentVoucherData)
@@ -422,10 +426,11 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
       this.voucherDate = item.date;
       this.checkForHeadData(item['value'], action, true);
     } else {
+      console.log(this.apiInvoiceData[0].date);
       for (var i = 0; i < this.apiInvoiceData.length; i++) {
-        if (this.apiInvoiceData[i]['date'] === item.date) {
+        if (this.apiInvoiceData[i].date === item.date) {
           this.voucherDate = item.date;
-          this.checkForHeadData(this.apiInvoiceData[i]['value'], action, false);
+          this.checkForHeadData(this.apiInvoiceData[i].value, action, false);
           break;
         }
       }
@@ -436,12 +441,93 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
   checkForHeadData(invoiceHeadArr, action,prev_balance_voucher) {
     //invoiceHeadArr[0]['total_amt']=5500;
     // invoiceHeadArr[6]['total_amt']=3500;
-    console.log(this.chartsOfAccount, invoiceHeadArr);
+    console.log("COA ",this.chartsOfAccount);
+    console.log("invoice Head array", invoiceHeadArr);
     var voucherEntryArray = [];
     var feeReceivableAmt = 0;
     for (var i = 0; i < invoiceHeadArr.length; i++) {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
-        if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === invoiceHeadArr[i]['fh_name']) {
+        if (this.chartsOfAccount[j]['coa_dependencies'] && this.chartsOfAccount[j]['coa_dependencies'].length > 0 && this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === invoiceHeadArr[i]['fh_name']) {
+          if (action != 'update') {
+            let vFormJson = {};
+            vFormJson = {
+              vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+              vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_grno: '',
+              vc_invoiceno: '',
+              vc_debit: 0,
+              vc_credit: invoiceHeadArr[i]['total_amt']
+            };
+            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+            voucherEntryArray.push(vFormJson);
+          } else {
+            var mathchedFlag = 0;
+            var deviation = 0;
+            var accountDebitSum = 0;
+            var accountCreditSum = 0;
+            var totalPrevHeadAmt = 0;
+            for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
+              for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
+                
+                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
+                  mathchedFlag = 1;
+                  
+                  accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                  accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                }
+              }
+            }
+            console.log(mathchedFlag, 'matchedFlag')
+            if(!mathchedFlag) {
+              let vFormJson = {};
+              vFormJson = {
+                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_grno: '',
+                vc_invoiceno: '',
+                vc_debit:  0,
+                vc_credit: invoiceHeadArr[i]['total_amt']
+              };
+              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+              voucherEntryArray.push(vFormJson);
+            } else {
+              totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+              deviation = invoiceHeadArr[i]['total_amt'] - totalPrevHeadAmt;
+              feeReceivableAmt = feeReceivableAmt + deviation;
+              if (deviation < 0 ) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit:  -deviation,
+                  vc_credit: 0
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+              if (deviation > 0 ) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit:  0,
+                  vc_credit: deviation
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+            }
+          }
+        }else{
           if (action != 'update') {
             let vFormJson = {};
             vFormJson = {
