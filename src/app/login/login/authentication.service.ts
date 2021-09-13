@@ -6,7 +6,8 @@ import { environment } from '../../../environments/environment';
 export class AuthenticationService {
 	constructor(private http: HttpClient, private loaderService: CommonAPIService) { }
 
-	login(username: string, password: any, device_id: any, type: any, loginSource:any) {
+	login(username: string, password: any, device_id: any, type: any, loginSource:any, encrypt: any) {
+		console.log("encrypt >>>>>>>>>>>>>", encrypt);
 		this.loaderService.startLoading();
 		let prefixOptions={};
 		if (username.match(/-/g)) {
@@ -15,7 +16,7 @@ export class AuthenticationService {
 				'Prefix': userParam[0]
 			};
 		}
-		// prefixOptions['Prefix'] = 'gisfbd';
+		prefixOptions['Prefix'] = 'grizly';
 
 
 		const headers = new HttpHeaders(prefixOptions);
@@ -26,7 +27,7 @@ export class AuthenticationService {
 				'LoginSource' : 'support'
 			};
 			let pheaders = new HttpHeaders(hOptions);
-			return this.http.post(environment.apiSisUrl + '/users/supportAuthenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
+			return this.http.post(environment.apiSisUrl + '/users/supportAuthenticate', { username: username, password: password, device_id: device_id, type: type, loginSource:loginSource, encrypt: encrypt }, { headers: pheaders });
 		} else if (loginSource=='branch-change') {
 			let hOptions = {
 				'Prefix': username.split('-')[0],
@@ -34,14 +35,14 @@ export class AuthenticationService {
 			};
 			console.log('hOptions--', hOptions)
 			let pheaders = new HttpHeaders(hOptions);
-			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type, encrypt: encrypt }, { headers: pheaders });
 		} else {
 			// tslint:disable-next-line:max-line-length
 			console.log('this.loaderService.getUserPrefix()',this.loaderService.getUserPrefix());
 			if (this.loaderService.getUserPrefix()) {
-				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type });
+				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type, encrypt: encrypt });
 			} else {
-				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: headers });
+				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type, encrypt: encrypt }, { headers: headers });
 			}
 		}
 		
