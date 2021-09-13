@@ -473,7 +473,11 @@ export class FeeModificationComponent implements OnInit {
 		this.modifyReceiptForm.patchValue({
 			"check_data": this.balance_data
 		});
-		if (validateFlag) {
+		if(this.modifyReceiptForm.value.remarks_main == '') {
+			validateFlag = false
+		}
+		
+		if (validateFlag ) {
 			this.btnDisable = true;
 			this.feeService.updateReceipt(this.modifyReceiptForm.value).subscribe((result: any) => {
 				this.btnDisable = false;

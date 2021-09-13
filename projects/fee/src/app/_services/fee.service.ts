@@ -182,6 +182,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceBifurcation', value);
 	}
+	getConcessionInvoiceBifurcation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getConcessionInvoiceBifurcation', value);
+	}
 	getInvoiceGroupBifurcation(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceGroupBifurcation', value);
@@ -197,6 +201,10 @@ export class FeeService {
 	invoiceAdjustmentRemark(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/updateInvoice', value);
+	}
+	invoiceAdjustmentRemarkForConsolidatedAdjustment(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/updateInvoiceForConsolidatedAdjustment', value);
 	}
 	insertInvoice(value) {
 		this.service.startLoading();

@@ -940,6 +940,8 @@ export class WalletsLedgerComponent implements OnInit {
 	 }
 	 exportAsPDF(json: any[]) {
 		 this.dataset = json;
+		 console.log("i am json 2", json);
+		 
 		const headerData: any[] = [];
 		this.pdfrowdata = [];
 		this.levelHeading = [];
@@ -988,6 +990,7 @@ export class WalletsLedgerComponent implements OnInit {
 			if(item.id != 'action')
 			headerData.push(item.name);
 		}
+		
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
@@ -1082,7 +1085,7 @@ export class WalletsLedgerComponent implements OnInit {
 		
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
-			head: [['No of records: ' + json.length]],
+			head: [['No of records: ' + (json.length - 1)]],
 			didDrawPage: function (data) {
 
 			},

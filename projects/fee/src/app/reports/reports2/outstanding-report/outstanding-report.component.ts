@@ -2009,7 +2009,7 @@ export class OutstandingReportComponent implements OnInit {
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
-					'login_id': value.login_id,
+					'login_id':['6689'],
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
@@ -2257,7 +2257,7 @@ export class OutstandingReportComponent implements OnInit {
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
-					'login_id': value.login_id,
+					'login_id':['6689'],
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch,
