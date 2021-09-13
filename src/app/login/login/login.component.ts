@@ -163,7 +163,7 @@ export class LoginComponent implements OnInit {
 		this.webDeviceToken = '';
 
 		console.log('this.model--', this.model)
-		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', this.model.loginsource)
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', this.model.loginsource, 1)
 			.subscribe(
 				(result: any) => {
 					console.log('result--', result);
@@ -278,7 +278,7 @@ export class LoginComponent implements OnInit {
 		if (localStorage.getItem("web-token")) {
 			this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 		}
-		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', '')
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', '', 1)
 			.subscribe(
 				(result: any) => {
 					if (result.status === 'ok' && result.data) {

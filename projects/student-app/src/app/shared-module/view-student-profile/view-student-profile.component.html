@@ -848,7 +848,7 @@
                                                     :
                                                   </td>
                                                   <td style="padding-left:10px">
-                                                    {{item.esd_admission_no ? item.esd_admission_no : '-'}}
+                                                    {{item?.esd_admission_no ? item.esd_admission_no : '-'}}
                                                   </td>
                                               </tbody>
                                             </table>
@@ -1086,6 +1086,39 @@
                 <td></td>
               </tr>
 
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+</div>
+
+<div class="row" *ngIf="sibDet && sibDet.length > 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <h1 style="font-size: 18px;white-space: pre;">Switch Profile</h1>
+          <table class="table">
+            <thead>
+              <tr *ngFor="let item of sibDet">
+                <th scope="col">Admission No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Class</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of sibDet">
+                <td scope="row">{{item?.esd_admission_no ? item.esd_admission_no : '-'}}</td>
+                <td>{{item?.esd_name ? item.esd_name : '-'}}</td>
+                <td>{{item?.esd_class ? classArray2[item.esd_class] : '-'}} - {{item?.sec_name}}</td>
+                <td>
+                  <i class="fas fa-exchange-alt" aria-hidden="true" style="cursor:pointer; color:green; font-size: large;" (click)="switchAccount(item)"></i>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
