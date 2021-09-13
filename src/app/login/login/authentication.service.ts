@@ -16,8 +16,6 @@ export class AuthenticationService {
 				'Prefix': userParam[0]
 			};
 		}
-		prefixOptions['Prefix'] = 'grizly';
-
 
 		const headers = new HttpHeaders(prefixOptions);
 		console.log('loginSource--', loginSource,prefixOptions );
