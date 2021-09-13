@@ -423,7 +423,7 @@ export class SearchDialogComponent implements OnInit {
 			}) }
 		}
 		inputJson.receipt_mapping= receiptMappArr;
-		inputJson.rpt_status = this.receiptData.rpt_status;
+
 		if (this.searchForm.valid) {
 			this.deleteOk.emit(inputJson);
 			this.invoiceArrayForm = [];
