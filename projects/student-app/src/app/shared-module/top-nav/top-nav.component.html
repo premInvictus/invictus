@@ -45,7 +45,7 @@
               src="../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg">
               <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
          <div class="dropdown-content">
-            <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
+            <a href="javascript:void(0);"></a><button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button></div>
             <a routerLink="./user-credential"><button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i>Change Credential</button></a>
             <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
          </div>
@@ -69,10 +69,9 @@
            <span class="mat-button-wrapper">
               <img alt="invictus" class="axiom-profile-image" src="https://via.placeholder.com/35x35" [matMenuTriggerFor]="menu">
               <mat-menu #menu="matMenu" class="mat-log-menu">
-                 <button  mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
-        <a routerLink="./user-credential">  <button  mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change Credential</button></a>
-        
-        <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+               <a routerLink="./view-profile-student"><button  mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button></a>
+               <a routerLink="./user-credential">  <button  mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change Credential</button></a>        
+               <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
         </mat-menu>
         </span>
         </a>

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../../../../../../src/app/login/login/authentication.service';
+import { CookieService } from 'ngx-cookie';
 @Component({
   selector: 'app-view-student-profile',
   templateUrl: './view-student-profile.component.html',
@@ -43,9 +46,27 @@ export class ViewStudentProfileComponent implements OnInit {
   remarks: any[] = [];
   profileimage: any = '';
   cityName: any;
-  constructor(private common: CommonAPIService,
+	userSaveData: any;
+	currentDate = new Date();
+	webDeviceToken: any = {};
+	returnUrl: string;
+  model: any;
+
+  constructor(    
+		private route: ActivatedRoute,
+		private router: Router,
+		private authenticationService: AuthenticationService,
+    private common: CommonAPIService,
     public dom: DomSanitizer,
-    private erp: ErpCommonService) { }
+		private _cookieService: CookieService,
+		private loaderService: CommonAPIService,
+    private erp: ErpCommonService) {
+      if (_cookieService.get('remember')) {
+        this.model.username = this._cookieService.get('username');
+        this.model.password = this._cookieService.get('password');
+        this.model.rememberme = this._cookieService.get('rememberme');
+      }
+     }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -75,6 +96,7 @@ export class ViewStudentProfileComponent implements OnInit {
   getStudentDetails(user) {
     this.erp.getStudent({ au_login_id: user.login_id, au_process_type: '4', last_class: true }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        console.log("Student details : ", res);
         this.studentdetails = res.data[0];
         this.parentDet = this.studentdetails.parentDetails && this.studentdetails.parentDetails.length > 0 ?
           this.studentdetails.parentDetails : [];
@@ -102,6 +124,7 @@ export class ViewStudentProfileComponent implements OnInit {
         console.log(this.profileimage);
       }
     });
+    console.log("student Details ", this.studentdetails);
   }
   getClass() {
     this.erp.getClassData({}).subscribe(
@@ -348,4 +371,159 @@ export class ViewStudentProfileComponent implements OnInit {
       }
     });
   }
+
+  //Switch account login process
+  switchAccount(item){
+    let username = "";
+    let password = "";
+    let loginId = "";
+    console.log("lemme login please : ", item);
+    this.erp.getUser({ au_admission_no: item.esd_admission_no, role_id: 4 }).subscribe((result: any) => {
+      if (result.status === 'ok') {
+        console.log("lemme c the password : ", result);
+        if (result.data) {
+          //Login
+          username = result.data[0].au_username;
+          password = result.data[0].au_password;
+          loginId = result.data[0].au_login_id;
+          let data = {
+            "username" : username,
+            "password" : password,
+            "loginId" : loginId,
+            "rememberme" : 0
+          };
+          console.log(password);
+          this.login(data);
+        }
+      } else {
+        //Throw Error
+      }
+    });
+  }
+
+  login(data) {
+    this.model = {
+      "username" : data.username,
+      "password" : data.password,
+      "rememberme" : 0
+    };
+		this._cookieService.put('username', data.username);
+		this._cookieService.put('password', data.password);
+		this._cookieService.put('remember', data.rememberme);
+		//this.loaderService.setUserPrefix(this.model.username.split("-")[0])
+		if (localStorage.getItem("web-token")) {
+			this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+		}
+		this.authenticationService.login(data.username, data.password , this.webDeviceToken['web-token'], 'web', '', 0)
+			.subscribe(
+				(result: any) => {
+          console.log("Login Service : ",result);
+					if (result.status === 'ok' && result.data) {
+            
+						localStorage.clear();
+						this._cookieService.removeAll();
+
+						const user = result.data;
+						if (result.data.userSaveStateData) {
+							this.userSaveData = JSON.parse(result.data.userSaveStateData);
+						}
+						const tempJson = {
+							CID: user.clientKey,
+							AN: user.token,
+							UR: user.role_id,
+							LN: user.login_id,
+							PF: user.Prefix
+						};
+						// user.Prefix = this.model.username.split('-')[0];
+						// user.username = this.model.username;
+						if (user) {
+							localStorage.setItem('currentUser', JSON.stringify(user));
+							this._cookieService.put('userData', JSON.stringify(tempJson));
+						}
+						if (this._cookieService.get('userData')) {
+							this.common.getSession().subscribe((result3: any) => {
+								if (result3 && result3.status === 'ok') {
+									this.sessionArray = result3.data;
+									this.common.getSchool().subscribe((result2: any) => {
+										if (result2.status === 'ok') {
+											this.schoolInfo = result2.data[0];
+											localStorage.setItem('expire_time', JSON.stringify({ expire_time: this.schoolInfo.session_expire }));
+											if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
+												Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
+												const currentSession =
+													(Number(this.currentDate.getFullYear()) + '-' + Number(this.currentDate.getFullYear() + 1)).toString();
+												const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+												if (findex !== -1) {
+													const sessionParam: any = {};
+													sessionParam.ses_id = this.sessionArray[findex].ses_id;
+													localStorage.setItem('session', JSON.stringify(sessionParam));
+												}
+											} else {
+												const currentSession =
+													(Number(this.currentDate.getFullYear() - 1) + '-' + Number(this.currentDate.getFullYear())).toString();
+												const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+												if (findex !== -1) {
+													const sessionParam: any = {};
+													sessionParam.ses_id = this.sessionArray[findex].ses_id;
+													localStorage.setItem('session', JSON.stringify(sessionParam));
+												}
+											}
+											let returnUrl: any;
+											console.log('this.userSaveData', this.userSaveData);
+											// this.returnUrl = '/student';
+                      if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
+												localStorage.setItem('project', JSON.stringify({ pro_url: 'student' }));
+												returnUrl = '/student';
+											} else {
+												returnUrl = this.userSaveData.pro_url;
+												localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
+											}
+											if (this.userSaveData && this.userSaveData.ses_id) {
+												const sessionParam: any = {};
+												sessionParam.ses_id = this.userSaveData.ses_id;
+												localStorage.setItem('session', JSON.stringify(sessionParam));
+											}
+											if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
+												this.returnUrl = '/admin';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
+												this.returnUrl = returnUrl + '/school';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
+												this.returnUrl = '/teacher';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
+												this.returnUrl = '/student';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
+												this.returnUrl = returnUrl + '/parent';
+											}
+											//this.common.startSessionTime();
+											// this.router.navigate([this.returnUrl]);
+                      this.router.navigate([this.returnUrl])
+                                              .then(() => {
+                                                window.location.reload();
+                                              });
+										}
+									});
+								}
+							});
+						}
+						this.loaderService.stopLoading();
+					} else {
+						this.loaderService.stopLoading();
+						if (result.status === 'error' && result.data === 'token not matched') {
+							this.common.showSuccessErrorMessage('Token Expired, Please enter a valid username and password', 'error');
+						} else {
+							this.common.showSuccessErrorMessage('Error Switching Account', 'error');
+						}
+
+						this.router.navigate(['/student/view-profile-student']);
+					}
+				},
+				error => {
+					this.common.showSuccessErrorMessage('Invalid username and password', 'error');
+				});
+	}
+
+
+
+
+
 }
