@@ -102,7 +102,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.getFeeAccount(this.feeLoginId);
 			this.getConcessionPerUser(this.feeLoginId);
 		} else {
-			if (this.accountsForm) {
+			if(this.accountsForm) {
 				this.accountsForm.reset()
 			}
 			this.transportFlag = false;
@@ -148,10 +148,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			hs_building: '',
 			hs_room: '',
 			hs_bed: '',
-			optedFacilites: '3'
+			optedFacilites:'3'
 		});
 		this.userConcessionForm = this.fbuild.group({
-
+			
 			tucc_con_end_date: "",
 			tucc_con_start_date: "",
 			tucc_created_by: "",
@@ -165,50 +165,50 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	getConcessionByIdInTable(id) {
 		let na = this.conGroupArray.filter((element) => {
-			if (id == element.fcg_id) {
+			if(id == element.fcg_id) {
 				return true
 			}
 		});
-		if (na.length > 0) {
+		if(na.length > 0) {
 			return na[0].fcg_name
 		} else {
 			return '-'
 		}
-
-
+		
+		
 	}
 
 	getConcessionDescByIdInTable(id) {
-		let na = this.conGroupArray.filter((element) => {
-			if (id == element.fcg_id) {
+		let na =  this.conGroupArray.filter((element) => {
+			if(id == element.fcg_id) {
 				return true
 			}
 		});
-		if (na.length > 0) {
-			return na[0].fcg_description
-		} else {
+		if(na.length > 0) {
+			return  na[0].fcg_description
+		}else {
 			return '-';
 		}
-
-
+		
+		
 	}
 
 	getStatus(item) {
-		if (item == "" || item == "0") {
+		if(item == "" || item =="0") {
 			return "Pending"
-		} else if (item == "1") {
+		} else if( item == "1") {
 			return "Approved"
-		} else if (item == '2') {
+		} else if(item == '2') {
 			return "Rejected"
 		}
 	}
 
 	addUserConcessionGrouptoUser() {
 		console.log("i am here", this.userConcessionForm.valid);
-
+		
 		if (this.userConcessionForm.valid) {
 			this.userConcessionForm.patchValue({
-				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd'),
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
 				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd'),
 				tucc_login_id: this.feeLoginId,
 				tucc_created_by: this.currentUser.login_id
@@ -219,12 +219,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		}
 	}
 	getConcessionPerUser(feeLoginId) {
-
-		this.sisService.getConcessionPerUser({ au_login_id: feeLoginId }).subscribe((res: any) => {
-			if (res.data) {
+		
+		this.sisService.getConcessionPerUser({au_login_id: feeLoginId}).subscribe((res:any) => {
+			if(res.data) {
 				this.userConcessionArray = res.data
 				console.log("i am res.data", this.userConcessionArray);
-
+				
 			}
 		})
 	}
@@ -240,31 +240,31 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.patchValue({
 					hs_bed: ''
 				});
-			}
+			} 
 		});
 	}
 	getBuilding() {
 		this.buildingArray = [];
-		this.feeService.getHostelConfigType({ hc_type: 'building', hc_status: '1' }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.buildingArray = result.data;
-			}
+		this.feeService.getHostelConfigType({hc_type: 'building',hc_status: '1'}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.buildingArray = result.data;
+		  }
 		});
 	}
 	getRoom() {
 		this.roomArray = [];
-		this.feeService.getHostelConfigType({ hc_type: 'room', hc_status: '1', hm_building: this.accountsForm.value.hs_building }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.roomArray = result.data;
-			}
+		this.feeService.getHostelConfigType({hc_type: 'room',hc_status: '1',hm_building: this.accountsForm.value.hs_building}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.roomArray = result.data;
+		  }
 		});
 	}
 	getBed() {
 		this.bedArray = [];
-		this.feeService.getHostelConfigType({ hc_type: 'bed', hc_status: '1', hm_building: this.accountsForm.value.hs_building, hm_room: this.accountsForm.value.hs_room }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.bedArray = result.data;
-			}
+		this.feeService.getHostelConfigType({hc_type: 'bed',hc_status: '1',hm_building: this.accountsForm.value.hs_building,hm_room: this.accountsForm.value.hs_room}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.bedArray = result.data;
+		  }
 		});
 	}
 	additionalFeeComponent(class_id) {
@@ -272,16 +272,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			if (result && result.status === 'ok') {
 				this.additionalFeeComponentArray = [];
 				//console.log('additionalFeeComponentArray--', result.data);
-				for (var i = 0; i < result.data.length; i++) {
-					if (result.data[i]['fs_classification'] == 'group') {
-						result.data[i]['fh_id'] = 'g-' + result.data[i]['fs_id'];
+				for (var i=0; i<result.data.length;i++) {
+					if (result.data[i]['fs_classification']=='group') {
+						result.data[i]['fh_id'] = 'g-'+result.data[i]['fs_id'];
 						result.data[i]['fh_name'] = result.data[i]['fs_name'];
 						this.additionalFeeComponentArray.push(result.data[i]);
 					} else {
 						this.additionalFeeComponentArray.push(result.data[i]);
 					}
 				}
-
+				
 			}
 		});
 	}
@@ -300,7 +300,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_transport_from: '',
 			accd_transport_to: '',
 			accd_remark: '',
-			optedFacilites: '3'
+			optedFacilites :'3'
 		});
 		this.stoppageArray = [];
 		this.slabArray = [];
@@ -321,7 +321,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
 					this.accountsForm.patchValue({
-						optedFacilites: '1'
+						optedFacilites :'1'
 					})
 				} else {
 					this.transportFlag = false;
@@ -348,9 +348,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				if (this.accountDetails.accd_is_hostel === 'Y') {
 					this.hostelFlag = true;
 					this.accountsForm.patchValue({
-						optedFacilites: '2'
+						optedFacilites :'2'
 					})
-					if (this.accountDetails.hostel_details) {
+					if(this.accountDetails.hostel_details) {
 						this.accountsForm.patchValue({
 							hs_building: this.accountDetails.hostel_details.hs_building,
 							hs_room: this.accountDetails.hostel_details.hs_room,
@@ -366,8 +366,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
-				console.log("just check me", this.accountDetails.accd_remark_id);
-
+				console.log("just check me",   this.accountDetails.accd_remark_id);
+				
 				this.accountsForm.patchValue({
 					accd_id: this.accountDetails.accd_id,
 					accd_login_id: this.accountDetails.accd_login_id,
@@ -458,17 +458,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	optedFacilitesEvent(event) {
+	optedFacilitesEvent(event){
 		console.log(event);
 		console.log(event.value == '1');
-		if (event.value == '1') {
+		if(event.value == '1'){
 			this.accountsForm.patchValue({
 				accd_transport_mode: '1',
 			});
 			this.modeFlag = true;
 			this.transportFlag = true;
 			console.log(this.accountDetails);
-
+			
 			this.accountsForm.patchValue({
 				accd_hostel_fs_id: '',
 				accd_hostel_fcc_id: '',
@@ -478,7 +478,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			});
 			this.hostelTerminateFlag = false;
 			this.hostelFlag = false;
-		} else if (event.value == '2') {
+		} else if(event.value == '2'){
 			this.hostelFlag = true;
 
 			this.accountsForm.patchValue({
@@ -495,7 +495,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.stoppageArray = [];
 			this.transportFlag = false;
 			this.terminationFlag = false;
-		} else if (event.value == '3') {
+		} else if(event.value == '3'){
 			this.accountsForm.patchValue({
 				accd_hostel_fs_id: '',
 				accd_hostel_fcc_id: '',
@@ -649,7 +649,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id ? this.accountsForm.value.accd_remark_id : '',
+				accd_remark_id: this.accountsForm.value.accd_remark_id ? this.accountsForm.value.accd_remark_id :'',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -730,8 +730,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if (this.hostelFlag) {
 			if (this.accountsForm.value.accd_hostel_fs_id && this.accountsForm.value.accd_hostel_fs_id !== '0' &&
 				this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0' &&
-				this.accountsForm.value.hs_building &&
-				this.accountsForm.value.hs_room &&
+				this.accountsForm.value.hs_building && 
+				this.accountsForm.value.hs_room && 
 				this.accountsForm.value.hs_bed) {
 				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to) {
 					validateFlag = false;
@@ -742,7 +742,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		}
 		console.log('shsashsh', this.userConcessionArray, this.feeLoginId);
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approved') {
-
+			
 			this.accountsForm.value.accd_remark_id = '';
 		}
 		if (validateFlag) {
@@ -756,7 +756,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id ? this.accountsForm.value.accd_remark_id : '',
+				accd_remark_id: this.accountsForm.value.accd_remark_id ?  this.accountsForm.value.accd_remark_id: '',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -854,7 +854,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
 				accd_fcg_document: JSON.stringify(this.documentPath),
 				accd_reason_id: this.accountsForm.value.accd_reason_id,
-				accd_remark_id: this.accountsForm.value.accd_remark_id ? this.accountsForm.value.accd_remark_id : '',
+				accd_remark_id: this.accountsForm.value.accd_remark_id ?  this.accountsForm.value.accd_remark_id : '',
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -952,24 +952,18 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				tucc_remarks: this.userConcessionArray[si].tucc_remarks,
 				tucc_status: this.userConcessionArray[si].tucc_status
 			});
-
+			
 		}
 	}
 
 	updateConcessions() {
 		if (this.indexUpdate > -1) {
 			this.userConcessionForm.patchValue({
-				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd'),
-				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd')
+				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
+				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd') 
 			});
-			if (this.userConcessionArray[this.indexUpdate].tucc_con_start_date != this.userConcessionForm.value.tucc_con_start_date ||
-				this.userConcessionArray[this.indexUpdate].tucc_con_end_date != this.userConcessionForm.value.tucc_con_end_date ||
-				this.userConcessionArray[this.indexUpdate].tucc_fcg_id != this.userConcessionForm.value.tucc_fcg_id) {
-				this.userConcessionForm.patchValue({
-					tucc_status: "0"
-				});
-			}
 			this.userConcessionArray[this.indexUpdate] = this.userConcessionForm.value;
+		
 			this.userConcessionForm.reset();
 			this.indexUpdate = -1;
 		}
