@@ -21,7 +21,6 @@ import { BulkWalletTransactionComponent } from './bulk-wallet-transaction/bulk-w
 import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.component';
 import { CommonStudentProfileComponent1 } from './common-student-profile-2/common-student-profile.component'
 import { StudentRouteMoveStoreService } from './student-route-move-store.service';
-import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -42,7 +41,6 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 		SecurityDepositComponent,
 		DropoutComponent,
 		BulkUpdatesComponent,
-		BulkUploadComponent,
 		BouncedChequeMultipleComponent,
 		PreviewDocumentComponent,
 		BulkWalletTransactionComponent,

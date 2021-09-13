@@ -12,7 +12,6 @@ import { DropoutComponent } from './dropout/dropout.component';
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { BulkWalletTransactionComponent } from './bulk-wallet-transaction/bulk-wallet-transaction.component';
 import { MissingInvoiceComponent } from './missing-invoice/missing-invoice.component';
-import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 
 const routes: Routes = [
 	{ path: 'cheque-control-tool', component: ChequeControlToolComponent },
@@ -27,8 +26,7 @@ const routes: Routes = [
 	{ path: 'dropout', component: DropoutComponent},
 	{ path: 'bulk-transaction', component: BulkUpdatesComponent},
 	{ path: 'bulk-wallet-transaction', component: BulkWalletTransactionComponent},
-	{ path: 'missing-invoices', component: MissingInvoiceComponent},
-	{ path: 'bulk-update', component: BulkUploadComponent},
+	{ path: 'missing-invoices', component: MissingInvoiceComponent}
 ];
 
 @NgModule({

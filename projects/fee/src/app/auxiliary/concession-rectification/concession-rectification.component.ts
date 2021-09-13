@@ -99,7 +99,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 						admno: element.au_process_type == '3' ? ("Pr. Adm. - " + element.au_admission_no) : element.au_process_type == '4' ? ("A - " + element.au_admission_no): element.au_admission_no,
 						name: element.au_full_name,
 						concession: element.fcg_name,
-						proposed_by: element.created_name,
+						proposed_by: element.tucc_created_by,
 						action: element
 					});
 

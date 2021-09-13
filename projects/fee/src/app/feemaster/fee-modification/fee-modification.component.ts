@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
-import { MatDialog, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { InvoiceElement } from '../fee-transaction-entry/invoiceelement.model';
 
 @Component({
@@ -44,21 +44,6 @@ export class FeeModificationComponent implements OnInit {
 	inv_due_date: any;
 	showForm = false;
 	btnDisable = false;
-	ELEMENT_DATA: any[] = [];
-	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-	check_name_of_field = [
-		{id: 'ftr_remark', name:'Remarks'},
-		{id: 'ftr_pay_id', name:'Payment Type'},
-		{id: 'ftr_bnk_id', name:'Bank Name'},
-		{id: 'ftr_transaction_date', name:'Transaction Date'},
-		{id: 'ftr_cheque_no', name:'Cheque Number'},
-		{id: 'ftr_cheque_date', name:'Cheque Date'},
-		{id: 'ftr_transaction_id', name:'Transaction Number'},
-		{id: 'ftr_branch', name:'Branch Name'},
-		{id: 'ftr_amount', name:'Amount'}
-	];
-	displayedColumns = [ 'created_date', 'field_name', 'initial_vale', 'final_vale', 'created_by', 'remarks'];
-	balance_data: { rpt_id: any; rpt_inv_id: any; inv_invoice_no: any; inv_receipt_no: any; login_id: any; ftr_transaction_id: any; ftr_transaction_date: any; ftr_id: any; ftr_inv_id: any; ftr_emod_id: any; ftr_pay_id: any; ftr_amount: any; ftr_remark: any; ftr_cheque_no: any; ftr_cheque_date: any; ftr_bnk_id: any; ftr_branch: any; is_cheque: boolean; ftr_deposit_bnk_id: any; ftr_rpt_no: any; };
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -66,9 +51,7 @@ export class FeeModificationComponent implements OnInit {
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
 		public common: CommonAPIService,
-		public dialog: MatDialog
-		
-		) { }
+		public dialog: MatDialog) { }
 
 	ngOnInit() {
 		this.getSchool();
@@ -80,7 +63,6 @@ export class FeeModificationComponent implements OnInit {
 		this.getInvoiceTypes();
 		this.getFeePeriods();
 		this.buildForm();
-		
 	}
 	buildForm() {
 		this.modifyReceiptForm = this.fbuild.group({
@@ -104,13 +86,11 @@ export class FeeModificationComponent implements OnInit {
 			'ftr_branch': '',
 			'ftr_amount': '',
 			'ftr_remark': '',
-			'remarks_main': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'ftr_fine_amount' : '',
 			'ftr_prev_balance' : '',
-			'saveAndPrint': '',
-			'check_data': ''
+			'saveAndPrint': ''
 		});
 
 	}
@@ -214,17 +194,13 @@ export class FeeModificationComponent implements OnInit {
 			'ftr_branch': '',
 			'ftr_amount': '',
 			'ftr_remark': '',
-			'remarks_main': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'ftr_fine_amount' : '',
 			'ftr_prev_balance' : '',
-			'saveAndPrint': '',
-			'check_data':''
+			'saveAndPrint': ''
 		});
 		this.showForm = false;
-		this.ELEMENT_DATA = [];
-		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	}
 	isExist(mod_id) {
 		return this.common.isExistUserAccessMenu(mod_id);
@@ -271,8 +247,6 @@ export class FeeModificationComponent implements OnInit {
 			receiptJSON.invoice_no = rpt_number;
 			document.getElementById('inv_num').blur();
 		}
-		this.ELEMENT_DATA = [];
-		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 		if (rpt_number) {
 			this.feeService.getReceiptBifurcation(receiptJSON).subscribe((result: any) => {
@@ -322,28 +296,6 @@ export class FeeModificationComponent implements OnInit {
 						'ftr_deposit_bnk_id': this.receipt.ftr_deposit_bnk_id,
 						'ftr_rpt_no' : this.receipt.ftr_rpt_no
 					});
-					this.balance_data = {
-						'rpt_id' : this.receipt.receipt_id,
-						'rpt_inv_id': this.receipt.inv_id,
-						'inv_invoice_no': this.receipt.inv_invoice_no,
-						'inv_receipt_no': this.receipt.rpt_receipt_no,
-						'login_id': this.receipt.login_id,
-						'ftr_transaction_id': this.receipt.ftr_transaction_id,
-						'ftr_transaction_date': this.receipt.ftr_transaction_date,
-						'ftr_id' : this.receipt.ftr_id,
-						'ftr_inv_id' : this.receipt.ftr_inv_id,
-						'ftr_emod_id' : this.receipt.ftr_emod_id,
-						'ftr_pay_id': this.receipt.ftr_pay_id,
-						'ftr_amount': this.receipt.netPay,
-						'ftr_remark' : this.receipt.ftr_remark ? this.receipt.ftr_remark : '',
-						'ftr_cheque_no': this.receipt.ftr_cheque_no,
-						'ftr_cheque_date': this.receipt.ftr_cheque_date,
-						'ftr_bnk_id': this.receipt.ftr_bnk_id,
-						'ftr_branch': this.receipt.ftr_branch,
-						'is_cheque': this.receipt.ftr_cheque_no > 0 ? true : false,
-						'ftr_deposit_bnk_id': this.receipt.ftr_deposit_bnk_id,
-						'ftr_rpt_no' : this.receipt.ftr_rpt_no
-					}
 					this.showForm = true;
 				} else {
 					this.receiptArray = [];
@@ -352,70 +304,6 @@ export class FeeModificationComponent implements OnInit {
 					this.showForm = false;
 				}
 			});
-			let sr = 0;
-			this.feeService.getReceiptLog(receiptJSON).subscribe((result:any) => {
-				if(result.status == 'ok') {
-					result.data.forEach(element => {
-						console.log(element);
-						let obj:any = {};
-						let check_push = false;
-						sr += 1;
-						obj.srno = sr;
-						obj.initial_vale = element.tfrl_rpt_initial_value;
-						obj.final_vale = element.tfrl_rpt_final_value;
-						obj.created_by = element.au_full_name;
-						obj.remarks = element.tfrl_remarks;
-						obj.created_date = new DatePipe('en-US').transform(element.tfrl_changed_date, 'dd-MMM-yyyy');
-						this.check_name_of_field.map((el) => {
-							if(el.id == element.tfrl_rpt_field) {
-								obj.field_name = el.name;
-								check_push = true
-							}
-						});
-						if(element.tfrl_rpt_field == 'ftr_pay_id') {
-							this.payModes.forEach((el) => {
-								if(el.pay_id == element.tfrl_rpt_initial_value) {
-									obj.initial_vale = el.pay_name
-								}
-								if(el.pay_id == element.tfrl_rpt_final_value) {
-									obj.final_vale = el.pay_name
-								}
-							})
-						}
-						if(element.tfrl_rpt_field == 'ftr_bnk_id') {
-							let x = JSON.parse(element.tfrl_log);
-							if(x.ftr_pay_id == '3') {
-								this.allBanks.forEach((el) => {
-									if(el.tb_id == element.tfrl_rpt_initial_value) {
-										obj.initial_vale = el.tb_name
-									}
-									if(el.tb_id == element.tfrl_rpt_final_value) {
-										obj.final_vale = el.tb_name
-									}
-								})
-
-							} else {
-								console.log("in here", this.banks, element.tfrl_rpt_initial_value, element.tfrl_rpt_final_value);
-								
-								this.banks.forEach((el) => {
-									if(parseInt(el.bnk_id) == parseInt(element.tfrl_rpt_initial_value)) {
-										obj.initial_vale = el.bank_name
-									}
-									if(parseInt(el.bnk_id) == parseInt(element.tfrl_rpt_final_value)) {
-										obj.final_vale = el.bank_name
-									}
-								})
-							}
-						}
-						if(check_push) {
-							this.ELEMENT_DATA.push(obj);
-						}
-					});
-					this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-					
-				}
-				
-			})
 		} else {
 			this.common.showSuccessErrorMessage('Invoice/Receipt Number cannot be blank', 'error');
 			this.showForm = false;
@@ -469,15 +357,8 @@ export class FeeModificationComponent implements OnInit {
 			}
 		}
 
-		console.log('this.modifyReceiptForm.value', this.modifyReceiptForm.value, this.balance_data);
-		this.modifyReceiptForm.patchValue({
-			"check_data": this.balance_data
-		});
-		if(this.modifyReceiptForm.value.remarks_main == '') {
-			validateFlag = false
-		}
-		
-		if (validateFlag ) {
+		console.log('this.modifyReceiptForm.value', this.modifyReceiptForm.value);
+		if (validateFlag) {
 			this.btnDisable = true;
 			this.feeService.updateReceipt(this.modifyReceiptForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
@@ -493,7 +374,6 @@ export class FeeModificationComponent implements OnInit {
 			this.btnDisable = false;
 		}
 	}
-	
 	saveAndPrintReceipt() {
 		const datePipe = new DatePipe('en-in');
 		if (this.receipt.late_fine_amt) {
@@ -558,5 +438,4 @@ export class FeeModificationComponent implements OnInit {
 			this.btnDisable = false;
 		}
 	}
-	
 }
