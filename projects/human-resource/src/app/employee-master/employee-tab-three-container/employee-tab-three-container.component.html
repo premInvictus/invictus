@@ -200,7 +200,7 @@
                                             placeholder="Reporting Officer"
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
-                                            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
+                                            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_id">
                                                 {{item.emp_name}}
                                             </mat-option>
                                         </mat-select>
