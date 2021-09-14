@@ -716,7 +716,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				}
 
 				this.commonAPIService.setUserPrefix(result.data[0]['au_si_prefix']);
-				this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','branch-change')
+				this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','branch-change', 1)
 				.subscribe(
 					(result: any) => {
 						if (result.status === 'ok' && result.data) {
