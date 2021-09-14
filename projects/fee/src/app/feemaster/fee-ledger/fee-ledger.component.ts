@@ -29,7 +29,9 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild(CommonStudentProfileComponent) commonStudentProfileComponent: CommonStudentProfileComponent;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('deleteReceiptModal') deleteReceiptModal;
+	@ViewChild('cancelReceiptModal') cancelReceiptModal;
 	@ViewChild('deleteReceiptWithReasonModal') deleteReceiptWithReasonModal;
+	@ViewChild('cancelReceiptWithReasonModal') cancelReceiptWithReasonModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('consolidateModal') consolidateModal;
 	@ViewChild('unconsolidateModal') unconsolidateModal;
@@ -192,24 +194,24 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	getGlobalSetting() {
 		let param: any = {};
-		param.gs_alias = ['gradecard_scholastic_abbreviation','gradecard_show_scholastic_gradescale','gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
-		  'gradecard_health_status', 'gradecard_date', 'school_achievement'];
+		param.gs_alias = ['gradecard_scholastic_abbreviation', 'gradecard_show_scholastic_gradescale', 'gradecard_attendance', 'gradecard_total_mettings', 'gradecard_mettings_present', 'gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+			'gradecard_health_status', 'gradecard_date', 'school_achievement'];
 		this.feeService.getGlobalSettingReplace(param).subscribe((result: any) => {
-		  if (result && result.status === 'ok') {
-			this.settings = result.data;
-			this.settings.forEach(element => {
-			  
-			  if (element.gs_alias === 'gradecard_header') {
-				this.header = element.gs_value;
-				this.header = this.header.replace('@','data:image/png;base64,');
-				// var regex = /<img.*?src="(.*?)"/;
-				// var src = regex.exec(this.header)[1];
-				// console.log(src);
-			  } 
-			});
-		  }
+			if (result && result.status === 'ok') {
+				this.settings = result.data;
+				this.settings.forEach(element => {
+
+					if (element.gs_alias === 'gradecard_header') {
+						this.header = element.gs_value;
+						this.header = this.header.replace('@', 'data:image/png;base64,');
+						// var regex = /<img.*?src="(.*?)"/;
+						// var src = regex.exec(this.header)[1];
+						// console.log(src);
+					}
+				});
+			}
 		})
-	  }
+	}
 
 	checkEmit(process_type) {
 		this.process_type = process_type;
@@ -235,15 +237,15 @@ export class FeeLedgerComponent implements OnInit {
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe(async (result: any) => {
 			console.log("i am result data", result.data);
-			
-			if(result.data == "") {
+
+			if (result.data == "") {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
 				return;
 			}
 			result.data[1].map((element) => {
 				// console.log("i am element", element);
 				if (element.fh_class_id.includes(result.data[0][0].au_class_id)) {
-					headName.push(element.fh_name+'')
+					headName.push(element.fh_name + '')
 				}
 
 			});
@@ -263,13 +265,13 @@ export class FeeLedgerComponent implements OnInit {
 			}
 			let arr = [];
 			let continuev = false;
-			
+
 			result.data[0].map(element => {
 				console.log((element.rpt_receipt_no));
-				if(element.rpt_receipt_no) {
+				if (element.rpt_receipt_no) {
 					continuev = true;
 				}
-				
+
 			});
 			result.data[0].map((element) => {
 				let bank_name_1 = '';
@@ -356,30 +358,30 @@ export class FeeLedgerComponent implements OnInit {
 			doc.levelHeading = [];
 			doc.levelTotalFooter = [];
 			doc.levelSubtotalFooter = [];
-			
+
 			async function getBase64ImageFromUrl(imageUrl) {
 				var res = await fetch(imageUrl);
 				var blob = await res.blob();
-			  
+
 				return new Promise((resolve, reject) => {
-				  var reader  = new FileReader();
-				  reader.addEventListener("load", function () {
-					  resolve(reader.result);
-				  }, false);
-			  
-				  reader.onerror = () => {
-					return reject(this);
-				  };
-				  reader.readAsDataURL(blob);
+					var reader = new FileReader();
+					reader.addEventListener("load", function () {
+						resolve(reader.result);
+					}, false);
+
+					reader.onerror = () => {
+						return reject(this);
+					};
+					reader.readAsDataURL(blob);
 				})
-			  }
+			}
 
 			var imageurl = await getBase64ImageFromUrl(this.schoolInfo.school_logo);
-			
-			
+
+
 			doc.autoTable({
 				// startY: doc.previousAutoTable.finalY + 0.2,
-				
+
 				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
 				didDrawPage: function (data) {
 					// doc.setFont('Roboto');
@@ -394,9 +396,9 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			
+
 			doc.autoTable({
-				head: [[this.schoolInfo.school_address + ',' +this.schoolInfo.school_city]],
+				head: [[this.schoolInfo.school_address + ',' + this.schoolInfo.school_city]],
 				startY: doc.previousAutoTable.finalY - 2,
 				didDrawPage: function (data) {
 					// doc.setFont('Roboto');
@@ -412,7 +414,7 @@ export class FeeLedgerComponent implements OnInit {
 				theme: 'striped'
 			});
 			doc.autoTable({
-				head: [['Website: '+this.schoolInfo.school_website + ', Affiliation No: ' +this.schoolInfo.school_afflication_no]],
+				head: [['Website: ' + this.schoolInfo.school_website + ', Affiliation No: ' + this.schoolInfo.school_afflication_no]],
 				startY: doc.previousAutoTable.finalY - 2,
 				didDrawPage: function (data) {
 					// doc.setFont('Roboto');
@@ -450,7 +452,7 @@ export class FeeLedgerComponent implements OnInit {
 			details.push(result.data[0][0].au_admission_no);
 			details.push('Active Parent');
 			details.push(':');
-			details.push( new CapitalizePipe().transform(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name));
+			details.push(new CapitalizePipe().transform(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_parent_name));
 			details.push('');
 			details.push('');
 			details.push('');
@@ -458,7 +460,7 @@ export class FeeLedgerComponent implements OnInit {
 			details = [];
 			details.push('Class');
 			details.push(':');
-			details.push(result.data[0][0].class_name +'-'+ result.data[0][0].sec_name);
+			details.push(result.data[0][0].class_name + '-' + result.data[0][0].sec_name);
 			details.push('Active Parent No');
 			details.push(':');
 			details.push(this.commonStudentProfileComponent.studentdetails.parentinfo[0].epd_contact_no);
@@ -480,7 +482,7 @@ export class FeeLedgerComponent implements OnInit {
 			doc.autoTable({
 				head: [],
 				body: pdfdetaileddata,
-				startY: doc.previousAutoTable.finalY -2,
+				startY: doc.previousAutoTable.finalY - 2,
 				didDrawPage: function (data) {
 					doc.setFontStyle('bold');
 				},
@@ -493,7 +495,7 @@ export class FeeLedgerComponent implements OnInit {
 				drawRow: function (row, data) {
 					row.height = 80
 				},
-			  
+
 				useCss: true,
 
 				styles: {
@@ -505,22 +507,22 @@ export class FeeLedgerComponent implements OnInit {
 					halign: 'left',
 					// columnWidth: 'wrap',
 					fillColor: false,
-					rowHeight: 5, 
-                	cellPadding: 0,
+					rowHeight: 5,
+					cellPadding: 0,
 				},
 				columnStyles: {
-					0: {cellWidth: 15},
-					1: {cellWidth: 2},
-					2: {cellWidth: 15},
-					3: {cellWidth: 15},
-					4: {cellWidth: 2},
-					5: {cellWidth: 15},
-					6: {cellWidth: 15},
-					7: {cellWidth: 2},
-					8: {cellWidth: 15},
+					0: { cellWidth: 15 },
+					1: { cellWidth: 2 },
+					2: { cellWidth: 15 },
+					3: { cellWidth: 15 },
+					4: { cellWidth: 2 },
+					5: { cellWidth: 15 },
+					6: { cellWidth: 15 },
+					7: { cellWidth: 2 },
+					8: { cellWidth: 15 },
 					// etc
 				},
-				
+
 			});
 			doc.autoTable({
 				head: [headName],
@@ -592,7 +594,7 @@ export class FeeLedgerComponent implements OnInit {
 					textColor: 'black',
 					// lineColor: '#89a8c8',
 					lineWidth: 0.1,
-        			lineColor: [0, 0, 0],
+					lineColor: [0, 0, 0],
 					valign: 'middle',
 					halign: 'center',
 					columnWidth: 'wrap'
@@ -616,14 +618,14 @@ export class FeeLedgerComponent implements OnInit {
 					textColor: 'black',
 					halign: 'left',
 					fontSize: 8,
-					
+
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				// tslint:disable-next-line:max-line-length
-				startY: doc.previousAutoTable.finalY -2,
+				startY: doc.previousAutoTable.finalY - 2,
 				head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
 				didDrawPage: function (data) {
 
@@ -638,15 +640,15 @@ export class FeeLedgerComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			if(continuev) {
+			if (continuev) {
 				doc.save('Receipt_Ledger_' + this.loginId + ".pdf");
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
 			}
-			if(result.data[0].length == 0) {
+			if (result.data[0].length == 0) {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
 			}
-			
+
 		})
 	}
 
@@ -716,7 +718,7 @@ export class FeeLedgerComponent implements OnInit {
 
 
 		this.feeService.getHeadWiseStudentDetail({ login_id: this.loginId }).subscribe((result: any) => {
-			if(result.data == "") {
+			if (result.data == "") {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error');
 				return;
 			}
@@ -766,7 +768,7 @@ export class FeeLedgerComponent implements OnInit {
 			columValue.push('Fine',);
 			columValue.push('Total');
 
-			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ' );
+			reportType = new TitleCasePipe().transform('Receipt ledger : ' + this.sessionName + ' ');
 			const fileName = new TitleCasePipe().transform('Receipt ledger_: ' + this.sessionName + '_' + this.commonStudentProfileComponent.studentdetails.au_full_name + '_' + this.commonStudentProfileComponent.studentdetails.em_admission_no) + '.xlsx';
 			const workbook = new Excel.Workbook();
 			console.log("i am column ", columns.length, Math.floor(columns.length / 2), this.alphabetJSON[Math.floor(columns.length / 2) + 1]);
@@ -801,22 +803,22 @@ export class FeeLedgerComponent implements OnInit {
 			// 	}
 
 			// }
-			
+
 			console.log("i am col def", columndefinition);
 
 			let arr = [];
 			let obj2: any = {};
-			for(let i = 0; i < columndefinition.length; i++) {
+			for (let i = 0; i < columndefinition.length; i++) {
 				obj2[`${columndefinition[i].id}`] = ''
 			}
 
 			obj2.ftr_bnk_name = 'Grand Total';
 			let continuev = false;
 			result.data[0].map(element => {
-				if(element.rpt_receipt_no) {
+				if (element.rpt_receipt_no) {
 					continuev = true;
 				}
-				
+
 			})
 			result.data[0].map((element) => {
 				let obj: any = {}
@@ -841,11 +843,11 @@ export class FeeLedgerComponent implements OnInit {
 				if (!main) {
 					obj.rpt_receipt_no = element.rpt_receipt_no;
 					obj.rpt_receipt_date = (new DatePipe('en-in').transform(element.rpt_receipt_date, 'd-MMM-y'));
-					obj.fp_months = (element.fp_months[0]) ? element.fp_months[0]: '-';
+					obj.fp_months = (element.fp_months[0]) ? element.fp_months[0] : '-';
 					obj.pay_name = (element.pay_name);
-					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1: '-';
+					obj.bank_name_1 = (element.bank_name_1) ? element.bank_name_1 : '-';
 					obj.ftr_cheque_no = (element.ftr_cheque_no) ? element.ftr_cheque_no : '-';
-					obj.late_fine_amt = (element.late_fine_amt ? element.late_fine_amt: 0);	
+					obj.late_fine_amt = (element.late_fine_amt ? element.late_fine_amt : 0);
 					obj.rpt_net_amount = (element.rpt_net_amount ? (element.rpt_net_amount) : 0);
 
 					obj.ftr_bnk_name = (element.ftr_bnk_name);
@@ -871,26 +873,25 @@ export class FeeLedgerComponent implements OnInit {
 							})
 							obj[`${da[0].invg_fh_id}`] = (!at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : '-');
 
-							if (element.rpt_receipt_no)
-							{
-								if(!obj2[`${da[0].invg_fh_id}`] || obj2[`${da[0].invg_fh_id}`] == '') {
+							if (element.rpt_receipt_no) {
+								if (!obj2[`${da[0].invg_fh_id}`] || obj2[`${da[0].invg_fh_id}`] == '') {
 									obj2[`${da[0].invg_fh_id}`] = 0
 								}
 								obj2[`${da[0].invg_fh_id}`] += !at_val ? (da[0].invg_fh_amount ? parseInt(da[0].invg_fh_amount) : 0) : 0;
 							}
-								
+
 						}
 
 
 					}
-					
+
 
 
 					if (element.rpt_receipt_no) {
-						if(!obj2.late_fine_amt || obj2.late_fine_amt == '') {
+						if (!obj2.late_fine_amt || obj2.late_fine_amt == '') {
 							obj2.late_fine_amt = 0
 						}
-						if(!obj2.rpt_net_amount || obj2.rpt_net_amount == '') {
+						if (!obj2.rpt_net_amount || obj2.rpt_net_amount == '') {
 							obj2.rpt_net_amount = 0
 						}
 						obj2.late_fine_amt += parseInt(element.late_fine_amt ? element.late_fine_amt : 0);
@@ -1021,10 +1022,10 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			worksheet.columns.forEach(column => {
 				column.width = 15
-			  })
+			})
 			console.log(continuev);
-			
-			if(continuev) {
+
+			if (continuev) {
 				workbook.xlsx.writeBuffer().then(data => {
 					const blob = new Blob([data], { type: 'application/octet-stream' });
 					saveAs(blob, fileName);
@@ -1032,7 +1033,7 @@ export class FeeLedgerComponent implements OnInit {
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('No receipt to generate report', 'error')
 			}
-			
+
 		});
 
 	}
@@ -1088,6 +1089,7 @@ export class FeeLedgerComponent implements OnInit {
 					const tempactionFlag: any = {
 						deleteinvoice: false,
 						deletereceipt: false,
+						cancelreceipt: false,
 						edit: false,
 						recalculate: false,
 						consolidate: false,
@@ -1099,6 +1101,7 @@ export class FeeLedgerComponent implements OnInit {
 					if (item.inv_paid_status === 'paid') {
 						if (item.flgr_invoice_receipt_no === '0') {
 							tempactionFlag.deletereceipt = true;
+							tempactionFlag.cancelreceipt = true;
 						} else {
 							tempactionFlag.detach = true;
 						}
@@ -1163,7 +1166,7 @@ export class FeeLedgerComponent implements OnInit {
 
 
 
-					if (item.ftr_status !== "2") {
+					if (item.ftr_status !== "2" && item.ftr_status !== "6") {
 						this.footerRecord.receipttotal += Number(element.reciept);
 					}
 
@@ -1686,12 +1689,13 @@ export class FeeLedgerComponent implements OnInit {
 
 	manipulateAction(row) {
 		this.selection.toggle(row);
-		console.log(this.selection.selected, row);
+		console.log(this.selection.selected, row,);
 		let tempactionFlag: any
 		if (row && row.flgr_payment_mode === "partial") {
 			tempactionFlag = {
 				deleteinvoice: false,
 				deletereceipt: false,
+				cancelreceipt: false,
 				edit: false,
 				recalculate: false,
 				consolidate: false,
@@ -1704,6 +1708,7 @@ export class FeeLedgerComponent implements OnInit {
 			tempactionFlag = {
 				deleteinvoice: true,
 				deletereceipt: true,
+				cancelreceipt: true,
 				edit: true,
 				recalculate: true,
 				consolidate: true,
@@ -1716,6 +1721,7 @@ export class FeeLedgerComponent implements OnInit {
 
 		if (this.selection.selected.length > 0) {
 			this.selection.selected.forEach(item => {
+
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.deleteinvoice = false;
 				} else {
@@ -1723,8 +1729,11 @@ export class FeeLedgerComponent implements OnInit {
 				}
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.deletereceipt = false;
+					tempactionFlag.cancelreceipt = false;
+
 				} else {
 					tempactionFlag.deletereceipt = tempactionFlag.deletereceipt && item.eachActionFlag.deletereceipt && this.selection.selected.length > 0;
+					tempactionFlag.cancelreceipt = tempactionFlag.cancelreceipt && item.eachActionFlag.cancelreceipt && this.selection.selected.length > 0;
 				}
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.edit = false;
@@ -1761,6 +1770,17 @@ export class FeeLedgerComponent implements OnInit {
 				} else {
 					tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
 				}
+				if (this.selection.selected.length == 1) {
+					console.log("in here");
+					
+					if (item.action.ftr_status == '6' || item.action.ftr_status == '2') {
+						tempactionFlag.deletereceipt = true;
+						tempactionFlag.cancelreceipt = false;
+					}
+				} else {
+					tempactionFlag.deletereceipt = false;
+					tempactionFlag.cancelreceipt = false;
+				}
 
 
 
@@ -1770,6 +1790,8 @@ export class FeeLedgerComponent implements OnInit {
 
 
 			});
+			console.log("i am here", tempactionFlag);
+			
 			this.actionFlag = tempactionFlag;
 		} else {
 			this.resetActionFlag();
@@ -1780,6 +1802,7 @@ export class FeeLedgerComponent implements OnInit {
 		this.actionFlag = {
 			deleteinvoice: false,
 			deletereceipt: false,
+			cancelreceipt: false,
 			edit: false,
 			recalculate: false,
 			consolidate: false,
@@ -1792,6 +1815,7 @@ export class FeeLedgerComponent implements OnInit {
 
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openDeleteReciptDialog = (data) => this.deleteReceiptModal.openModal(data);
+	cancelDeleteReciptDialog = (data) => this.cancelReceiptModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	openUnConsolidateDialog = (data) => this.unconsolidateModal.openModal(data);
@@ -1810,6 +1834,12 @@ export class FeeLedgerComponent implements OnInit {
 		receiptJson.id = value;
 		receiptJson.receipt_id = 14;
 		this.deleteReceiptWithReasonModal.openModalFee(receiptJson);
+	}
+	cancelReciptConfirm(value) {
+		const receiptJson: any = {};
+		receiptJson.id = value;
+		receiptJson.receipt_id = 14;
+		this.cancelReceiptWithReasonModal.openModalFee(receiptJson);
 	}
 
 	fetchInvId() {
@@ -1864,6 +1894,26 @@ export class FeeLedgerComponent implements OnInit {
 			}
 		});
 	}
+	cancelReceiptFinal(value) {
+		const param: any = {};
+		param.ftr_id = value.inv_id;
+		param.login_id = this.loginId;
+		param.process_type = this.commonStudentProfileComponent.processType;
+		param.reason_remark = value.reason_remark;
+		param.reason_id = value.reason_id;
+		// console.log(param);
+		// console.log(this.commonStudentProfileComponent.processType);
+		this.feeService.cancelReceipt(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
+				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
 
 	recalculateConfirm(value) {
 		const param: any = {};
@@ -1896,15 +1946,24 @@ export class FeeLedgerComponent implements OnInit {
 
 	attachReceipt(value) {
 		console.log('receipt value', value);
-		this.feeService.attachReceipt(value).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+		if (value.rpt_status != '3' && value.rpt_status != '2') {
+			this.feeService.attachReceipt(value).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+					this.getFeeLedger(this.loginId);
+					this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		} else {
+			if (value.rpt_status == '3') {
+				this.commonAPIService.showSuccessErrorMessage("Cancelled receipt cannot be attached", 'error');
+			} else if (value.rpt_status == '2') {
+				this.commonAPIService.showSuccessErrorMessage("Dishounered Cheque cannot be attached", 'error');
 			}
-		});
+
+		}
 	}
 	unconsolidateConfirm(value) {
 		this.feeService.unconsolidateInvoice({ inv_consolidate_id: this.fetchInvId() }).subscribe((result: any) => {
