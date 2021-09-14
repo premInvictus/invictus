@@ -182,6 +182,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceBifurcation', value);
 	}
+	getConcessionInvoiceBifurcation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getConcessionInvoiceBifurcation', value);
+	}
 	getInvoiceGroupBifurcation(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceGroupBifurcation', value);
@@ -197,6 +201,10 @@ export class FeeService {
 	invoiceAdjustmentRemark(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/updateInvoice', value);
+	}
+	invoiceAdjustmentRemarkForConsolidatedAdjustment(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/updateInvoiceForConsolidatedAdjustment', value);
 	}
 	insertInvoice(value) {
 		this.service.startLoading();
@@ -229,6 +237,10 @@ export class FeeService {
 	deleteReceipt(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/deleteFeeReceipt', value);
+	}
+	cancelReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/cancelFeeReceipt', value);
 	}
 
 	attachReceipt(value) {
@@ -720,5 +732,17 @@ export class FeeService {
 	getBankChargeReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getBankChargeReport', value);
+	}
+	uploadBulkDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/uploadBulkDocuments', value);
+	}
+	downloadBulkUpdateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/downloadBulkUpdateTemplate', value);
+	}
+	getReceiptLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getReceiptLog', value);
 	}
 }

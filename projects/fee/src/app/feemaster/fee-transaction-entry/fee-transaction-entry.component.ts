@@ -48,6 +48,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	opening_balance_paid_status = 0;
 	bnk_charge =  0;
 	bnk_charge_per = 0;
+	readonlymodeforinvoice = false;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -119,6 +120,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'walletProcess':''
 			});
 			this.selectedMode = '1';
+			this.readonlymodeforinvoice = true;
 			this.currentInvoiceId  = invDet2.inv_id;
 			this.getInvoices(invDet2.inv_id);
 		}
@@ -453,6 +455,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 				}
 				this.selectedMode = '1';
+				this.readonlymodeforinvoice = true;
 				if (this.studentInfo.last_invoice_number) {
 					this.currentInvoiceId = this.studentInfo.last_invoice_number;
 					this.getInvoices(this.studentInfo.last_invoice_number);
@@ -939,6 +942,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
+		console.log("i ma here", $event.value, $event);
+		if($event.value == '1') {
+			this.readonlymodeforinvoice = true;
+		} else {
+			this.readonlymodeforinvoice = false;
+		}
+		
 		if (this.selectedMode !== '1') {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.fee_amount,
@@ -1037,6 +1047,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					'saveAndPrint': ''
 				});
 				this.selectedMode = '1';
+				this.readonlymodeforinvoice = true;
 				this.getInvoices(invDet2.inv_id);
 			}
 

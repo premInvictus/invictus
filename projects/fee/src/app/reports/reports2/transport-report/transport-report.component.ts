@@ -1993,7 +1993,7 @@ export class TransportReportComponent implements OnInit {
 							}
 							if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 								item2.id === 'applicable_from' || item2.id === 'applicable_to')) {
-								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y');
+								obj[item2.id] = groupItem.rows[key][item2.id] && groupItem.rows[key][item2.id] != '-' ? new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'): '-';
 							}
 							if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
 								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
@@ -2379,7 +2379,7 @@ export class TransportReportComponent implements OnInit {
 							}
 							if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 								item2.id === 'applicable_from' || item2.id === 'applicable_to')) {
-								arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
+								arr.push(groupItem.rows[key][item2.id] && groupItem.rows[key][item2.id] != '-' ? new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'): '');
 							}
 							if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
 								arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
