@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
+import { CommonAPIService, SisService, ProcesstypeService, SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -21,6 +21,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	reasonDataArray: any[] = [];
 	events: string[] = [];
 	students: any[] = [];
+	classArray: any[] = [];
+	sectionArray: any[] = [];
 	disableApiCall = false;
 	showCancelDate = false;
 	enrolmentPlaceholder = 'Enrolment';
@@ -52,12 +54,15 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	selectedMembers: any[] = [];
 	selectedMembersEnrolls: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService,
+		private notif: CommonAPIService, private sisService: SisService, 
+		private SmartService: SmartService,
 		private processType: ProcesstypeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
 	ngOnInit() {
+		this.getClass();
+		this.getSectionAll();
 		this.buildForm();
 		this.getReason(8);
 		localStorage.removeItem('change_enrolment_status_last_state');
@@ -160,6 +165,22 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		} else {
 			this.selectedMembersEnrolls.splice(findex2, 1);
 		}
+	}
+
+	getSectionAll(){
+		this.sisService.getSectionAll({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.sectionArray = result.data;
+			}
+		});
+	}
+
+	getClass() {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
 	}
 
 	getStudentData(event) {
