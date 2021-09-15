@@ -421,39 +421,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     }
     this.renderData();
   }
-
-  // getSkillsAwards(login_id) {
-  //   this.defaultskill = false;
-  //   if (login_id) {
-  //     this.finalAwardArray = [];
-  //     this.finalActivityArray = [];
-  //     this.skillAwardsArray = [];
-  //     this.sisService.getSkillAwards({ login_id: login_id, user: 'User' }).subscribe((result: any) => {
-  //       if (result.status === 'ok') {
-  //         this.defaultskill = true;
-  //         this.skillAwardsArray.push(result.awards);
-  //         this.skillAwardsArray.push(result.skills);
-  //         if (this.skillAwardsArray[0]) {
-  //           for (const item of this.skillAwardsArray[0]) {
-  //             this.finalAwardArray.push(item);
-  //             this.examNavigate(0);
-  //           }
-  //         }
-  //         if (this.skillAwardsArray[1]) {
-  //           for (const item of this.skillAwardsArray[1]) {
-  //             this.finalActivityArray.push(item);
-
-  //           }
-  //         }
-  //         this.renderData();
-  //       } else {
-  //         this.finalAwardArray = [];
-  //         this.finalActivityArray = [];
-  //         this.skillAwardsArray = [];
-  //       }
-  //     });
-  //   }
-  // }
+  
   examNavigate(index) {
     this.currentExamIndex = index;
     this.currentExam = this.finalAwardArray[this.currentExamIndex];
