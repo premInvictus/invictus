@@ -62,6 +62,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   yearwisePerformanceData: any = {};
   performanceTab = 'session';
   currentUserDetails: any = {};
+  skillDetails: any;
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -77,6 +78,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
     this.processtypeService.setProcesstype(4);
+    this.getStudentLastRecordPerProcessType();
     this.buildForm();
     this.getActivity();
     this.getActivityClub();
@@ -84,11 +86,14 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.getEventLevel();
     this.getAuthority();
     this.getArea();
-    this.getStudentLastRecordPerProcessType();
+    console.log("on init called");
   }
   ngOnChanges() {
     console.log('ngOnchanged', this.loginId);
     console.log('studentAcademicProfile', this.studentAcademicProfile);
+    // this.getSkillsAwards(this.loginId);
+    // this.getStudentLastRecordPerProcessType();
+    // this.getAdditionalDetails(this.loginId);
   }
   getPerformance(tabname) {
     this.performanceTab = tabname;
@@ -373,44 +378,58 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
       }
     }
   }
-  getSkillsAwards(login_id) {
-    this.defaultskill = false;
+
+  getAdditionalDetails(login_id){
     if (login_id) {
-      this.finalAwardArray = [];
+      this.finalAwardArray = new Array<any>();
       this.finalActivityArray = [];
       this.skillAwardsArray = [];
-      this.sisService.getSkillAwards({ login_id: login_id, user: 'User' }).subscribe((result: any) => {
+      console.log("get add check 1 ", this.finalAwardArray);
+      this.sisService.getAdditionalDetails({ au_login_id: login_id }).subscribe((result: any) => {
         if (result.status === 'ok') {
+          console.log("get add check 2 ", this.finalAwardArray);
           this.defaultskill = true;
-          this.skillAwardsArray.push(result.awards);
-          this.skillAwardsArray.push(result.skills);
-          if (this.skillAwardsArray[0]) {
-            for (const item of this.skillAwardsArray[0]) {
-              this.finalAwardArray.push(item);
-              this.examNavigate(0);
-            }
-          }
-          if (this.skillAwardsArray[1]) {
-            for (const item of this.skillAwardsArray[1]) {
-              this.finalActivityArray.push(item);
+          this.finalAwardArray = result.data[0].awardsDetails;
+          this.skillAwardsArray.push(result.data[0].awardsDetails);
+          console.log("get add check 3 ", this.finalAwardArray);
+          // if (this.skillAwardsArray[0]) {
+          //   for (const item of this.skillAwardsArray[0]) {
+          //     this.finalAwardArray.push(item);
+          //     console.log("get add check 4 ", this.finalAwardArray);
+          //     this.examNavigate(0);
+          //     console.log("get add check 5 ", this.finalAwardArray);
+          //   }
+          // }
+          // console.log("get add check 6 ", this.finalAwardArray);
+          // if (this.skillAwardsArray[1]) {
+          //   for (const item of this.skillAwardsArray[1]) {
+          //     console.log("get add check 7 ", this.finalAwardArray);
+          //     this.finalActivityArray.push(item);
 
-            }
-          }
+          //   }
+          // }
+          console.log("get add check 8 ", this.finalAwardArray);
+          console.log("final array from home function ", this.finalAwardArray);
           this.renderData();
         } else {
           this.finalAwardArray = [];
           this.finalActivityArray = [];
           this.skillAwardsArray = [];
+          this.renderData();
         }
       });
     }
+    this.renderData();
   }
+  
   examNavigate(index) {
     this.currentExamIndex = index;
     this.currentExam = this.finalAwardArray[this.currentExamIndex];
-    if (this.finalAwardArray.length === 1 || this.finalAwardArray.length === 0) {
-      this.examPre = true;
-      this.examNext = true;
+    if (this.finalAwardArray) {
+      if(this.finalAwardArray.length === 1 || this.finalAwardArray.length === 0){
+        this.examPre = true;
+        this.examNext = true;
+      }
     } else if (this.currentExamIndex === this.finalAwardArray.length - 1) {
       this.examNext = true;
       this.examPre = false;
@@ -431,14 +450,16 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
       this.schoolAdmin = [];
       this.classTeacher = [];
       this.subjectTeacher = [];
+      this.remarkArray = [];
+
+      console.log("r check 1", this.remarkArray);
 
       const getJson = { 'user': 'user', 'era_type': 'general', 'login_id': login_id };
       this.sisService.getGeneralRemarks(getJson).subscribe((result: any) => {
         if (result.status === 'ok') {
           this.defaultRemark = true;
           this.remarkArray = result.generalRemarks ? result.generalRemarks : [];
-          console.log("remarks array");
-          console.log(this.remarkArray);
+          console.log("r check 2", this.remarkArray);
           this.prepareGroupAuthorityData(this.remarkArray);
           for (const item of this.remarkArray) {
             if (Number(item.era_aut_id) === 1) {
@@ -453,6 +474,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
               this.subjectTeacher.push(item);
             }
           }
+          console.log("r check 3", this.remarkArray);
         }
       });
     }
@@ -473,7 +495,8 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
             this.getClassTerm(this.currentUserDetails.au_class_id);
           }
         });
-        this.getSkillsAwards(this.loginId);
+        // this.getSkillsAwards(this.loginId);
+        this.getAdditionalDetails(this.loginId);
         this.getRemarks(this.loginId);
       }
     });
@@ -500,11 +523,12 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.termId = '1';
     this.termindex = 0;
     this.performanceTab = 'session'
-    this.getSkillsAwards(this.loginId);
+    // this.getSkillsAwards(this.loginId);
     this.getRemarks(this.loginId);
     this.currentUserDetails = this.studentAcademicProfile.studentdetails;
     this.sessionWisePerformance(this.currentUserDetails);
     this.getClassTerm(this.currentUserDetails.au_class_id);
+    this.getAdditionalDetails(this.loginId);
   }
 
 	openAddModal(value) {
@@ -523,14 +547,28 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.remarkArray.push(value.value);
 }
 prepareSkillsForUpdate(value){
-    this.skillAwardsArray[0].push(value.value);
+  if(this.skillAwardsArray){
+    if(this.skillAwardsArray.length > 0){
+      this.skillAwardsArray.push(value.value);
+    }else{
+      // let arr = new Array<any>(3);
+      this.skillAwardsArray[0] = this.skillAwardsArray;
+      this.skillAwardsArray[1] = [];
+      this.skillAwardsArray[2] = [];
+      this.skillAwardsArray[2].push(value.value);
+    }
+  }
 }
 
 	addOk(data) { 
+    console.log("add ok data", data);
 		console.log("Hi add me has been clicked");
     console.log("add ok "+data.controls['form_name'].value);
+    // this.getStudentLastRecordPerProcessType();
+    console.log("data login data ", this.loginId);
     if (data) {
 			if(data.controls['form_name'].value == 'remarks'){
+        console.log(data);
         data.controls['era_login_id'].setValue(this.loginId);
         // console.log("add ok "+data.controls['era_login_id'].value);
         this.prepareRemarksForUpdate(data);
@@ -539,30 +577,50 @@ prepareSkillsForUpdate(value){
         }).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
-            this.buildForm();
+            this.getRemarks(this.loginId);
           } else {
             this.commonAPIService.showSuccessErrorMessage(res.message, 'error');
           }
         });
-      }else{
-        data.controls['eaw_login_id'].setValue(this.loginId);
-        console.log("add ok "+data.controls['eaw_login_id'].value);
-        this.prepareSkillsForUpdate(data);
+      }else if(data.controls['form_name'].value == 'skills'){
+        // this.prepareSkillsForUpdate(data);
+        let tempSkills = {
+            "eaw_id": "",
+            "eaw_login_id" : this.loginId,
+            "eaw_status" : "1",
+            "eaw_ses_id": data.controls['eaw_ses_id'].value,
+            "eaw_activity_name": data.controls['eaw_activity_name'].value,
+            "eaw_level_of_interest": data.controls['eaw_level_of_interest'].value,
+            "eaw_authority": data.controls['eaw_authority'].value,
+            "eaw_event_level": data.controls['eaw_event_level'].value,
+            "eaw_teacher_remark": data.controls['eaw_teacher_remark'].value
+        };
+        if(data){
+          this.finalAwardArray.push(tempSkills);
+        }
+        const tabTwoJSON = {
+          au_login_id: this.loginId,
+          educationDetails: [],
+          documentDetails: [],
+          awardsDetails: data ? this.finalAwardArray : []
+        };
         // console.log(this.skillAwardsArray[0].push(data.value));
-        // console.log(data.value);
-        this.sisService.addSkills({
-          au_login_id: this.loginId ,awardsDetails: this.skillAwardsArray[0]
-        }).subscribe((res: any) => {
+        console.log("SKAD >>>>>>>>>>>>>>>>>",tabTwoJSON);
+        this.sisService.addSkills(tabTwoJSON).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
-            this.buildForm();
+            this.getAdditionalDetails(this.loginId);
+            this.renderData();
+            // this.buildForm();
           } else {
             this.commonAPIService.showSuccessErrorMessage(res.message, 'error');
           }
         });
       }
       this.updateFlag = true;
-      this.ngOnInit();
+      // this.renderData();
+
+    // this.getStudentLastRecordPerProcessType();
     }
 	}
 	updateGeneralRemarkList() {
@@ -645,39 +703,44 @@ prepareSkillsForUpdate(value){
   renderData() {
     console.log("i am in render data ");
     console.log(this.finalAwardArray);
-		for (let i = 0; i < this.finalAwardArray.length; i++) {
-      console.log("length of final award array "+this.finalAwardArray.length);
-			const spannArray: any[] = [];
-			spannArray.push({
-				act_name: this.finalAwardArray[i].eaw_activity_name,
-				eaw_id: this.finalAwardArray[i].eaw_id,
-				eaw_ses_id: this.finalAwardArray[i].eaw_ses_id,
-				eaw_level_of_interest: this.finalAwardArray[i].eaw_level_of_interest,
-				eaw_authority: this.finalAwardArray[i].eaw_authority,
-				eaw_event_level: this.finalAwardArray[i].eaw_event_level,
-				eaw_teacher_remark: this.finalAwardArray[i].eaw_teacher_remark,
-			});
-			for (let j = i + 1; j < this.finalAwardArray.length; j++) {
-				if (this.finalAwardArray[i].eaw_activity_name === this.finalAwardArray[j].eaw_activity_name) {
-					spannArray.push({
-						act_name: this.finalAwardArray[i].eaw_activity_name,
-						eaw_id: this.finalAwardArray[j].eaw_id,
-						eaw_ses_id: this.finalAwardArray[j].eaw_ses_id,
-						eaw_level_of_interest: this.finalAwardArray[j].eaw_level_of_interest,
-						eaw_authority: this.finalAwardArray[j].eaw_authority,
-						eaw_event_level: this.finalAwardArray[j].eaw_event_level,
-						eaw_teacher_remark: this.finalAwardArray[j].eaw_teacher_remark,
-					});
-				}
-			}
-			const findex = this.finalSpannedArray.findIndex(f => f.act_name === this.finalAwardArray[i].eaw_activity_name);
-			if (findex === -1) {
-				this.finalSpannedArray.push({
-					act_name: this.finalAwardArray[i].eaw_activity_name,
-					details: spannArray
-				});
-			}
-		}
+    if(this.finalAwardArray){
+      for (let i = 0; i < this.finalAwardArray.length; i++) {
+        console.log("length of final award array "+this.finalAwardArray.length);
+        const spannArray: any[] = [];
+        spannArray.push({
+          act_name: this.finalAwardArray[i].eaw_activity_name,
+          eaw_id: this.finalAwardArray[i].eaw_id,
+          eaw_ses_id: this.finalAwardArray[i].eaw_ses_id,
+          eaw_level_of_interest: this.finalAwardArray[i].eaw_level_of_interest,
+          eaw_authority: this.finalAwardArray[i].eaw_authority,
+          eaw_event_level: this.finalAwardArray[i].eaw_event_level,
+          eaw_teacher_remark: this.finalAwardArray[i].eaw_teacher_remark,
+        });
+        for (let j = i + 1; j < this.finalAwardArray.length; j++) {
+          if (this.finalAwardArray[i].eaw_activity_name === this.finalAwardArray[j].eaw_activity_name) {
+            spannArray.push({
+              act_name: this.finalAwardArray[i].eaw_activity_name,
+              eaw_id: this.finalAwardArray[j].eaw_id,
+              eaw_ses_id: this.finalAwardArray[j].eaw_ses_id,
+              eaw_level_of_interest: this.finalAwardArray[j].eaw_level_of_interest,
+              eaw_authority: this.finalAwardArray[j].eaw_authority,
+              eaw_event_level: this.finalAwardArray[j].eaw_event_level,
+              eaw_teacher_remark: this.finalAwardArray[j].eaw_teacher_remark,
+            });
+          }
+        }
+        const findex = this.finalSpannedArray.findIndex(f => f.act_name === this.finalAwardArray[i].eaw_activity_name);
+        if (findex === -1) {
+          this.finalSpannedArray.push({
+            act_name: this.finalAwardArray[i].eaw_activity_name,
+            details: spannArray
+          });
+        }
+        console.log("final spanned array : ", this.finalSpannedArray);
+      }
+    }else{
+      this.finalAwardArray = [];
+    }
 		console.log("I am final awards array");
 		console.log(this.finalAwardArray);
 	}

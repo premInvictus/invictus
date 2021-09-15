@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
+import { CommonAPIService, SisService, ProcesstypeService, SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -21,9 +21,13 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	reasonDataArray: any[] = [];
 	events: string[] = [];
 	students: any[] = [];
+	allStudents: any[] = [];
+	classArray: any[] = [];
+	sectionArray: any[] = [];
 	disableApiCall = false;
 	showCancelDate = false;
 	enrolmentPlaceholder = 'Enrolment';
+	event_au_process_type ;
 	enrollMentTypeArray: any[] = [{
 		au_process_type: '1', au_process_name: 'Enquiry'
 	},
@@ -51,13 +55,17 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	currIndex: any;
 	selectedMembers: any[] = [];
 	selectedMembersEnrolls: any[] = [];
+	filteredStudents: any[];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService,
+		private notif: CommonAPIService, private sisService: SisService, 
+		private SmartService: SmartService,
 		private processType: ProcesstypeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
 	ngOnInit() {
+		this.getClass();
+		this.getSectionAll();
 		this.buildForm();
 		this.getReason(8);
 		localStorage.removeItem('change_enrolment_status_last_state');
@@ -162,6 +170,138 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		}
 	}
 
+	getSectionAll(){
+		this.sisService.getSectionAll().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				result.data.forEach(element => {
+					if(element.sec_name != "" && element.sec_name != " "){
+						this.sectionArray.push(element);
+					}					
+				});
+				console.log("all the sections : ",this.sectionArray);
+			}
+		});
+	}
+
+	isAMatch(element, index, array){
+		return 
+	}
+
+	filterByClass(event){
+		let filterData = [];
+		console.log("class search : ",event.value );
+		console.log("Students  : ", this.students );
+		if(event.value != "" && event.value != " "){
+			this.students.forEach(element => {
+				// if(element.au_admission_no == (event.target.value)){
+				// 	filterData = element;
+				// }
+				filterData = this.students.filter(item => item.class_name == event.value);
+			});
+			this.filteredStudents = filterData;
+			if(filterData.length > 0){
+				this.students = filterData;
+			}
+			// this.students = filterData;
+		}else{
+			this.sisService.getStudentsDataPerProcessType({
+				process_type_from: this.event_au_process_type
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+					this.students = res.data;
+				} else {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+				}
+			});
+		}
+		console.log(filterData);
+
+	}
+
+	filterBySec(event){
+		let filterData = [];
+		console.log("section search : ",event.value );
+		console.log("Students  : ", this.students );
+		if(event.value != "" && event.value != " "){
+			this.students.forEach(element => {
+				// if(element.au_admission_no == (event.target.value)){
+				// 	filterData = element;
+				// }
+				filterData = this.students.filter(item => item.sec_name == event.value);
+			});
+			this.filteredStudents = filterData;
+			if(filterData.length > 0){
+				this.students = filterData;
+			}
+			// this.students = filterData;
+		}else{
+			this.sisService.getStudentsDataPerProcessType({
+				process_type_from: this.event_au_process_type
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+					this.students = res.data;
+				} else {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+				}
+			});
+		}
+		console.log(filterData);
+
+	}
+
+	searchByAdmissionNo(event){
+		let filterData = [];
+		console.log("admission search : ",event.target.value );
+		console.log("Students  : ", this.students );
+		if(event.target.value != "" && event.target.value != " "){
+			this.students.forEach(element => {
+				// if(element.au_admission_no == (event.target.value)){
+				// 	filterData = element;
+				// }
+				filterData = this.students.filter(item => item.au_admission_no.includes( event.target.value ));
+			});
+			this.filteredStudents = filterData;
+			if(filterData.length > 0){
+				this.students = filterData;
+			}
+			// this.students = filterData;
+		}else{
+			this.sisService.getStudentsDataPerProcessType({
+				process_type_from: this.event_au_process_type
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+					this.students = res.data;
+				} else {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+				}
+			});
+		}
+		console.log(filterData);
+	}
+
+	getClass() {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
+	}
+
 	getStudentData(event) {
 		if (event) {
 			event.stopPropagation();
@@ -256,13 +396,13 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		this.sisService.getReason({ reason_type }).subscribe((result: any) => {
 			if (result) {
 				this.reasonDataArray = result.data;
-
 			}
 		});
 	}
 
 	prepareEnrolmentToArray(event) {
 		if (this.currIndex === 1) {
+			this.event_au_process_type = event.value;
 			this.sisService.getStudentsDataPerProcessType({
 				process_type_from: event.value
 			}).subscribe((res: any) => {

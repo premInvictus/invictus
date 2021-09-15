@@ -67,7 +67,7 @@
       </mat-card-title>
       <mat-card-content *ngIf="defaultskill">
 
-        <div *ngIf="finalAwardArray.length > 0 " class="row">
+        <div *ngIf="finalAwardArray && finalAwardArray.length > 0 " class="row">
           <div class="col-12">
 
             <table class="table table-borderd table-stripped custom-table height-300">
@@ -83,35 +83,35 @@
                  </tr>
               </thead>
               <tbody class="table-skill__body text-center">
-                 <ng-container *ngFor="let item of finalSpannedArray;let i=index">
-                    <ng-container *ngIf="item.act_name === item.details[0].act_name">
+                 <ng-container>
+                    <ng-container>
                        <ng-container>
-                          <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                             <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td>
-                             <td class="custom-td" *ngIf="j == 0"
-                                [attr.rowspan]="item.details.length">{{getActivityName(item.act_name)}}</td>
+                          <tr class="custom-tr" *ngFor="let item of finalAwardArray;let i = index">
+                             <td class="custom-td" [attr.rowspan]="item.length">{{i+1}}</td>
+                             <td class="custom-td"
+                                [attr.rowspan]="item.length">{{getActivityName(item.eaw_activity_name)}}</td>
                              <!-- <td class="custom-td">
                                 {{getSessionName(det.eaw_ses_id)}}
                              </td> -->
                              <td class="custom-td">
-                                {{getAuthorityName(det.eaw_authority)}}
+                                {{getAuthorityName(item.eaw_authority)}}
                              </td>
                              <td class="custom-td">
-                                {{getLevelofInterestName(det.eaw_level_of_interest)}}
+                                {{getLevelofInterestName(item.eaw_level_of_interest)}}
                              </td>
                              <td class="custom-td">
-                                {{getEventLevelName(det.eaw_event_level)}}
+                                {{getEventLevelName(item.eaw_event_level)}}
                              </td>
-                             <td class="custom-td teachers-remarks"  *ngIf="det.eaw_teacher_remark.length < 20; else teachers_remarks_long">
-                                {{det.eaw_teacher_remark}}  
+                             <td class="custom-td teachers-remarks"  *ngIf="item.eaw_teacher_remark && item.eaw_teacher_remark.length < 20; else teachers_remarks_long">
+                                {{item.eaw_teacher_remark}}  
                              </td>
                              <ng-template #teachers_remarks_long>
                               <td class="custom-td teachers-remarks" >
-                                {{(det.eaw_teacher_remark | slice:0:16)+'..'}}
+                                {{(item.eaw_teacher_remark | slice:0:16)+'..'}}
                                 <i class="fa fa-info-circle" data-toggle="tooltip" 
                                 data-placement="top"
                                 position="above"
-                                matTooltip="{{det.eaw_teacher_remark}}" 
+                                matTooltip="{{item.eaw_teacher_remark}}" 
                                 aria-hidden="true"></i>
                               </td>
                             </ng-template>
