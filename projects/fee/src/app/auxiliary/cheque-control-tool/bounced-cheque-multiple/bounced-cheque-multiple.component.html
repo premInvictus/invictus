@@ -140,7 +140,7 @@
     <div class="col-12">
       <table mat-table id="cheque_control_list1" [dataSource]="dataSource" class="fee-table-100 text-center" matSort>
         <ng-container matColumnDef="srno">
-          <th style="font-size: 10px" *matHeaderCellDef width="2%">
+          <th style="font-size: 10px" *matHeaderCellDef width="20px">
            
             <span >S.No.</span>
           </th>
@@ -155,7 +155,7 @@
           <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.recieptdate}} </td>
         </ng-container>
         <ng-container matColumnDef="recieptno">
-          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header width="10%"> Reciept no. </th>
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header width="10%"> Rpt. No. </th>
           <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
               <span>{{item.recieptno}}</span>
           </td>
@@ -246,13 +246,13 @@
           <td style="font-size: 9px" *matCellDef="let item"> {{item.admno}} </td>
         </ng-container>
         <ng-container matColumnDef="studentnam">
-          <th style="font-size: 10px" *matHeaderCellDef  width="15%"> Student Name </th>
+          <th style="font-size: 10px" *matHeaderCellDef  width="15%"> Name </th>
           <td style="text-align: center !important" style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studentname | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="studenttags">
-          <th style="font-size: 10px" *matHeaderCellDef  width="5%"> Tag </th>
+          <th style="font-size: 10px" *matHeaderCellDef  width="2%"> Tag </th>
           <td style="text-align: center !important" style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
           </td>

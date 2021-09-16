@@ -57,7 +57,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
     
     this.studentDetails = this.data;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log('studentDetails', this.studentDetails);
   }
   buildForm() {
     this.bouncedForm = this.fbuild.group({
@@ -96,7 +95,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
             this.banks.push(result.data[i]);
           }
         }
-        console.log('banks--',this.banks);
       }
     });
   }
@@ -120,7 +118,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
       value: event.value,
       text: event.source.triggerValue
     };
-    console.log(this.selectedData);
   }
   
   submit(event) {
@@ -185,7 +182,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
         (result: any) => {
           if (result && result.status === 'ok') {
             this.schoolInfo = result.data[0];
-            console.log("i am here--------------------", this.schoolInfo);
             this.getSchoolSetting();
           }
         });
@@ -205,9 +201,9 @@ export class BouncedChequeMultipleComponent implements OnInit {
         header = header.replace('{{si_school_city}}', this.schoolInfo.school_city);
         header = header.replace('{{si_school_state}}', this.schoolInfo.school_state);
         header = header.replace('<table ', '<table id="header_tab"');
-        console.log("i am header",header);
+       
         
-        this.header  = new DOMParser().parseFromString(header, "text/html");
+        // this.header  = new DOMParser().parseFromString(header, "text/html");
         document.getElementById("checid").innerHTML = header;
     	}
 
@@ -229,7 +225,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
     
     let bankOInfo: any;
     for (let i = 0; i < this.allBanks.length; i++) {
-      console.log("--------------------",this.allBanks, this.allBanks[i]['bnk_gid'], bnk_id);
       
       if (this.allBanks[i]['bnk_alias'] && (this.allBanks[i]['bnk_alias'] === this.selectedData.text)) {
         bankOInfo = this.allBanks[i];
@@ -251,11 +246,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
   }
 
   downloadPdf() {
-    console.log("i am here--------------------", this.schoolSetting[0]);
     
-    
-    
-    console.log(this.bouncedForm.value.fcc_deposite_date);
      var dated = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
      dated = dated ? this.commonAPIService.dateConvertion(dated, "dd-MMM-yyyy") : 'N/A';
     // var toDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
@@ -268,10 +259,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let bankName = bankInfo && bankInfo['bnk_alias'] ? bankInfo['bnk_alias'] : ((bankInfo['bank_name']) ? (bankInfo['bank_name']).toUpperCase() : '');
     let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
-    console.log("----------------------------", bankInfo);
-    
-    console.log('bankInfo', bankName,bankAccNo, bankInfo,this.bouncedForm.value.ftr_deposit_bnk_id);
-    console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource, localStorage.getItem('session'));
+  
     setTimeout(() => {
       const doc = new jsPDF('portrait');
       doc.setFontSize(9);
@@ -429,7 +417,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
   }
 
   submitAndPrint() {
-    console.log('submit and print1', this.studentDetails);
+    
 
 
     this.CHEQUE_ELEMENT_DATA = [];
