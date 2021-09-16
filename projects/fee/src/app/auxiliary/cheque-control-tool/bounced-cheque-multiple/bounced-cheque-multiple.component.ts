@@ -359,6 +359,20 @@ export class BouncedChequeMultipleComponent implements OnInit {
           fontSize: 4,
           cellPadding: 5
         },
+        columnStyles: {
+          0: {cellWidth: 10},
+          1: {cellWidth: 15},
+          2: {cellWidth: 15},
+          3: {cellWidth: 25},
+          4: {cellWidth: 15},
+          5: {cellWidth: 25},
+          6: {cellWidth: 15},
+          7: {cellWidth: 15},
+          8: {cellWidth: 25},
+          9: {cellWidth: 15},
+          10: {cellWidth: 10}
+          // etc
+        },
         startY: doc.previousAutoTable.finalY ,
         useCss: true,
         styles: {
@@ -427,13 +441,27 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let pos = 1;
     const temparray = this.studentDetails.length > 0 ? this.studentDetails : [this.studentDetails];
     let total = 0;
+    console.log("------------------------",);
+    
     for (const item of temparray) {
+      let prefix = '';
+      if(item.ftr_process_type == '4') {
+        prefix = 'A - ';
+      } else if (item.ftr_process_type == '3') {
+        prefix = 'P - ';
+      } else if (item.ftr_process_type == '2') {
+        prefix = 'R - ';
+      } else if (item.ftr_process_type == '5') {
+        prefix = 'Al - ';
+      } else if (item.ftr_process_type == '1') {
+        prefix = 'E - ';
+      }
       this.CHEQUE_ELEMENT_DATA.push({
         position: pos,
         srno: item,
         class_name: item.class_name + (item.sec_name ? ' ' + item.sec_name : ''),
         chequeno: item.cheque_no,
-        admno: item.inv_process_usr_no,
+        admno: prefix + item.inv_process_usr_no,
         studentname: item.au_full_name,
         studenttags: item.tag_name ? item.tag_name : '',
         recieptno: item.receipt_no,
