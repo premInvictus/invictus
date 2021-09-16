@@ -159,6 +159,18 @@ export class OutstandingReportComponent implements OnInit {
 	previousYearVoucherExists: boolean;
 	feeMonthArray: any[];
 	objobjectmain = {};
+	arrayOfWidth = {
+		'srno': 4,
+		'stu_admission_no': 8,
+		'stu_full_name': 11,
+		'epd_parent_name': 11,
+		'epd_contact_no': 11,
+		'stu_class_name': 8,
+		'tag_name': 7,
+		'rpt_amount': 11,
+		'fp_name': 20,
+		'other': 10
+	}
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -2023,7 +2035,7 @@ export class OutstandingReportComponent implements OnInit {
 						width: 2
 					},
 					{
-						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+						id: 'stu_admission_no', name: 'Enrl. No', field: 'stu_admission_no', filterable: true,
 						width: 60,
 						grouping: {
 							getter: 'stu_admission_no',
@@ -2076,7 +2088,7 @@ export class OutstandingReportComponent implements OnInit {
 					},
 					{
 						id: 'epd_contact_no',
-						name: 'Active Parent Contact',
+						name: 'Contact',
 						field: 'epd_contact_no',
 						filterable: true,
 						sortable: true,
@@ -2085,7 +2097,7 @@ export class OutstandingReportComponent implements OnInit {
 						filter: { model: Filters.compoundInputText }
 					},
 					{
-						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
+						id: 'stu_class_name', name: 'Class - Sec', field: 'stu_class_name', filterable: true,
 						filterSearchType: FieldType.string,
 						width: 50,
 						filter: { model: Filters.compoundInput },
@@ -2272,7 +2284,7 @@ export class OutstandingReportComponent implements OnInit {
 						width: 2
 					},
 					{
-						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+						id: 'stu_admission_no', name: 'Enrl. No', field: 'stu_admission_no', filterable: true,
 						width: 60,
 						grouping: {
 							getter: 'stu_admission_no',
@@ -2325,7 +2337,7 @@ export class OutstandingReportComponent implements OnInit {
 					},
 					{
 						id: 'epd_contact_no',
-						name: 'Active Parent Contact',
+						name: 'Contact',
 						field: 'epd_contact_no',
 						filterable: true,
 						sortable: true,
@@ -2334,7 +2346,7 @@ export class OutstandingReportComponent implements OnInit {
 						filter: { model: Filters.compoundInputText }
 					},
 					{
-						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
+						id: 'stu_class_name', name: 'Class - Sec', field: 'stu_class_name', filterable: true,
 						filterSearchType: FieldType.string,
 						width: 50,
 						filter: { model: Filters.compoundInput },
@@ -4974,7 +4986,7 @@ export class OutstandingReportComponent implements OnInit {
 				if (!(item.id.includes('checkbox_select'))) {
 					columns.push({
 						key: item.id,
-						width: this.checkWidth(item.id, item.name)
+						width: this.checkWidthwithArray(item.id, item.name)
 					});
 					columValue.push(item.name);
 				}
@@ -5250,7 +5262,7 @@ export class OutstandingReportComponent implements OnInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-					this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.exportColumnDefinitions.length - 1] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = this.common.htmlToText(groupItem.title);
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -5640,6 +5652,18 @@ export class OutstandingReportComponent implements OnInit {
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
+	}
+	checkWidthwithArray(id, header) {
+		console.log("i am id------------", id,'-----------', this.arrayOfWidth[id]);
+		if(this.arrayOfWidth[id]) {
+			return this.arrayOfWidth[id];
+		} else {
+			const res = this.dataset.map((f) => (f[id] !== '-' && f[id]) ? f[id].toString().length : 1);
+			const max2 = header.toString().length;
+			const max = Math.max.apply(null, res);
+			return max2 > max ? max2 : max;
+		}
+		
 	}
 	getGroupColumns(columns) {
 		let grName = '';
