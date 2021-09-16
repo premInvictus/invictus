@@ -140,61 +140,61 @@
     <div class="col-12">
       <table mat-table id="cheque_control_list1" [dataSource]="dataSource" class="fee-table-100 text-center" matSort>
         <ng-container matColumnDef="srno">
-          <th mat-header-cell *matHeaderCellDef width="2%">
+          <th style="font-size: 10px" *matHeaderCellDef width="2%">
            
             <span >S.No.</span>
           </th>
-          <td mat-cell *matCellDef="let row">
+          <td style="font-size: 9px" *matCellDef="let row">
             
             <span>{{row?.position}}</span>
           </td>
           <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
         <ng-container matColumnDef="recieptdate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reciept Date </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.recieptdate}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header> Reciept Date </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.recieptdate}} </td>
         </ng-container>
         <ng-container matColumnDef="recieptno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Reciept no. </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap">
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header width="10%"> Reciept no. </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
               <span>{{item.recieptno}}</span>
           </td>
         </ng-container>
         <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef  width="10%"> Amount </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.amount | number}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef  width="10%"> Amount </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.amount | number}} </td>
         </ng-container>
         <ng-container matColumnDef="chequeno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header  width="10%"> Cheque No </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chequeno}}</td>
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header  width="10%"> Cheque No </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.chequeno}}</td>
         </ng-container>
         <ng-container matColumnDef="drawnbankname"  width="10%">
-          <th mat-header-cell *matHeaderCellDef> Drawn  on Bank </th>
-          <td mat-cell *matCellDef="let item"> {{item.drawnbankname}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef> Drawn  on Bank </th>
+          <td style="font-size: 9px" *matCellDef="let item"> {{item.drawnbankname}} </td>
         </ng-container>
         <ng-container matColumnDef="fee">
-            <th mat-header-cell *matHeaderCellDef  width="10%"> Fee Period</th>
-            <td mat-cell *matCellDef="let item"> {{item.fee}} </td>
+            <th style="font-size: 10px" *matHeaderCellDef  width="10%"> Fee Period</th>
+            <td style="font-size: 9px" *matCellDef="let item"> {{item.fee}} </td>
           </ng-container>
         <ng-container matColumnDef="bankdeposite">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Deposit</th>
-          <td mat-cell *matCellDef="let item">
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header> Date of Deposit</th>
+          <td style="font-size: 9px" *matCellDef="let item">
             <span style="font-size: 14px">
               <b>{{item.bankdeposite}}</b>
             </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="chequedate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque Date</th>
-          <td mat-cell *matCellDef="let item">
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header> Cheque Date</th>
+          <td style="font-size: 9px" *matCellDef="let item">
             <span style="font-size: 14px">
               <b>{{item.chequedate | date : 'd-MMM-y'}}</b>
             </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="processingdate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Clearence/Dishonoured</th>
-          <td mat-cell *matCellDef="let item">
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header> Date of Clearence/Dishonoured</th>
+          <td style="font-size: 9px" *matCellDef="let item">
             <span style="font-size: 14px" *ngIf="item.action.fcc_status === 'b'">
               <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
               <b *ngIf="!item.action.dishonor_date">-</b>
@@ -209,8 +209,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Status </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap">
+          <th style="font-size: 10px" *matHeaderCellDef> Status </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
             <div class="inline-flex margin-top-5">
               <div class="text-center">
                 <span style="font-size: 14px" *ngIf="item.action.status === '4'">
@@ -234,36 +234,36 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="entered_by">
-          <th mat-header-cell *matHeaderCellDef> Entered By </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.entered_by}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef> Entered By </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.entered_by}} </td>
         </ng-container>
         <ng-container matColumnDef="approved_by">
-          <th mat-header-cell *matHeaderCellDef> Approved By </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.approved_by}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef> Approved By </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.approved_by}} </td>
         </ng-container>
         <ng-container matColumnDef="admno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header  width="10%"> Enrl. No. </th>
-          <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef mat-sort-header  width="10%"> Enrl. No. </th>
+          <td style="font-size: 9px" *matCellDef="let item"> {{item.admno}} </td>
         </ng-container>
         <ng-container matColumnDef="studentnam">
-          <th mat-header-cell *matHeaderCellDef  width="15%"> Student Name </th>
-          <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
+          <th style="font-size: 10px" *matHeaderCellDef  width="15%"> Student Name </th>
+          <td style="text-align: center !important" style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studentname | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="studenttags">
-          <th mat-header-cell *matHeaderCellDef  width="5%"> Tag </th>
-          <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
+          <th style="font-size: 10px" *matHeaderCellDef  width="5%"> Tag </th>
+          <td style="text-align: center !important" style="font-size: 9px" *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="class_name">
-          <th mat-header-cell *matHeaderCellDef  width="10%"> Class </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.class_name}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef  width="10%"> Class </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap"> {{item.class_name}} </td>
         </ng-container>
         <ng-container matColumnDef="action" >
-          <th mat-header-cell *matHeaderCellDef [hidden]="showPdf"> Action </th>
-          <td mat-cell *matCellDef="let item" class="text-nowrap" [hidden]="showPdf">
+          <th style="font-size: 10px" *matHeaderCellDef [hidden]="showPdf"> Action </th>
+          <td style="font-size: 9px" *matCellDef="let item" class="text-nowrap" [hidden]="showPdf">
             <div class="inline-flex margin-top-5">
               <span style="font-size: 14px" *ngIf="item.action.status === '4'">
                 <b>Approved</b>
@@ -283,8 +283,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="remarks">
-          <th mat-header-cell *matHeaderCellDef> Remarks </th>
-          <td mat-cell *matCellDef="let item"> {{item.remarks}} </td>
+          <th style="font-size: 10px" *matHeaderCellDef> Remarks </th>
+          <td style="font-size: 9px" *matCellDef="let item"> {{item.remarks}} </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
@@ -295,6 +295,13 @@
           <td colspan="11">No Record Found</td>
         </tr>
       </table>
+      <!-- <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
+        [pageSizeOptions]="[5,10,25,100,1000]" (page)="pageEvent = fetchData($event)"></mat-paginator> -->
+    </div>
+  </div>
+  <div class="row" [hidden]="true">
+    <div class="col-12" id="checid">
+      
       <!-- <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
         [pageSizeOptions]="[5,10,25,100,1000]" (page)="pageEvent = fetchData($event)"></mat-paginator> -->
     </div>

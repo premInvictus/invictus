@@ -19,7 +19,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
   finalArray: any[] = [];
   defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
   //,'bankdeposite'
-  displayedColumns = ['srno', 'recieptno', 'admno', 'studentnam', 'studenttags', 'class_name', 'fee', 'amount', 'chequeno', 'drawnbankname','chequedate'];
+
+  displayedColumns = ['srno', 'chequedate', 'chequeno', 'drawnbankname', 'amount', 'fee', 'recieptno','admno', 'studentnam', 'class_name','studenttags'];
   bouncedForm: FormGroup;
   reasonArray: any[] = [];
   gender: any;
@@ -33,6 +34,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
   schoolInfo: any;
   selectedData:any;
   sessionArray: any[] = [];
+  schoolSetting: any;
+  header: any;
   constructor(
     public dialogRef: MatDialogRef<BouncedChequeMultipleComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -51,6 +54,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     this.getAllBanks();
     this.getSession();
     this.getSchool();
+    
     this.studentDetails = this.data;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     console.log('studentDetails', this.studentDetails);
@@ -95,6 +99,15 @@ export class BouncedChequeMultipleComponent implements OnInit {
         console.log('banks--',this.banks);
       }
     });
+  }
+  getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
   }
   closeModal() {
     this.dialogRef.close({ status: '0' });
@@ -172,8 +185,34 @@ export class BouncedChequeMultipleComponent implements OnInit {
         (result: any) => {
           if (result && result.status === 'ok') {
             this.schoolInfo = result.data[0];
+            console.log("i am here--------------------", this.schoolInfo);
+            this.getSchoolSetting();
           }
         });
+  }
+
+  getSchoolSetting() {
+    this.feeService.getGlobalSetting({gs_alias: 'spt_cheque_report_header'}).subscribe((result:any) => {
+      if (result && result.status === 'ok') {
+    		this.schoolSetting = result.data;
+        let header = this.schoolSetting[0].gs_value.replace('\\','');
+        // let logo = this.getBase64Image(this.schoolInfo.school_logo);
+        header = header.replace('{{si_school_logo}}', '<img width="100" height="100" src="'+this.schoolInfo.school_logo+'"/>');
+        header = header.replace('{{si_school_name}}', this.schoolInfo.school_name);
+        header = header.replace('{{si_school_address}}', this.schoolInfo.school_address);
+        header = header.replace('{{si_school_pin}}', this.schoolInfo.school_pincode);
+        header = header.replace('{{si_school_address}}', this.schoolInfo.school_address);
+        header = header.replace('{{si_school_city}}', this.schoolInfo.school_city);
+        header = header.replace('{{si_school_state}}', this.schoolInfo.school_state);
+        header = header.replace('<table ', '<table id="header_tab"');
+        console.log("i am header",header);
+        
+        this.header  = new DOMParser().parseFromString(header, "text/html");
+        document.getElementById("checid").innerHTML = header;
+    	}
+
+      
+    })
   }
 
   getAllBanks() {
@@ -187,20 +226,21 @@ export class BouncedChequeMultipleComponent implements OnInit {
   }
 
   getBankInfo(bnk_id) {
-    console.log('bnk_id', bnk_id);
-    console.log('allBanks', this.allBanks);
-    console.log('this.selectedData.text',this.selectedData.text, this.selectedData);
-    var bankOInfo: any;
-    for (var i = 0; i < this.allBanks.length; i++) {
-      if (this.allBanks[i]['bnk_alias'] && Number(this.allBanks[i]['bnk_alias'] === this.selectedData.text)) {
+    
+    let bankOInfo: any;
+    for (let i = 0; i < this.allBanks.length; i++) {
+      console.log("--------------------",this.allBanks, this.allBanks[i]['bnk_gid'], bnk_id);
+      
+      if (this.allBanks[i]['bnk_alias'] && (this.allBanks[i]['bnk_alias'] === this.selectedData.text)) {
         bankOInfo = this.allBanks[i];
         break;
-      } else {
-        if (this.allBanks[i]['bnk_gid'] && Number(this.allBanks[i]['bnk_gid'] === bnk_id)) {
-          bankOInfo = this.allBanks[i];
-        }
-      }
+      } else if (this.allBanks[i]['bnk_gid'] && (this.allBanks[i]['bnk_gid'] === bnk_id)) {
+          bankOInfo = this.allBanks[i]; break;
+        } else if (this.allBanks[i]['bnk_id'] && (this.allBanks[i]['bnk_id'] === bnk_id)) {
+          bankOInfo = this.allBanks[i]; break;
+        } 
     }
+    
     return bankOInfo;
   }
   getSessionName(id) {
@@ -211,6 +251,9 @@ export class BouncedChequeMultipleComponent implements OnInit {
   }
 
   downloadPdf() {
+    console.log("i am here--------------------", this.schoolSetting[0]);
+    
+    
     
     console.log(this.bouncedForm.value.fcc_deposite_date);
      var dated = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
@@ -222,50 +265,78 @@ export class BouncedChequeMultipleComponent implements OnInit {
     var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MMM-yyyy") : 'N/A';
     var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
     var bankInfo = this.getBankInfo(this.bouncedForm.value.ftr_deposit_bnk_id);
-    let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
+    let bankName = bankInfo && bankInfo['bnk_alias'] ? bankInfo['bnk_alias'] : ((bankInfo['bank_name']) ? (bankInfo['bank_name']).toUpperCase() : '');
     let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
-    console.log('bankInfo', bankInfo,this.bouncedForm.value.ftr_deposit_bnk_id);
+    console.log("----------------------------", bankInfo);
+    
+    console.log('bankInfo', bankName,bankAccNo, bankInfo,this.bouncedForm.value.ftr_deposit_bnk_id);
     console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource, localStorage.getItem('session'));
     setTimeout(() => {
       const doc = new jsPDF('portrait');
-
+      doc.setFontSize(9);
       doc.autoTable({
-        margin: { top: 10, right: 10, bottom: 10, left: 10 },
-      })
-
-      doc.autoTable({
-        head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-        didDrawPage: function (data) {
-          doc.setFont('Roboto');
+        html: '#header_tab',
+        columnStyles: {
+          0: {cellWidth: 50},
+          1: {cellWidth: 80}
+          // etc
         },
         headerStyles: {
-          fontStyle: 'bold',
+          // minCellWidth: 23,
+          fontStyle: 'normal',
           fillColor: '#ffffff',
-          textColor: '#ff0000',
-          halign: 'center',
-          fontSize: 20,
+          textColor: 'black',
+          fontSize: 10,
+          cellPadding: 5
         },
         useCss: true,
-        theme: 'striped'
+        styles: {
+          fontSize: 10,
+          // minCellWidth: 23,
+
+          textColor: 'black',
+          lineColor: '#89A8C9',
+          cellPadding: 5
+        },
+        // theme: 'grid',
+        didDrawCell: function(data) {
+          
+          if ( data.cell.section === 'body') {
+             var td = data.cell.raw;
+             // Assuming the td cells have an img element with a data url set (<td><img src="data:image/jpeg;base64,/9j/4AAQ..."></td>)
+             
+             if(td.getElementsByTagName('img').length >0) {
+              let img = td.getElementsByTagName('img')[0];
+              let dim = data.cell.height - data.cell.padding('vertical');
+              
+              var textPos = data.cell;
+              
+              doc.addImage(img, 'JPEG', textPos.x,  textPos.y, 17, 17);
+             }
+          }
+        }
+        
       });
 
       if (bankName && bankAccNo) {
         let bankFullName = '';
-        bankFullName = bankBranch ? bankName + ', ' + bankBranch + ',  A/C No. ' + bankAccNo : bankName + '  A/C No. ' + bankAccNo;
+        bankFullName = bankBranch ? bankName + ' - ' + ' A/C No. ' + bankAccNo : bankName + ' - A/C No. ' + bankAccNo;
         doc.autoTable({
           head: [[
             new TitleCasePipe().transform(bankFullName)
           ]],
+          startY: doc.previousAutoTable.finalY + 1,
           didDrawPage: function (data) {
             doc.setFont('Roboto');
           },
+          
           headerStyles: {
             fontStyle: 'italic',
             fillColor: '#ffffff',
             textColor: 'black',
             halign: 'center',
-            fontSize: 16,
+            fontSize: 10,
           },
           useCss: true,
           theme: 'striped'
@@ -278,13 +349,13 @@ export class BouncedChequeMultipleComponent implements OnInit {
           // {content: toDate,  styles: {halign: 'left', fillColor: '#ffffff'}},
           { content: 'Session : ' + session, styles: { halign: 'right', fillColor: '#ffffff' } }
         ]],
-
+        startY: doc.previousAutoTable.finalY ,
 
         headerStyles: {
           fontStyle: 'bold',
           fillColor: '#ffffff',
           textColor: 'black',
-          fontSize: 14,
+          fontSize: 9,
         },
         useCss: true,
         theme: 'grid'
@@ -297,12 +368,13 @@ export class BouncedChequeMultipleComponent implements OnInit {
           fontStyle: 'normal',
           fillColor: '#ffffff',
           textColor: 'black',
-          fontSize: 6,
+          fontSize: 4,
           cellPadding: 5
         },
+        startY: doc.previousAutoTable.finalY ,
         useCss: true,
         styles: {
-          fontSize: 6,
+          fontSize: 4,
           minCellWidth: 16.5,
 
           textColor: 'black',
@@ -318,13 +390,13 @@ export class BouncedChequeMultipleComponent implements OnInit {
           { content: 'Generated By : ' + this.currentUser.full_name, styles: { halign: 'left', fillColor: '#ffffff' } },
           { content: 'Deposited By  ', styles: { halign: 'left', fillColor: '#ffffff' } }
         ]],
-
+        startY: doc.previousAutoTable.finalY + 1 ,
         headerStyles: {
           fontStyle: 'italic',
           fillColor: '#ffffff',
           textColor: 'black',
           fontWeight: 'bold',
-          fontSize: 12,
+          fontSize: 9,
         },
         useCss: true,
         theme: 'grid'
@@ -346,7 +418,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       // 	theme: 'striped'
       // });
 
-
+      
       doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
 
       this.dialogRef.close({ status: '1' });
@@ -412,13 +484,14 @@ export class BouncedChequeMultipleComponent implements OnInit {
       approved_by: '',
       recieptdate: '',
       bankdeposite: '',
+      drawnbankname: 'Total',
       processingdate: '',
       remarks: '',
       action: '',
       ftr_family_number: '',
       selectionDisable: true,
       chequedate:'',
-      fee: 'Total'
+      fee: ''
     });
     this.dataSource = new MatTableDataSource<any>(this.CHEQUE_ELEMENT_DATA);
     this.downloadPdf();

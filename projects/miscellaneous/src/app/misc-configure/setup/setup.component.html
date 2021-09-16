@@ -2326,6 +2326,10 @@
                                             </div>
                                           </div>
                                         </div>
+                                        <ng-container *ngIf="control.gs_type == 'editor'">
+                                          <ckeditor [config]="ckeConfig" [formControlName]="control.gs_alias">
+                                          </ckeditor>
+                                        </ng-container>
                                         <div class="row">
                                           <div class="col-lg-6 col-mobile-view-add-ques">
                                             <div class="row">
