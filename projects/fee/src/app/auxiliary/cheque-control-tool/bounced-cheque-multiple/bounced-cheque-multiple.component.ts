@@ -192,7 +192,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       if (result && result.status === 'ok') {
     		this.schoolSetting = result.data;
         let header = this.schoolSetting[0].gs_value.replace('\\','');
-        // let logo = this.getBase64Image(this.schoolInfo.school_logo);
+        console.log("-------------------", this.schoolInfo.school_logo, this.schoolSetting);
         header = header.replace('{{si_school_logo}}', '<img width="100" height="100" src="'+this.schoolInfo.school_logo+'"/>');
         header = header.replace('{{si_school_name}}', this.schoolInfo.school_name);
         header = header.replace('{{si_school_address}}', this.schoolInfo.school_address);
@@ -205,6 +205,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
         
         // this.header  = new DOMParser().parseFromString(header, "text/html");
         document.getElementById("checid").innerHTML = header;
+        console.log("-------------------", header);
+        
     	}
 
       
@@ -266,7 +268,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       doc.autoTable({
         html: '#header_tab',
         columnStyles: {
-          0: {cellWidth: 50},
+          0: {cellWidth: 40},
           1: {cellWidth: 80}
           // etc
         },
@@ -300,7 +302,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
               
               var textPos = data.cell;
               
-              doc.addImage(img, 'JPEG', textPos.x,  textPos.y, 17, 17);
+              doc.addImage(img, 'JPG', textPos.x,  textPos.y, 17, 17);
              }
           }
         }
@@ -363,12 +365,12 @@ export class BouncedChequeMultipleComponent implements OnInit {
           0: {cellWidth: 10},
           1: {cellWidth: 15},
           2: {cellWidth: 15},
-          3: {cellWidth: 25},
+          3: {cellWidth: 20},
           4: {cellWidth: 15},
-          5: {cellWidth: 25},
+          5: {cellWidth: 20},
           6: {cellWidth: 15},
           7: {cellWidth: 15},
-          8: {cellWidth: 25},
+          8: {cellWidth: 20},
           9: {cellWidth: 15},
           10: {cellWidth: 10}
           // etc
