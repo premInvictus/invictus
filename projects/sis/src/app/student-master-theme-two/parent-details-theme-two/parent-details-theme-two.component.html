@@ -94,8 +94,8 @@
                   <div class="col-3">
                      <fieldset class="col-12 fieldset_invoice">
                         <legend class="invoice_legend"> <b>Personal Details</b></legend>
-
-                        <div class="col-12  mar-top-30" *ngIf="checkIfFieldExist('epd_contact_no')">
+                        <div class=" mar-top-30"></div>
+                        <div class="col-12" *ngIf="checkIfFieldExist('epd_contact_no')">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Contact No.</mat-label>
                               <input matInput placeholder="Contact No." formControlName="epd_contact_no" minlength="10"
@@ -255,7 +255,7 @@
                             </mat-form-field>
                         </div>
                      </fieldset>
-                     <div class="col-12 ">
+                     <div class="col-12" *ngIf="checkIfFieldExist('epd_parent_alumni')">
                         <div class="margin-top-25 mar-bot-25">
                            <span>Whether Alumni of the School?</span>
                            <mat-slide-toggle class="margin-legt-imp-10" (change)="checkAluminiStatus(i,$event)"
@@ -267,7 +267,7 @@
                      <fieldset class="col-12 fieldset_invoice" [ngClass]="opacityClass[i]">
                         <legend class="invoice_legend"> <b>Alumni Details</b></legend>
                         <div class="row mar-top-30">
-                           <div class="col-6 ">
+                           <div class="col-6 "  *ngIf="checkIfFieldExist('epd_parent_alumni')">
                               <mat-form-field class="form-field" appearance="outline">
                                  <mat-label>Enter Admission No.</mat-label>
                                  <input class="text-capitalize" matInput placeholder="Enter Admission Number"
@@ -280,7 +280,7 @@
                                  </mat-error>
                               </mat-form-field>
                            </div>
-                           <div class="col-6">
+                           <div class="col-6" *ngIf="checkIfFieldExist('epd_parent_alumni_last_year')">
                               <mat-form-field class="form-field" appearance="outline">
                                  <mat-label>Enter Year</mat-label>
                                  <input class="text-capitalize" matInput placeholder="Enter Year"
@@ -294,7 +294,7 @@
                               </mat-form-field>
                            </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" *ngIf="checkIfFieldExist('epd_parent_alumni_last_class')">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Last Class Attended</mat-label>
                               <mat-select placeholder="Last Class Attended"
