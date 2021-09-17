@@ -113,7 +113,7 @@
                   <span class="livadm-text font-size-14">{{getLiveLabel()}} : {{studentdetails.livecount}}</span>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist('au_full_name')">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"

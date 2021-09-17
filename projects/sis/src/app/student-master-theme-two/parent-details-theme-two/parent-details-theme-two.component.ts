@@ -80,6 +80,12 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() editRequestFlag = false;
 	defaultsrc: any;
 	cityCountryArray: any[] = [];
+	formFieldsO: any;
+	formFieldsA: any;
+	formFieldsP: any;
+	optionalParentForm: any;
+	optional_ea_office_address: any;
+	optional_ea_res_address: any;
 	constructor(public fbuild: FormBuilder, private notif: CommonAPIService, private sisService: SisService,
 		private formEnabledService: FormEnabledService, private processtypeService: ProcesstypeService,
 		public SmartService: SmartService) { }
@@ -88,7 +94,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
-		this.buildForm();
+		this.getConfigureSetting();
 		this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png',
 			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png',
 			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png'];
@@ -100,7 +106,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getCountry();
 		this.getState();
 		this.getSchool();
-		this.getConfigureSetting();
+		this.prepareFormFields();
+		this.buildForm();
 	}
 	ngOnChanges() {
 		if (this.viewOnly) {
@@ -139,6 +146,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		}
 		console.log(this.parentDet);
 	}
+
 	buildForm() {
 		this.formGroupArray = [{
 			form_id: 1, formGroup: this.fbuild.group({
@@ -321,6 +329,164 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}),
 		}];
 	}
+
+
+	prepareFormFields(){
+
+		this.formFieldsP = [
+			"epd_profile_image", "epd_parent_name", "epd_parent_dob",	"epd_parent_nationality", "epd_contact_no",	"epd_whatsapp_no",
+			"epd_pan_no", "epd_aadhar_no", "epd_email", "epd_parent_alumni",	"epd_parent_alumni_last_class",	"epd_parent_alumni_last_year", "epd_parent_admission_no",
+			"epd_qualification", "epd_parent_occupation_type", "epd_parent_staff_of_organisation",	"epd_parent_type",	"epd_organisation",	"epd_designation", "epd_income",
+			"epd_is_transferable",	"epd_custody_of_guardian", "epd_guard_child_rel"
+		];
+		this.formFieldsO = [
+			"ea_id", "ea_login_id",	"ea_address_for","ea_address_type",	"ea_address1","ea_address2","ea_city","ea_state","ea_country","ea_pincode",	"ea_status","ea_email",	"ea_mobile"
+		];
+		this.formFieldsA = [
+			"ea_id", "ea_login_id",	"ea_address_for","ea_address_type",	"ea_address1","ea_address2","ea_city","ea_state","ea_country","ea_pincode",	"ea_status","ea_email",	"ea_mobile"
+		];
+
+		console.log("this.settingsArray ", this.settingsArray);
+
+
+		// this.formFieldsO.forEach(element => {
+		// 	if(this.checkIfFieldExist(element)){
+		// 		ea_office_address.element = '';
+		// 	}
+		// });
+		// this.formFieldsA.forEach(element => {
+		// 	if(this.checkIfFieldExist(element)){
+		// 		ea_res_address.element = '';
+		// 	}
+		// });
+	}
+
+
+
+
+	// buildForm() {
+
+	// 	this.optionalParentForm = {
+	// 		'epd_id' : '',
+	// 		'epd_login_id' : '',
+	// 		'epd_parent_honorific' : '',
+	// 		'epd_status' : ''
+	// 	};
+
+	// 	this.formGroupArray = [{
+	// 		form_id: 1, formGroup: this.fbuild.group(this.optionalParentForm),
+	// 		ea_office_address: this.fbuild.group({
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'F',
+	// 			ea_address_type: 'office',
+	// 			ea_address1: '',
+	// 			ea_address2: '',
+	// 			ea_city: '',
+	// 			ea_state: '',
+	// 			ea_country: '',
+	// 			ea_pincode: '',
+	// 			ea_status: '',
+	// 			ea_email: '',
+	// 			ea_mobile: ''
+	// 		}),
+	// 		ea_res_address: this.fbuild.group({
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'F',
+	// 			ea_address_type: 'permanent',
+	// 			ea_address1: '',
+	// 			ea_same_residential_address: 'N',
+	// 			ea_address2: '',
+	// 			ea_city: '0',
+	// 			ea_state: '0',
+	// 			ea_country: '0',
+	// 			ea_pincode: '0',
+	// 			ea_status: '',
+	// 		}),
+	// 	},
+	// 	{
+	// 		form_id: 2, formGroup: this.fbuild.group(this.optionalParentForm),
+	// 		ea_office_address: this.fbuild.group({
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'M',
+	// 			ea_address_type: 'office',
+	// 			ea_address1: '',
+	// 			ea_address2: '',
+	// 			ea_city: '',
+	// 			ea_state: '',
+	// 			ea_country: '',
+	// 			ea_pincode: '',
+	// 			ea_status: '',
+	// 			ea_email: '',
+	// 			ea_mobile: ''
+	// 		}),
+	// 		ea_res_address: this.fbuild.group({
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'M',
+	// 			ea_address_type: 'permanent',
+	// 			ea_address1: '',
+	// 			ea_same_residential_address: 'N',
+	// 			ea_address2: '',
+	// 			ea_city: '0',
+	// 			ea_state: '0',
+	// 			ea_country: '0',
+	// 			ea_pincode: '0',
+	// 			ea_status: '',
+	// 		}),
+	// 	},
+	// 	{
+	// 		form_id: 3, formGroup: this.fbuild.group(this.optionalParentForm),
+	// 		ea_office_address: this.fbuild.group({
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'G',
+	// 			ea_address_type: 'office',
+	// 			ea_address1: '',
+	// 			ea_address2: '',
+	// 			ea_city: '',
+	// 			ea_state: '',
+	// 			ea_country: '',
+	// 			ea_pincode: '',
+	// 			ea_status: '',
+	// 			ea_email: '',
+	// 			ea_mobile: ''
+	// 		}),
+	// 		ea_res_address: this.fbuild.group({ 
+	// 			ea_id: '',
+	// 			ea_login_id: '',
+	// 			ea_address_for: 'G',
+	// 			ea_address_type: 'permanent',
+	// 			ea_address1: '',
+	// 			ea_address2: '',
+	// 			ea_same_residential_address: 'N',
+	// 			ea_city: '0',
+	// 			ea_state: '0',
+	// 			ea_country: '0',
+	// 			ea_pincode: '0',
+	// 			ea_status: ''
+	// 		}),
+	// 	}];
+
+	// 	// this.formGroupArray = [{
+	// 	// 	form_id: 1, formGroup: this.fbuild.group(parentForm),
+	// 	// 	ea_office_address: this.fbuild.group(ea_office_address),
+	// 	// 	ea_res_address: this.fbuild.group(ea_res_address),
+	// 	// },
+	// 	// {
+	// 	// 	form_id: 2, formGroup: this.fbuild.group(parentForm),
+	// 	// 	ea_office_address: this.fbuild.group(ea_office_address),
+	// 	// 	ea_res_address: this.fbuild.group(ea_res_address),
+	// 	// },
+	// 	// {
+	// 	// 	form_id: 3, formGroup: this.fbuild.group(parentForm),
+	// 	// 	ea_office_address: this.fbuild.group(ea_office_address),
+	// 	// 	ea_res_address: this.fbuild.group(ea_res_address),
+	// 	// }];
+	// }
+	
 	filterCityStateCountry($event) {
 		if ($event.target.value !== '' && $event.target.value.length >= 1) {
 			this.cityCountryArray = [];
@@ -340,19 +506,35 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.savedSettingsArray = result.data;
 				for (const item of this.savedSettingsArray) {
 					if (item.cos_tb_id === '3') {
-						this.settingsArray.push({
-							cos_tb_id: item.cos_tb_id,
-							cos_ff_id: item.cos_ff_id,
-							cos_status: item.cos_status,
-							ff_field_name: item.ff_field_name
-						});
+						// setTimeout(function() {
+							this.settingsArray.push({
+								cos_tb_id: item.cos_tb_id,
+								cos_ff_id: item.cos_ff_id,
+								cos_status: item.cos_status,
+								ff_field_name: item.ff_field_name
+							});
+							// this.formFieldsP.forEach(element => {
+							// 	var pass = false;
+							// 	if(item.ff_field_name == element && item.cos_status =='Y' ) pass = true; 
+							// 	// this.checkIfFieldExist(element);
+							// 	console.log("parent form ", element);
+							// 	if(pass){
+							// 		console.log("parent form element passed ", element);
+							// 		this.optionalParentForm[element] = '';
+							// 	}else{
+							// 		console.log("pass error ", pass);
+							// 	}
+							// });
+						// }, 5000);
 					}
 				}
 			}
 		});
 	}
 	checkIfFieldExist(value) {
+		// console.log("if field exist ", value);
 		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
+		// console.log("if field exist findex ", findex);
 		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
 			return true;
 		} else if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'N') {

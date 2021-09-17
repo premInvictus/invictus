@@ -171,14 +171,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				tucc_con_start_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_start_date, 'yyyy-MM-dd') ,
 				tucc_con_end_date: new DatePipe('en-in').transform(this.userConcessionForm.value.tucc_con_end_date, 'yyyy-MM-dd') 
 			});
-			if (this.userConcessionArray[this.indexUpdate].tucc_con_start_date != this.userConcessionForm.value.tucc_con_start_date ||
-				this.userConcessionArray[this.indexUpdate].tucc_con_end_date != this.userConcessionForm.value.tucc_con_end_date ||
-				this.userConcessionArray[this.indexUpdate].tucc_fcg_id != this.userConcessionForm.value.tucc_fcg_id) {
-				this.userConcessionForm.patchValue({
-					tucc_status: ""
-				});
-			}
-
 			this.userConcessionArray[this.indexUpdate] = this.userConcessionForm.value;
 		
 			this.userConcessionForm.reset();
