@@ -261,7 +261,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
   
     setTimeout(() => {
-      const doc = new jsPDF('portrait');
+      const doc = new jsPDF('portrait',"mm", "a4");
       doc.setFontSize(9);
       doc.autoTable({
         html: '#header_tab',
@@ -300,6 +300,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
               let dim = data.cell.height - data.cell.padding('vertical');
               
               var textPos = data.cell;
+              console.log("i am here................", img.src, img.src.split('.').pop().toUpperCase());
               
               doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 17, 17);
              }
@@ -353,32 +354,17 @@ export class BouncedChequeMultipleComponent implements OnInit {
       doc.autoTable({
         html: '#cheque_control_list1',
         headerStyles: {
-          minCellWidth: 16.5,
           fontStyle: 'normal',
           fillColor: '#ffffff',
           textColor: 'black',
           fontSize: 4,
           cellPadding: 5
         },
-        columnStyles: {
-          0: {cellWidth: 'auto'},
-          1: {cellWidth: 15},
-          2: {cellWidth: 15},
-          3: {cellWidth: 20},
-          4: {cellWidth: 15},
-          5: {cellWidth: 20},
-          6: {cellWidth: 15},
-          7: {cellWidth: 15},
-          8: {cellWidth: 20},
-          9: {cellWidth: 15},
-          10: {cellWidth: 'auto'}
-          // etc
-        },
+        
         startY: doc.previousAutoTable.finalY ,
         useCss: true,
         styles: {
           fontSize: 4,
-          minCellWidth: 16.5,
 
           textColor: 'black',
           lineColor: '#89A8C9',
