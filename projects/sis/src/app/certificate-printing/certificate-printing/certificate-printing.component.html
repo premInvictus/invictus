@@ -27,7 +27,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
-                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      [errorStateMatcher]="confirmValidParentMatcher" 
+                      (selectionChange)="resetStudentCount()" required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
                         {{item.au_process_name}}</mat-option>
