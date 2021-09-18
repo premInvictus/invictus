@@ -69,6 +69,11 @@ export class CertificatePrintingComponent implements OnInit {
       }
     });
   }
+  // Reset Student count in select all when change event occurs
+  resetStudentCount(){
+    this.selection = new SelectionModel<Element>(true, []);
+  }
+
   getSectionsByClass() {
     this.sectionArray = [];
     this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
