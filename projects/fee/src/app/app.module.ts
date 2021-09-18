@@ -12,7 +12,7 @@ import { CookieModule } from 'ngx-cookie';
 import { routing } from './app.routing';
 
 // import service
-import { CommonAPIService, SisService, ProcesstypeFeeService, RoutingStateService, FeeService } from './_services/index';
+import { CommonAPIService, SisService, ProcesstypeFeeService, RoutingStateService, FeeService, HtmlToTextService } from './_services/index';
 import { ResolverService } from './_services/resolver.service';
 import { UserTypeService } from './usertype/usertype.service';
 
@@ -31,6 +31,7 @@ const providers = [CommonAPIService,
 	UserTypeService,
 	ResolverService,
 	LoaderService,
+	HtmlToTextService,
 	{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }];
 @NgModule({
 	declarations: [

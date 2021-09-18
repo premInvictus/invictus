@@ -261,8 +261,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
   
     setTimeout(() => {
-      const doc = new jsPDF('portrait',"mm", "a4");
-      doc.setFontSize(9);
+      const doc = new jsPDF('portrait',"mm", "a4", true);
+      
       doc.autoTable({
         html: '#header_tab',
         columnStyles: {
@@ -273,17 +273,18 @@ export class BouncedChequeMultipleComponent implements OnInit {
         },
         headerStyles: {
           // minCellWidth: 23,
-          fontStyle: 'normal',
+          fontStyle: 'bold',
           fillColor: '#ffffff',
           textColor: 'black',
-          fontSize: 10,
-          cellPadding: 5
+          fontSize: 15,
+          cellPadding: 5,
+          minCellHight: 25,
         },
         useCss: true,
         styles: {
           fontSize: 10,
           // minCellWidth: 23,
-
+          minCellHight: 25,
           textColor: 'black',
           lineColor: '#89A8C9',
           cellPadding: 5
@@ -322,7 +323,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
           },
           
           headerStyles: {
-            fontStyle: 'italic',
+            fontStyle: 'bold',
             fillColor: '#ffffff',
             textColor: 'black',
             halign: 'center',
@@ -340,9 +341,17 @@ export class BouncedChequeMultipleComponent implements OnInit {
           { content: 'Session : ' + session, styles: { halign: 'right', fillColor: '#ffffff' } }
         ]],
         startY: doc.previousAutoTable.finalY ,
-
+        // willDrawCell: function (data) {
+				// 	// tslint:disable-next-line:no-shadowed-variable
+				// 	// const doc = data.doc;
+				// 	// const rows = data.table.body;
+				// 	// doc.setFillColor(255, 255, 255);
+        //   console.log("i am data",data.cell.raw.innerHT, data.cell.text);
+        //   let splittect= data.cell.raw.content.split(":");
+        //   data.cell.raw.innerHTML = ('<b>'+splittect[0]+'</b>:'+splittect[1]);
+        //   // data.cell.text = '\033[31;1;4mHello\033[0m';
+				// },
         headerStyles: {
-          fontStyle: 'bold',
           fillColor: '#ffffff',
           textColor: 'black',
           fontSize: 9,
@@ -365,12 +374,24 @@ export class BouncedChequeMultipleComponent implements OnInit {
         useCss: true,
         styles: {
           fontSize: 4,
-
+          
           textColor: 'black',
           lineColor: '#89A8C9',
           cellPadding: 5
         },
-        theme: 'grid'
+        theme: 'grid',
+        willDrawCell: function (data) {
+          // tslint:disable-next-line:no-shadowed-variable
+          const doc = data.doc;
+          const rows = data.table.body;
+   
+          if (data.row.index === rows.length - 1) {
+            doc.setFontStyle('bold'); 
+            
+            doc.setTextColor('#ffffff');
+            doc.setFillColor(67, 160, 71);
+          }
+        },
       });
 
       doc.autoTable({
