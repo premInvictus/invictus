@@ -276,14 +276,15 @@ export class BouncedChequeMultipleComponent implements OnInit {
           fontStyle: 'bold',
           fillColor: '#ffffff',
           textColor: 'black',
-          fontSize: 10,
-          cellPadding: 5
+          fontSize: 15,
+          cellPadding: 5,
+          minCellHight: 25,
         },
         useCss: true,
         styles: {
           fontSize: 10,
           // minCellWidth: 23,
-          minCellHight: 20,
+          minCellHight: 25,
           textColor: 'black',
           lineColor: '#89A8C9',
           cellPadding: 5
