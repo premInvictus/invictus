@@ -302,7 +302,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
               let dim = data.cell.height - data.cell.padding('vertical');
               
               var textPos = data.cell;
-              console.log("i am here................", img.src, img.src.split('.').pop().toUpperCase());
               
               doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);
              }
