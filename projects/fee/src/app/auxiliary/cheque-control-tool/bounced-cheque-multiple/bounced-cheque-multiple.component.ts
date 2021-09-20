@@ -282,7 +282,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
         },
         useCss: true,
         styles: {
-          fontSize: 10,
+          fontSize: 15,
+          fontStyle: 'bold',
           // minCellWidth: 23,
           minCellHight: 25,
           textColor: 'black',
@@ -301,9 +302,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
               let dim = data.cell.height - data.cell.padding('vertical');
               
               var textPos = data.cell;
-              console.log("i am here................", img.src, img.src.split('.').pop().toUpperCase());
               
-              doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 17, 17);
+              doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);
              }
           }
         }
