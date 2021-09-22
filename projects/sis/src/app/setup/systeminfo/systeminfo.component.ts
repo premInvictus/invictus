@@ -18,11 +18,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
-	cityCountryArray: any = [];
-	cityCountryArray2: any = [];
+	cityCountryArray:any = [];
+	cityCountryArray2:any = [];
 	arrayState: any[] = [];
 	arrayDist: any[] = [];
 	configValue: any;
+	sesId;
+	certificate_type_arr: any[] = [];
 	disableApiCall = false;
 	customs: any[] = [
 		{ type: 'custom', name: 'Custom Type' },
@@ -38,15 +40,15 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Religion Name', 'Mother Tongue',
 		'Qualification', 'Occupation',
 		'Income Range', 'Vaccination',
-		'Age', 'Activity', 'Level of Interest', 'Event Level',
+		'Age', 'Activity', 'Level of Intrest', 'Event Level',
 		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality', 'Tag',
-		'Question', 'Type', 'City', 'Bank Name'];
+		'Question','Certificate'];
 	secondHeaderArray: any[] = ['Alias', 'Required',
 		'Alias', 'Type',
 		'Alias', 'Alias',
 		'Alias', 'Alias',
 		'', 'Alias', 'Vaccinations', 'Alias', 'Alias', 'Alias', 'Alias',
-		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias', 'Type', 'Class', 'District', 'Alias'];
+		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias', 'Type', 'Settings'];
 	configFlag = false;
 	updateFlag = false;
 	classArray: any[] = [];
@@ -71,6 +73,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.getTypeAll();
 		this.getState();
 		this.getDist();
+		this.getSlcTcTemplateSetting();
+		this.sesId = JSON.parse(localStorage.getItem('session')).ses_id ? JSON.parse(localStorage.getItem('session')).ses_id : 0;
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -322,7 +326,18 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				tb_id: '',
 				tb_name: '',
 				tb_alias: '',
-
+				
+			})
+		},
+		{
+			formGroup: this.fbuild.group({
+				cs_id: '',
+				cs_certificate_type : '',
+				cs_name : '',
+				cs_alias : '',
+				cs_status : '',
+				cs_paper : '',
+				cs_orientation : ''				
 			})
 		},
 		];
@@ -408,15 +423,19 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 24) {
 			this.getParameterTable(this);
-			this.displayedColumns = ['parameter', 'type', 'class', 'action', 'modify']
+			this.displayedColumns = [ 'parameter', 'type', 'class', 'action', 'modify']
 			this.configFlag = true;
-		} else if (Number(this.configValue) === 25) {
+		} else if(Number(this.configValue) === 25){
 			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'modify'];
 			this.getCityStateDist(this);
 			this.configFlag = true;
-		} else if (Number(this.configValue) === 26) {
+		} else if(Number(this.configValue) === 26){
 			this.displayedColumns = ['position', 'name', 'alias', 'modify'];
 			this.getBanksDetail(this);
+			this.configFlag = true;
+		} else if(Number(this.configValue) === 27){
+			// this.displayedColumns = ['cs_id', 'cs_name', 'cs_alias', 'cs_status','modify'];
+			this.getCertificatePrintSetupAll(this);
 			this.configFlag = true;
 		}
 	}
@@ -516,6 +535,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 24) {
 			if (value[0].gf_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 27) {
+			if (value.cs_status === '1') {
 				return true;
 			}
 		}
@@ -828,6 +851,21 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 
 		}
+		else if (Number(this.configValue) === 27) {
+			if (value.cs_status === '1') {
+				value.cs_status = '0';
+			} else {
+				value.cs_status = '1';
+			}
+			this.sisService.changeCertificatePrintSetupStatusId({ cs_id: value.cs_id, cs_status: value.cs_status }).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getCertificatePrintSetupAll(this);
+				}
+			});
+
+
+		}
 	}
 	changeTypeQues($event) {
 		if ($event.value === 'custom') {
@@ -917,8 +955,20 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				this.deleteEntry(data, 'deleteCityFromCityTable', this.getCityStateDist);
 				break;
 			case '26':
-				this.deleteEntry(data, 'deleteBanksSoft', this.getBanksDetail)
+				this.deleteEntry(data, 'deleteBanksSoft', this.getBanksDetail);
+				break;
+			case '27':
+				this.deleteEntry(data, 'deleteCertificatePrintSetup', this.getCertificatePrintSetupAll);
+				break;
 		}
+	}
+
+	getSlcTcTemplateSetting() {
+		this.sisService.getSlcTcTemplateSetting({ usts_certificate_type: '1' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+			this.certificate_type_arr = result.data;
+			}
+		})
 	}
 	getVaccinations() {
 		this.sisService.getVaccinations().subscribe((result: any) => {
@@ -982,7 +1032,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				// a1 = result.filter(e => )
 			}
-
+			
 			let pos = 1;
 			for (const item of super_arr) {
 				let s = [];
@@ -1006,7 +1056,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				});
 				pos++;
 			}
-			that.CONFIG_ELEMENT_DATA.sort((a, b) => (a.order > b.order ? 1 : -1));
+			that.CONFIG_ELEMENT_DATA.sort((a,b) => (a.order > b.order? 1:-1));
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
@@ -1016,9 +1066,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		})
 	}
 
-	// Get all the city state and dist information
 	getCityStateDist(that) {
-		console.log("first header array", this.firstHeaderArray);
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.sisService.getStateCountryByCity().subscribe((result: any) => {
@@ -1039,7 +1087,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
-			that.configDataSource.sort = that.sort;
+			
 		})
 	}
 
@@ -1061,7 +1109,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
-			that.configDataSource.sort = that.sort;
+			
 		})
 	}
 
@@ -1361,6 +1409,34 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	getCertificatePrintSetupAll(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		let payload = {
+			cs_ses_id : this.sesId
+		};
+		that.sisService.getCertificatePrintSetupAll({ cs_ses_id: this.sesId ? this.sesId : '5' }).subscribe((result: any) => {
+			let pos = 1;
+			console.log("cert print settings : ",result);
+			if (result.status === 'ok') {
+				for (const item of result.data) {
+					that.CONFIG_ELEMENT_DATA.push({
+						position: pos,
+						name: item.cs_name,
+						alias: item.cs_alias,
+						action: item
+					});
+					pos++;
+				}
+				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+				that.configDataSource.paginator = that.paginator;
+				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+				that.configDataSource.sort = that.sort;
+			}
+		});
+	}
+
 	getEventLevelAll(that) {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -1642,10 +1718,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					break;
 
 				case '25':
-					console.log("25 form group ", this.formGroupArray[value - 1].formGroup.value);
-					if (Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
 						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
-
+						
 					} else {
 						console.log("i am empty");
 						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
@@ -1653,6 +1729,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					break;
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
+					break;
+			
+				case '27':
+					this.formGroupArray[value - 1].formGroup.value.cs_status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificatePrintSetupAll', this.getCertificatePrintSetupAll);
+					this.getCertificatePrintSetupAll(this);
 					break;
 
 			}
@@ -1871,7 +1953,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			});
 			// console.log("i am value", value);
 
-		} else if (Number(this.configValue) === 25) {
+		} else if(Number(this.configValue) === 25) {
 			this.updateFlag = true;
 			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
 				city_id: value.cit_id,
@@ -1882,12 +1964,22 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				state_name: value.sta_name,
 				item_main: value
 			})
-		} else if (Number(this.configValue) == 26) {
+		} else if(Number(this.configValue) == 26) {
 			this.updateFlag = true;
 			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
 				tb_id: value.tb_id,
 				tb_name: value.tb_name,
 				tb_alias: value.tb_alias,
+			})
+		} else if(Number(this.configValue) == 27) {
+			this.updateFlag = true;
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				cs_id: value.cs_id,
+				cs_certificate_type: value.cs_certificate_type,
+				cs_name: value.cs_name,
+				cs_alias: value.cs_alias,
+				cs_paper: JSON.parse(value.cs_settings).cs_paper,
+				cs_orientation: JSON.parse(value.cs_settings).cs_orientation,
 			})
 		}
 	}
@@ -1998,33 +2090,33 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					break;
 				case '24':
 					//check for grade change
-					if (this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_order != this.formGroupArray[value - 1].formGroup.value.parameter_order) {
-						this.sisService.updateOrderType({ parameter_order: this.formGroupArray[value - 1].formGroup.value.parameter_order, parameter_name: this.formGroupArray[value - 1].formGroup.value.parameter_name }).subscribe((res: any) => {
+					if(this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_order != this.formGroupArray[value - 1].formGroup.value.parameter_order) {
+						this.sisService.updateOrderType({parameter_order: this.formGroupArray[value - 1].formGroup.value.parameter_order, parameter_name:this.formGroupArray[value - 1].formGroup.value.parameter_name }).subscribe((res:any) => {
 							this.getParameterTable(this);
 						});
 					}
 					console.log('++++++++++++++++++++++++++++', this.formGroupArray[value - 1].formGroup.value);
-					if (this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_value != this.formGroupArray[value - 1].formGroup.value.parameter_name) {
-
-						let obj = this.subjectArray.filter((e: any) => e.parameter_value === this.formGroupArray[value - 1].formGroup.value.parameter_name);
+					if(this.formGroupArray[value - 1].formGroup.value.parameter_id[0].parameter_value != this.formGroupArray[value - 1].formGroup.value.parameter_name ) {
+						
+						let obj = this.subjectArray.filter((e:any) => e.parameter_value === this.formGroupArray[value - 1].formGroup.value.parameter_name);
 						let arr = [];
 						this.formGroupArray[value - 1].formGroup.value.parameter_id.forEach(element => {
 							arr.push(element.mf_id)
 						});
 						console.log("i am here", obj[0]);
-						this.sisService.updateAccordingToClass({ subject_id: obj[0] ? obj[0].parameter_id : '', mf_id_array: arr, parameter_name: this.formGroupArray[value - 1].formGroup.value.parameter_name }).subscribe((res: any) => {
+						this.sisService.updateAccordingToClass({subject_id: obj[0] ? obj[0].parameter_id: '', mf_id_array: arr, parameter_name: this.formGroupArray[value - 1].formGroup.value.parameter_name}).subscribe((res:any) => {
 							console.log("i am here");
 							this.getParameterTable(this);
 						})
 					}
-
+					
 					//lets check for cases such as remark type
 					if (this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gt_id != this.formGroupArray[value - 1].formGroup.value.parameter_type) {
 						let arr = [];
 						this.formGroupArray[value - 1].formGroup.value.parameter_id.forEach(element => {
 							arr.push(element.gf_id);
 						});
-						this.sisService.updateGradeType({ id_arr: arr, type: this.formGroupArray[value - 1].formGroup.value.parameter_type }).subscribe((res: any) => {
+						this.sisService.updateGradeType({ id_arr: arr, type: this.formGroupArray[value - 1].formGroup.value.parameter_type }).subscribe((res:any) => {
 							this.getParameterTable(this);
 						})
 					}
@@ -2056,9 +2148,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 							});
 						obj = [];
 						this.formGroupArray[value - 1].formGroup.value.parameter_class.forEach(element => {
-							if (!barr.includes(element)) {
-								let obj1: any = {
-									gf_status: this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gf_status,
+							if(!barr.includes(element)) {
+								let obj1 : any = {
+									gf_status : this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gf_status,
 									gf_gt_id: this.formGroupArray[value - 1].formGroup.value.parameter_id[0].gf_gt_id,
 									class_id: element,
 									mf_value: this.formGroupArray[value - 1].formGroup.value.parameter_id[0].mf_value
@@ -2066,8 +2158,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 								obj.push(obj1);
 							}
 						});
-						if (obj.length > 0) {
-							this.sisService.addClassToList({ obj: obj }).subscribe((res: any) => {
+						if(obj.length > 0) {
+							this.sisService.addClassToList({obj:obj}).subscribe((res:any) => {
 								this.getParameterTable(this);
 							});
 						}
@@ -2076,13 +2168,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.updateFlag = false;
 					this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
 					// this.updateEntry('', 'getParameterForRemarks', this.getParameterTable);
-
+					
 					break;
 				case '25':
-					console.log("line 2080", this.formGroupArray[value - 1].formGroup.value);
-					if (Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					if(Object.keys(this.formGroupArray[value - 1].formGroup.value.item_main).length === 0) {
 						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertclassintable', this.getCityStateDist);
-
+						
 					} else {
 						console.log("i am empty");
 						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'updateclassintable', this.getCityStateDist);
@@ -2091,20 +2183,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
 					break;
+
+			
+				case '27':
+					this.formGroupArray[value - 1].formGroup.value.cs_status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificatePrintSetupAll', this.getCertificatePrintSetupAll);
+					this.getCertificatePrintSetupAll(this);
+					break;
 			}
 		}
 	}
-	//Filter the data table
-	applyFilter(event) {
-		let filterValue = event.trim(); // Remove whitespace
-		filterValue = event.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-		this.configDataSource.filter = filterValue;
-	}
-	//Apply Sorting in the data table
-	sortData(event) {
-
-	}
-
+	applyFilter(event) { }
 	deleteCancel() { }
 	deleteEntry(deletedData, serviceName, next) {
 		if (serviceName == 'deleteSubjectStatusId') {
@@ -2262,13 +2351,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			item_main: item
 		})
 		// this.
-
+		
 	}
 
 	filterCityStateCountry($event) {
 		// keyCode
 		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
-			if ($event.target.value !== '' && $event.target.value.length >= 1) {
+			if ($event.target.value !== '' && $event.target.value.length >= 1 ) {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {

@@ -916,10 +916,6 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/insertSlcTcPrintSetting', value);
 	}
-	savePrintProgress(value) {
-		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/slctc/savePrintProgress', value);
-	}
 	generateReportClassWise(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/generateReportClasswise', value);
@@ -1254,5 +1250,21 @@ export class SisService {
 	getPromotedReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/getPromotedReport', value);
+	}
+	getCertificatePrintSetupAll(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/getCertificateSettings',value);
+	}
+	insertOrUpdateCertificatePrintSetupAll(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/insertOrUpdateCertificateSettings', value);
+	}
+	changeCertificatePrintSetupStatusId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/changeCertificatePrintSetupStatusId', value);
+	}
+	deleteCertificatePrintSetup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/deleteCertificatePrintSetup', value);
 	}
 }
