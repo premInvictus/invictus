@@ -74,8 +74,8 @@ export class SlctcPrintingSetupComponent implements OnInit {
 	}
 	insertTemplate() {
 		let settings_json = {
-			"cs_paper" : this.templateArray[this.templateIndex]['usts_paper'] ? this.templateArray[this.templateIndex]['usts_paper'] : this.templateForm.value.usts_paper,
-			"cs_orientation" : this.templateArray[this.templateIndex]['usts_orientation'] ? this.templateArray[this.templateIndex]['usts_orientation'] : this.templateForm.value.usts_orientation,
+			"cs_paper" : this.templateArray[this.templateIndex]['usts_paper'] == this.templateForm.value.usts_paper ? this.templateArray[this.templateIndex]['usts_paper'] : this.templateForm.value.usts_paper,
+			"cs_orientation" : this.templateArray[this.templateIndex]['usts_orientation'] == this.templateForm.value.usts_orientation ? this.templateArray[this.templateIndex]['usts_orientation'] : this.templateForm.value.usts_orientation,
 		}
 		console.log("settings ", settings_json);
 		this.disableApiCall = true;
