@@ -5,6 +5,7 @@ import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@a
 import { ConfigElement } from './system.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { element } from 'protractor';
+import {environment} from 'src/environments/environment';
 @Component({
 	selector: 'app-systeminfo',
 	templateUrl: './systeminfo.component.html',
@@ -24,6 +25,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	arrayDist: any[] = [];
 	configValue: any;
 	sesId;
+	ckeConfig: any;
 	certificate_type_arr: any[] = [];
 	disableApiCall = false;
 	customs: any[] = [
@@ -42,13 +44,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Income Range', 'Vaccination',
 		'Age', 'Activity', 'Level of Intrest', 'Event Level',
 		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality', 'Tag',
-		'Question','Certificate'];
+		'Question','','','Name','Name'];
 	secondHeaderArray: any[] = ['Alias', 'Required',
 		'Alias', 'Type',
 		'Alias', 'Alias',
 		'Alias', 'Alias',
 		'', 'Alias', 'Vaccinations', 'Alias', 'Alias', 'Alias', 'Alias',
-		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias', 'Type', 'Settings'];
+		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias', 'Type', 'Settings','','Alias','Alias'];
 	configFlag = false;
 	updateFlag = false;
 	classArray: any[] = [];
@@ -88,6 +90,33 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.subjectArray1 = result;
 
 		})
+	}
+
+	loadPlugin(){
+		this.ckeConfig = {
+			allowedContent: true,
+			pasteFromWordRemoveFontStyles: false,
+			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+			disallowedContent: 'm:omathpara',
+			height: '800',
+			width: '100%',
+			// tslint:disable-next-line:max-line-length 
+			extraPlugins: 'strinsertExt,language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
+
+			scayt_multiLanguageMod: true,
+			filebrowserUploadMethod: 'form',
+			uploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+			imageUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+			filebrowserUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+			toolbar: [
+				// tslint:disable-next-line:max-line-length
+				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+					{ name: 'strinsertExt', items: ['strinsertExt'] },
+					{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
+				]
+			],
+			removeDialogTabs: 'image:advanced;image:Link'
+		};
 	}
 
 	getTypeAll() {
@@ -329,6 +358,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				
 			})
 		},
+		{
+			formGroup: this.fbuild.group({
+				usts_id: '',
+				usts_name : '',
+				usts_alias : '',
+				usts_status : '',
+				usts_paper : '',
+				usts_orientation : '',
+				usts_template: ''				
+			})
+		},
 		];
 	}
 	loadConfiguration($event) {
@@ -421,6 +461,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if(Number(this.configValue) === 26){
 			this.displayedColumns = ['position', 'name', 'alias', 'modify'];
 			this.getBanksDetail(this);
+			this.configFlag = true;
+		} else if(Number(this.configValue) === 27){
+			// this.displayedColumns = ['usts_id', 'usts_name', 'usts_alias', 'usts_status','modify'];
+			this.getCertificateAll(this);
 			this.configFlag = true;
 		}
 	}
@@ -520,6 +564,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 24) {
 			if (value[0].gf_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 27) {
+			if (value.usts_status === '1') {
 				return true;
 			}
 		}
@@ -832,6 +880,21 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 
 		}
+		else if (Number(this.configValue) === 27) {
+			if (value.usts_status === '1') {
+				value.usts_status = '0';
+			} else {
+				value.usts_status = '1';
+			}
+			this.sisService.changeCertificatePrintSetupStatusId({ usts_id: value.usts_id, usts_status: value.usts_status }).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getCertificateAll(this);
+				}
+			});
+
+
+		}
 	}
 	changeTypeQues($event) {
 		if ($event.value === 'custom') {
@@ -923,13 +986,18 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			case '26':
 				this.deleteEntry(data, 'deleteBanksSoft', this.getBanksDetail);
 				break;
+			case '27':
+				this.deleteEntry(data, 'deleteCertificate', this.getCertificateAll);
+				this.getCertificateAll(this);
+				break;
 		}
 	}
 
 	getSlcTcTemplateSetting() {
-		this.sisService.getSlcTcTemplateSetting({ usts_certificate_type: '1' }).subscribe((result: any) => {
+		this.sisService.getSlcTcTemplateSetting({'usts_status':'1'}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-			this.certificate_type_arr = result.data;
+				console.log("certs template ", result.data);
+				this.certificate_type_arr = result.data;
 			}
 		})
 	}
@@ -1373,21 +1441,21 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	getCertificatePrintSetupAll(that) {
+	getCertificateAll(that) {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		let payload = {
-			cs_ses_id : this.sesId
 		};
-		that.sisService.getCertificatePrintSetupAll({ cs_ses_id: this.sesId ? this.sesId : '5' }).subscribe((result: any) => {
+		that.sisService.getCertificateAll({}).subscribe((result: any) => {
 			let pos = 1;
-			console.log("cert print settings : ",result);
+			console.log("cert all : ",result);
 			if (result.status === 'ok') {
 				for (const item of result.data) {
 					that.CONFIG_ELEMENT_DATA.push({
 						position: pos,
-						name: item.cs_name,
-						alias: item.cs_alias,
+						name: item.usts_name,
+						alias: item.usts_alias,
+						settings: item.usts_settings,
 						action: item
 					});
 					pos++;
@@ -1398,6 +1466,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				that.configDataSource.sort = that.sort;
 			}
 		});
+		// this.getSlcTcTemplateSetting();
 	}
 
 	getEventLevelAll(that) {
@@ -1693,6 +1762,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
 					break;
+			
+				case '27':
+					this.formGroupArray[value - 1].formGroup.value.usts_status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificate', this.getCertificateAll);
+					this.getCertificateAll(this);
+					break;
 
 			}
 		}
@@ -1928,6 +2003,16 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				tb_name: value.tb_name,
 				tb_alias: value.tb_alias,
 			})
+		} else if(Number(this.configValue) == 27) {
+			this.updateFlag = true;
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				usts_id: value.usts_id,
+				usts_name: value.usts_name,
+				usts_alias: value.usts_alias,
+				usts_template: value.usts_template,
+				usts_paper: JSON.parse(value.usts_settings).cs_paper,
+				usts_orientation: JSON.parse(value.usts_settings).cs_orientation,
+			})
 		}
 	}
 	getOrderValue(value) {
@@ -2130,6 +2215,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
 					break;
+
+			
+				case '27':
+					this.formGroupArray[value - 1].formGroup.value.usts_status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificate', this.getCertificateAll);
+					this.getCertificateAll(this);
+					break;
 			}
 		}
 	}
@@ -2155,6 +2247,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				if (result.status === 'ok') {
 					next(this);
 					this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
+				}else{
+					this.commonService.showSuccessErrorMessage('Deleted Unsuccessful', 'error');
 				}
 			});
 		}
@@ -2168,6 +2262,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
 				this.disableApiCall = false;
 			} else {
+				this.commonService.showSuccessErrorMessage('Add Unsuccesfull', 'error');
 				this.disableApiCall = false;
 			}
 		});
@@ -2206,6 +2301,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				that.configDataSource.paginator = that.paginator;
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
+				this.commonService.showSuccessErrorMessage('Fetched Succesfully', 'success');
 			}
 		});
 	}
