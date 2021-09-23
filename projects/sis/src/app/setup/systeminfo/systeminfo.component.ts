@@ -329,17 +329,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				
 			})
 		},
-		{
-			formGroup: this.fbuild.group({
-				cs_id: '',
-				cs_certificate_type : '',
-				cs_name : '',
-				cs_alias : '',
-				cs_status : '',
-				cs_paper : '',
-				cs_orientation : ''				
-			})
-		},
 		];
 	}
 	loadConfiguration($event) {
@@ -432,10 +421,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if(Number(this.configValue) === 26){
 			this.displayedColumns = ['position', 'name', 'alias', 'modify'];
 			this.getBanksDetail(this);
-			this.configFlag = true;
-		} else if(Number(this.configValue) === 27){
-			// this.displayedColumns = ['cs_id', 'cs_name', 'cs_alias', 'cs_status','modify'];
-			this.getCertificatePrintSetupAll(this);
 			this.configFlag = true;
 		}
 	}
@@ -535,10 +520,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 24) {
 			if (value[0].gf_status === '1') {
-				return true;
-			}
-		} else if (Number(this.configValue) === 27) {
-			if (value.cs_status === '1') {
 				return true;
 			}
 		}
@@ -851,21 +832,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 
 		}
-		else if (Number(this.configValue) === 27) {
-			if (value.cs_status === '1') {
-				value.cs_status = '0';
-			} else {
-				value.cs_status = '1';
-			}
-			this.sisService.changeCertificatePrintSetupStatusId({ cs_id: value.cs_id, cs_status: value.cs_status }).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
-					this.getCertificatePrintSetupAll(this);
-				}
-			});
-
-
-		}
 	}
 	changeTypeQues($event) {
 		if ($event.value === 'custom') {
@@ -956,9 +922,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				break;
 			case '26':
 				this.deleteEntry(data, 'deleteBanksSoft', this.getBanksDetail);
-				break;
-			case '27':
-				this.deleteEntry(data, 'deleteCertificatePrintSetup', this.getCertificatePrintSetupAll);
 				break;
 		}
 	}
@@ -1730,12 +1693,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
 					break;
-			
-				case '27':
-					this.formGroupArray[value - 1].formGroup.value.cs_status = '1';
-					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificatePrintSetupAll', this.getCertificatePrintSetupAll);
-					this.getCertificatePrintSetupAll(this);
-					break;
 
 			}
 		}
@@ -1971,16 +1928,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				tb_name: value.tb_name,
 				tb_alias: value.tb_alias,
 			})
-		} else if(Number(this.configValue) == 27) {
-			this.updateFlag = true;
-			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
-				cs_id: value.cs_id,
-				cs_certificate_type: value.cs_certificate_type,
-				cs_name: value.cs_name,
-				cs_alias: value.cs_alias,
-				cs_paper: JSON.parse(value.cs_settings).cs_paper,
-				cs_orientation: JSON.parse(value.cs_settings).cs_orientation,
-			})
 		}
 	}
 	getOrderValue(value) {
@@ -2182,13 +2129,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					break;
 				case '26':
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateBankDetails', this.getBanksDetail);
-					break;
-
-			
-				case '27':
-					this.formGroupArray[value - 1].formGroup.value.cs_status = '1';
-					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificatePrintSetupAll', this.getCertificatePrintSetupAll);
-					this.getCertificatePrintSetupAll(this);
 					break;
 			}
 		}
