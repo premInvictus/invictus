@@ -653,6 +653,18 @@
                                           <mat-radio-button value="P">Portrait</mat-radio-button>
                                         </mat-radio-group>
                                     </div>
+                                    <div class="mt-2 mb-5">
+                                       <mat-label><b>Background Image </b></mat-label> &nbsp;
+                                       <button mat-stroked-button class="btn-outline-green">
+                                         <label for="usts_bg_img">Choose File
+                                           &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                                       <input style="display:none" type="file" accept="image/*"
+                                         (change)="uploadCertBgImage($event)" id="usts_bg_img">
+
+                                       <img *ngIf="bgImgUrl"
+                                         style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
+                                         [src]="bgImgUrl" />
+                                     </div>
                                  </form>
                                  <div class="text-center">
 

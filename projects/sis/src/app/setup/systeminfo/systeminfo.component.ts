@@ -25,6 +25,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	arrayDist: any[] = [];
 	configValue: any;
 	sesId;
+	bgImgUrl;
 	ckeConfig: any;
 	certificate_type_arr: any[] = [];
 	disableApiCall = false;
@@ -366,7 +367,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				usts_status : '',
 				usts_paper : '',
 				usts_orientation : '',
-				usts_template: ''				
+				usts_template: '',
+				usts_bg_img : ''				
 			})
 		},
 		];
@@ -1456,7 +1458,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						position: pos,
 						name: item.usts_name,
 						alias: item.usts_alias,
-						settings: item.usts_settings,
 						action: item
 					});
 					pos++;
@@ -1465,9 +1466,33 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				that.configDataSource.paginator = that.paginator;
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
+				// this.getSlcTcTemplateSetting();
 			}
 		});
-		this.getSlcTcTemplateSetting();
+	}
+
+	uploadCertBgImage(event){
+		console.log("i am uploading image",event);
+		const file: File = event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = (e) => {
+            const fileJson = {
+                fileName: file.name,
+                imagebase64: reader.result
+            };
+            this.sisService.uploadDocuments([fileJson]).subscribe((result: any) => {
+                if (result.status === 'ok') {
+                    console.log("yahooooooo ", result);
+					this.bgImgUrl = result.data[0].file_url;
+					console.log(this.bgImgUrl);
+					this.commonService.showSuccessErrorMessage('Upload Successful', 'success');
+                }
+            });
+        };
+        reader.readAsDataURL(file);
+	}
+	deleteCertBgImage(e){
+		console.log("i am deleting image",e);
 	}
 
 	getEventLevelAll(that) {
@@ -1606,6 +1631,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	}
 	resetForm(value) {
 		this.formGroupArray[value - 1].formGroup.reset();
+		this.bgImgUrl = "";
 	}
 	addConfiguration(value) {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
@@ -1766,6 +1792,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			
 				case '27':
 					this.formGroupArray[value - 1].formGroup.value.usts_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.usts_bg_img = this.bgImgUrl ? this.bgImgUrl : 'no image';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificate', this.getCertificateAll);
 					this.getCertificateAll(this);
 					break;
@@ -2006,10 +2033,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			})
 		} else if(Number(this.configValue) == 27) {
 			this.updateFlag = true;
+			console.log("hiiii", value.usts_bg_img);
+			this.bgImgUrl = value.usts_bg_img;
 			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
 				usts_id: value.usts_id,
 				usts_name: value.usts_name,
 				usts_alias: value.usts_alias,
+				usts_bg_img: value.usts_bg_img,
 				usts_template: value.usts_template,
 				usts_paper: JSON.parse(value.usts_settings).cs_paper,
 				usts_orientation: JSON.parse(value.usts_settings).cs_orientation,
@@ -2220,6 +2250,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			
 				case '27':
 					this.formGroupArray[value - 1].formGroup.value.usts_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.usts_bg_img = this.bgImgUrl ? this.bgImgUrl : 'no image';
+					console.log(this.formGroupArray[value - 1].formGroup.value);
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertOrUpdateCertificate', this.getCertificateAll);
 					this.getCertificateAll(this);
 					break;
