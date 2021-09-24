@@ -94,7 +94,6 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		this.sisService.getSlcTcTemplateSetting({ usts_id: this.templateForm.value.usts_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				// console.log(result.data[0].usts_template); a
-				let template_settings = JSON.parse(result.data[0].usts_settings);
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template,
 					'usts_id': result.data[0].usts_id
