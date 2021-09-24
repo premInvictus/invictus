@@ -50,7 +50,6 @@ export class SlctcPrintingSetupComponent implements OnInit {
 				if (result.data && result.data.length > 0) {
 					this.typeArray = result.data;
 					result.data.forEach(element => {
-						let settings = JSON.parse(element.usts_settings);
 						this.templateArray.push({
 							usts_id: element.usts_id,
 							usts_name: element.usts_alias,
