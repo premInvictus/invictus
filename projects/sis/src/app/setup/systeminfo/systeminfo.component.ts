@@ -1450,6 +1450,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			let pos = 1;
 			console.log("cert all : ",result);
 			if (result.status === 'ok') {
+				this.certificate_type_arr = result.data;
 				for (const item of result.data) {
 					that.CONFIG_ELEMENT_DATA.push({
 						position: pos,
@@ -1466,7 +1467,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				that.configDataSource.sort = that.sort;
 			}
 		});
-		// this.getSlcTcTemplateSetting();
+		this.getSlcTcTemplateSetting();
 	}
 
 	getEventLevelAll(that) {

@@ -28,20 +28,6 @@
                   </mat-select>
                </mat-form-field>
            </div>
-           <div class="row">
-            <mat-label><b>Size *</b></mat-label> &nbsp; &nbsp;
-            <mat-radio-group aria-label="Select an option" formControlName="usts_paper" required>
-               <mat-radio-button value="A4">A4</mat-radio-button> &nbsp; &nbsp;
-               <mat-radio-button value="A5">A5</mat-radio-button>
-             </mat-radio-group>
-           </div>
-           <div class="row">
-            <mat-label><b>Orientation *</b></mat-label> &nbsp;
-            <mat-radio-group aria-label="Select an option" formControlName="usts_orientation" required>
-               <mat-radio-button value="L">Landscape</mat-radio-button> &nbsp; &nbsp;
-               <mat-radio-button value="P">Portrait</mat-radio-button>
-            </mat-radio-group>
-           </div>
         </div>
         <div class="col-lg-8">
           <div style="width:auto;text-align: center" *ngIf="loadConfig">

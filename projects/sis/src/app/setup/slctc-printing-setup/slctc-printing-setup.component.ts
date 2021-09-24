@@ -54,9 +54,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 						this.templateArray.push({
 							usts_id: element.usts_id,
 							usts_name: element.usts_alias,
-							usts_value: element.usts_name,
-							usts_orientation : settings ? settings.cs_orientation : '',
-							usts_paper : settings ? settings.cs_paper : '',
+							usts_value: element.usts_name
 						})
 					});
 				}
@@ -67,21 +65,13 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		this.templateForm = this.fbuild.group({
 			usts_template: '',
 			usts_name: '',
-			usts_orientation :  '',
-			usts_paper : '',
 			usts_id: '1'
 		});
 	}
 	insertTemplate() {
-		let settings_json = {
-			"cs_paper" : this.templateArray[this.templateIndex]['usts_paper'] == this.templateForm.value.usts_paper ? this.templateArray[this.templateIndex]['usts_paper'] : this.templateForm.value.usts_paper,
-			"cs_orientation" : this.templateArray[this.templateIndex]['usts_orientation'] == this.templateForm.value.usts_orientation ? this.templateArray[this.templateIndex]['usts_orientation'] : this.templateForm.value.usts_orientation,
-		}
-		console.log("settings ", settings_json);
 		this.disableApiCall = true;
 		this.templateForm.value['usts_name'] = this.templateArray[this.templateIndex]['usts_value'];
 		this.templateForm.value['usts_id'] = this.templateArray[this.templateIndex]['usts_id'];
-		this.templateForm.value['usts_settings'] = settings_json;
 		this.sisService.insertSlcTcTemplateSetting(this.templateForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Template Added', 'success');
@@ -108,9 +98,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 				let template_settings = JSON.parse(result.data[0].usts_settings);
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template,
-					'usts_id': result.data[0].usts_id,
-					'usts_paper' : template_settings ? template_settings.cs_paper :'',
-					'usts_orientation' : template_settings ? template_settings.cs_orientation:''
+					'usts_id': result.data[0].usts_id
 				});
 			} else {
 				this.templateForm.patchValue({
