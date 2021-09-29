@@ -25,16 +25,17 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Choose User Type</mat-label>
-              <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
+              <mat-select formControlName="user_role_id" required (selectionChange)="resetAll(); isOthersCheck($event)">
                 <mat-option value="4">Student</mat-option>
                 <mat-option value="3">Employee</mat-option>
+                <mat-option value="5">Others</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <div class="row remove-top-margin">
               <div class="col-7">
-                <mat-form-field class="form-field" appearance="outline">
+                <mat-form-field class="form-field" appearance="outline" *ngIf="!isOthers">
                   <mat-label>
                     {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login
                     Id'}}
@@ -43,14 +44,26 @@
                     [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
                     formControlName="searchId" autocomplete="off" />
                 </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline" *ngIf="isOthers">
+                  <mat-label>
+                    Enter Name
+                  </mat-label>
+                  <input matInput
+                    placeholder="Enter Name"
+                    formControlName="searchId" autocomplete="off"
+                  />
+                </mat-form-field>
               </div>
               <div class="col-1">
                 <i *ngIf="searchForm.value.user_role_id == '4'" style="cursor: pointer;"
                   class="fas fa-search margin-top-20" matTooltip="Search Students" (click)="openSearchDialog()"></i>
               </div>
               <div class="col-4 margin-top-10  text-right">
-                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                <button  *ngIf="searchForm.value.user_role_id != '5'" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
                   Search
+                </button>
+                <button  *ngIf="searchForm.value.user_role_id == '5'" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="isOtherUser()">
+                  Add Item
                 </button>
               </div>
             </div>
@@ -75,9 +88,11 @@
         <div class="col-2 remove-col-padding-left margin-top-15">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
-          <span class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'"> S -
-              {{userData?.em_admission_no}}</span> <span *ngIf="userData?.au_role_id == '3'"> T -
-              {{userData?.emp_id}}</span> <span *ngIf="userData?.au_role_id == '2'"> A
+          <span class="font-size-16 text-capitalize">
+            ( <span *ngIf="userData?.au_role_id == '4'"> S - {{(userData?.au_process_type == 3) ? userData?.em_provisional_admission_no : userData?.em_admission_no}}</span>
+            <span *ngIf="userData?.au_role_id == '3'"> T -
+              {{userData?.emp_id}}</span> 
+            <span *ngIf="userData?.au_role_id == '2'"> A
               -{{userData?.emp_id}}</span> )
           </span>
         </div>
@@ -155,6 +170,119 @@
     </mat-card>
   </div>
 </div>
+<div class="row" *ngIf="(showReturnIssueSectionForOthers)">
+  <div class="col-12 ">
+    <form [formGroup]="itemSearchForm">
+      <mat-card class="mat-card-108">
+        <div class="row">
+          <div class="col-7 margin-top-15">
+            <span class="font-size-20 font-bold">Add Items</span>
+          </div>
+          <div class="col-5">
+            <div class="row remove-top-margin">
+              <div class="col-3" *ngIf="common.isExistUserAccessMenu('846')">
+                  <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Date</mat-label>
+                      <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Bundle</mat-label>
+                  <mat-select formControlName="bundle_id" (selectionChange)="addBundleItems()">
+                    <mat-option *ngFor="let item of bundleArray" [value]="item.bundle_id">
+                      {{item.bundle_name | titlecase}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Scan Item Code</mat-label>
+                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-3 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  (click)="searchItemDataOthers()" style="width: auto !important;">
+                  Add To List
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row margin-top-15" [hidden]="!(tableArray.length > 0)">
+          <div class="col-12 remove-col-padding">
+            <table class="table-100">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Item Code</th>
+                  <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Available Qty</th>
+                  <th class="custom-th">Item Price</th>
+                  <th class="custom-th">Item Quantity</th>
+                  <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of tableArray; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
+                    <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.available_item}}</span></td>
+                    <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
+                    <td width="20%" class="custom-td">
+                      <form [formGroup]="formGroupArray[i].formGroup">
+                        <!-- <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Item Quantity</mat-label> -->
+                        <input matInput type="number" formControlName="item_quantity" required
+                          placeholder="Please Enter Item Quantity" (change)="setTotal(item, i)" />
+                        <!-- </mat-form-field> -->
+                      </form>
+                    </td>
+                    <td width="10%" class="custom-td">{{getTotalPrice(i)}}</td>
+                    <td width="10%" class="custom-td">
+                      <!-- <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i> -->
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(item.item_code) : null"
+                        [checked]="selection.isSelected(item.item_code)" [disabled]="checkRequired(item.item_code)"
+                        [aria-label]="checkboxLabel(item.item_code)">
+                      </mat-checkbox>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tfoot>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">Total</td>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td"></td>
+                <td class="custom-td">{{getTotalPriceSum()}}</td>
+                <td class="custom-td"></td>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <br />
+        <div class="row text-center" *ngIf="tableArray.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="previewSaveItem()"
+              [disabled]="disabledApiButton">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetItem()">
+              Reset
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </form>
+  </div>
+</div>
 <div class="row" *ngIf="(userData!='' && showReturnIssueSection && !previewTableFlag )">
   <div class="col-12 ">
     <form [formGroup]="itemSearchForm">
@@ -176,7 +304,7 @@
               <div class="col-3">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Bundle</mat-label>
-                  <mat-select formControlName="bundle_id" required (selectionChange)="addBundleItems()">
+                  <mat-select formControlName="bundle_id" (selectionChange)="addBundleItems()">
                     <mat-option *ngFor="let item of bundleArray" [value]="item.bundle_id">
                       {{item.bundle_name | titlecase}}</mat-option>
                   </mat-select>
@@ -273,7 +401,7 @@
     </form>
   </div>
 </div>
-<div class="row" *ngIf="userData==''">
+<div class="row" *ngIf="(userData=='' && !showReturnIssueSectionForOthers)">
   <div class="col-12">
     <mat-card>
       <div class="text-center">
@@ -313,7 +441,7 @@
               </tr>
               <tr>
                 <td class="text-left pad-overall-2" style="width: 30%;">
-                  <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
+                  <span>{{tableReciptArray.role_id}}</span><span> : {{ (tableReciptArray?.adm_no != '' && tableReciptArray?.p_adm_no != '' ) ? ((tableReciptArray?.adm_no != 0 ) ? "A-"+tableReciptArray?.adm_no : "P-"+tableReciptArray?.p_adm_no) : ''}}</span>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 30%;">
                   <span>Class</span><span> : {{tableReciptArray.class_name}}</span>
@@ -323,7 +451,7 @@
               </tr>
               <tr>
                 <td class="text-left pad-overall-2" style="width: 30%;">
-                  <span>Name </span> <span> : {{tableReciptArray.name}} </span>
+                  <span>Name </span> <span> : {{tableReciptArray.name ? tableReciptArray.name : otherName}} </span>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 30%;">
                   <span>Mobile No.</span><span> : {{tableReciptArray.mobile}}</span>

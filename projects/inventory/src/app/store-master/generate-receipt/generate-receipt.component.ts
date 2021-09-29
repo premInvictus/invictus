@@ -143,13 +143,26 @@ export class GenerateReceiptComponent implements OnInit {
   filterItem($event) {
     // keyCode
     if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
-      if ($event.target.value !== '' && $event.target.value.length >= 3) {
-        this.itemArray = [];
-        this.commonService.getItemsFromMaster({ item_name: $event.target.value }).subscribe((result: any) => {
-          if (result && result.status === 'ok') {
-            this.itemArray = result.data;
-          }
-        });
+      //check if no is entered
+      const reg = new RegExp('^[0-9]+$');
+      if($event.target.value !== ''){
+        if($event.target.value.match(reg)){
+          this.itemArray = [];
+          this.commonService.getItemsFromMaster({ item_code: $event.target.value }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+              console.log("item result ", result);
+              this.itemArray = result.data;
+            }
+          });
+        }else if($event.target.value !== '' && $event.target.value.length >= 3) {
+          this.itemArray = [];
+          this.commonService.getItemsFromMaster({ item_name: $event.target.value }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+              console.log("item result ", result);
+              this.itemArray = result.data;
+            }
+          });
+        }
       }
     }
   }
