@@ -300,7 +300,7 @@ export class GenerateBillComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        // emp_id: this.currentUser.login_id,
+        emp_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
@@ -329,7 +329,7 @@ export class GenerateBillComponent implements OnInit {
     } else {
       let inputJson: any = {};
       inputJson = {
-        // emp_id: this.currentUser.login_id,
+        emp_id: this.currentUser.login_id,
         item_code: Number(this.itemSearchForm.value.scanItemId)
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
