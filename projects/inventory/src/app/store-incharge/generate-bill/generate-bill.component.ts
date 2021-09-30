@@ -34,12 +34,15 @@ export class GenerateBillComponent implements OnInit {
   tableReciptArray: any[] = [];
   tableHeader: any;
   payModes:any[]=['cash','wallet'];
+  // payModes:any[]=['cash','UPI','wallet','RTGS/NEFT/IMPS','Debit /Credit Card','Others'];
+  otherName = "";
   wallet_details:any={
     balancetotal: 0,
     balancetype:'',
     submitflag:false,
     min_wallet_balance:0
   };
+  isOthers = false;
   storeinchargeDetails:any;
   storeinchargeLocation:any;
   locationArray: any[] = [];
@@ -48,6 +51,7 @@ export class GenerateBillComponent implements OnInit {
   requiredArray: any[] = [];
   studentArrayByName:any[] = [];
   session:any
+  showReturnIssueSectionForOthers: boolean = false;
   constructor(
     private fbuild: FormBuilder,
     public common: CommonAPIService,
@@ -71,7 +75,7 @@ export class GenerateBillComponent implements OnInit {
   getStoreIncharge(){
     let inputJson: any = {};
       inputJson = {
-        emp_id: this.currentUser.login_id,
+        // emp_id: this.currentUser.login_id,
       }
     this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
       if (result.length > 0) {
@@ -116,6 +120,21 @@ export class GenerateBillComponent implements OnInit {
       }
     }
   }
+  isOthersCheck(event){
+    if(event.value == '5'){
+      this.isOthers = true;
+    }else{
+      this.isOthers = false;
+    } 
+  }
+
+  isOtherUser(){
+    this.userData = [];
+    this.showReturnIssueSection = false;
+    this.showReturnIssueSectionForOthers = true;
+    this.previewTableFlag = false;
+  }
+
   getBundle(){
     this.bundleArray = [];
     const param:any = {};
@@ -145,6 +164,7 @@ export class GenerateBillComponent implements OnInit {
         });
   }
   searchUser() {
+    this.showReturnIssueSectionForOthers = false;
     if (this.searchForm && this.searchForm.value.searchId) {
       this.resetItem();
       const au_role_id = this.searchForm.value.user_role_id;
@@ -301,6 +321,35 @@ export class GenerateBillComponent implements OnInit {
     }
 
   }
+  searchItemDataOthers() {
+    this.otherName = this.searchForm.value.searchId;
+    const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.itemSearchForm.value.scanItemId));
+    if (findex !== -1) {
+      this.common.showSuccessErrorMessage('Item Already exist in the cart', 'error');
+    } else {
+      let inputJson: any = {};
+      inputJson = {
+        emp_id: this.currentUser.login_id,
+        item_code: Number(this.itemSearchForm.value.scanItemId)
+      }
+      this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+        if (result.length > 0) {
+          this.storeinchargeDetails = result[0];
+          this.storeinchargeLocation = this.storeinchargeDetails.item_location;
+          let item = result[0].item_assign[0];
+          if(item && item.inv_item_master) {
+            item.item_quantity = item.inv_item_master.item_location.item_qty;
+          }
+          this.itemArray.push(item);
+          this.selection.toggle(item.item_code);
+          this.pushItem();
+        } else {
+          this.common.showSuccessErrorMessage('Item is not available at store', 'error');
+        }
+      })
+    }
+
+  }
   getTotalPrice(index) {
     if (this.formGroupArray[index].formGroup.value.item_selling_price &&
       this.formGroupArray[index].formGroup.value.item_quantity) {
@@ -413,7 +462,9 @@ export class GenerateBillComponent implements OnInit {
         this.tableReciptArray['class_name'] = '';
         this.tableReciptArray['role_id'] = 'Employee Id';
       } else {
-        this.tableReciptArray['adm_no'] = this.userData.em_admission_no;
+        this.tableReciptArray['adm_no'] = this.userData.em_admission_no ? this.userData.em_admission_no : '';
+        this.tableReciptArray['p_adm_no'] = this.userData.em_provisional_admission_no ? this.userData.em_provisional_admission_no : '';
+        this.tableReciptArray['process_type'] = this.userData.au_process_type;
         this.tableReciptArray['class_name'] = this.userData.sec_name ? this.userData.class_name + '-' + this.userData.sec_name : '';
         this.tableReciptArray['role_id'] = 'Admission No.';
       }
@@ -550,15 +601,15 @@ export class GenerateBillComponent implements OnInit {
           billArray['school_state'] = this.schoolInfo.school_state;
           billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
           billArray['school_website'] = this.schoolInfo.school_website;
-          billArray['name'] = result.buyer_details.au_full_name;
+          billArray['name'] = result.buyer_details.au_full_name ? result.buyer_details.au_full_name : this.otherName;
           billArray['mobile'] = result.buyer_details.active_contact;
           billArray['active_parent'] = result.buyer_details.active_parent;
           if (result.buyer_details.au_role_id === 3) {
-            billArray['adm_no'] = result.buyer_details.emp_id;
+            billArray['adm_no'] = result.buyer_details.emp_id ? result.buyer_details.emp_id : '-';
             billArray['class_name'] = '';
             billArray['role_id'] = 'Employee Id';
           } else {
-            billArray['adm_no'] = result.buyer_details.em_admission_no;
+            billArray['adm_no'] = result.buyer_details.em_admission_no != 0 ? "A-"+result.buyer_details.em_admission_no : "P-"+result.buyer_details.em_provisional_admission_no;
             billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
             billArray['role_id'] = 'Admission No.';
           }
@@ -668,9 +719,10 @@ export class GenerateBillComponent implements OnInit {
 		});
 		diaogRef.afterClosed().subscribe((result: any) => {
 			if (result) {
-        console.log(result);
+        console.log("result from search ",result);
+        let admission_no = (result.process_type == 3) ? "P"+result.adm_no : result.adm_no;
         this.searchForm.patchValue({
-          searchId : result.adm_no
+          searchId : admission_no
         });
         this.searchUser();
         
