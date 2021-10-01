@@ -153,7 +153,13 @@
               <div class="col-8">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Scan Item Code</mat-label>
-                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId"  (keyup)="filterItem($event)" [matAutocomplete]="autoGroup" autocomplete="off" />
+                  <mat-autocomplete #autoGroup="matAutocomplete">
+                    <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
+                      (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
+                      {{item.item_code}} -
+                      {{item.item_name | capitalize}}</mat-option>
+                  </mat-autocomplete>
                 </mat-form-field>
               </div>
               <div class="col-4 margin-top-10  text-right">

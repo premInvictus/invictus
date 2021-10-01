@@ -217,6 +217,11 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/location/getParentLocationOnly', value);
   }
+  getAllLocations(value){
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/location/getAll', value);
+    
+  }
   getGlobalSettingReplace(value) {
     this.service.startLoading();
     return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);

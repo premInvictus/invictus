@@ -100,6 +100,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	allLocationData: any[] = [];
 	locationData: any[] = [];
 	showReturnIssueSection = false;
+	itemArray: any[];
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -313,6 +314,34 @@ export class CirculationConsumptionComponent implements OnInit {
 		this.itemData[i]['current_location_stock'] = currentLocationStock;
 	}
 
+
+	filterItem($event) {
+		// keyCode
+		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+		  //check if no is entered
+		  const reg = new RegExp('^[0-9]+$');
+		  if($event.target.value !== ''){
+			if($event.target.value.match(reg)){
+			  this.itemArray = [];
+			  this.erpCommonService.getItemsFromMaster({ item_code: $event.target.value }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+				  console.log("item result ", result);
+				  this.itemArray = result.data;
+				}
+			  });
+			}else if($event.target.value !== '' && $event.target.value.length >= 3) {
+			  this.itemArray = [];
+			  this.erpCommonService.getItemsFromMaster({ item_name: $event.target.value }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+				  console.log("item result ", result);
+				  this.itemArray = result.data;
+				}
+			  });
+			}
+		  }
+		}
+	  }
+
 	searchItemData() {
 		if (this.returnIssueItemsForm && this.returnIssueItemsForm.value.scanItemId) {
 			const itemAlreadyAddedStatus = this.checkItemAlreadyAdded(this.returnIssueItemsForm.value.scanItemId);
@@ -351,6 +380,8 @@ export class CirculationConsumptionComponent implements OnInit {
 						if (result && result.data && result.data[0]) {
 							delete result.data[0]['_id'];
 							result.data[0]['due_date'] = date;
+
+							console.log("search item by status", result);
 
 							var current_stock = 0;
 							if (result.data[0].item_location) {
@@ -411,6 +442,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		} else {
 			this.common.showSuccessErrorMessage('Please Scan a item to Add', 'error');
 		}
+		console.log("itemData ", this.itemData);
 	}
 
 	getItemLocationStock(item, location_id) {
