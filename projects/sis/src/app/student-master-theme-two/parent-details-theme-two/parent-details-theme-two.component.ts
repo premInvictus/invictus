@@ -329,6 +329,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}),
 		}];
 	}
+	
 
 
 	prepareFormFields(){

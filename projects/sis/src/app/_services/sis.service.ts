@@ -1255,4 +1255,21 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/reportSis/getPromotedReport', value);
 	}
+	getCertificateAll(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/getCertificateAll',value);
+	}
+	insertOrUpdateCertificate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/insertOrUpdateCertificate', value);
+	}
+	changeCertificatePrintSetupStatusId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/changeCertificatePrintSetupStatusId', value);
+	}
+	deleteCertificate(value) {
+		console.log("delete api");
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/deleteCertificate', value);
+	}
 }

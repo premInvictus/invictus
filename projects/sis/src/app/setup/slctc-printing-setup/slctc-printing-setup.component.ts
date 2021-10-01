@@ -96,7 +96,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 				// console.log(result.data[0].usts_template); a
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template,
-					'usts_id': result.data[0].usts_id,
+					'usts_id': result.data[0].usts_id
 				});
 			} else {
 				this.templateForm.patchValue({

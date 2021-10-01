@@ -27,7 +27,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
-                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      [errorStateMatcher]="confirmValidParentMatcher" 
+                      (selectionChange)="resetStudentCount()" required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
                         {{item.au_process_name}}</mat-option>
@@ -41,7 +42,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Class</mat-label>
                     <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
-                      (selectionChange)="getSectionsByClass()" [errorStateMatcher]="confirmValidParentMatcher" required>
+                      (selectionChange)="getSectionsByClass(); resetStudentCount()" [errorStateMatcher]="confirmValidParentMatcher" required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
                       </mat-option>
@@ -54,7 +55,8 @@
                 <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
-                    <mat-select placeholder="Section" formControlName="sec_id" >
+                    <mat-select placeholder="Section" formControlName="sec_id" 
+                    (selectionChange)="resetStudentCount()" >
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                       </mat-option>
@@ -65,7 +67,9 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Certificate Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="certificate_type"
-                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      [errorStateMatcher]="confirmValidParentMatcher"
+                      (selectionChange)="resetStudentCount()" 
+                      required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of certificate_type_arr" [value]="item.usts_id">
                         {{item.usts_alias}}</mat-option>
@@ -76,7 +80,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-2">
-                  <button mat-raised-button class="btn-success margin-top-12" (click)="getAllStudent()">Apply</button>
+                  <button mat-raised-button class="btn-success margin-top-12" (click)="getAllStudent(); resetStudentCount();">Apply</button>
                 </div>
               </div>
             </form>
