@@ -422,7 +422,6 @@ export class InvoiceDetailsModalComponent implements OnInit {
 										}
 										this.invoiceBifurcationArray2.push(obj);
 									});
-									console.log(this.invoiceBifurcationArray2, "++++++++++++++++++++++++");
 								}
 
 							})
