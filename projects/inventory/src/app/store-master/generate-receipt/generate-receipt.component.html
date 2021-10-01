@@ -47,7 +47,7 @@
                     <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
                       (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
                       {{item.item_code}} -
-                      {{item.item_name | capitalize}}</mat-option>
+                      {{item.item_name | capitalize }}</mat-option>
                   </mat-autocomplete>
                   <mat-error>
                     This field is required
