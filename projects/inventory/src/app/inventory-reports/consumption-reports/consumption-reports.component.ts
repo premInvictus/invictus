@@ -358,6 +358,7 @@ export class ConsumptionReportsComponent implements OnInit {
     ];
     this.inventory.getConsumption().subscribe((result: any) => {
       if (result) {
+        console.log("consumption report ",result);
         repoArray = result;
         let ind = 0;
         for (let item of repoArray) {

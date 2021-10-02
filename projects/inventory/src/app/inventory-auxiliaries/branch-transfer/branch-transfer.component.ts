@@ -51,12 +51,14 @@ export class BranchTransferComponent implements OnInit {
   BRANCH_TRANSFER_DATA: any[] = [];
   schoolInfo: any = {};
   locations: any[] = [];
+  locationArray: any[] = [];
   schoolGroupData:any[] = [];
   datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
   disabledApiButton = false;
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getBranch();
+    this.getAllLocations();
     this.getBranchTransferData();
     this.getSchool();
     this.buildForm();
@@ -86,6 +88,8 @@ export class BranchTransferComponent implements OnInit {
     });
     this.finalRequistionForm = this.fbuild.group({
       intended_use: '',
+      new_location : '',
+      remarks : ''
     });
 
   }
@@ -206,6 +210,16 @@ export class BranchTransferComponent implements OnInit {
       }
     });
   }
+  getAllLocations(){
+        this.locationArray = [];
+        this.service.getAllLocations({}).subscribe((result: any) => {
+          if (result) {
+            console.log("all locations",result);
+            this.locationArray = result;
+          }
+        });
+  }
+
   getItemPerId(item: any) {
     this.locations = [];
     this.service.filterItemsFromMaster(
@@ -225,6 +239,7 @@ export class BranchTransferComponent implements OnInit {
         this.locations = result.data[0].locs
       }
     });
+    console.log("locations ",this.locations);
     this.itemCode = item.item_code;
     this.createRequistionForm.patchValue({
       item_name: item.item_name,
@@ -300,7 +315,8 @@ export class BranchTransferComponent implements OnInit {
     this.finalRequistionArray = val.inv_item_details;
     this.editBranchtransfer = true;
     this.finalRequistionForm.patchValue({
-      'intended_use': val.branch_details.branch_id
+      'intended_use': val.branch_details.branch_id,
+      'new_location': val.new_location
     });
     this.bt_id = val.inv_bt_id;
   }
@@ -393,6 +409,7 @@ export class BranchTransferComponent implements OnInit {
     return event;
   }
   finalSubmit($event) {
+    console.log("final submit >>");
     if ($event) {
       this.disabledApiButton = true;
       if (!this.editBranchtransfer && !this.deleteFlag && !this.genFlag) {
@@ -422,11 +439,61 @@ export class BranchTransferComponent implements OnInit {
         this.service.createBranchTransfer(JSON).subscribe((res: any) => {
           this.disabledApiButton = false;
           if (res) {
-            this.finalRequistionArray = [];
-            this.createRequistionForm.reset();
-            this.finalRequistionForm.reset();
-            this.commonService.showSuccessErrorMessage('Request Created Successfully', 'success');
-            this.goBack();
+
+            console.log("finalRequistionArray ", this.finalRequistionArray);
+            console.log("item code ", this.finalRequistionForm.value);
+            let pm_item_details = [];
+            this.commonService.getItemsFromMaster({ item_code: this.finalRequistionArray[0].item_code }).subscribe((result: any) => {
+              if (result && result.status === 'ok') {
+                console.log("item result >>", result);
+                console.log("finalRequistionArray ",this.finalRequistionArray);
+                console.log("createRequistionForm ",this.finalRequistionForm.value);
+                
+                result.data[0].item_location.forEach(element => {
+                  console.log("1 ", element.location_id);
+                  if(element.location_id == this.finalRequistionForm.value.new_location){
+                    let present_quant = element.item_qty;
+                    console.log("quantity ", present_quant);
+                    console.log("quantity ", Number(this.finalRequistionArray[0].item_quantity));
+                    pm_item_details.push({
+                      "item_code": this.finalRequistionArray[0].item_code,
+                      "item_quantity": Number(this.finalRequistionArray[0].item_quantity),
+                      "item_location": this.finalRequistionForm.value.new_location
+                  });
+                    console.log("1>",pm_item_details);
+                  }else if(element.location_id == this.finalRequistionArray[0].location){
+                    let present_quant = element.item_qty;
+                    console.log("quantity ", present_quant);
+                    console.log("quantity ", Number(this.finalRequistionArray[0]));
+                    pm_item_details.push({
+                      "item_code": this.finalRequistionArray[0].item_code,
+                      "item_quantity": Number(-this.finalRequistionArray[0].item_quantity),
+                      "item_location": this.finalRequistionArray[0].location
+                  });
+                    console.log("1 > ",pm_item_details);
+                  }
+                  
+                });
+
+                console.log("item details to update ",pm_item_details);
+                this.service.updateItemQuantity({ "pm_item_details" : pm_item_details}).subscribe((result_p: any) => {
+                  if (result_p) {
+                    
+                    this.commonService.showSuccessErrorMessage('Stock Updated', 'success');
+                  }
+                });
+        
+        
+                
+              }
+              this.finalRequistionArray = [];
+              this.createRequistionForm.reset();
+              this.finalRequistionForm.reset();
+              this.commonService.showSuccessErrorMessage('Request Created Successfully', 'success');
+              this.goBack();
+            });
+           
+           
           } else {
             this.commonService.showSuccessErrorMessage('Request Not Created Successfully', 'error');
           }
@@ -525,10 +592,12 @@ export class BranchTransferComponent implements OnInit {
                   inv_item_details: this.item_det.inv_item_details
                 }).subscribe((res: any) => {
                   if (res) {
+
                   }
                 });
               }
             });
+
             this.goBack();
           } else {
             this.commonService.showSuccessErrorMessage('Error to create gate pass Successfully', 'error');
@@ -575,7 +644,9 @@ export class BranchTransferComponent implements OnInit {
           })
           ind++;
         }
-        this.totalRecords = Number(res.totalRecords);
+        console.log();
+        
+        this.totalRecords = (res.data.length);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         this.datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
         this.datasource.paginator.length = this.paginator.length = this.totalRecords;
