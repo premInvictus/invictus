@@ -426,7 +426,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 
 							})
 						}
-
+						
+						
 						// this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
 						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
 						this.modifyInvoiceForm.patchValue({
@@ -680,7 +681,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			
 			if(el.fp_id === fp_id) {
 				const invg_id_idx = el.bifurcation.findIndex(item => item.invg_id === invg_id);
-				this.invoiceBifurcationArray2[a].bifurcation[invg_id_idx].adjustment = parseInt($event.target.value);
+				if(this.invoiceBifurcationArray2[a].bifurcation[invg_id_idx]) {
+					this.invoiceBifurcationArray2[a].bifurcation[invg_id_idx].adjustment = parseInt($event.target.value);
+				}
+				
 			}
 			a+=1;
 		});
