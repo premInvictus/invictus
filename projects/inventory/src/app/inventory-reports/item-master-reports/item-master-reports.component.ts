@@ -334,13 +334,13 @@ export class ItemMasterReportsComponent implements OnInit {
       const collectionJSON: any = {
         "filters": [
           {
-            "filter_type": "item_code",
+            "filter_type": "",
             "filter_value": "",
             "type": "text"
           }
         ]
       };
-      this.inventory.filterItemsFromMaster(collectionJSON).subscribe((result: any) => {
+      this.inventory.searchItemsFromMaster({}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           repoArray = result.data;
           let i = 1;
@@ -472,7 +472,7 @@ export class ItemMasterReportsComponent implements OnInit {
         ]
       };
       // const obj: any = {};
-      this.inventory.filterItemsFromMaster(collectionJSON).subscribe((result: any) => {
+      this.inventory.searchItemsFromMaster({}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           repoArray = result.data;
           let finalSet = [];

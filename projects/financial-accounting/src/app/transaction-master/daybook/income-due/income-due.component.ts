@@ -398,9 +398,9 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe(
       (result: any) => {
-        this.showLoadingFlag = true;
+        // this.showLoadingFlag = true;
       // this.commonAPIService.stopLoading();
-      this.commonAPIService.startLoading();
+      // this.commonAPIService.startLoading();
       console.log("COA for COA function ", result);
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
