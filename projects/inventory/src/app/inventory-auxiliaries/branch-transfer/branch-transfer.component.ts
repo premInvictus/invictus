@@ -2,14 +2,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { InventoryService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService } from '../../_services';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSlideToggleChange } from '@angular/material';
 import { ErpCommonService } from 'src/app/_services';
+import { Element } from './branch-transfer.model';
 @Component({
   selector: 'app-branch-transfer',
   templateUrl: './branch-transfer.component.html',
   styleUrls: ['./branch-transfer.component.css']
 })
 export class BranchTransferComponent implements OnInit {
+  @ViewChild('viewModal') viewModal;
   createNewFlag = false;
   bt_id: any;
   item_det: any = {};
@@ -25,7 +27,9 @@ export class BranchTransferComponent implements OnInit {
   branchArray: any[] = [];
   deleteFlag = false;
   displayedColumns: any[] = ['srno', 'date', 'created_by', 'branch_name', 'action'];
+  // displayedColumns: any[] = ['srno', 'date', 'created_by', 'action'];
   @ViewChild('deleteModal') deleteModal;
+  // @ViewChild('viewModal') viewModal;
   @ViewChild('messageModal') messageModal;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   submitParam: any = {};
@@ -72,6 +76,26 @@ export class BranchTransferComponent implements OnInit {
       }
     });
   }
+    color = 'accent';
+    inOrOut = 'Internal Transfer';
+    inOrOutStatus = false;
+
+  changed($event: MatSlideToggleChange){
+    console.log($event.checked);
+    if($event.checked == false){
+      this.inOrOut = "Internal Transfer";
+      this.inOrOutStatus = false;
+    }else{
+      this.inOrOut = "External Transfer";
+      this.inOrOutStatus = true;
+    } 
+  }
+
+  openViewModal(item){
+    console.log(item);
+    this.viewModal.openModal(item);
+  }
+
   buildForm() {
     this.createRequistionForm = this.fbuild.group({
       item_code: '',
@@ -427,14 +451,16 @@ export class BranchTransferComponent implements OnInit {
           updated_date: '',
           inv_item_details: this.finalRequistionArray,
           branch_details: {
-            branch_id: this.finalRequistionForm.value.intended_use,
+            branch_id: this.finalRequistionForm.value.intended_use ? this.finalRequistionForm.value.intended_use : this.finalRequistionArray[0].location,
             branch_name: this.getBranchName(this.finalRequistionForm.value.intended_use),
             branch_prefix: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
           },
           status: 'pending',
           type: 'branch-transfer',
           branch_to: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
-          branch_from: '',
+          branch_from: this.finalRequistionArray[0].location,
+          branch_session: '',
+          remarks: this.finalRequistionArray[0].remarks
         };
         this.service.createBranchTransfer(JSON).subscribe((res: any) => {
           this.disabledApiButton = false;
@@ -639,7 +665,7 @@ export class BranchTransferComponent implements OnInit {
             srno: ind + 1,
             date: item.created_date,
             created_by: item.created_by.name,
-            branch_name: item.branch_details.branch_name,
+            // branch_name: item.branch_details.branch_name,
             action: item,
           })
           ind++;
