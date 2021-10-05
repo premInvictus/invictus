@@ -42,7 +42,7 @@
             <ng-container matColumnDef="item_location">
                 <th mat-header-cell *matHeaderCellDef class="cell-left"> Location </th>
                 <td mat-cell class="cell-left" *matCellDef="let element;">
-                  {{element.location_name}} <i class="fas fa-arrow-right"></i>  {{element.location_name}}</td>
+                  {{element.item_from_location}} <i class="fas fa-arrow-right"  style="color: #d19e51"></i>  {{element.item_to_location}}</td>
               </ng-container>
   
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

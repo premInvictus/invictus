@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InventoryService } from '../../_services';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSlideToggleChange } from '@angular/material';
 import { ErpCommonService } from 'src/app/_services';
@@ -35,12 +35,13 @@ export class BranchTransferComponent implements OnInit {
   submitParam: any = {};
   createRequistionForm: FormGroup;
   finalRequistionForm: FormGroup;
-  itempagesize = 100;
+  itempagesize = 10;
+  pageLength: number;
   totalRecords: any;
-  itempagesizeoptions = [100, 300, 500, 1000];
   pageIndex = 0;
+  pageSize = 10;
+  pageSizeOptions = [10, 30, 50, 100];
   pageEvent: PageEvent;
-  pageSize = 100;
   itemArray: any[] = [];
   itemCode: any;
   itemCodeArray: any[] = [];
@@ -67,6 +68,11 @@ export class BranchTransferComponent implements OnInit {
     this.getSchool();
     this.buildForm();
   }
+
+  ngAfterViewInit() {
+    this.datasource.paginator = this.paginator; 
+  }
+
   getSchool() {
     this.erp.getSchool().subscribe((res: any) => {
       if (res && res.status === 'ok') {
@@ -106,7 +112,7 @@ export class BranchTransferComponent implements OnInit {
       item_price: '',
       item_status: '',
       item_type_details: '',
-      location: '',
+      location: [[], Validators.required],
       location_name: ''
 
     });
@@ -218,6 +224,8 @@ export class BranchTransferComponent implements OnInit {
       if (result && result.status === 'ok') {
         this.itemArray2 = result.data;
         this.getQuantityBasedOnLocation2(val, this.itemArray2);
+        const myArr = val.location.split(",");
+        console.log("myArray ", myArr);
         this.createRequistionForm.patchValue({
           'item_code': val.item_code,
           'item_name': val.item_name,
@@ -238,6 +246,7 @@ export class BranchTransferComponent implements OnInit {
         this.locationArray = [];
         this.service.getAllLocations({}).subscribe((result: any) => {
           if (result) {
+            console.log(result);
             console.log("all locations",result);
             this.locationArray = result;
           }
@@ -276,18 +285,31 @@ export class BranchTransferComponent implements OnInit {
     });
   }
   getQuantityBasedOnLocation($event) {
+    console.log($event.value)
+    var locations : any = [];
+    var locationName = "";
+    locations = $event.value;
+    var totalQuantity = 0;
     if (!this.editBranchtransfer) {
       const sindex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
       if (sindex !== -1) {
-        const lindex = this.itemArray[sindex].item_location.findIndex(f => Number(f.location_id) === Number($event.value));
-        if (lindex !== -1) {
-          this.qty = Number(this.itemArray[sindex].item_location[lindex].item_qty);
-          this.createRequistionForm.patchValue({
-            item_quantity: this.qty,
-            location: Number($event.value),
-            location_name: this.getLocationName(Number($event.value))
-          });
-        }
+        locations.forEach((ele)=>{
+          const lindex = this.itemArray[sindex].item_location.findIndex(f => Number(f.location_id) === Number(ele));
+          if (lindex !== -1) {
+            this.qty = Number(this.itemArray[sindex].item_location[lindex].item_qty);
+            console.log(this.qty)
+            totalQuantity += this.qty; 
+            console.log(totalQuantity)
+          }
+          locationName +=  this.getLocationName(Number(ele)) + ","
+        });
+        this.qty = totalQuantity;
+        this.createRequistionForm.patchValue({
+          item_quantity: totalQuantity,
+          location: ($event.value),
+          location_name: locationName
+        });
+
       }
     }
   }
@@ -456,8 +478,8 @@ export class BranchTransferComponent implements OnInit {
             branch_prefix: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
           },
           status: 'pending',
-          type: 'branch-transfer',
-          branch_to: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
+          type: this.finalRequistionForm.value.intended_use ? 'branch-transfer' : 'location-transfer',
+          branch_to: this.getBranchPrefix(this.finalRequistionForm.value.intended_use) ? this.getBranchPrefix(this.finalRequistionForm.value.intended_use) : this.finalRequistionForm.value.new_location,
           branch_from: this.finalRequistionArray[0].location,
           branch_session: '',
           remarks: this.finalRequistionArray[0].remarks
@@ -655,27 +677,31 @@ export class BranchTransferComponent implements OnInit {
   getBranchTransferData() {
     this.service.getBranchTransfer({
       "pageIndex": this.pageIndex,
-      "pageSize": this.pageSize,
-      "type": 'branch-transfer'
+      "pageSize": this.pageSize
     }).subscribe((res: any) => {
+      console.log("get Branch Tranfers",res);
       if (res && res.status === 'ok') {
+        this.BRANCH_TRANSFER_DATA = [];
         let ind = 0;
         for (const item of res.data) {
           this.BRANCH_TRANSFER_DATA.push({
-            srno: ind + 1,
+            srno: item.inv_bt_id,
             date: item.created_date,
             created_by: item.created_by.name,
-            // branch_name: item.branch_details.branch_name,
+            branch_name: item.type == "branch-transfer" ? "External" : "Internal",
             action: item,
           })
           ind++;
         }
         console.log();
         
-        this.totalRecords = (res.data.length);
+        this.totalRecords = (res.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         this.datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
-        this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+        // this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+        // this.datasource.paginator = this.paginator;
+        this.paginator.length = parseInt(this.totalRecords);
+        this.datasource.paginator.length = this.paginator.length;
         this.datasource.paginator = this.paginator;
       }
     });

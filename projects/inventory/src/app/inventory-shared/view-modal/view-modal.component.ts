@@ -37,6 +37,9 @@ export class ViewModalComponent implements OnInit {
 
     console.log(data);
 
+    var fLocation = data.branch_from;
+    var tLocation = data.branch_to;
+
     data.inv_item_details.forEach(element => {
       let ind = 0;
       this.ELEMENT_DATA.push({
@@ -45,7 +48,8 @@ export class ViewModalComponent implements OnInit {
         "item_name": element.item_name,
         "item_category": element.item_type_details.item_category.name,
         "item_quantity": element.item_quantity + " " +element.item_units,
-        "item_location": element.location_name
+        "item_from_location": fLocation,
+        "item_to_location": tLocation
       });  
       ind++;
       this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
