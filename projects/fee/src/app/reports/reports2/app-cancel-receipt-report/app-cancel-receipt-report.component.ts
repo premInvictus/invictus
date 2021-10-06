@@ -725,7 +725,10 @@ export class CancelReceiptReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
+		if(value != '-')
 		return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		else 
+		return value;
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		if (totals.group.level === 0) {
