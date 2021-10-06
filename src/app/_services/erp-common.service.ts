@@ -696,6 +696,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiInvUrl + '/configuration/filterItemsFromMaster', value);
 	}
 
+	getItemsFromMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/configuration/getItemsFromMaster', value);
+	}
+
 	insertUserItemData(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiInvUrl + '/inventory-user/insert', value);
