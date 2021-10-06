@@ -137,6 +137,7 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
   session: any;
   date: any;
   notFormatedCellArray: any;
+  ledgerArray: any;
   constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -159,7 +160,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
   openDeleteDialog = (data) => this.deleteModal.openModal(data);
 
   deleteConfirm(element) {
-    console.log('value--', element);
     var inputJson = {
       coa_id: element.coa_id,
       coa_code: element.coa_code,
@@ -188,7 +188,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
       }
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
 			this.getAccounts();
 		});
   }
@@ -203,7 +202,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
       }
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
 			this.getAccounts();
 		});
   }
@@ -218,39 +216,140 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
       }
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
 			// this.getAccounts();
 		});
   }
 
   openLedgerModal(value) {
-    this.faService.getChartsOfAccount({"coa_id":value.ac_id}).subscribe((result:any)=>{
-			if(result) {
-        console.log('trial balance coa_id', result, [
-          "01","02","03","04","05","06",
-          "07",
-          "08","09","10","11","12"
-      ]);
-        const dialogRef = this.dialog.open(LedgerEntryModelComponent, {
-          height: '520px',
-          width: '1400px',
-          data: {
-            title: result.coa_acc_name,
-            showtitle: true,
-            coa_id: result.coa_id,
-            date: [
-              "01","02","03","04","05","06",
-              "07",
-              "08","09","10","11","12"
-          ]
-          }
-        });
-      }
+    console.log("open Ledger Modal >>>>>>>>>>>", value);
+    // this.ledgerArray = [];
+    // var inputJson = {
+    //   monthId : [
+    //     "01","02","03","04","05","06",
+    //     "07",
+    //     "08","09","10","11","12"
+    // ]
+    // };
+    // if (value.ac_id) {
+    //   inputJson['coa_id'] = value.ac_id ? value.ac_id : null
+    // }
+
+    // this.faService.getTrialBalance(inputJson).subscribe((data:any)=>{
+    //   if(data) {
+        
+    //     var receipt_data = data.receipt_data;
+    //     var receiptArr = [];
+    //     if (receipt_data) {
+    //     for(var j=0; j<receipt_data.length; j++) {
+    //       receiptArr.push(receipt_data[j]['tb_name']);
+    //     }}
+    //     for(var i=0; i<data.ledger_data.length;i++) {
+          
+    //       for(var j=0; j<data.ledger_data[i]['debit_data'].length;j++) {
+    //         if (data.ledger_data[i]['debit_data'][j]['vc_account_type'] === 'Opening Balance') {
+    //           var a = data.ledger_data[i]['debit_data'].splice(j,1);   // removes the item
+    //           data.ledger_data[i]['debit_data'].unshift(a[0]);         // adds it back to the beginning
+    //           break;
+    //         }
+    //       }
+    //       for(var j=0; j<data.ledger_data[i]['credit_data'].length;j++) {
+    //         if (data.ledger_data[i]['credit_data'][j]['vc_account_type'] === 'Opening Balance') {
+    //           var a = data.ledger_data[i]['credit_data'].splice(j,1);   // removes the item
+    //           data.ledger_data[i]['credit_data'].unshift(a[0]);         // adds it back to the beginning
+    //           break;
+    //         }
+    //       }
+    //     }
+        
+    //     for (var i =0;  i < data.ledger_data.length; i++) {
+    //       if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
+    //         var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );
+
+    //         var opening_balance = 0;
+    //         if (data.ledger_data[i]['debit_data'] && data.ledger_data[i]['debit_data'][0] && data.ledger_data[i]['debit_data'][0]['vc_account_type'] === 'opening_balance') {
+    //           opening_balance = data.ledger_data[i]['debit_data'][0]['vc_account_type']['vc_debit'];
+    //         }
+           
+    //         // var receipt_value = receipt_data[index]['receipt_amt'];
+    //         // if (receipt_value > 0) {
+    //         //   var iJson:any = {
+    //         //     "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+    //         //         "vc_credit" : receipt_value+opening_balance
+                                        
+    //         //   }
+    //         //   data.ledger_data[i]['debit_data'].push(iJson);
+    //         //   data.ledger_data[i]['credit_data'].push({});
+    //         // }
+    //         // if (receipt_value < 0) {
+    //         //   var iJson:any = {
+    //         //     "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+    //         //         "vc_debit" : receipt_value+opening_balance
+                                        
+    //         //   }
+    //         //   data.ledger_data[i]['credit_data'].push(iJson);
+    //         //   data.ledger_data[i]['debit_data'].push({});
+    //         // }
+    //       }
+    //       if(i===data.ledger_data.length -1 ) {
+    //         this.ledgerArray = data;
+    //       }
+    //     }
+
+        
+    //    // console.log('this.ledgerArray--', this.ledgerArray);
+
+        
+        
+    //   } else {
+        
+    //   }
+    // })
+
+
+
+
+
+
+
+    const dialogRef = this.dialog.open(LedgerEntryModelComponent, {
+      height: '520px',
+      width: '1400px',
+      data: {
+                title: value.action.coa_acc_name,
+                showtitle: true,
+                coa_id:  value.action.coa_id,
+                date: [
+                  "04","05","06",
+                  "07",
+                  "08","09","10","11","12","01","02","03"
+              ]
+              }
+      
     });
+    // this.faService.getChartsOfAccount({"coa_id":value.ac_id}).subscribe((result:any)=>{
+		// 	if(result) {
+    //     const dialogRef = this.dialog.open(LedgerEntryModelComponent, {
+    //       height: '520px',
+    //       width: '1400px',
+    //       data: {
+    //         title: result.coa_acc_name,
+    //         showtitle: true,
+    //         coa_id: result.coa_id,
+    //         date: [
+    //           "01","02","03","04","05","06",
+    //           "07",
+    //           "08","09","10","11","12"
+    //       ]
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   getAccounts() {
+    this.commonAPIService.startLoading();
 		this.faService.getAllChartsOfAccount({}).subscribe((data:any)=>{
+      console.log("chats of account >>", data);
 			if(data) {
         this.accountsArray = data;
         let element: any = {};        
@@ -258,8 +357,27 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         
           let pos = 1;
+          // item.coa_opening_balance_data.opening_balance_type == 'debit' ? ((item.total && item.total.length > 0) ? (item.total[0].credit_total > (item.total[0].debit_total+this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance)) ? "Dr" : "Cr") : "" ): ((item.total && item.total.length > 0) ? ((item.total[0].credit_total+this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance)) > item.total[0].debit_total ? "Dr" : "Cr") : "")
           
           for (const item of this.accountsArray) {
+            let closingBtype = 'Dr';
+            let closingB = item.coa_opening_balance_data ? this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance) : 0;
+            if(item.coa_opening_balance_data && item.coa_opening_balance_data.opening_balance_type && item.coa_opening_balance_data.opening_balance_type == 'debit'){
+              // console.log((item.total[0].debit_total + Number(closingB)));
+              // console.log((item.total[0].credit_total + Number(closingB)));
+              if(item.total && item.total.length > 0 && item.total[0].credit_total > (item.total[0].debit_total + Number(closingB))){
+                closingBtype = "Cr";
+              }else {
+                closingBtype = "Dr";
+              }
+              // (() ? (item.total[0].credit_total > (item.total[0].debit_total) ? "Dr" : "Cr") : "" )
+            }else{
+              if(item.total && item.total.length > 0 && (item.total[0].credit_total + Number(closingB)) > (item.total[0].debit_total)){
+                closingBtype = "Dr";
+              }else{
+                closingBtype = "Cr";
+              }
+            }
             element = {
               // srno: pos,
               // verified_on: new DatePipe('en-in').transform(item.verfication_on_date, 'd-MMM-y'),
@@ -275,8 +393,9 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
               dependencies_type: item.dependencies_type,
               ac_cloosingbalance:item.total && item.total[0] && item.total[0]['deviation'] ? this.getTwoDecimalValue(item.total[0]['deviation']) : 0, 
               opening_balance : item.coa_opening_balance_data ? this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance) : '',
-              opening_balance_type : item.coa_opening_balance_data && item.coa_opening_balance_data.opening_balance_type ? item.coa_opening_balance_data.opening_balance_type == 'debit' ? 'dr' : 'cr' : '',
+              opening_balance_type : item.coa_opening_balance_data && item.coa_opening_balance_data.opening_balance_type ? (item.coa_opening_balance_data.opening_balance_type == 'debit' ? 'dr' : 'cr') : '',
               opening_date : item.coa_opening_balance_data ? item.coa_opening_balance_data.opening_balance_date: '',
+              closing_balance_type : closingBtype,
               status:item.coa_status,
               opening_balance_cal :item.coa_opening_balance_data ? (item.coa_opening_balance_data.opening_balance) : 0,
               action:item
@@ -293,9 +412,11 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
           //   this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
           //   this.dataSource.sort = this.sort;
           // }
+      this.commonAPIService.stopLoading();
         
 			} else {
 				this.accountsArray = [];
+        this.commonAPIService.stopLoading();
 			}
 		})
   }
@@ -344,7 +465,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
   }
 
   changeStatus(element) {
-    console.log('element--',element);
     var inputJson = {
       coa_id: element.coa_id,
       coa_code: element.coa_code,
@@ -368,7 +488,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
     this.sisService.getSchool().subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.schoolInfo = res.data[0];
-        console.log('this.schoolInfo 202', this.schoolInfo)
         this.schoolInfo['disable'] = true;
         this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
         this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
@@ -656,7 +775,6 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
 
 
   downloadPdf() {
-    console.log(this.accountsArray);
     var prepare=[];
     this.accountsArray.forEach(e=>{
       var tempObj =[];

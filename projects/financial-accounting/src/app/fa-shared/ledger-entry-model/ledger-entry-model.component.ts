@@ -139,6 +139,9 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     // else here if you wish (like an error message).
   }
   getLedger() {
+    this.credit_total_f = 0;
+    this.debit_total_f = 0;
+    this.deviation_f = 0;
     if (this.data.coa_id) {
       console.log("passed ledger data ",this.data.date);
       this.faService.getTrialBalance({ coa_id: [this.data.coa_id], monthId: this.data.date}).subscribe((data: any) => {
@@ -178,6 +181,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
                 data.ledger_data[i]['debit_data'].push({});
               }
             }else if(data.ledger_data[i]['coa_dependencies'] == undefined || data.ledger_data[i]['coa_dependencies'].length <= 0){
+              console.log("I am here");
               let open_year = data.ledger_data[0].coa_opening_balance_data.opening_balance_date.split('-');
               var y: number = +open_year[0];
               let new_open_year = y + 1;
@@ -189,7 +193,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
                 "vc_date" : new_open_date,
                 "vc_closing_date" : closing_date
               }
-              data.ledger_data[i]['credit_data'].push(iJson);
+              data.ledger_data[i]['credit_data'].push({});
               data.ledger_data[i]['debit_data'].push({});
             }
             if (i === data.ledger_data.length - 1) {
