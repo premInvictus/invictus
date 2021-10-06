@@ -84,6 +84,8 @@
 
                 <app-payment-online-settlement-report *ngIf="reportType === '21'"></app-payment-online-settlement-report>
                 <app-fee-outstanding-summary-report *ngIf="reportType === '22'"></app-fee-outstanding-summary-report>
+                <app-cancel-receipt-report [userName]="userName"  *ngIf="reportType === '23'">
+                </app-cancel-receipt-report>
               </div>
             </div>
           </mat-expansion-panel>

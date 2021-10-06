@@ -660,6 +660,11 @@ export class FeeService {
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDeletedFeeReceiptReport', value);
 	}
 
+	getCancelReceiptReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getCancelReceiptReport', value);
+	}
+
 	getGroupFeeHeads(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getGroupedFeeHeads', value);

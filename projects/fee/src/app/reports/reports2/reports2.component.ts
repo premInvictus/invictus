@@ -217,7 +217,17 @@ export class Reports2Component implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
-		}
+		},
+		{
+			report_id: '23',
+			report_name: 'Cancel Fee Receipts',
+			report_image:
+				'/assets/images/Fee Reports/deleted_fee_transaction.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		},
 	];
 	reportType: string;
 	reportHeader: any;
@@ -375,6 +385,10 @@ export class Reports2Component implements OnInit {
 		if (actionT === '22') {
 			return this.CommonAPIService.isExistUserAccessMenu('824');
 			// return true;
+		}
+		if (actionT === '23') {
+			// return this.CommonAPIService.isExistUserAccessMenu('824');
+			return true;
 		}
 	}
 }
