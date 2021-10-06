@@ -1,0 +1,12 @@
+.close-btn {
+    margin-left: -15px !important;
+}
+.mat-column-item_code{
+    width: 10%;
+}
+.mat-column-item_quantity{
+    width: 10%;
+}
+.mat-column-item_price{
+    width: 10%;
+}

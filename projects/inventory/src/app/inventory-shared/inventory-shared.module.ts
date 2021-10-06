@@ -44,6 +44,7 @@ import { NgxBarcodeModule } from 'ngx-barcode';
 import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
 import { MessageModalComponent } from '../store-master/message-modal/message-modal.component';
 import { ReceiptModalComponent } from './receipt-modal/receipt-modal.component';
+import { ViewModalComponent } from './view-modal/view-modal.component';
 import { BillDetailsModalComponent } from './bill-details-modal/bill-details-modal.component';
 import { BundleModalComponent } from './bundle-modal/bundle-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
@@ -129,6 +130,7 @@ export const MY_FORMATS = {
 		InventoryDetailsComponent,
 		MessageModalComponent,
 		ReceiptModalComponent,
+		ViewModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
 		SearchViaNameComponent,
@@ -148,6 +150,7 @@ export const MY_FORMATS = {
 		AddLocationDialog,
 		MessageModalComponent,
 		ReceiptModalComponent,
+		ViewModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
 		SearchViaNameComponent,
@@ -202,6 +205,7 @@ export const MY_FORMATS = {
 		InventoryDetailsComponent,
 		MessageModalComponent,
 		ReceiptModalComponent,
+		ViewModalComponent,
 		BillDetailsModalComponent,
 		BundleModalComponent,
 		SearchViaNameComponent,
