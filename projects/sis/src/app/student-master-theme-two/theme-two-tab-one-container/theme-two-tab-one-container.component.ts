@@ -269,7 +269,10 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				if (result && result.status === 'ok') {
 					this.viewOnly = true;
 					// this.tb_id = this.formEnabledService.getTabid('Personal Details');
+					
+					
 					this.studentdetails = result.data[0];
+					console.log("--------------------",result.data[0], this.studentdetails.personalDetails);
 					this.parentDetails2 = this.studentdetails.parentDetails;
 					if (this.childDetails) {
 						this.childDetails.patchPersonalDetails(this.studentdetails.personalDetails);
