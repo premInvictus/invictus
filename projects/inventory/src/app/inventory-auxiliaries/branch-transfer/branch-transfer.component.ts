@@ -112,7 +112,7 @@ export class BranchTransferComponent implements OnInit {
       item_price: '',
       item_status: '',
       item_type_details: '',
-      location: [[], Validators.required],
+      location: '',
       location_name: ''
 
     });
@@ -293,23 +293,15 @@ export class BranchTransferComponent implements OnInit {
     if (!this.editBranchtransfer) {
       const sindex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
       if (sindex !== -1) {
-        locations.forEach((ele)=>{
-          const lindex = this.itemArray[sindex].item_location.findIndex(f => Number(f.location_id) === Number(ele));
-          if (lindex !== -1) {
-            this.qty = Number(this.itemArray[sindex].item_location[lindex].item_qty);
-            console.log(this.qty)
-            totalQuantity += this.qty; 
-            console.log(totalQuantity)
-          }
-          locationName +=  this.getLocationName(Number(ele)) + ","
-        });
-        this.qty = totalQuantity;
-        this.createRequistionForm.patchValue({
-          item_quantity: totalQuantity,
-          location: ($event.value),
-          location_name: locationName
-        });
-
+        const lindex = this.itemArray[sindex].item_location.findIndex(f => Number(f.location_id) === Number($event.value));
+        if (lindex !== -1) {
+          this.qty = Number(this.itemArray[sindex].item_location[lindex].item_qty);
+          this.createRequistionForm.patchValue({
+            item_quantity: this.qty,
+            location: Number($event.value),
+            location_name: this.getLocationName(Number($event.value))
+          });
+        }
       }
     }
   }
@@ -491,37 +483,66 @@ export class BranchTransferComponent implements OnInit {
             console.log("finalRequistionArray ", this.finalRequistionArray);
             console.log("item code ", this.finalRequistionForm.value);
             let pm_item_details = [];
+            
             this.commonService.getItemsFromMaster({ item_code: this.finalRequistionArray[0].item_code }).subscribe((result: any) => {
               if (result && result.status === 'ok') {
                 console.log("item result >>", result);
                 console.log("finalRequistionArray ",this.finalRequistionArray);
                 console.log("createRequistionForm ",this.finalRequistionForm.value);
+
+                let exists: boolean = false;
+                let tmp_pm_item_details = {};
                 
-                result.data[0].item_location.forEach(element => {
-                  console.log("1 ", element.location_id);
-                  if(element.location_id == this.finalRequistionForm.value.new_location){
-                    let present_quant = element.item_qty;
-                    console.log("quantity ", present_quant);
-                    console.log("quantity ", Number(this.finalRequistionArray[0].item_quantity));
-                    pm_item_details.push({
-                      "item_code": this.finalRequistionArray[0].item_code,
-                      "item_quantity": Number(this.finalRequistionArray[0].item_quantity),
-                      "item_location": this.finalRequistionForm.value.new_location
-                  });
-                    console.log("1>",pm_item_details);
-                  }else if(element.location_id == this.finalRequistionArray[0].location){
-                    let present_quant = element.item_qty;
-                    console.log("quantity ", present_quant);
-                    console.log("quantity ", Number(this.finalRequistionArray[0]));
-                    pm_item_details.push({
-                      "item_code": this.finalRequistionArray[0].item_code,
-                      "item_quantity": Number(-this.finalRequistionArray[0].item_quantity),
-                      "item_location": this.finalRequistionArray[0].location
-                  });
-                    console.log("1 > ",pm_item_details);
-                  }
+                this.finalRequistionArray.forEach(fRA => {
                   
+                  result.data[0].item_location.forEach(element => {
+                    console.log("1 ", element.location_id);
+                    if(element.location_id == this.finalRequistionForm.value.new_location){
+                      let present_quant = element.item_qty;
+                      console.log("quantity ", present_quant);
+                      console.log("quantity ", Number(fRA.item_quantity));
+                      pm_item_details.push({
+                          "item_code": fRA.item_code,
+                          "item_quantity": Number(fRA.item_quantity),
+                          "item_location": this.finalRequistionForm.value.new_location
+                      });
+                      console.log("1>",pm_item_details);
+                    }else if(element.location_id == fRA.location){
+                      let present_quant = element.item_qty;
+                      console.log("quantity ", present_quant);
+                      console.log("quantity ", Number(fRA));
+                      pm_item_details.push({
+                          "item_code": fRA.item_code,
+                          "item_quantity": Number(-fRA.item_quantity),
+                          "item_location": fRA.location
+                      });
+                      console.log("1 > ",pm_item_details);
+                    }else{
+                      exists = true;
+                    }
+                    // else if(element.location_id != this.finalRequistionForm.value.new_location && element.location_id != fRA.location){
+                    //   pm_item_details.push({
+                    //       "item_code": fRA.item_code,
+                    //       "item_quantity": Number(fRA.item_quantity),
+                    //       "item_location": this.finalRequistionForm.value.new_location
+                    //   });
+                    // }
+                    
+                  });
+
+                  if(exists){
+                    tmp_pm_item_details = {
+                        "item_code": fRA.item_code,
+                        "item_quantity": Number(fRA.item_quantity),
+                        "item_location": this.finalRequistionForm.value.new_location
+                    };
+                  }
                 });
+                console.log("tmp pm item", tmp_pm_item_details);
+                
+                if(exists){
+                  pm_item_details.push(tmp_pm_item_details);
+                }
 
                 console.log("item details to update ",pm_item_details);
                 this.service.updateItemQuantity({ "pm_item_details" : pm_item_details}).subscribe((result_p: any) => {
