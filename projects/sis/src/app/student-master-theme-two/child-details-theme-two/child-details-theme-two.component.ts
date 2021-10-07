@@ -83,6 +83,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	}
 
 	ngOnInit() {
+		console.log("--------------------------");
+		
 		this.dobDate.setFullYear(this.dobDate.getFullYear() - 1);
 		this.buildForm();
 		this.getNationality();
@@ -267,7 +269,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			upd_reference: '',
 			upd_qualification: '',
 			upd_organization: '',
-			upd_designation: ''
+			upd_designation: '',
+			upd_is_online: 'offline'
 		});
 		this.paddressform = this.fbuild.group({
 			ea_id: '',
@@ -594,6 +597,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 
 	patchPersonalDetails(personalDetails) {
 		this.cityCountryArray = [];
+		console.log("in here----------", personalDetails);
+		
 		if (personalDetails.length > 0) {
 			this.baseform.patchValue({
 				upd_id: personalDetails[0].upd_id,
@@ -610,7 +615,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				upd_gender: personalDetails[0].upd_gender,
 				upd_category: personalDetails[0].upd_category,
 				upd_mt_id: personalDetails[0].upd_mt_id,
-				upd_tag_id: personalDetails[0].upd_tag_id
+				upd_tag_id: personalDetails[0].upd_tag_id,
+				upd_is_online: personalDetails[0].upd_is_online ? (personalDetails[0].upd_is_online == "" ? 'offline' : personalDetails[0].upd_is_online) : 'offline'
 			});
 			if (personalDetails[0].addressDetails.length > 0) {
 				personalDetails[0].addressDetails.forEach(element => {
