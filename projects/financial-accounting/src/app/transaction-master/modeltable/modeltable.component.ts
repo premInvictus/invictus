@@ -916,7 +916,7 @@ export class ModeltableComponent implements OnInit {
 							this.common.stopLoading();
 							this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 							// repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.data.date): [];
-							repoArray = result.data != null ? result.data : [];
+							repoArray = result.data != null ? result.data.reportData : [];
 							console.log("------------------->>>>>>>>>>>", repoArray);
               
 							this.totalRecords = Number(result.data.totalRecords);
