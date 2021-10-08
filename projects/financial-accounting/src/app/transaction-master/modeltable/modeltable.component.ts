@@ -322,6 +322,7 @@ export class ModeltableComponent implements OnInit {
 
 	getOutstandingReport(value: any) {
 		
+      	this.common.startLoading();
 		// value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
@@ -878,11 +879,14 @@ export class ModeltableComponent implements OnInit {
 							this.gridHeight = 750;
 						}
 						this.tableFlag = true;
+						this.common.stopLoading();
 					} else {
+						this.common.stopLoading();
 						this.tableFlag = true;
 					}
 				});
 			} else if (this.reportType === 'feedue') {
+				this.common.startLoading();
 				this.gridOptions.rowHeight = 65;
 				value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 				const collectionJSON: any = {
@@ -909,9 +913,11 @@ export class ModeltableComponent implements OnInit {
 				} else {
 					this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
+							this.common.stopLoading();
 							this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-							repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.data.date): [];
-							console.log("-------------------", repoArray);
+							// repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.data.date): [];
+							repoArray = result.data != null ? result.data : [];
+							console.log("------------------->>>>>>>>>>>", repoArray);
               
 							this.totalRecords = Number(result.data.totalRecords);
 							localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
