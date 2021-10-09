@@ -43,12 +43,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	feeRenderId: any = '';
 	btnDisable = false;
 	currentInvoiceId = '';
-	invoiceArrayForm: any[]= [];
-	walletProcess: any[]= ['deposit','withdrawal'];
+	invoiceArrayForm: any[] = [];
+	walletProcess: any[] = ['deposit', 'withdrawal'];
 	opening_balance_paid_status = 0;
-	bnk_charge =  0;
+	bnk_charge = 0;
 	bnk_charge_per = 0;
 	readonlymodeforinvoice = false;
+	footerRecord: any;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -65,6 +66,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.invoiceArray = [];
 		this.invoice = {};
 		this.selectedMode = '';
+
 		this.getSchool();
 		this.getAllBanks();
 		this.getBanks();
@@ -78,6 +80,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		if (!(invDet.inv_id)) {
 			this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 				if (data.adm_no && data.login_id) {
+					this.getPocketBalance(data.login_id);
 					this.lastRecordId = data.adm_no;
 					this.loginId = data.adm_no;
 					this.feeLoginId = data.login_id;
@@ -87,6 +90,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						if (result.status === 'ok') {
 							this.lastRecordId = result.data[0].last_record;
 							this.loginId = result.data[0].au_login_id;
+							this.getPocketBalance(this.loginId);
 							this.feeLoginId = this.loginId;
 							this.getStudentInformation(this.lastRecordId);
 						}
@@ -99,6 +103,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.lastRecordId = invDet2.au_admission_no;
 			this.loginId = invDet2.login_id;
 			this.feeLoginId = this.loginId;
+			this.getPocketBalance(this.loginId);
 			this.studentInfo = {};
 			this.feeTransactionForm.patchValue({
 				'inv_id': [],
@@ -117,25 +122,55 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'is_cheque': '',
 				'ftr_deposit_bnk_id': '',
 				'saveAndPrint': '',
-				'walletProcess':''
+				'walletProcess': ''
 			});
 			this.selectedMode = '1';
 			this.readonlymodeforinvoice = true;
-			this.currentInvoiceId  = invDet2.inv_id;
+			this.currentInvoiceId = invDet2.inv_id;
 			this.getInvoices(invDet2.inv_id);
 		}
 	}
-	addBankCharge(event){
+	getPocketBalance(login_id) {
+		this.footerRecord = {
+			balancetotal: 0,
+			balancetype: ''
+		};
+		this.feeService.getWallets({ login_id: login_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const recordArray = result.data;
+				console.log('recordArray in common', recordArray);
+				let total_credit = 0;
+				let total_debit = 0;
+				for (const item of recordArray) {
+					if (item.w_amount_type == 'credit') {
+						total_credit += parseInt(item.w_amount);
+					} else if (item.w_amount_type == 'debit') {
+						total_debit += parseInt(item.w_amount);
+					}
+				}
+				this.footerRecord.balancetotal = total_credit - total_debit;
+				console.log("---------------------------", this.footerRecord);
+
+				if (this.footerRecord.balancetotal > 0) {
+					this.footerRecord.balancetype = '+';
+				} else if (this.footerRecord.balancetotal < 0) {
+					this.footerRecord.balancetype = '';
+				}
+				console.log("---------------------------", this.footerRecord);
+			}
+		});
+	}
+	addBankCharge(event) {
 		this.removeBankCharge();
-		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
+		if (this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == event.value);
-			if(bnk){
+			if (bnk) {
 				const bnk_charge = JSON.parse(bnk.bnk_charge);
 				let bnkcharge = 0;
-				if(bnk_charge && bnk_charge.length > 0){
+				if (bnk_charge && bnk_charge.length > 0) {
 					for (let i = 0; i < bnk_charge.length; i++) {
 						const element = bnk_charge[i];
-						if(this.invoice.netPay >= element.bnk_charge_start && this.invoice.netPay <= element.bnk_charge_end) {
+						if (this.invoice.netPay >= element.bnk_charge_start && this.invoice.netPay <= element.bnk_charge_end) {
 							bnkcharge = element.bnk_charge;
 							break;
 						}
@@ -151,14 +186,14 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.setBankCharge(this.bnk_charge)
 		console.log(this.bnk_charge);
 	}
-	setBankCharge(bnk_charge){
+	setBankCharge(bnk_charge) {
 		this.invoice.netPay += bnk_charge;
 		this.feeTransactionForm.patchValue({
 			ftr_amount: this.invoice.netPay
 		});
 		this.invoiceTotal = this.invoice.netPay;
 	}
-	removeBankCharge(){
+	removeBankCharge() {
 		this.invoice.netPay -= this.bnk_charge;
 		this.feeTransactionForm.patchValue({
 			ftr_amount: this.invoice.netPay
@@ -185,8 +220,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': '',
-			'walletProcess':'',
-			'ftr_actual_amount':''
+			'walletProcess': '',
+			'ftr_actual_amount': ''
 		});
 	}
 	checkEmit(process_type) {
@@ -220,9 +255,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.invoiceArray = [];
 		const invoiceJSON: any = {
 			inv_id: inv_number,
-			ftr_transaction_date : datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
+			ftr_transaction_date: datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
 		};
-		if(inv_number) {
+		if (inv_number) {
 			this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 
@@ -230,7 +265,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 					this.invoice = {};
 					this.invoice = result.data[0];
-					
+
 					this.invoice.netPay = this.invoice.late_fine_amt ?
 						Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 						Number(this.invoice.fee_amount);
@@ -238,7 +273,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 					if (this.invoice.balance_amt) {
 						console.log("i am here ", this.invoice.balance_amt);
-						
+
 						this.invoice.balance_amt = Number(this.invoice.balance_amt);
 						this.invoice.netPay += this.invoice.balance_amt;
 						// this.invoice.netPay += Number(this.invoice.balance_amt);
@@ -252,18 +287,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						this.invoice.netPay = 0;
 					}
 
-					
+
 
 					this.invoiceArray = this.invoice.invoice_bifurcation;
 
-					
+
 
 					this.feeTransactionForm.patchValue({
 						'ftr_amount': this.invoice.netPay,
 						'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
 					});
 					let pos = 1;
-					
+
 					// if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
 					// 	// const element = {
 					// 	// 	srno: pos,
@@ -299,30 +334,31 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					let arr = [];
 					for (const item of this.invoiceArray) {
 						if (Number(item.head_bal_amount) != 0) {
-						this.INVOICE_ELEMENT_DATA.push({
-							srno: pos,
-							feehead: item.invg_fh_name,
-							feedue: item.invg_fh_amount,
-							concession: item.invg_fcc_amount,
-							adjustment: item.invg_adj_amount,
-							// tslint:disable-next-line: max-line-length
-							// netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-							netpay: Number(item.head_bal_amount)
-						});}
+							this.INVOICE_ELEMENT_DATA.push({
+								srno: pos,
+								feehead: item.invg_fh_name,
+								feedue: item.invg_fh_amount,
+								concession: item.invg_fcc_amount,
+								adjustment: item.invg_adj_amount,
+								// tslint:disable-next-line: max-line-length
+								// netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+								netpay: Number(item.head_bal_amount)
+							});
+						}
 						// tslint:disable-next-line: max-line-length
-						if (item.head_bal_amount && Number(item.head_bal_amount) != 0 && item.invg_fh_name != 'Previous Received Amt.' ) {
+						if (item.head_bal_amount && Number(item.head_bal_amount) != 0 && item.invg_fh_name != 'Previous Received Amt.') {
 							var fb = this.fbuild.group({
-								rm_inv_id:item.invg_inv_id,
-								rm_head_type:item.invg_head_type,
-								rm_fm_id:item.invg_fm_id,
-								rm_fh_id:item.invg_fh_id,
-								rm_fh_name:item.invg_fh_name,
-								rm_fh_amount:item.invg_fh_amount,
-								rm_fcc_id:item.invg_fcc_id,
-								rm_fcc_name:item.invg_fcc_name,
-								rm_fcc_amount:item.invg_fcc_amount,
-								rm_adj_amount:item.invg_adj_amount,
-								rm_total_amount:Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
+								rm_inv_id: item.invg_inv_id,
+								rm_head_type: item.invg_head_type,
+								rm_fm_id: item.invg_fm_id,
+								rm_fh_id: item.invg_fh_id,
+								rm_fh_name: item.invg_fh_name,
+								rm_fh_amount: item.invg_fh_amount,
+								rm_fcc_id: item.invg_fcc_id,
+								rm_fcc_name: item.invg_fcc_name,
+								rm_fcc_amount: item.invg_fcc_amount,
+								rm_adj_amount: item.invg_adj_amount,
+								rm_total_amount: Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
 								// netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
 								netpay: Number(item.head_bal_amount)
 							});
@@ -331,11 +367,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 							this.invoiceTotal += Number(item.head_bal_amount);
 							arr.push(item);
 						}
-						
-						
-						
-						
-						
+
+
+
+
+
 					}
 					this.invoiceArray = arr;
 					if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
@@ -350,55 +386,55 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						this.invoiceTotal += element.netpay;
 						this.INVOICE_ELEMENT_DATA.push(element);
 						var fb = this.fbuild.group({
-							rm_inv_id:'',
-							rm_head_type:'',
-							rm_fm_id:'',
-							rm_fh_id:'',
-							rm_fh_name:'',
-							rm_fh_amount:'',
-							rm_fcc_id:'',
-							rm_fcc_name:'',
-							rm_fcc_amount:'',
-							rm_adj_amount:'',
-							rm_total_amount:'',						
-							netpay:Number(this.invoice.inv_fine_amount)
+							rm_inv_id: '',
+							rm_head_type: '',
+							rm_fm_id: '',
+							rm_fh_id: '',
+							rm_fh_name: '',
+							rm_fh_amount: '',
+							rm_fcc_id: '',
+							rm_fcc_name: '',
+							rm_fcc_amount: '',
+							rm_adj_amount: '',
+							rm_total_amount: '',
+							netpay: Number(this.invoice.inv_fine_amount)
 						});
 						this.invoiceArrayForm.push(fb);
 					}
 
-					
-					
-					if((this.invoice.netPay - this.invoiceTotal) > 0) {
+
+
+					if ((this.invoice.netPay - this.invoiceTotal) > 0) {
 						this.INVOICE_ELEMENT_DATA[0].netpay += this.invoice.netPay - this.invoiceTotal;
 					}
-					if((this.invoice.netPay - this.invoiceTotal) < 0) {
+					if ((this.invoice.netPay - this.invoiceTotal) < 0) {
 						let catchData = this.invoice.netPay;
-						for(let  i = this.INVOICE_ELEMENT_DATA.length -1; i > 0; i--) {
-							if(this.INVOICE_ELEMENT_DATA[i].netpay > catchData - this.invoiceTotal) {
+						for (let i = this.INVOICE_ELEMENT_DATA.length - 1; i > 0; i--) {
+							if (this.INVOICE_ELEMENT_DATA[i].netpay > catchData - this.invoiceTotal) {
 								this.INVOICE_ELEMENT_DATA[i].netpay -= (catchData - this.invoiceTotal);
 								break;
 							} else {
 								catchData -= this.INVOICE_ELEMENT_DATA[i].netpay;
 								this.INVOICE_ELEMENT_DATA[i].netpay = 0;
 							}
-						} 
+						}
 					}
 					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 					this.invoiceArrayForm[0].patchValue({
 						netpay: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal),
 						rm_total_amount: this.invoiceArrayForm[0].value.netpay + (this.invoice.netPay - this.invoiceTotal)
 					})
-					console.log("i am here", this.invoiceArrayForm[0].value, this.invoice.netPay - this.invoiceTotal, this.invoice.netPay , this.invoiceTotal);
+					console.log("i am here", this.invoiceArrayForm[0].value, this.invoice.netPay - this.invoiceTotal, this.invoice.netPay, this.invoiceTotal);
 					this.invoiceTotal = this.invoice.netPay;
-					
+
 				}
 			});
 		}
-			
+
 	}
 	async getStudentInformation(login_id) {
 		this.bnk_charge = 0;
-		this.commonStu.showWalletLedger=false;
+		this.commonStu.showWalletLedger = false;
 		this.studentInfo = {};
 		this.entryModes = JSON.parse(JSON.stringify(this.tempentryModes));
 		this.feeTransactionForm.patchValue({
@@ -418,21 +454,27 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': '',
-			'walletProcess':''
+			'walletProcess': ''
 		});
 		const optedforhostel = 1;
-		if(optedforhostel == 1) {
+		if (optedforhostel == 1) {
 			await this.feeService.getFeeAccount({ accd_login_id: this.feeLoginId }).toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
-					const accountdet:any = result.data[0];
-					if(accountdet.accd_is_hostel == 'Y') {
-						this.commonStu.showWalletLedger=true;
-					} else {
-						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
-						if(findex != -1) {
-							this.entryModes.splice(findex,1);
+					const accountdet: any = result.data[0];
+					console.log("i ma here", accountdet);
 
-						}
+					if (accountdet.accd_is_hostel == 'Y') {
+						this.commonStu.showWalletLedger = true;
+					} else {
+
+						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
+						const nindex = this.payModes.findIndex(e => e.pay_name == 'Wallet');
+						// if(findex != -1) {
+						// 	this.entryModes.splice(findex,1);
+						// }
+						// if(nindex != -1) {
+						// 	this.payModes.splice(nindex,1);
+						// }
 					}
 				}
 			});
@@ -441,15 +483,15 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			if (result && result.status === 'ok') {
 				this.studentInfo = result.data[0];
 				this.opening_balance_paid_status = result.data[0]['opening_balance_paid_status'];
-				for (var i=0; i<this.entryModes.length;i++) {
-					if(Number(this.opening_balance_paid_status)) {
+				for (var i = 0; i < this.entryModes.length; i++) {
+					if (Number(this.opening_balance_paid_status)) {
 						if (this.entryModes[i]['emod_alias'] == 'AOB') {
-							this.entryModes.splice(i,1);
+							this.entryModes.splice(i, 1);
 						}
 					}
-					if(!(Number(this.opening_balance_paid_status)) && this.studentInfo.student_opening_balance == 0) {
+					if (!(Number(this.opening_balance_paid_status)) && this.studentInfo.student_opening_balance == 0) {
 						if (this.entryModes[i]['emod_alias'] == 'AOB') {
-							this.entryModes.splice(i,1);
+							this.entryModes.splice(i, 1);
 						}
 					}
 
@@ -470,10 +512,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 
 	recaluclateInvoice(event) {
-		console.log('in', event);
-		
-		
-			// 'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+		// 'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 		this.getInvoices(this.currentInvoiceId);
 	}
 	getEntryModes() {
@@ -563,12 +602,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.banks = [];
 		this.feeService.getBanks({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				for (var i=0; i<result.data.length;i++) {
+				for (var i = 0; i < result.data.length; i++) {
 					if ((!(result.data[i]['bnk_module_list'] == '')) || (result.data[i]['bnk_module_list'].includes('fees'))) {
 						this.banks.push(result.data[i]);
 					}
 				}
-				
+
 			}
 		});
 	}
@@ -642,7 +681,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		// 	validateFlag = false;
 		// 	this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
 		// }
-		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
+		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1 || Number(this.feeTransactionForm.value.ftr_pay_id) === 7) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
@@ -669,87 +708,108 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		if (validateFlag) {
 			this.btnDisable = true;
-			if (this.selectedMode === '4') {
-				if(this.feeTransactionForm.value.walletProcess) {
-					let inputjson:any = this.feeTransactionForm.value;
-					if(this.feeTransactionForm.value.walletProcess == 'deposit') {
+			console.log("i am selected mod", this.selectedMode, this.feeTransactionForm.value.ftr_pay_id);
+
+			if (this.selectedMode === '4' || (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+				console.log("i am in here1");
+
+				if (this.feeTransactionForm.value.walletProcess || (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+					let inputjson: any = this.feeTransactionForm.value;
+					console.log("i am in here2", inputjson);
+					if (this.feeTransactionForm.value.walletProcess == 'deposit') {
 						inputjson.ftr_amount_type = 'credit';
-					} else if(this.feeTransactionForm.value.walletProcess == 'withdrawal') {
+					} else if (this.feeTransactionForm.value.walletProcess == 'withdrawal') {
+						inputjson.ftr_amount_type = 'debit';
+					} else if (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7') {
 						inputjson.ftr_amount_type = 'debit';
 					}
-					inputjson.ftr_amount_status = this.feeTransactionForm.value.walletProcess;
-					let receiptMappArr=  [];
-					for (var i=0;i<this.invoiceArrayForm.length;i++) {
-						if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
-						receiptMappArr.push({
-							rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
-							rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
-							rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
-							rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
-							rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
-							rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
-							rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
-							rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
-							rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
-							rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-							rm_total_amount:this.invoiceArrayForm[i].value.netpay,
-						}) }
+					if (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7') {
+						inputjson.ftr_amount_status = 'withdrawal';
+						inputjson.ftr_remark = 'Against Invoice - ' + inputjson.inv_invoice_no[0];
+					} else {
+						inputjson.ftr_amount_status = this.feeTransactionForm.value.walletProcess;
 					}
-					inputjson.receipt_mapping= receiptMappArr;
+
+
+
+					let receiptMappArr = [];
+					for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+						if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+							receiptMappArr.push({
+								rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+								rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+								rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+								rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+								rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+								rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+								rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+								rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+								rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+								rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+								rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+							})
+						}
+					}
+					inputjson.receipt_mapping = receiptMappArr;
+					console.log("i amhere", inputjson);
 
 					this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 						this.btnDisable = false;
-						if (result && result.status === 'ok') {
+						if (result && result.status === 'ok' && !((this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7'))) {
 							this.common.showSuccessErrorMessage(result.messsage, 'success');
 							this.reset();
 							this.getStudentInformation(this.lastRecordId);
 							this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 						} else {
-							this.common.showSuccessErrorMessage(result.messsage, 'error');
-							this.reset();
-							this.getStudentInformation(this.lastRecordId);
-							this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+
+							if (!((this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7'))) {
+								this.common.showSuccessErrorMessage(result.messsage, 'error');
+								this.reset();
+								this.getStudentInformation(this.lastRecordId);
+								this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+							}
 						}
 					});
 				} else {
 					this.common.showSuccessErrorMessage('Please Select Wallet Process', 'error');
 					this.btnDisable = false;
 				}
-				
+
 			} else {
-				let inputjson:any = this.feeTransactionForm.value;
-				let receiptMappArr=  [];
-				for (var i=0;i<this.invoiceArrayForm.length;i++) {
-					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
-					receiptMappArr.push({
-						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
-						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
-						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
-						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
-						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
-						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
-						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
-						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
-						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
-						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.netpay,
-					}) }
+				let inputjson: any = this.feeTransactionForm.value;
+				let receiptMappArr = [];
+				for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+						receiptMappArr.push({
+							rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+						})
+					}
 				}
-				inputjson.receipt_mapping= receiptMappArr;
+				inputjson.receipt_mapping = receiptMappArr;
 				if (this.selectedMode == '5') {
 					inputjson.inv_id = [];
 					inputjson.inv_invoice_no = [];
 					inputjson.inv_process_type = this.studentInfo.au_process_type;
 					inputjson.ftr_prev_balance = 0;
 					inputjson.lateFeeAmt = 0;
-					inputjson.opening_balance_transaction =  true;
+					inputjson.opening_balance_transaction = true;
 					inputjson.receipt_mapping = [];
 				} else {
-					inputjson.opening_balance_transaction =  false
+					inputjson.opening_balance_transaction = false
 				}
-				inputjson.ftr_bnk_charge =  Math.round(this.bnk_charge);
-				inputjson.ftr_bnk_charge_per =  Math.round(this.bnk_charge_per);
-				inputjson.ftr_amount =  this.feeTransactionForm.value.ftr_amount - inputjson.ftr_bnk_charge;
+				inputjson.ftr_bnk_charge = Math.round(this.bnk_charge);
+				inputjson.ftr_bnk_charge_per = Math.round(this.bnk_charge_per);
+				inputjson.ftr_amount = this.feeTransactionForm.value.ftr_amount - inputjson.ftr_bnk_charge;
 				console.log('inputjson-->', inputjson);
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
@@ -764,16 +824,75 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						} else {
 							this.common.showSuccessErrorMessage(result.messsage, 'error');
 						}
-						
+
 						this.reset();
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					}
 				});
 			}
+
+			if ((this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+				let inputjson: any = this.feeTransactionForm.value;
+				let receiptMappArr = [];
+				for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+						receiptMappArr.push({
+							rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+						})
+					}
+				}
+				inputjson.receipt_mapping = receiptMappArr;
+				if (this.selectedMode == '5') {
+					inputjson.inv_id = [];
+					inputjson.inv_invoice_no = [];
+					inputjson.inv_process_type = this.studentInfo.au_process_type;
+					inputjson.ftr_prev_balance = 0;
+					inputjson.lateFeeAmt = 0;
+					inputjson.opening_balance_transaction = true;
+					inputjson.receipt_mapping = [];
+				} else {
+					inputjson.opening_balance_transaction = false
+				}
+				inputjson.ftr_bnk_charge = Math.round(this.bnk_charge);
+				inputjson.ftr_bnk_charge_per = Math.round(this.bnk_charge_per);
+				inputjson.ftr_amount = this.feeTransactionForm.value.ftr_amount - inputjson.ftr_bnk_charge;
+				console.log('inputjson-->', inputjson);
+				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.messsage, 'success');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						if (result.message) {
+							this.common.showSuccessErrorMessage(result.message, 'error');
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+						}
+
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			}
+
 		} else {
 			this.btnDisable = false;
 		}
+		this.getPocketBalance(this.loginId);
 	}
 	saveAndPrint() {
 		const datePipe = new DatePipe('en-in');
@@ -809,7 +928,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
+		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1 || Number(this.feeTransactionForm.value.ftr_pay_id) === 7) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
@@ -836,37 +955,49 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		if (validateFlag) {
 			this.btnDisable = true;
-			if (this.selectedMode === '4') {
-				let inputjson:any = this.feeTransactionForm.value;
+			if (this.selectedMode === '4' || (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+				let inputjson: any = this.feeTransactionForm.value;
 				inputjson.ftr_amount_type = 'credit';
-				let receiptMappArr=  [];
-				for (var i=0;i<this.invoiceArrayForm.length;i++) {
-					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
-					receiptMappArr.push({
-						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
-						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
-						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
-						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
-						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
-						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
-						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
-						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
-						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
-						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.netpay,
-					}) }
+				if (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7') {
+					inputjson.ftr_amount_type = 'debit';
 				}
-				inputjson.receipt_mapping= receiptMappArr;
+				if (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7') {
+					inputjson.ftr_amount_status = 'withdrawal';
+				}
+				let receiptMappArr = [];
+				for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+						receiptMappArr.push({
+							rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+						})
+					}
+				}
+				inputjson.receipt_mapping = receiptMappArr;
 				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
 						const length = result.data.split('/').length;
-						this.common.showSuccessErrorMessage(result.message, 'success');
-						console.log('result.data',result.data);
-						window.open(result.data, '_blank');
-						this.reset();
-						this.getStudentInformation(this.lastRecordId);
-						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+						window.open(result.data, '_blank');						
+						if (!(this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+							this.common.showSuccessErrorMessage(result.message, 'success');
+							console.log('result.data', result.data);
+							
+							this.reset();
+							this.getStudentInformation(this.lastRecordId);
+							this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+						}
+
+
 					} else {
 						if (result.message) {
 							this.common.showSuccessErrorMessage(result.message, 'error');
@@ -879,25 +1010,26 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}
 				});
 			} else {
-				let inputjson:any = this.feeTransactionForm.value;
-				let receiptMappArr=  [];
-				for (var i=0;i<this.invoiceArrayForm.length;i++) {
-					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
-					receiptMappArr.push({
-						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
-						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
-						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
-						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
-						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
-						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
-						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
-						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
-						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
-						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.netpay,
-					}) }
+				let inputjson: any = this.feeTransactionForm.value;
+				let receiptMappArr = [];
+				for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+						receiptMappArr.push({
+							rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+						})
+					}
 				}
-				inputjson.receipt_mapping= receiptMappArr;
+				inputjson.receipt_mapping = receiptMappArr;
 				if (this.selectedMode == '5') {
 					inputjson.inv_id = [];
 					inputjson.inv_invoice_no = [];
@@ -906,9 +1038,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					inputjson.lateFeeAmt = 0;
 					inputjson.receipt_mapping = [];
 
-					inputjson.opening_balance_transaction =  true;
+					inputjson.opening_balance_transaction = true;
 				} else {
-					inputjson.opening_balance_transaction =  false
+					inputjson.opening_balance_transaction = false
 				}
 				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 					this.btnDisable = false;
@@ -931,6 +1063,63 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}
 				});
 			}
+
+			if ((this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
+
+				let inputjson: any = this.feeTransactionForm.value;
+				let receiptMappArr = [];
+				for (var i = 0; i < this.invoiceArrayForm.length; i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0) {
+						receiptMappArr.push({
+							rm_inv_id: this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type: this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id: this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id: this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name: this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount: this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id: this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name: this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount: this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount: this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount: this.invoiceArrayForm[i].value.netpay,
+						})
+					}
+				}
+				inputjson.receipt_mapping = receiptMappArr;
+				if (this.selectedMode == '5') {
+					inputjson.inv_id = [];
+					inputjson.inv_invoice_no = [];
+					inputjson.inv_process_type = this.studentInfo.au_process_type;
+					inputjson.ftr_prev_balance = 0;
+					inputjson.lateFeeAmt = 0;
+					inputjson.receipt_mapping = [];
+
+					inputjson.opening_balance_transaction = true;
+				} else {
+					inputjson.opening_balance_transaction = false
+				}
+				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						const length = result.data.split('/').length;
+						this.common.showSuccessErrorMessage(result.message, 'success');
+						window.open(result.data, '_blank');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						this.reset();
+						if (result.message) {
+							this.common.showSuccessErrorMessage(result.message, 'error');
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+						}
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			}
+
 		} else {
 			this.btnDisable = false;
 		}
@@ -943,12 +1132,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
 		console.log("i ma here", $event.value, $event);
-		if($event.value == '1') {
+		if ($event.value == '1') {
 			this.readonlymodeforinvoice = true;
 		} else {
 			this.readonlymodeforinvoice = false;
 		}
-		
+
 		if (this.selectedMode !== '1') {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.fee_amount,
@@ -961,7 +1150,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 		if (this.selectedMode == '5') {
 			this.feeTransactionForm.patchValue({
-				'ftr_amount' : this.studentInfo.student_opening_balance,
+				'ftr_amount': this.studentInfo.student_opening_balance,
 				'ftr_actual_amount': this.studentInfo.student_opening_balance
 			});
 		}
@@ -986,7 +1175,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': '',
-			'ftr_actual_amount':''
+			'ftr_actual_amount': ''
 		});
 	}
 
@@ -1062,7 +1251,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 		if (event.value === 2 || event.value === '2') {
 			// tslint:disable-next-line: max-line-length
-			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) ;
+			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10);
 
 			if (netAmount < 0) {
 				netAmount = 0;
@@ -1072,7 +1261,55 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'ftr_amount': netAmount,
 				'ftr_pay_id': event.value
 			});
+		} else if (event.value === 7 || event.value === '7') {
+			console.log("i am here", this.footerRecord);
+			
+			if (this.footerRecord.balancetype == '') {
+				this.feeTransactionForm.patchValue({
+					'ftr_amount': this.invoice.netPay,
+					'ftr_pay_id': '1'
+				});
+				this.common.showSuccessErrorMessage('Not Enough Balance in Wallet', 'error');
+			} else {
+				this.feeTransactionForm.patchValue({
+					'ftr_amount': this.footerRecord.balancetotal,
+					'ftr_pay_id': event.value
+				});
+				let val = this.footerRecord.balancetotal;
+				let changeValue = 0;
+
+				console.log("i am here---------", this.invoiceTotal);
+
+				for (let i = 0; i < this.invoiceArrayForm.length; i++) {
+
+					if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount <= val - changeValue) {
+						this.invoiceArrayForm[i].patchValue({
+							netpay: this.invoiceArray[i].head_bal_amount
+						});
+						changeValue += this.invoiceArray[i].head_bal_amount;
+					} else if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount > val - changeValue) {
+						this.invoiceArrayForm[i].patchValue({
+							netpay: val - changeValue
+						});
+						changeValue += (val - changeValue);
+
+					}
+				}
+				this.feeTransactionForm.patchValue({
+					'ftr_amount': (changeValue),
+					'ftr_pay_id': event.value
+				});
+				this.invoiceTotal = (changeValue);
+				// if (this.invoiceArrayForm.length > 0) {
+				// 	this.invoiceArrayForm[0].patchValue({
+				// 		netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)
+				// 	});
+				// }
+			}
+
 		} else {
+			console.log("i am here");
+
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.netPay,
 				'ftr_pay_id': event.value
@@ -1081,13 +1318,14 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 		if (this.selectedMode == '5') {
 			this.feeTransactionForm.patchValue({
-				'ftr_amount' : this.studentInfo.student_opening_balance,
+				'ftr_amount': this.studentInfo.student_opening_balance,
 				'ftr_pay_id': event.value
 			});
 		}
-		if(event.value !== '4'){
+		if (event.value !== '4' && event.value !== '7') {
 			this.removeBankCharge();
 		}
+		console.log("i am here---------", this.invoiceTotal);
 	}
 	checkStatus() {
 		if (this.commonStu.studentdetails.editable_status === '1') {
@@ -1100,92 +1338,97 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.studentRouteMoveStoreService.setInvoiceId({});
 	}
 
-	setNetPay(element,i) {
+	setNetPay(element, i) {
 		console.log(this.invoiceArrayForm);
 		this.invoiceTotal = 0;
 		// this.invoiceArrayForm[i].patchValue({
 		// 	netpay:Number(this.invoiceArrayForm[i].value.feedue)-Number(this.invoiceArrayForm[i].value.concession) - Number(this.invoiceArrayForm[i].value.adjustment)
 		// });
-		for (let i=0; i<this.invoiceArrayForm.length;i++) {
-
-			this.invoiceTotal = this.invoiceTotal+Number(this.invoiceArrayForm[i].value.netpay);
-			this.invoiceArrayForm[i].patchValue({rm_total_amount : this.invoiceArrayForm[i].value.netpay});
+		for (let i = 0; i < this.invoiceArrayForm.length; i++) {
+			this.invoiceTotal = this.invoiceTotal + Number(this.invoiceArrayForm[i].value.netpay);
+			this.invoiceArrayForm[i].patchValue({ rm_total_amount: this.invoiceArrayForm[i].value.netpay });
 		}
 
 		this.feeTransactionForm.patchValue({
-			ftr_amount:this.invoiceTotal
+			ftr_amount: this.invoiceTotal
 		})
+		if(this.invoiceTotal > this.footerRecord.balancetotal) {
+			this.common.showSuccessErrorMessage('Not Enough Balance in Wallet', 'error');
+			this.btnDisable = true
+		} else {
+			this.btnDisable = false
+		}
 
 
 	}
 	changeValue(val) {
+		console.log("i am cleed");
+
 		console.log(this.feeTransactionForm.value, val, this.invoiceArrayForm, this.invoiceArray);
 		let changeValue = 0;
 		this.bnk_charge = 0;
 		this.bnk_charge_per = 0;
-		console.log("----------------------------------------", val);
-		if(this.feeTransactionForm.value.ftr_pay_id === '4') {
+		if (this.feeTransactionForm.value.ftr_pay_id === '4') {
 			const bnk = this.banks.find(e => e.bnk_id == this.feeTransactionForm.value.ftr_bnk_id);
-			console.log('bnk',bnk);
-			if(bnk){
+
+			if (bnk) {
 				const bnk_charge = JSON.parse(bnk.bnk_charge);
 				let bnkcharge = 0;
-				if(bnk_charge && bnk_charge.length > 0){
+				if (bnk_charge && bnk_charge.length > 0) {
 					for (let i = 0; i < bnk_charge.length; i++) {
 						const element = bnk_charge[i];
-						if(val >= element.bnk_charge_start && val <= element.bnk_charge_end) {
+						if (val >= element.bnk_charge_start && val <= element.bnk_charge_end) {
 							bnkcharge = element.bnk_charge;
 						}
 					}
 				}
-				this.bnk_charge = ((val * bnkcharge)/(100 + bnkcharge));
+				this.bnk_charge = ((val * bnkcharge) / (100 + bnkcharge));
 				this.bnk_charge_per = bnkcharge;
 				// this.invoice.netPay = this.bnk_charge;
 				// this.invoiceTotal = this.invoice.netPay;
 			}
 			this.bnk_charge = Math.round(this.bnk_charge);
-			console.log('bnk_charge',this.bnk_charge);		
+			console.log('bnk_charge', this.bnk_charge);
 		} else {
 			this.removeBankCharge();
 		}
 		this.invoiceArrayForm.filter(item => {
-			
+
 			if (item.value.rm_fh_name === '' && item.value.netpay <= val) {
 				changeValue += item.value.netpay
-			} else if(item.value.rm_fh_name === '' && item.value.netpay > val) {
+			} else if (item.value.rm_fh_name === '' && item.value.netpay > val) {
 				changeValue += val;
 			}
 		});
-		
-		for(let i = 0; i <this.invoiceArrayForm.length ; i++ ) {
-			
-			if(this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount <= val - changeValue) {
+
+		for (let i = 0; i < this.invoiceArrayForm.length; i++) {
+
+			if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount <= val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: this.invoiceArray[i].head_bal_amount
 				});
-				changeValue +=this.invoiceArray[i].head_bal_amount;
+				changeValue += this.invoiceArray[i].head_bal_amount;
 			} else if (this.invoiceArrayForm[i].value.rm_fh_name != '' && this.invoiceArray[i].head_bal_amount > val - changeValue) {
 				this.invoiceArrayForm[i].patchValue({
 					netpay: val - changeValue
 				});
-				changeValue +=(val - changeValue);
+				changeValue += (val - changeValue);
 
 			}
 		}
-		if(this.invoiceArrayForm.length > 0){
+		if (this.invoiceArrayForm.length > 0) {
 			this.invoiceArrayForm[0].patchValue({
 				netpay: this.invoiceArrayForm[0].value.netpay + (val - changeValue)
 			});
 		}
-		
+
 		this.feeTransactionForm.patchValue({
-			ftr_amount:val
-		}); 
+			ftr_amount: val
+		});
 		this.invoiceTotal = val;
-		
+
 	}
 	getAMount(itotal, prevBal, fineA) {
-		
-		return (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)) > 0 ? (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)): 0
+		return (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)) > 0 ? (parseInt(itotal) + parseInt(prevBal) + parseInt(fineA)) : 0
 	}
 }
