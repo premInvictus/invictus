@@ -469,12 +469,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
 						const nindex = this.payModes.findIndex(e => e.pay_name == 'Wallet');
-						if(findex != -1) {
-							this.entryModes.splice(findex,1);
-						}
-						if(nindex != -1) {
-							this.payModes.splice(nindex,1);
-						}
+						// if(findex != -1) {
+						// 	this.entryModes.splice(findex,1);
+						// }
+						// if(nindex != -1) {
+						// 	this.payModes.splice(nindex,1);
+						// }
 					}
 				}
 			});
@@ -715,7 +715,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 
 				if (this.feeTransactionForm.value.walletProcess || (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7')) {
 					let inputjson: any = this.feeTransactionForm.value;
-					console.log("i am in here2");
+					console.log("i am in here2", inputjson);
 					if (this.feeTransactionForm.value.walletProcess == 'deposit') {
 						inputjson.ftr_amount_type = 'credit';
 					} else if (this.feeTransactionForm.value.walletProcess == 'withdrawal') {
@@ -725,6 +725,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}
 					if (this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7') {
 						inputjson.ftr_amount_status = 'withdrawal';
+						inputjson.ftr_remark = 'Against Invoice - ' + inputjson.inv_invoice_no[0];
 					} else {
 						inputjson.ftr_amount_status = this.feeTransactionForm.value.walletProcess;
 					}
