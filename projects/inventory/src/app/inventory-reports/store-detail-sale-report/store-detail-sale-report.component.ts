@@ -372,7 +372,16 @@ export class StoreDetailSaleReportComponent implements OnInit {
           filterable: true,
           filterSearchType: FieldType.string,
           width: 25,
-          formatter: this.receiptFormatter
+          formatter: this.receiptFormatter,
+          grouping: {
+            getter: 'receipt_no',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
         },
         {
           id: 'item_code', name: 'Item', field: 'item_code', sortable: true,
@@ -564,7 +573,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
                 obj['contact'] = item.buyer_details.active_contact;
               }
               obj['count'] = data.item_quantity + ' - ' + (data_pic.item_units.name ? data_pic.item_units.name: data_pic.item_units.id);
-              obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_hierarchy : '' ;
+              obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_id +' - '+item.location_details[0].location_hierarchy : '' ;
               obj['action'] = item;
               obj['class'] = item.buyer_details.class_name+'-'+item.buyer_details.sec_name;
               obj['mop'] = new TitleCasePipe().transform(item.mop);
@@ -641,7 +650,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
 	}
 	groupByBankName() {
 		this.dataviewObj.setGrouping({
-			getter: 'item_code',
+			getter: 'receipt_no',
 			formatter: (g) => {
 				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
 			},
@@ -654,7 +663,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
-		this.draggableGroupingPlugin.setDroppedGroups('item_code');
+		this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
 	}
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
