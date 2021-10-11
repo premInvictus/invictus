@@ -23,10 +23,22 @@ export class ViewModalComponent implements OnInit {
   @ViewChild('viewModal') viewModal;
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_category', 'item_location'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  locationArray: any[];
   constructor(private dialog: MatDialog, public inventory: InventoryService) { }
   ngOnInit() {
+    this.getAllLocations();
   }
 
+  getAllLocations(){
+    this.locationArray = [];
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        console.log("all locations",result);
+        this.locationArray = result;
+      }
+    });
+}
 
   
   openModal(data) {
@@ -34,11 +46,14 @@ export class ViewModalComponent implements OnInit {
     this.locations = [];
     this.inputData = data;
     this.inputData.pm_type = 'GR';
-
+    this.locationArray = data.locationArray;
     console.log(data);
+    console.log(this.locationArray);
+    
+    console.log(data.branch_from);
 
-    var fLocation = data.branch_from;
-    var tLocation = data.branch_to;
+    var fLocation = this.getLocationName(Number(data.branch_from));
+    var tLocation = this.getLocationName(Number(data.branch_to));
 
     data.inv_item_details.forEach(element => {
       let ind = 0;
@@ -62,6 +77,7 @@ export class ViewModalComponent implements OnInit {
       });
 
     });
+console.log(this.ELEMENT_DATA);
 
     // this.inventory.getRequistionMaster({pm_id : data}).subscribe((result: any) => {
     //   console.log("get PO >>>>>>>> ", result);
@@ -98,10 +114,10 @@ export class ViewModalComponent implements OnInit {
     // });
   }
   getLocationName(loc_id) {
-    if (this.locations.length > 0) {
-    const index = this.locations.findIndex(f => Number(f.location_id) === Number(loc_id));
+    if (this.locationArray.length > 0) {
+    const index = this.locationArray.findIndex(f => Number(f.location_id) === Number(loc_id));
     if (index !== -1) {
-      return this.locations[index].location_name;
+      return this.locationArray[index].location_name;
     }
     } else {
       return '-';
