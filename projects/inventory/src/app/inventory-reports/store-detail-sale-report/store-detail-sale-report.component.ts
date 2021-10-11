@@ -587,9 +587,14 @@ export class StoreDetailSaleReportComponent implements OnInit {
           obj3['name'] = '';
           obj3['contact'] = '';
           obj3['count'] = '';
+          obj3['rate'] = '';
+          obj3['item_code'] = '';
           obj3['location'] = '';
           obj3['class'] = '';
           obj3['mop'] = '';
+          obj3['dept_id'] = '';
+          obj3['status'] = '';
+          obj3['created_by'] = '';
           obj3['bill_total'] = new IndianCurrency().transform(this.dataset.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           this.totalRow = obj3;
           this.aggregatearray.push(new Aggregators.Sum('bill_total'));
@@ -813,7 +818,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
     }
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Store Assign Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -1133,9 +1138,9 @@ export class StoreDetailSaleReportComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('store_assign_report') + this.sessionName;
+    reportType = new TitleCasePipe().transform('store_detail_sales_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('store assign report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
