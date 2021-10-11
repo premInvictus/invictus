@@ -1352,11 +1352,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.feeTransactionForm.patchValue({
 			ftr_amount: this.invoiceTotal
 		})
-		if(this.invoiceTotal > this.footerRecord.balancetotal) {
-			this.common.showSuccessErrorMessage('Not Enough Balance in Wallet', 'error');
-			this.btnDisable = true
-		} else {
-			this.btnDisable = false
+		if(this.selectedMode == '7' || this.selectedMode == 7) {
+			if(this.invoiceTotal > this.footerRecord.balancetotal) {
+				this.common.showSuccessErrorMessage('Not Enough Balance in Wallet', 'error');
+				this.btnDisable = true
+			} else {
+				this.btnDisable = false
+			}
 		}
 
 
