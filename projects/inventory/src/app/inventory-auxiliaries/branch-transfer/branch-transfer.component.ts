@@ -5,6 +5,8 @@ import { CommonAPIService, SisService, AxiomService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSlideToggleChange } from '@angular/material';
 import { ErpCommonService } from 'src/app/_services';
 import { Element } from './branch-transfer.model';
+import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-branch-transfer',
   templateUrl: './branch-transfer.component.html',
@@ -99,6 +101,7 @@ export class BranchTransferComponent implements OnInit {
 
   openViewModal(item){
     console.log(item);
+    item.locationArray = this.locationArray;
     this.viewModal.openModal(item);
   }
 
@@ -306,9 +309,10 @@ export class BranchTransferComponent implements OnInit {
     }
   }
   getLocationName(location_id) {
-    const findex = this.locations.findIndex(f => Number(f.location_id) === Number(location_id));
+    console.log("locations ", this.locationArray);
+    const findex = this.locationArray.findIndex(f => Number(f.location_id) === Number(location_id));
     if (findex !== -1) {
-      return this.locations[findex].location_hierarchy;
+      return this.locationArray[findex].location_hierarchy;
     }
   }
   getQuantityBasedOnLocation2(val, array: any[]) {
@@ -689,11 +693,58 @@ export class BranchTransferComponent implements OnInit {
     }
   }
   generatePass(val) {
+    console.log("val", val);
+    
     this.genFlag = true;
     this.item_det = val;
     this.bt_id = val.inv_bt_id;
     this.submitParam.text = 'to create gate pass ';
+    this.submitParam.branch_from = val.branch_from;
+    this.submitParam.branch_to = val.branch_to;
     this.deleteModal.openModal(this.submitParam);
+  }
+  downloadPass(val){
+    var datePipe = new DatePipe('en-US');
+    val.created_date = datePipe.transform(val.created_date, 'dd-MMM-yyyy');
+    const JSON = {
+        "bill_id": val.inv_bt_id,
+        "bill_type": val.type == "location-transfer" ? "Internal" : "External",
+        "bill_date": val.created_date,
+        "remarks": val.remarks ? val.remarks : "",
+        "bill_created_by": val.created_by.name,
+        "bill_details": val.inv_item_details,
+        "school_name": this.schoolInfo.school_name,
+        "school_logo": this.schoolInfo.school_logo,
+        "school_address": this.schoolInfo.school_address,
+        "school_phone": this.schoolInfo.school_phone,
+        "school_city":  this.schoolInfo.school_city,
+        "school_state":  this.schoolInfo.school_state,
+        "school_afflication_no":  this.schoolInfo.school_afflication_no,
+        "school_website":  this.schoolInfo.school_website,
+        "name": val.branch_to + " - " + this.getLocationName(Number(val.branch_to)),
+    };
+    console.log("action", val);
+    console.log("JSOn", JSON);
+    
+    this.service.generateGatePass(JSON).subscribe((res: any) => {
+      this.disabledApiButton = false;
+      if (res) {        
+        saveAs(res.data.fileUrl, res.data.fileName);
+        this.commonService.showSuccessErrorMessage('Download Successful', 'success');
+      }
+    });
+    // this.service.generateGatePass(JSON).subscribe((res: any) => {
+    //   console.log("Hello");   
+    //   console.log("generate pass result", res);   
+    //   if(res && res.status === 'ok'){     
+    //     const length = res.data.split('/').length;
+    //     saveAs(res.data.fileUrl, res.data.fileUrl.split('/')[length - 1]);
+    //     this.commonService.showSuccessErrorMessage('Download Successful', 'success');
+    //   }else{
+    //     this.commonService.showSuccessErrorMessage('Download unsuccessful', 'error');
+    //   }
+    //   this.commonService.showSuccessErrorMessage('Download unsuccessful', 'error');
+    // });
   }
   getBranchTransferData() {
     this.service.getBranchTransfer({

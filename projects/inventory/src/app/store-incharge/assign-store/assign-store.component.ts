@@ -5,6 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import * as Excel from 'exceljs/dist/exceljs';
+import { saveAs } from 'file-saver';
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+import { IndianCurrency } from 'projects/admin-app/src/app/_pipes';
 
 @Component({
   selector: 'app-assign-store',
@@ -33,6 +38,8 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   bundleArray: any[] = [];
   edit = false;
   bundleArrayMain: any[] = [];
+  schoolInfo: any;
+  currentTabIndex: number;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -45,7 +52,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit() {
-    
+    this.getSchool();
     this.getAllEmployee();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
@@ -167,6 +174,43 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     }
     
   }
+
+
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+				console.log('this.schoolInfo 202', this.schoolInfo)
+				this.schoolInfo['disable'] = true;
+				this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
+				this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
+			}
+		});
+	}
+
+	downloadPdf() {
+		const doc = new jsPDF('p', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+	}
+
+	downloadExcel() {
+		alert("Under Construction");
+	}
   getAllEmployee(){
     this.employeeArray = [];
     this.commonService.getAllEmployee({emp_cat_id:2}).subscribe((result: any) => {
@@ -176,7 +220,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     });
     // this.commonService.getFilterData({}).subscribe((result: any) => {
     //   if (result.status === 'ok') {
-    //     this.employeeArray = result.data;
+    //     tgetSchoolhis.employeeArray = result.data;
     //   }
     // });
   }
