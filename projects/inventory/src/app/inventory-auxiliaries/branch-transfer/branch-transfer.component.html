@@ -218,7 +218,7 @@
                       {{item.location_name}}
                     </td>
                     <td *ngIf="!viewOnly" class="custom-td">
-                      <i class="far fa-edit modify-icon" (click)="editList(i)" style="cursor:pointer"
+                      <i class="far fa-edit modify-icon" (click)="editList(i, item)" style="cursor:pointer"
                         title="Edit"></i>&nbsp;
                       <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteList(i)"
                         style="cursor:pointer" title="Delete"></i>

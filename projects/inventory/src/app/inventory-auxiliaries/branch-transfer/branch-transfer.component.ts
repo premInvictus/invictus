@@ -20,6 +20,7 @@ export class BranchTransferComponent implements OnInit {
   qty: any;
   itemArray2: any[];
   qty2: any;
+  allBranchTransferData: any;
   constructor(private service: InventoryService,
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -356,9 +357,11 @@ export class BranchTransferComponent implements OnInit {
     });
     this.finalRequistionArray = val.inv_item_details;
     this.editBranchtransfer = true;
+    console.log("hey value ", val);
     this.finalRequistionForm.patchValue({
-      'intended_use': val.branch_details.branch_id,
-      'new_location': val.new_location
+      'intended_use': val.branch_to.branch_id,
+      'new_location': val.branch_to,
+      'remarks' : val.remarks,
     });
     this.bt_id = val.inv_bt_id;
   }
@@ -384,7 +387,9 @@ export class BranchTransferComponent implements OnInit {
 
   // Edit item list function
 
-  editList(value) {
+  editList(value, item) {
+    console.log("hey edit ", item);
+    
     this.createRequistionForm.reset();
     this.UpdateFlag = true;
     this.update_id = value;
@@ -451,7 +456,7 @@ export class BranchTransferComponent implements OnInit {
     return event;
   }
   finalSubmit($event) {
-    console.log("final submit >>");
+    console.log("final submit >>", this.finalRequistionArray);
     if ($event) {
       this.disabledApiButton = true;
       if (!this.editBranchtransfer && !this.deleteFlag && !this.genFlag) {
@@ -478,8 +483,9 @@ export class BranchTransferComponent implements OnInit {
           branch_to: this.getBranchPrefix(this.finalRequistionForm.value.intended_use) ? this.getBranchPrefix(this.finalRequistionForm.value.intended_use) : this.finalRequistionForm.value.new_location,
           branch_from: this.finalRequistionArray[0].location,
           branch_session: '',
-          remarks: this.finalRequistionArray[0].remarks
+          remarks: this.finalRequistionForm.value.remarks
         };
+        console.log("create json ", JSON);
         this.service.createBranchTransfer(JSON).subscribe((res: any) => {
           this.disabledApiButton = false;
           if (res) {
@@ -753,6 +759,7 @@ export class BranchTransferComponent implements OnInit {
     }).subscribe((res: any) => {
       console.log("get Branch Tranfers",res);
       if (res && res.status === 'ok') {
+        this.allBranchTransferData = res.data;
         this.BRANCH_TRANSFER_DATA = [];
         let ind = 0;
         for (const item of res.data) {
