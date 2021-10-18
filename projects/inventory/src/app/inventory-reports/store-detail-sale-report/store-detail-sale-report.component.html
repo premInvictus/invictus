@@ -57,6 +57,10 @@
     </div>
     <div class="col-4">
       <div class="margin-top-10">
+        <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
+          filter
+        </button>
+        &nbsp; &nbsp; &nbsp;
         <button class="btn-success text-uppercase" mat-raised-button (click)="changeReportType()">
           generate
         </button>
@@ -106,3 +110,4 @@
    [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete'"
    (deleteOk)="deleteSaleReceipt($event)">
 </app-delete-with-reason>
+<app-advanced-search-modal-2 (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal-2>

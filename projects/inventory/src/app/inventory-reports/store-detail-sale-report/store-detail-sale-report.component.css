@@ -1,0 +1,18 @@
+.filter-bt{
+    color: white !important;
+    background-color: #797f83 !important;
+    height: 33px !important;
+    text-transform: uppercase;
+    width: 74px !important;
+    margin-left: 4px !important;
+    margin-right: 6px !important;
+  }
+  .filter-bt:hover{
+    color: #797f83 !important;
+    background-color: white !important ;
+    border: 2px solid  #797f83;
+    height: 33px;
+    margin-left: 4px !important;
+    width: 74px !important;
+    margin-right: 6px !important;
+  }

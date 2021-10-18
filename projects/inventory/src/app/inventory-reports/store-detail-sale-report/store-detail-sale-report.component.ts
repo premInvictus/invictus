@@ -30,6 +30,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
   today = new Date();
   @ViewChild('billDetailsModal') billDetailsModal;
   @ViewChild('deleteWithReasonModal') deleteWithReasonModal;
+  @ViewChild('searchModal') searchModal;
   @Input() userName: any = '';
   rowsChosen: any[] = [];
   rowChosenData: any[] = [];
@@ -79,6 +80,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
   session: any;
   itemData: any[] = [];
   schoolInfo: any;
+  objectFilter: any = {};
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -220,6 +222,8 @@ export class StoreDetailSaleReportComponent implements OnInit {
   }
   
   changeReportType() {
+    console.log("i am here", this.objectFilter);
+    
     if (this.reportFilterForm.valid) {
       this.dataArr = [];
       this.totalRow = {};
@@ -548,10 +552,11 @@ export class StoreDetailSaleReportComponent implements OnInit {
               }
               let data_imp:any = {};
               for(let data_i of this.allEmployee) {
-                if(data_i.emp_login_id == data.created_by) {
+                if(data_i.emp_login_id == item.created_by) {
                   data_imp = data_i;
                   break;
                 }
+                // console.log("i amhere", data_i.emp_login_id, data.created_by);
               }
               
               let obj: any = {};
@@ -567,23 +572,54 @@ export class StoreDetailSaleReportComponent implements OnInit {
                 obj['name'] = item.buyer_details.au_full_name;
                 obj['contact'] = item.buyer_details.au_mobile;
               }
-              if (item.buyer_details.au_role_id == 4) {
-                obj['emp_id'] = 'S - ' + item.buyer_details.em_admission_no + ' - ' + item.buyer_details.au_full_name;
+              else if (item.buyer_details.au_role_id == 4) {
+                obj['emp_id'] =   ((item.buyer_details.em_admission_no != 0) ? ('S - '+ item.buyer_details.em_admission_no): ('P - '+ item.buyer_details.em_provisional_admission_no))  + ' - ' + item.buyer_details.au_full_name;
                 obj['name'] = item.buyer_details.au_full_name;
                 obj['contact'] = item.buyer_details.active_contact;
+              } else {
+                obj['emp_id'] =   'O - Nilesh Shukla';
+                obj['name'] = item.buyer_details.au_full_name;
+                obj['contact'] = item.buyer_details.active_contact;
+                
               }
               obj['count'] = data.item_quantity + ' - ' + (data_pic.item_units.name ? data_pic.item_units.name: data_pic.item_units.id);
               obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_id +' - '+item.location_details[0].location_hierarchy : '' ;
               obj['action'] = item;
-              obj['class'] = item.buyer_details.class_name+'-'+item.buyer_details.sec_name;
+              obj['class'] = (item.buyer_details.class_name? item.buyer_details.class_name: '')+'-'+(item.buyer_details.sec_name? item.buyer_details.sec_name: '');
               obj['mop'] = new TitleCasePipe().transform(item.mop);
               obj['status'] = new TitleCasePipe().transform(item.status);
               obj['bill_total'] = data.total_price;
               obj['au_role_id'] = item.buyer_details.au_role_id;
               obj['bill_details'] = item.bill_details;
-              obj['created_by'] = data_imp.emp_name
-              this.dataset.push(obj);
-              ind++;
+              obj['created_by'] = data_imp.emp_name;
+              let isAvailable = true;
+              if(Object.keys(this.objectFilter).length > 0) {
+                if(this.objectFilter.created_by) {
+                  if(!this.objectFilter.created_by.includes(obj['created_by']) && !this.objectFilter.created_by.includes(item.created_by)) {
+                    isAvailable = false
+                  }
+                }
+                if(this.objectFilter.item_code) {
+                  if(!this.objectFilter.item_code.includes(obj['dept_id'])) {
+                    isAvailable = false
+                  }
+                }
+                if(this.objectFilter.item_location) {
+                  console.log("-----------------------", this.objectFilter.item_location, item.location_details[0].location_id);
+                  
+                  if(!this.objectFilter.item_location.includes(item.location_details[0].location_id)) {
+                    isAvailable = false
+                  }
+                }
+                
+              } else {
+                isAvailable = true;
+              }
+              if(isAvailable) {
+                this.dataset.push(obj);
+                ind++;
+              }
+              
             }
           }
           this.totalRow = {};
@@ -623,7 +659,8 @@ export class StoreDetailSaleReportComponent implements OnInit {
           this.tableFlag = true;
         }
         setTimeout(() => this.groupByPaymentMode(), 2);
-						setTimeout(() => this.groupByBankName(), 2);
+				setTimeout(() => this.groupByBankName(), 2);
+        this.objectFilter = {}
       });
     } else {
       this.CommonService.showSuccessErrorMessage('Please fill all required fields', 'error');
@@ -1126,7 +1163,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
       return 'Sub Total (' + groupItem.value + ')';
     }
   }
-
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
   exportToExcel(json: any[]) {
     this.notFormatedCellArray = [];
     let reportType: any = '';
@@ -1506,5 +1543,20 @@ export class StoreDetailSaleReportComponent implements OnInit {
     } else {
       return new IndianCurrency().transform(value);
     }
+  }
+  searchOk($event) {
+    console.log("i am here", $event);
+    this.objectFilter = {}
+    for(let i = 0; i <$event.filters.length; i++) {
+     if(this.objectFilter[$event.filters[i].filter_type] != '') {
+      if(this.objectFilter[$event.filters[i].filter_type]) {
+        this.objectFilter[$event.filters[i].filter_type].push($event.filters[i].filter_value)
+      } else {
+        this.objectFilter[$event.filters[i].filter_type] = [$event.filters[i].filter_value]
+      }
+     }
+    }
+    
+    // this.getAllEmployee($event);
   }
 }
