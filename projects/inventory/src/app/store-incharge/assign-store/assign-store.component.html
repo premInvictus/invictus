@@ -100,6 +100,17 @@
 </ng-container>
 <div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0 && inventory.getcurrentChildTab() != 'bundlelist'">
   <br><br>
+  <!-- <div class="row d-flex">
+    <div class="col-12">
+      <div class="download mr-auto float-right">
+        <fieldset> 
+        <button class="btn btn-sm" (click)="downloadTemplate()">Download Sample Excel Sheet</button>
+        <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " style="cursor: pointer; height: 40px !important" src="/assets/images/upload-50.png"
+                                        matTooltip="Upload price list" (click)="uploadExcel()" [matTooltipPosition]="'left'" />
+        </fieldset>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div> -->
   <div class="row d-flex">
     <div class="col-4 float-left">
       <mat-form-field *ngIf="tableDataArray.length > 0 || bundleArrayMain.length > 0" style="width: 100%;margin-left: 0%;margin-bottom: -10%;">
@@ -146,24 +157,23 @@
     <ng-container matColumnDef="item_selling_price">
       <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Selling Price </th>
       <td mat-cell class="cell-left" *matCellDef="let element;">
-        <!-- <form [formGroup]="formGroupArray[element.position].formGroup">
+        <form [formGroup]="formGroupArray[element.position].formGroup">
           <input matInput type="text" class="remark-text" placeholder="Enter Price"
-            formControlName="item_selling_price">
-        </form> -->
-        {{element.item_selling_price}} 
+            formControlName="item_selling_price" value="{{element.item_selling_price}}">
+        </form>         
       </td>
     </ng-container>
     
 
-    <ng-container matColumnDef="action">
+    <!-- <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
       <td mat-cell class="cell-left" *matCellDef="let element;">
-        <i class="far fa-eye modify-icon" (click)="actionList(element.action.pm_id,'approved')"
+        <i class="fa fa-pencil" (click)="editPrice(element)"
           style="cursor:pointer" title="Edit"></i>&nbsp;
         <!-- <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-          (click)="actionList(element.action,'delete')" style="cursor:pointer" title="Delete"></i> -->
+          (click)="actionList(element.action,'delete')" style="cursor:pointer" title="Delete"></i> --
       </td>
-    </ng-container>
+    </ng-container> -->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -50,9 +50,11 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   tableDivFlag = false;
   tabledataFlag = false;
   ELEMENT_DATA: any[] = [];
-  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price', 'action'];
+  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
 dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 @ViewChild(MatPaginator) paginator: MatPaginator;
+  priceForm: FormGroup;
+  uploadComponent: string;
 
   constructor(
     private fbuild: FormBuilder,
@@ -110,9 +112,37 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
       exist_location_id: '',
       exist_emp_id: ''
     });
+
+    this.priceForm = this.fbuild.group({
+      item_selling_price : ''
+    });
     this.formGroupArray = [];
   }
 
+  editPrice(item){
+    console.log("edit item ", item);
+    
+  }
+  uploadExcel(){
+    alert("Hi i am your upload helper");
+  }
+
+  downloadTemplate() {
+    if (this.uploadComponent === '') {
+      this.commonService.showSuccessErrorMessage('Please choose one component for which do you wish to download template', 'error');
+    } else {
+      this.inventory.downloadEmployeeExcel([
+        { component: this.uploadComponent }]).subscribe((result: any) => {
+          if (result) {
+            this.commonService.showSuccessErrorMessage('Download Successfully', 'success');
+            const length = result.fileUrl.split('/').length;
+            saveAs(result.fileUrl, result.fileUrl.split('/')[length - 1]);
+          } else {
+            this.commonService.showSuccessErrorMessage('Error While Downloading File', 'error');
+          }
+        });
+    }
+  }
 
   getAllAssignMaster() {
 
@@ -689,10 +719,12 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   }
   finalUpdate() {
     var finalJson: any = {};
-    const itemAssign: any[] = [];
+    const itemAssign: any[] = [];    
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
     }
+    console.log(itemAssign);
+
     const emp:any[] = [];
     for(let item of this.assignStoreForm.value.emp_id){
       const temp = this.employeeArray.find(e => e.emp_login_id == item);
