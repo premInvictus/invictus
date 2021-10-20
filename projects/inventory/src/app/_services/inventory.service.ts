@@ -222,6 +222,10 @@ export class InventoryService {
     return this.http.post(environment.apiInvUrl + '/location/getAll', value);
     
   }
+  getAllCategories(value){
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/getAllCategories', value);    
+  }
   getGlobalSettingReplace(value) {
     this.service.startLoading();
     return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
