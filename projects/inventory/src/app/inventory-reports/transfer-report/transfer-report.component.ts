@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CommonAPIService, InventoryService } from '../../_services';
-import { DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../_pipes';
+import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { CapitalizePipe, IndianCurrency } from 'src/app/_pipes';
 import { ErpCommonService } from 'src/app/_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
@@ -21,14 +21,20 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-  selector: 'app-procurement-report',
-  templateUrl: './procurement-report.component.html',
-  styleUrls: ['./procurement-report.component.css']
+  selector: 'transfer-report',
+  templateUrl: './transfer-report.component.html',
+  styleUrls: ['./transfer-report.component.css']
 })
-export class ProcurementReportComponent implements OnInit {
-  @ViewChild('receiptModal') receiptModal;
+export class TransferReportComponent implements OnInit {
+
+  today = new Date();
+  @ViewChild('billDetailsModal') billDetailsModal;
+  @ViewChild('deleteWithReasonModal') deleteWithReasonModal;
   @ViewChild('searchModal') searchModal;
   @Input() userName: any = '';
+  rowsChosen: any[] = [];
+  rowChosenData: any[] = [];
+  assignListArray: any[] = [];
   notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
   levelHeading: any[] = [];
@@ -50,6 +56,7 @@ export class ProcurementReportComponent implements OnInit {
   submitParam: any = {};
   exportColumnDefinitions: any[] = [];
   reportFilterForm: FormGroup;
+  allEmployee: any[] = [];
   // @Output() displyRep = new EventEmitter();
   columnDefinitions1: Column[] = [];
   columnDefinitions2: Column[] = [];
@@ -71,7 +78,9 @@ export class ProcurementReportComponent implements OnInit {
   sessionName: any;
   currentUser: any;
   session: any;
+  itemData: any[] = [];
   schoolInfo: any;
+  objectFilter: any = {};
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -118,69 +127,61 @@ export class ProcurementReportComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
-  itemData: any[] = [];
-  itemData2: any;
-  showFilter = false;
-  today = new Date();
-  objectFilter: any ={};
-  constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
-    private erpCommonService: ErpCommonService,) {
+  locationArray: any[] = [];
+  constructor(private fbuild: FormBuilder, private inventory: InventoryService, public CommonService: CommonAPIService,
+    private erpCommonService: ErpCommonService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
-    this.buildForm();
+    this.allStoreIncharge();
     this.getSchool();
     this.getSession();
-    this.reportTypeArray.push({ report_type: 'consolidate', report_name: 'Consolidate Report' });
-    this.reportTypeArray.push({ report_type: 'detailed', report_name: 'Detailed Report' });
+    this.buildForm();
     this.inventory.searchItemsFromMaster({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         // this.displayList(res.data);
         this.itemData = res.data;
-
+        
       }
     });
-    this.CommonService.getLocation({}).subscribe((res: any) => {
-      // this.displayList(res.data);
-      this.itemData2 = res;
-    });
-
+    this.erpCommonService.getAllEmployee({}).subscribe((res:any) => {
+      console.log("--------------------", res);
+      this.allEmployee = res;
+    })
   }
   buildForm() {
     this.reportFilterForm = this.fbuild.group({
       'report_type': '',
+      'location_id': '',
+      'locationid': '',
+      'status': '',
       'from_date': this.today,
       'to_date': this.today,
     });
   }
-  changeReportType() {
-    console.log("i am here--------", this.reportFilterForm.value);
-
-    this.reportType = this.reportFilterForm.value.report_type;
-    this.dataArr = [];
-    this.totalRow = {};
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.tableFlag = false;
-    this.nodataFlag = false;
-    if (this.reportType == 'consolidate') {
-      this.getReport();
-      this.showFilter = false;
-    } else if( this.reportType == 'detailed') {
-      this.showFilter = true;
-      this.getDetailedReport();
+  searchLocationByName($event) {
+    if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+      if ($event.target.value !== '' && $event.target.value.length >= 3) {
+        const inputJson = {
+          "filter": $event.target.value,
+        };
+        this.locationArray = [];
+        this.inventory.getParentLocationOnly(inputJson).subscribe((result: any) => {
+          if (result) {
+            this.locationArray = result;
+          }
+        });
+      }
     }
   }
-  changeStatus(event) {
-    console.log("-----------------", event);
-    
-    if (event.value == 'consolidate') {
-      this.showFilter = false;
-    } else if( event.value == 'detailed') {
-      this.showFilter = true;
-    }
+
+  getLocationId(item: any) {
+    this.reportFilterForm.patchValue({
+      location_id: item.location_name,
+      locationid: item.location_id
+    });
   }
   getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -200,637 +201,507 @@ export class ProcurementReportComponent implements OnInit {
           }
         });
   }
-  getDetailedReport() {
-    this.dataArr = [];
-    this.totalRow = {};
-    this.columnDefinitions = [];
+  allStoreIncharge() {
+    this.inventory.allStoreIncharge({}).subscribe((result: any) => {
+      if (result) {
+        this.assignListArray = result;
+      }
+    });
+  }
+  resetValues() {
+    this.reportFilterForm.patchValue({
+      'report_type': '',
+      'location_id' : '',
+      'locationid': '',
+      'status': '',
+      'from_date': '',
+      'to_date': '',
+    });
     this.dataset = [];
     this.tableFlag = false;
-    this.nodataFlag = false;
-    this.gridOptions = {
-      enableDraggableGrouping: true,
-      createPreHeaderPanel: true,
-      showPreHeaderPanel: true,
-      enableHeaderMenu: true,
-      preHeaderPanelHeight: 40,
-      enableFiltering: true,
-      enableSorting: true,
-      enableColumnReorder: true,
-      createFooterRow: true,
-      showFooterRow: true,
-      footerRowHeight: 35,
-      enableExcelCopyBuffer: true,
-      fullWidthRows: true,
-      enableAutoTooltip: true,
-      enableCellNavigation: true,
-      headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',
-        iconSortAscCommand: 'fas fa-sort-up',
-        iconSortDescCommand: 'fas fa-sort-down',
-        title: 'Sort'
-      },
-      exportOptions: {
-        sanitizeDataExport: true,
-        exportWithFormatter: true
-      },
-      gridMenu: {
-        customItems: [{
-          title: 'pdf',
-          titleKey: 'Export as PDF',
-          command: 'exportAsPDF',
-          iconCssClass: 'fas fa-download'
+  }
+  
+  changeReportType() {
+    console.log("i am here", this.objectFilter);
+    
+    if (this.reportFilterForm.valid) {
+      this.dataArr = [];
+      this.totalRow = {};
+      this.columnDefinitions = [];
+      Object.keys(this.reportFilterForm).forEach((k) => this.reportFilterForm[k] == null && delete this.reportFilterForm[k]);
+      this.dataset = [];
+      this.tableFlag = false;
+      this.nodataFlag = false;
+      this.gridOptions = {
+        enableDraggableGrouping: true,
+        createPreHeaderPanel: true,
+        showPreHeaderPanel: true,
+        enableHeaderMenu: true,
+        preHeaderPanelHeight: 40,
+        enableFiltering: true,
+        enableSorting: true,
+        enableColumnReorder: true,
+        createFooterRow: true,
+        showFooterRow: true,
+        footerRowHeight: 35,
+        enableExcelCopyBuffer: true,
+        fullWidthRows: true,
+        enableAutoTooltip: true,
+        enableCellNavigation: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          columnId: 'checkbox_select'
         },
-        {
-          title: 'excel',
-          titleKey: 'Export Excel',
-          command: 'exportAsExcel',
-          iconCssClass: 'fas fa-download'
+        headerMenu: {
+          iconColumnHideCommand: 'fas fa-times',
+          iconSortAscCommand: 'fas fa-sort-up',
+          iconSortDescCommand: 'fas fa-sort-down',
+          title: 'Sort'
         },
-        {
-          title: 'expand',
-          titleKey: 'Expand Groups',
-          command: 'expandGroup',
-          iconCssClass: 'fas fa-expand-arrows-alt'
+        exportOptions: {
+          sanitizeDataExport: true,
+          exportWithFormatter: true
         },
-        {
-          title: 'collapse',
-          titleKey: 'Collapse Groups',
-          command: 'collapseGroup',
-          iconCssClass: 'fas fa-compress'
-        },
-        {
-          title: 'cleargroup',
-          titleKey: 'Clear Groups',
-          command: 'cleargroup',
-          iconCssClass: 'fas fa-eraser'
-        }
-        ],
-        onCommand: (e, args) => {
-          if (args.command === 'toggle-preheader') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
+        gridMenu: {
+          customItems: [{
+            title: 'pdf',
+            titleKey: 'Export as PDF',
+            command: 'exportAsPDF',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'excel',
+            titleKey: 'Export Excel',
+            command: 'exportAsExcel',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'expand',
+            titleKey: 'Expand Groups',
+            command: 'expandGroup',
+            iconCssClass: 'fas fa-expand-arrows-alt'
+          },
+          {
+            title: 'collapse',
+            titleKey: 'Collapse Groups',
+            command: 'collapseGroup',
+            iconCssClass: 'fas fa-compress'
+          },
+          {
+            title: 'cleargroup',
+            titleKey: 'Clear Groups',
+            command: 'cleargroup',
+            iconCssClass: 'fas fa-eraser'
           }
-          if (args.command === 'exportAsPDF') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+          ],
+          onCommand: (e, args) => {
+            if (args.command === 'toggle-preheader') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.clearGrouping();
+            }
+            if (args.command === 'exportAsPDF') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 
-            this.exportAsPDF(this.dataset);
-          }
-          if (args.command === 'expandGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.expandAllGroups();
-          }
-          if (args.command === 'collapseGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.collapseAllGroups();
-          }
-          if (args.command === 'cleargroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsExcel') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.exportAsPDF(this.dataset);
+            }
+            if (args.command === 'expandGroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.expandAllGroups();
+            }
+            if (args.command === 'collapseGroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.collapseAllGroups();
+            }
+            if (args.command === 'cleargroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.clearGrouping();
+            }
+            if (args.command === 'exportAsExcel') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 
-            this.exportToExcel(this.dataset);
-          }
-          if (args.command === 'export-csv') {
-            // this.exportToFile('csv');
-          }
-        },
-        onColumnsChanged: (e, args) => {
-          this.updateTotalRow(this.angularGrid.slickGrid);
-        },
-      },
-      draggableGrouping: {
-        dropPlaceHolderText: 'Drop a column header here to group by the column',
-        // groupIconCssClass: 'fa fa-outdent',
-        deleteIconCssClass: 'fa fa-times',
-        onGroupChanged: (e, args) => {
-          this.groupColumns = [];
-          this.groupColumns = args.groupColumns;
-          this.onGroupChanged(args && args.groupColumns);
-          setTimeout(() => {
+              this.exportToExcel(this.dataset);
+            }
+            if (args.command === 'export-csv') {
+              // this.exportToFile('csv');
+            }
+          },
+          onColumnsChanged: (e, args) => {
             this.updateTotalRow(this.angularGrid.slickGrid);
-          }, 100);
-        },
-        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
-    };
-    let repoArray = [];
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.columnDefinitions = [
-      {
-        id: 'srno',
-        name: 'SNo.',
-        field: 'srno',
-        sortable: true,
-        width: 15,
-
-      },
-      {
-        id: 'receipt_no', name: 'GRN.', field: 'receipt_no', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        formatter: this.receiptFormatter,
-        grouping: {
-          getter: 'receipt_no',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
           },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
         },
-      }
-      ,
-      {
-        id: 'receipt_date', name: 'Date', field: 'receipt_date', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40,
-        grouping: {
-          getter: 'receipt_date',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+        draggableGrouping: {
+          dropPlaceHolderText: 'Drop a column header here to group by the column',
+          // groupIconCssClass: 'fa fa-outdent',
+          deleteIconCssClass: 'fa fa-times',
+          onGroupChanged: (e, args) => {
+            this.groupColumns = [];
+            this.groupColumns = args.groupColumns;
+            this.onGroupChanged(args && args.groupColumns);
+            setTimeout(() => {
+              this.updateTotalRow(this.angularGrid.slickGrid);
+            }, 100);
           },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
+          onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+        }
+      };
+      let repoArray = [];
+      this.columnDefinitions = [];
+      this.dataset = [];
+      this.columnDefinitions = [
+        {
+          id: 'srno',
+          name: 'SNo.',
+          field: 'srno',
+          sortable: true,
+          width: 15,
+
         },
-      },
-      {
-        id: 'particular', name: 'Particular', field: 'particular', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-      {
-        id: 'qty', name: 'Qty', field: 'qty', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-      {
-        id: 'rate', name: 'Rate', field: 'rate', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-      {
-        id: 'amt', name: 'Amount', field: 'amt', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-      {
-        id: 'location', name: 'Location', field: 'location', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-
-      {
-        id: 'dept', name: 'Department', field: 'dept', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-      {
-        id: 'bno', name: 'Bill No.', field: 'bno', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      },
-
-      {
-        id: 'vendor_id', name: 'Vendor', field: 'vendor_id', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        grouping: {
-          getter: 'vendor_id',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+        {
+          id: 'receipt_date', name: 'Date', field: 'receipt_date', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 40,
+          grouping: {
+            getter: 'receipt_date',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
           },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
         },
+        {
+          id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+          formatter: this.receiptFormatter,
+          grouping: {
+            getter: 'receipt_no',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        },
+        {
+          id: 'item_code', name: 'Item', field: 'item_code', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 40,
+          grouping: {
+            getter: 'item_code',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        },
+        
+        
+        {
+          id: 'location', name: 'Location', field: 'location', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          grouping: {
+            getter: 'location',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        },
+        
+        {
+          id: 'class', name: 'Class', field: 'class', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          grouping: {
+            getter: 'class',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false,
+          },
+        },
+        
+        {
+          id: 'rate', name: 'Rate', field: 'rate', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+        }
+        ,
+        {
+          id: 'count', name: 'Qty', field: 'count', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+        }
+        // ,
+        // {
+        //   id: 'contact', name: 'Contact No.', field: 'contact', sortable: true,
+        //   filterable: true,
+        //   filterSearchType: FieldType.string,
+        // }
+        ,
+        {
+          id: 'bill_total', name: 'Amount', field: 'bill_total', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 40,
+          groupTotalsFormatter: this.sumTotalsFormatter,
+          formatter: this.checkTotalFormatter,
+        },
+        {
+          id: 'emp_id', name: 'Sold To', field: 'emp_id', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+          grouping: {
+            getter: 'emp_id',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        },
+        {
+          id: 'dept_id', name: 'Department', field: 'dept_id', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+          grouping: {
+            getter: 'dept_id',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        },
+        {
+          id: 'mop', name: 'MOP', field: 'mop', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+        },
+        {
+          id: 'status', name: 'Status', field: 'status', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          grouping: {
+            getter: 'status',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false,
+          },
+        },
+        {
+          id: 'created_by', name: 'Created By', field: 'created_by', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          grouping: {
+            getter: 'created_by',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false,
+          },
+        }
+        
+      ];
+      let inputJson: any = {};
+      inputJson = {
+        "status": this.reportFilterForm.value.status,
+        "item_location": this.reportFilterForm.value.locationid,
+        "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
+        "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd')
       }
-      // ,
-      // {
-      //   id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
-      //   filterable: true,
-      //   filterSearchType: FieldType.string,
-      //   grouping: {
-      //     getter: 'vendor_name',
-      //     formatter: (g) => {
-      //       return `${g.value}  <span style="color:green">(${g.count})</span>`;
-      //     },
-      //     aggregators: this.aggregatearray,
-      //     aggregateCollapsed: true,
-      //     collapsed: false
-      //   },
-      // }
-      ,
-      // {
-      //   id: 'vendor_category', name: 'Vendor Category', field: 'vendor_category', sortable: true,
-      //   filterable: true,
-      //   filterSearchType: FieldType.string,
-      // }
-      // ,
-      {
-        id: 'contact', name: 'Vendor Contact', field: 'contact', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-      ,
-      // {
-      //   id: 'email', name: 'Vendor Email', field: 'email', sortable: true,
-      //   filterable: true,
-      //   filterSearchType: FieldType.string
-      // },
-      {
-        id: 'created_by', name: 'Created By', field: 'created_by', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-    ];
-    this.inventory.getOrderMasterFilter({ 'pm_type': "GR","from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
-    "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd') }).subscribe((result: any) => {
-      if (result) {
-        repoArray = result;
-        let ind = 0;
-        for (let item of repoArray) {
-          for (let check of item.pm_item_details) {
-            let data_pic: any = {};
-            let deptObj: any = {}
-            for (let data_i of this.itemData2) {
-              if (data_i.location_id == check.item_location) {
-                data_pic = data_i;
-                break
-              }
-            }
-            for (let data_i of this.itemData) {
-              if (data_i.item_code == check.item_code) {
-                deptObj = data_i;
-                break;
-              }
-            }
-            let obj: any = {};
-            obj['id'] = ind + 1;
-            obj['srno'] = ind + 1;
-            obj['receipt_no'] = item.pm_id;
-            obj['particular'] = check.item_code + ' - ' + check.item_name;
-            obj['qty'] = check.item_quantity + ' ' + check.item_units;
-            obj['rate'] = check.item_price;
-            obj['amt'] = parseInt(check.item_quantity) * parseInt(check.item_price);
-            obj['location'] = data_pic ? data_pic.location_id + ' - ' + data_pic.location_name : '-';
-            obj['dept'] = deptObj.item_category.name;
-            obj['bno'] = item.pm_details ? item.pm_details.invoice_no : '-';
-            obj['receipt_date'] = item.pm_created ? this.CommonService.dateConvertion(item.pm_created.created_date, 'dd-MMM-y') : '-';
-            obj['created_by'] = item.pm_created ? new CapitalizePipe().transform(item.pm_created.created_by_name) : '-';
-            obj['vendor_id'] = (item.pm_vendor ? item.pm_vendor.ven_id : '-') + ' - ' + (item.pm_vendor ? new CapitalizePipe().transform(item.pm_vendor.ven_name) : '-');
-            obj['vendor_name'] = item.pm_vendor ? new CapitalizePipe().transform(item.pm_vendor.ven_name) : '-';
-            obj['vendor_category'] = item.pm_vendor ? item.pm_vendor.ven_category : '-';
-            obj['contact'] = item.pm_vendor ? item.pm_vendor.ven_contact : '-';
-            obj['email'] = item.pm_vendor ? item.pm_vendor.ven_email : '-';
-            let isAvailable = true;
-            console.log("i am here-----------", this.objectFilter);
-            
-            if (Object.keys(this.objectFilter).length > 0) {
-              if (this.objectFilter.created_by && item.pm_created) {
-                if (!this.objectFilter.created_by.includes(item.pm_created.created_by_name) && !this.objectFilter.created_by.includes(item.pm_created.created_by_name)) {
-                  isAvailable = false
+      this.inventory.storeCollection(inputJson).subscribe((result: any) => {
+        if (result) {
+          repoArray = result;
+          let ind = 0;
+          for (let item of repoArray) 
+          {
+            for (let data of item.bill_details) 
+            {
+              // let count = item.bill_details.reduce((a,b) => a += b.item_quantity,0)
+              let data_pic:any = {};
+              for(let data_i of this.itemData) {
+                if(data_i.item_code == data.item_code) {
+                  data_pic = data_i;
+                  break;
                 }
               }
-              if (this.objectFilter.item_code) {
-                if (!this.objectFilter.item_code.includes(obj['dept'])) {
-                  isAvailable = false
+              let data_imp:any = {};
+              for(let data_i of this.allEmployee) {
+                if(data_i.emp_login_id == item.created_by) {
+                  data_imp = data_i;
+                  break;
                 }
+                // console.log("i amhere", data_i.emp_login_id, data.created_by);
               }
-              if (this.objectFilter.item_location) {
-                console.log("-----------------------", this.objectFilter.item_location);
-
-                if (!this.objectFilter.item_location.includes(data_pic.location_id)) {
-                  isAvailable = false
+              
+              let obj: any = {};
+              obj['id'] = ind;
+              obj['dept_id'] = data_pic.item_category.name;
+              obj['item_code'] = data.item_code + ' - ' + data.item_name;
+              obj['srno'] = ind + 1;
+              obj['rate'] = data.item_selling_price
+              obj['receipt_no'] = item.bill_no;
+              obj['receipt_date'] = item.created_date ? this.CommonService.dateConvertion(item.created_date, 'dd-MMM-y') : '-';
+              if (item.buyer_details.au_role_id == 3) {
+                obj['emp_id'] = 'E - ' + item.buyer_details.emp_id + ' - ' + item.buyer_details.au_full_name;
+                obj['name'] = item.buyer_details.au_full_name;
+                obj['contact'] = item.buyer_details.au_mobile;
+              }
+              else if (item.buyer_details.au_role_id == 4) {
+                obj['emp_id'] =   ((item.buyer_details.em_admission_no != 0) ? ('S - '+ item.buyer_details.em_admission_no): ('P - '+ item.buyer_details.em_provisional_admission_no))  + ' - ' + item.buyer_details.au_full_name;
+                obj['name'] = item.buyer_details.au_full_name;
+                obj['contact'] = item.buyer_details.active_contact;
+              } else {
+                obj['emp_id'] =   'O - Nilesh Shukla';
+                obj['name'] = item.buyer_details.au_full_name;
+                obj['contact'] = item.buyer_details.active_contact;
+                
+              }
+              obj['count'] = data.item_quantity + ' - ' + (data_pic.item_units.name ? data_pic.item_units.name: data_pic.item_units.id);
+              obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_id +' - '+item.location_details[0].location_hierarchy : '' ;
+              obj['action'] = item;
+              obj['class'] = (item.buyer_details.class_name? item.buyer_details.class_name: '')+'-'+(item.buyer_details.sec_name? item.buyer_details.sec_name: '');
+              obj['mop'] = new TitleCasePipe().transform(item.mop);
+              obj['status'] = new TitleCasePipe().transform(item.status);
+              obj['bill_total'] = new TitleCasePipe().transform(item.status) == 'Canceled'?  -data.total_price:data.total_price ;
+              obj['au_role_id'] = item.buyer_details.au_role_id;
+              obj['bill_details'] = item.bill_details;
+              obj['created_by'] = data_imp.emp_name;
+              let isAvailable = true;
+              if(Object.keys(this.objectFilter).length > 0) {
+                if(this.objectFilter.created_by) {
+                  if(!this.objectFilter.created_by.includes(obj['created_by']) && !this.objectFilter.created_by.includes(item.created_by)) {
+                    isAvailable = false
+                  }
                 }
-              }
-              if (this.objectFilter.vendor && item.pm_vendor) {
-                if (!this.objectFilter.created_by.includes(item.pm_vendor.ven_id) && !this.objectFilter.created_by.includes(item.pm_vendor.ven_name)) {
-                  isAvailable = false
+                if(this.objectFilter.item_code) {
+                  if(!this.objectFilter.item_code.includes(obj['dept_id'])) {
+                    isAvailable = false
+                  }
                 }
+                if(this.objectFilter.item_location) {
+                  console.log("-----------------------", this.objectFilter.item_location, item.location_details[0].location_id);
+                  
+                  if(!this.objectFilter.item_location.includes(item.location_details[0].location_id)) {
+                    isAvailable = false
+                  }
+                }
+                
+              } else {
+                isAvailable = true;
               }
-
-            } else {
-              isAvailable = true;
-            }
-            if (isAvailable) {
-              this.dataset.push(obj);
-              ind++;
+              if(isAvailable) {
+                this.dataset.push(obj);
+                ind++;
+              }
+              
             }
           }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['srno'] = '';
+          obj3['receipt_no'] = 'Grand Total';
+          obj3['receipt_date'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
+          obj3['contact'] = '';
+          obj3['count'] = '';
+          obj3['rate'] = '';
+          obj3['item_code'] = '';
+          obj3['location'] = '';
+          obj3['class'] = '';
+          obj3['mop'] = '';
+          obj3['dept_id'] = '';
+          obj3['status'] = '';
+          obj3['created_by'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(this.dataset.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('bill_total'));
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 350;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 450;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
+          this.tableFlag = true;
+          this.nodataFlag = false;
+        } else {
+          this.nodataFlag = true;
+          this.tableFlag = true;
         }
-        if (this.dataset.length <= 5) {
-          this.gridHeight = 350;
-        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-          this.gridHeight = 450;
-        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-          this.gridHeight = 550;
-        } else if (this.dataset.length > 20) {
-          this.gridHeight = 750;
-        }
-        this.tableFlag = true;
-        this.nodataFlag = false;
         setTimeout(() => this.groupByPaymentMode(), 2);
-        setTimeout(() => this.groupByBankName(), 2);
-      } else {
-        this.nodataFlag = true;
-        this.tableFlag = true;
-      }
-    });
-    this.objectFilter = {};
+				setTimeout(() => this.groupByBankName(), 2);
+        this.objectFilter = {}
+      });
+    } else {
+      this.CommonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
 
   }
-
   groupByPaymentMode() {
-    this.dataviewObj.setGrouping({
-      getter: 'receipt_date',
-      formatter: (g) => {
-        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-      },
-      comparer: (a, b) => {
-        // (optional) comparer is helpful to sort the grouped data
-        // code below will sort the grouped value in ascending order
-
-        return Sorters.date(a, b, SortDirectionNumber.desc);
-      },
-      aggregators: this.aggregatearray,
-      aggregateCollapsed: true,
-      collapsed: false,
-    });
-    this.draggableGroupingPlugin.setDroppedGroups('receipt_date');
-  }
-  groupByBankName() {
-    this.dataviewObj.setGrouping({
-      getter: 'receipt_no',
-      formatter: (g) => {
-        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-      },
-      comparer: (a, b) => {
-        // (optional) comparer is helpful to sort the grouped data
-        // code below will sort the grouped value in ascending order
-        return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-      },
-      aggregators: this.aggregatearray,
-      aggregateCollapsed: true,
-      collapsed: false,
-    });
-    this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
-  }
-
-  getReport() {
-    this.dataArr = [];
-    this.totalRow = {};
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.tableFlag = false;
-    this.nodataFlag = false;
-    this.gridOptions = {
-      enableDraggableGrouping: true,
-      createPreHeaderPanel: true,
-      showPreHeaderPanel: true,
-      enableHeaderMenu: true,
-      preHeaderPanelHeight: 40,
-      enableFiltering: true,
-      enableSorting: true,
-      enableColumnReorder: true,
-      createFooterRow: true,
-      showFooterRow: true,
-      footerRowHeight: 35,
-      enableExcelCopyBuffer: true,
-      fullWidthRows: true,
-      enableAutoTooltip: true,
-      enableCellNavigation: true,
-      headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',
-        iconSortAscCommand: 'fas fa-sort-up',
-        iconSortDescCommand: 'fas fa-sort-down',
-        title: 'Sort'
-      },
-      exportOptions: {
-        sanitizeDataExport: true,
-        exportWithFormatter: true
-      },
-      gridMenu: {
-        customItems: [{
-          title: 'pdf',
-          titleKey: 'Export as PDF',
-          command: 'exportAsPDF',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'excel',
-          titleKey: 'Export Excel',
-          command: 'exportAsExcel',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'expand',
-          titleKey: 'Expand Groups',
-          command: 'expandGroup',
-          iconCssClass: 'fas fa-expand-arrows-alt'
-        },
-        {
-          title: 'collapse',
-          titleKey: 'Collapse Groups',
-          command: 'collapseGroup',
-          iconCssClass: 'fas fa-compress'
-        },
-        {
-          title: 'cleargroup',
-          titleKey: 'Clear Groups',
-          command: 'cleargroup',
-          iconCssClass: 'fas fa-eraser'
-        }
-        ],
-        onCommand: (e, args) => {
-          if (args.command === 'toggle-preheader') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsPDF') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportAsPDF(this.dataset);
-          }
-          if (args.command === 'expandGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.expandAllGroups();
-          }
-          if (args.command === 'collapseGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.collapseAllGroups();
-          }
-          if (args.command === 'cleargroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsExcel') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportToExcel(this.dataset);
-          }
-          if (args.command === 'export-csv') {
-            // this.exportToFile('csv');
-          }
-        },
-        onColumnsChanged: (e, args) => {
-          this.updateTotalRow(this.angularGrid.slickGrid);
-        },
-      },
-      draggableGrouping: {
-        dropPlaceHolderText: 'Drop a column header here to group by the column',
-        // groupIconCssClass: 'fa fa-outdent',
-        deleteIconCssClass: 'fa fa-times',
-        onGroupChanged: (e, args) => {
-          this.groupColumns = [];
-          this.groupColumns = args.groupColumns;
-          this.onGroupChanged(args && args.groupColumns);
-          setTimeout(() => {
-            this.updateTotalRow(this.angularGrid.slickGrid);
-          }, 100);
-        },
-        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
-    };
-    let repoArray = [];
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.columnDefinitions = [
-      {
-        id: 'srno',
-        name: 'SNo.',
-        field: 'srno',
-        sortable: true,
-        width: 15,
-
-      },
-      {
-        id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        formatter: this.receiptFormatter
-      }
-      ,
-      {
-        id: 'receipt_date', name: 'Receipt Date', field: 'receipt_date', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40,
-        grouping: {
-          getter: 'receipt_date',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-      }
-      ,
-      {
-        id: 'created_by', name: 'Created By', field: 'created_by', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-      ,
-      {
-        id: 'vendor_id', name: 'Vendor ', field: 'vendor_id', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        grouping: {
-          getter: 'vendor_id',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-      }
-      // ,
-      // {
-      //   id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
-      //   filterable: true,
-      //   filterSearchType: FieldType.string,
-      //   grouping: {
-      //     getter: 'vendor_name',
-      //     formatter: (g) => {
-      //       return `${g.value}  <span style="color:green">(${g.count})</span>`;
-      //     },
-      //     aggregators: this.aggregatearray,
-      //     aggregateCollapsed: true,
-      //     collapsed: false
-      //   },
-      // }
-      ,
-      {
-        id: 'vendor_category', name: 'Vendor Category', field: 'vendor_category', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      }
-      ,
-      {
-        id: 'contact', name: 'Vendor Contact', field: 'contact', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-      ,
-      {
-        id: 'email', name: 'Vendor Email', field: 'email', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string
-      }
-    ];
-    this.inventory.getOrderMaster({ 'pm_type': "GR" }).subscribe((result: any) => {
-      if (result) {
-        repoArray = result;
-        let ind = 0;
-        for (let item of repoArray) {
-          let obj: any = {};
-          obj['id'] = item.pm_id + 1;
-          obj['srno'] = ind + 1;
-          obj['receipt_no'] = item.pm_id;
-          obj['receipt_date'] = item.pm_created ? this.CommonService.dateConvertion(item.pm_created.created_date, 'dd-MMM-y') : '-';
-          obj['created_by'] = item.pm_created ? new CapitalizePipe().transform(item.pm_created.created_by_name) : '-';
-          obj['vendor_id'] = (item.pm_vendor ? item.pm_vendor.ven_id : '-') + ' - ' + (item.pm_vendor ? new CapitalizePipe().transform(item.pm_vendor.ven_name) : '-');
-          obj['vendor_name'] = item.pm_vendor ? new CapitalizePipe().transform(item.pm_vendor.ven_name) : '-';
-          obj['vendor_category'] = item.pm_vendor ? item.pm_vendor.ven_category : '-';
-          obj['contact'] = item.pm_vendor ? item.pm_vendor.ven_contact : '-';
-          obj['email'] = item.pm_vendor ? item.pm_vendor.ven_email : '-';
-          this.dataset.push(obj);
-          ind++;
-        }
-        if (this.dataset.length <= 5) {
-          this.gridHeight = 350;
-        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-          this.gridHeight = 450;
-        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-          this.gridHeight = 550;
-        } else if (this.dataset.length > 20) {
-          this.gridHeight = 750;
-        }
-        this.tableFlag = true;
-        this.nodataFlag = false;
-      } else {
-        this.nodataFlag = true;
-        this.tableFlag = true;
-      }
-    });
-
-
-  }
+		this.dataviewObj.setGrouping({
+			getter: 'receipt_date',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+        
+				return Sorters.date(a, b, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('receipt_date');
+	}
+	groupByBankName() {
+		this.dataviewObj.setGrouping({
+			getter: 'receipt_no',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
+	}
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
     this.clearGrouping();
@@ -865,32 +736,118 @@ export class ProcurementReportComponent implements OnInit {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
-    //this.updateTotalRow(angularGrid.slickGrid);
+    this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
-    // if (this.totalRow) {
-    //   let columnIdx = grid.getColumns().length;
-    //   while (columnIdx--) {
-    //     const columnId = grid.getColumns()[columnIdx].id;
-    //     const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-    //     columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
-    //   }
-    // }
+    if (this.totalRow) {
+      let columnIdx = grid.getColumns().length;
+      while (columnIdx--) {
+        const columnId = grid.getColumns()[columnIdx].id;
+        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+      }
+    }
   }
   receiptFormatter(row, cell, value, columnDef, dataContext) {
     return '<a style="text-decoration:underline !important;cursor:pointer">' + value + '</a>';
   }
   onCellClicked(e, args) {
+    if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
+			const index = this.rowsChosen.indexOf(args.row);
+			if (index === -1) {
+				this.rowsChosen.push(args.row);
+			} else {
+				this.rowsChosen.splice(index, 1);
+			}
+			const item = args.grid.getDataItem(args.row);
+			const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
+			if (index2 === -1) {
+				this.rowChosenData.push({
+					data: item,
+					index: args.row
+				});
+			} else {
+				this.rowChosenData.splice(index2, 1);
+			}
+			console.log('this.rowChosenData',this.rowChosenData);
+		}
     if (args.cell === args.grid.getColumnIndex('receipt_no')) {
       const item: any = args.grid.getDataItem(args.row);
       if (item['receipt_no']) {
-        this.actionList(Number(item['receipt_no']), false);
+        this.actionList(item, false);
       }
     }
   }
-  actionList(pm_id, action) {
-    this.submitParam.pm_id = pm_id;
-    this.receiptModal.openModal(this.submitParam);
+  onSelectedRowsChanged(e, args) {
+		if (args.rows.length === this.dataset.length) {
+			this.rowChosenData = [];
+			this.rowsChosen = args.rows;
+			for (const item of this.rowsChosen) {
+				this.rowChosenData.push({
+					data: this.dataset[item],
+					index: item
+				});
+			}
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else if (args.rows.length === 0) {
+			this.rowsChosen = [];
+			this.rowChosenData = [];
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else {
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		}
+  }
+  deleteSaleReceipt(value){
+    console.log('value -----',value);
+		if(value.reason_id && value.reason_remark) {
+      const param:any[] = [];
+      const data:any={};
+			data.reason_id = value.reason_id;
+			data.reason_remark = value.reason_remark;
+      data.status = 'canceled';
+      if(value.inv_id.length > 0){
+        value.inv_id.forEach(element => {
+          param.push(element.data.action.bill_id);
+        });
+        this.inventory.deleteSaleReeipt({bill_id:param,data:data}).subscribe((result:any) => {
+          if(result && result.status == 'ok'){
+            this.CommonService.showSuccessErrorMessage(result.data,'success');
+          }
+          this.changeReportType();
+        })
+      }
+		}
+  }
+  deleteModal() {
+    console.log(this.rowChosenData);
+		this.deleteWithReasonModal.openModal(this.rowChosenData);
+		// const change: any = this.deleteWithReasonModal.subscribeModalChange();
+		// change.afterClosed().subscribe((res: any) => {
+		// 	if (res && res.data && res.data.length > 0) {
+		// 		this.rowsChosen = [];
+		// 		this.rowChosenData = [];
+		// 		for (const item of res.data) {
+		// 			this.rowsChosen.push(item.index);
+		// 		}
+		// 		this.gridObj.setSelectedRows(this.rowsChosen);
+		// 		this.rowChosenData = res.data;
+
+		// 	} else {
+		// 		this.rowsChosen = [];
+		// 		this.rowChosenData = [];
+		// 		this.gridObj.setSelectedRows(this.rowsChosen);
+		// 	}
+		// });
+	}
+  actionList(item, action) {
+    this.billDetailsModal.openModal(item);
+  }
+  sumTotalsFormatter(totals, columnDef) {
+    const val = totals.sum && totals.sum[columnDef.field];
+    if (val != null) {
+      return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+    }
+    return '';
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];
@@ -899,10 +856,15 @@ export class ProcurementReportComponent implements OnInit {
     this.levelTotalFooter = [];
     this.levelSubtotalFooter = [];
     this.exportColumnDefinitions = [];
-    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    for (const item of exportColumnDefinitions) {
+      if(!(item.id.includes('checkbox_select'))) {
+        this.exportColumnDefinitions.push(item)
+      }
+    }
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Procurement Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -1005,12 +967,12 @@ export class ProcurementReportComponent implements OnInit {
           doc.setFillColor('#c8d6e5');
         }
         // grand total
-        // if (data.row.index === rows.length - 1) {
-        //   doc.setFontStyle('bold');
-        //   doc.setFontSize('18');
-        //   doc.setTextColor('#ffffff');
-        //   doc.setFillColor(67, 160, 71);
-        // }
+        if (data.row.index === rows.length - 1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(67, 160, 71);
+        }
       },
       headStyles: {
         fontStyle: 'bold',
@@ -1129,14 +1091,22 @@ export class ProcurementReportComponent implements OnInit {
 
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['dept_id']='';
+          obj3['item_code']='';
+          obj3['rate']='';
+          obj3['count']='';
+          obj3['location']='';
+          obj3['action']='';
+          obj3['class']='';
+          obj3['mop']='';
+          obj3['status']='';
+          obj3['au_role_id']='';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1170,14 +1140,22 @@ export class ProcurementReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['dept_id']='';
+          obj3['item_code']='';
+          obj3['rate']='';
+          obj3['count']='';
+          obj3['location']='';
+          obj3['action']='';
+          obj3['class']='';
+          obj3['mop']='';
+          obj3['status']='';
+          obj3['au_role_id']='';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1205,14 +1183,19 @@ export class ProcurementReportComponent implements OnInit {
       return 'Sub Total (' + groupItem.value + ')';
     }
   }
-
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
   exportToExcel(json: any[]) {
     this.notFormatedCellArray = [];
     let reportType: any = '';
     const columns: any[] = [];
     const columValue: any[] = [];
     this.exportColumnDefinitions = [];
-    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    for (const item of exportColumnDefinitions) {
+      if(!(item.id.includes('checkbox_select'))) {
+        this.exportColumnDefinitions.push(item)
+      }
+    }
     for (const item of this.exportColumnDefinitions) {
       columns.push({
         key: item.id,
@@ -1221,9 +1204,9 @@ export class ProcurementReportComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('procurement_report') + this.sessionName;
+    reportType = new TitleCasePipe().transform('store_detail_sales_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('procurement report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -1443,14 +1426,12 @@ export class ProcurementReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           // style row having total
@@ -1510,14 +1491,12 @@ export class ProcurementReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           if (groupItem.level === 0) {
@@ -1571,27 +1550,33 @@ export class ProcurementReportComponent implements OnInit {
     const max = Math.max.apply(null, res);
     return max2 > max ? max2 : max;
   }
-  openSearchDialog = (data) => { this.searchModal.openModal(data); }
-  searchOk($event) {
-    console.log("i am here", $event);
-    this.objectFilter = {}
-    for (let i = 0; i < $event.filters.length; i++) {
-      if (this.objectFilter[$event.filters[i].filter_type] != '') {
-        if (this.objectFilter[$event.filters[i].filter_type]) {
-          this.objectFilter[$event.filters[i].filter_type].push($event.filters[i].filter_value)
-        } else {
-          this.objectFilter[$event.filters[i].filter_type] = [$event.filters[i].filter_value]
-        }
-      }
-    }
-
-    // this.getAllEmployee($event);
-  }
   checkReturn(data) {
     if (Number(data)) {
       return Number(data);
     } else {
       return data;
     }
+  }
+  checkTotalFormatter(row, cell, value, columnDef, dataContext) {
+    if (value === 0) {
+      return 0;
+    } else {
+      return new IndianCurrency().transform(value);
+    }
+  }
+  searchOk($event) {
+    console.log("i am here", $event);
+    this.objectFilter = {}
+    for(let i = 0; i <$event.filters.length; i++) {
+     if(this.objectFilter[$event.filters[i].filter_type] != '') {
+      if(this.objectFilter[$event.filters[i].filter_type]) {
+        this.objectFilter[$event.filters[i].filter_type].push($event.filters[i].filter_value)
+      } else {
+        this.objectFilter[$event.filters[i].filter_type] = [$event.filters[i].filter_value]
+      }
+     }
+    }
+    
+    // this.getAllEmployee($event);
   }
 }
