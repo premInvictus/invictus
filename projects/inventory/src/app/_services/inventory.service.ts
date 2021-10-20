@@ -284,8 +284,11 @@ export class InventoryService {
     return this.http.post(environment.apiInvUrl + '/store-incharge/delete-store-incharge', value);
   }
   generateGatePass(value){
-    this.service.startLoading();
-    console.log("gate pass api");    
+    this.service.startLoading(); 
     return this.http.post(environment.apiInvUrl + '/branch-transfer/generateGatePass', value);
+  }
+  printGoodsReceipt(value: any) {
+    this.service.startLoading();  
+    return this.http.post(environment.apiInvUrl + '/requistion-master/printGoodsReceipt', value);
   }
 }

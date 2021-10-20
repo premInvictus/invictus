@@ -314,9 +314,11 @@
           </form>
           <div class="row margin-top-20">
             <div class="col-12 text-center">
-              <button mat-raised-button class="btn-success-green" *ngIf="this.finalRequistionArray.length > 0"
-                (click)="openSubmitModal()">Submit</button>
-              <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+              <button mat-raised-button class="btn-success-blue" *ngIf="this.finalRequistionArray.length > 0"
+                (click)="printGoodsReceipt($event);"><i class="fa fa-print" aria-hidden="true"></i> Submit & Print</button>
+                <button mat-raised-button class="btn-success-green margin-left-10" *ngIf="this.finalRequistionArray.length > 0"
+                  (click)="openSubmitModal()"><i class="fa fa-check-square" aria-hidden="true"></i> Submit</button>
+              <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
             </div>
           </div>
         </div>

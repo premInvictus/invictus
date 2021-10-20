@@ -486,7 +486,15 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   // }
 
 	downloadExcel() {
-		alert("Under Construction");
+    let workbook = new Excel.Workbook();
+    let worksheet = workbook.addWorksheet('Item Price');
+   
+    worksheet.columns = [
+      { header: 'Item Code', key: 'id', width: 10 },
+      { header: 'Item Name', key: 'name', width: 32 },
+      { header: 'Item Location', key: 'brand', width: 30, default: "location"},
+      { header: 'Price', key: 'price', width: 10, style: { font: { name: 'Arial Black', size:10} } },
+    ];
 	}
   getAllEmployee(){
     this.employeeArray = [];
