@@ -1,10 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import {BundleModalComponent} from '../../inventory-shared/bundle-modal/bundle-modal.component';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import * as Excel from 'exceljs/dist/exceljs';
+import { saveAs } from 'file-saver';
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+import { IndianCurrency } from 'projects/admin-app/src/app/_pipes';
+import * as XLSX from 'xlsx'; 
+import 'jspdf-autotable';
+import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 
 @Component({
   selector: 'app-assign-store',
@@ -14,6 +22,7 @@ import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 export class AssignStoreComponent implements OnInit,OnDestroy {
   assignStoreForm: FormGroup;
   existForm: FormGroup;
+  notFormatedCellArray: any[] = [];
   currentLocationId: any;
   created_date: any;
   locationDataArray: any[] = [];
@@ -33,6 +42,20 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   bundleArray: any[] = [];
   edit = false;
   bundleArrayMain: any[] = [];
+  schoolInfo: any;
+  currentTabIndex: number;
+  pageLength: number;
+  pageSize = 300;
+  pageSizeOptions = [100, 300, 1000];
+  tableDivFlag = false;
+  tabledataFlag = false;
+  ELEMENT_DATA: any[] = [];
+  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
+dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+@ViewChild(MatPaginator) paginator: MatPaginator;
+  priceForm: FormGroup;
+  uploadComponent: string;
+
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -45,7 +68,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit() {
-    
+    this.getSchool();
     this.getAllEmployee();
     this.buildForm();
     if (this.inventory.getAssignEmp()) {
@@ -74,7 +97,8 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
           // this.getBundle();
         }
       }
-    })
+    });
+    this.getAllAssignMaster();
   }
   ngOnDestroy(){
     this.inventory.setcurrentChildTab('');
@@ -88,75 +112,114 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
       exist_location_id: '',
       exist_emp_id: ''
     });
+
+    this.priceForm = this.fbuild.group({
+      item_selling_price : ''
+    });
     this.formGroupArray = [];
   }
-  applyFilter(filterValue: string) {
-		// this.bundleArray
-    // console.log("i am here", filterValue, this.bundleArrayMain, this.formGroupArray);
-    // if(this.bundleArrayMain.length > 0) {
-    //   this.bundleArray = this.bundleArrayMain.filter((el) => {
-    //     return el.item_name.includes(filterValue) || el.item_code == (filterValue)
-    //   })
-    //   this.formGroupArray = this.formGroupArray.filter((el) => {
-    //     return el.formGroup.value.item_name.includes(filterValue) || el.item_code == (filterValue)
-    //   })
-    // }
-    // this.formGroupArray = [];
-    // this.tableDataArrayMain = [];
-    let carr = [];
-    let frr = [];
-    console.log("i am here", filterValue.toLowerCase(), this.tableDataArrayMain);
-    if(this.bundleArrayMain.length > 0 ){
-      this.bundleArrayMain.map((el) => {
-        if(el.item_name.toLowerCase().includes(filterValue.toLowerCase()) ) {
-          console.log("i am here", el.item_name, filterValue);
-          
-          carr.push(el);
-          frr.push({
+
+  editPrice(item){
+    console.log("edit item ", item);
+    
+  }
+  uploadExcel(){
+    alert("Hi i am your upload helper");
+  }
+
+  downloadTemplate() {
+    if (this.uploadComponent === '') {
+      this.commonService.showSuccessErrorMessage('Please choose one component for which do you wish to download template', 'error');
+    } else {
+      this.inventory.downloadEmployeeExcel([
+        { component: this.uploadComponent }]).subscribe((result: any) => {
+          if (result) {
+            this.commonService.showSuccessErrorMessage('Download Successfully', 'success');
+            const length = result.fileUrl.split('/').length;
+            saveAs(result.fileUrl, result.fileUrl.split('/')[length - 1]);
+          } else {
+            this.commonService.showSuccessErrorMessage('Error While Downloading File', 'error');
+          }
+        });
+    }
+  }
+
+  getAllAssignMaster() {
+
+    if (this.assignStoreForm.valid) {
+      this.tableDataArray = [];
+      this.tableDataArrayMain = [];
+          this.formGroupArray = [];
+          this.itemArray = [];
+          var filterJson = {
+            "filters": [
+              {
+                "filter_type": "item_location",
+                "filter_value": this.locationId,
+                "type": "autopopulate"
+              }
+            ],
+            "page_index": 0
+          };
+         
+    this.ELEMENT_DATA = [];
+    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
+      if (result) {
+        this.itemArray = result.data;
+        let ind = 0;
+        this.tableDataArray = [];
+        for (let item of this.itemArray) {
+          this.tableDataArray.push({
+            item_code: item.item_code,
+            item_name: item.item_name,
+            item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
+            item_selling_price: this.getSellingPrice(item.item_code)
+          });
+          this.tableDataArrayMain.push({
+            item_code: item.item_code,
+            item_name: item.item_name,
+            item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
+            item_selling_price: ''
+          });
+          this.formGroupArray.push({
             formGroup: this.fbuild.group({
-              item_code: el.item_code,
-              item_name: el.item_name,
-              item_quantity: el.item_quantity,
-              item_selling_price: el.item_selling_price
+              item_code: item.item_code,
+              item_name: item.item_name,
+              item_quantity: item.item_location[0].item_qty,
+              item_selling_price: this.getSellingPrice(item.item_code)
             })
           });
         }
-        
-      });
-      if(frr.length > 0 ) {
-        this.bundleArray = carr;
-        this.formGroupArray = frr;
-      }
-      
-    }
-    carr = [];
-    frr = [];
-    console.log("i am here", filterValue.toLowerCase(), this.tableDataArrayMain);
-    if(this.tableDataArrayMain.length > 0 ){
-      this.tableDataArrayMain.map((el) => {
-        if(el.item_name.toLowerCase().includes(filterValue.toLowerCase()) ) {
-          console.log("i am here", el.item_name, filterValue);
-          
-          carr.push(el);
-          // frr.push({
-          //   formGroup: this.fbuild.group({
-          //     item_code: el.item_code,
-          //     item_name: el.item_name,
-          //     item_quantity: el.item_quantity,
-          //     item_selling_price: el.item_selling_price
-          //   })
-          // });
+        for (const item of this.itemArray) {
+          this.ELEMENT_DATA.push({
+            "position": ind + 1,            
+            "item_code": item.item_code,
+            "item_name": item.item_name,
+            "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
+            "item_selling_price": this.getSellingPrice(item.item_code),
+            "action": { 'item_code': item.item_code, 'status': item.status }
+          });
+          ind++;
         }
-        
-      });
-      if(carr.length > 0 ) {
-        this.tableDataArray = carr;
-        // this.formGroupArray = frr;
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.pageLength = this.ELEMENT_DATA.length;
+        this.dataSource.paginator = this.paginator;
+        this.tableDivFlag = true;
+        this.tabledataFlag = true;
       }
-      
+      console.log("get all items ", this.dataSource);
+    });
+
+
+    } else {
+      this.commonService.showSuccessErrorMessage('please fill required field', 'error');
     }
-    
-	}
+  }
+  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   editstoreincharge(){
     this.edit = true;
     if(this.assignEmpArray){
@@ -167,6 +230,264 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     }
     
   }
+
+
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+				console.log('this.schoolInfo 202', this.schoolInfo)
+				this.schoolInfo['disable'] = true;
+				this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
+				this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
+			}
+		});
+	}
+
+  downloadPdf() {
+    var prepare=[];
+    this.tableDataArray.forEach(e=>{
+      var tempObj =[];
+      tempObj.push(e.item_code);
+      tempObj.push(e.item_name);
+      tempObj.push( e.item_qty);
+      tempObj.push( e.item_selling_price);
+      prepare.push(tempObj);
+    });
+    const doc = new jsPDF('p', 'mm', 'a4');
+    doc.autoTable({
+        head: [['Item Code','Item Name','Item Quantity','Selling Price']],
+        body: prepare
+    });
+    doc.save('assign-item' + '.pdf');
+  }
+
+  fileName= 'assign_store.xlsx';  
+  exportExcel(): void 
+  {
+       /* table id is passed over here */   
+       let element = document.getElementById('excel-table'); 
+       const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+       delete (ws['O6'])
+
+       /* generate workbook and add the worksheet */
+       const wb: XLSX.WorkBook = XLSX.utils.book_new();
+       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+       /* save to file */
+       XLSX.writeFile(wb, this.fileName);
+			
+  }
+
+  // exportToExcel(json: any[]) {
+  //   this.notFormatedCellArray = [];
+  //   let reportType: any = '';
+  //   const columns: any[] = [];
+  //   const columValue: any[] = [];
+  //   let exportColumnDefinitions = this.displayedColumns;
+
+  //   for (const item of this.exportColumnDefinitions) {
+  //     columns.push({
+  //       key: item.id,
+  //       width: 10
+  //     });
+  //     columValue.push(item.name);
+  //   }
+  //   this.sessionName = this.getSessionName(this.session.ses_id);
+  //   reportType = new TitleCasePipe().transform('store_assign_report') + this.sessionName;
+  //   let reportType2: any = '';
+  //   reportType2 = new TitleCasePipe().transform('store assign report: ') + this.sessionName;
+  //   const fileName = reportType + '.xlsx';
+  //   const workbook = new Excel.Workbook();
+  //   const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+  //     { pageSetup: { fitToWidth: 7 } });
+  //   worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+  //   worksheet.getCell('A1').value =
+  //     new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+  //   worksheet.getCell('A1').alignment = { horizontal: 'left' };
+  //   worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+  //   worksheet.getCell('A2').value = reportType2;
+  //   worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+  //   worksheet.getRow(4).values = columValue;
+  //   worksheet.columns = columns;
+  //   if (this.dataviewObj.getGroups().length === 0) {
+  //     Object.keys(json).forEach(key => {
+  //       const obj: any = {};
+  //       for (const item2 of this.exportColumnDefinitions) {
+  //         obj[item2.id] = this.checkReturn(this.CommonService.htmlToText(json[key][item2.id]));
+
+  //       }
+  //       worksheet.addRow(obj);
+  //     });
+  //   } else {
+  //     // iterate all groups
+  //     this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
+  //   }
+  //   if (this.totalRow) {
+  //     worksheet.addRow(this.totalRow);
+  //   }
+  //   //style grand total
+  //   worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+  //     this.columnDefinitions.forEach(element => {
+  //       cell.font = {
+  //         color: { argb: 'ffffff' },
+  //         bold: true,
+  //         name: 'Arial',
+  //         size: 10
+  //       };
+  //       cell.alignment = { wrapText: true, horizontal: 'center' };
+  //       cell.fill = {
+  //         type: 'pattern',
+  //         pattern: 'solid',
+  //         fgColor: { argb: '439f47' },
+  //         bgColor: { argb: '439f47' }
+  //       };
+  //       cell.border = {
+  //         top: { style: 'thin' },
+  //         left: { style: 'thin' },
+  //         bottom: { style: 'thin' },
+  //         right: { style: 'thin' }
+  //       };
+  //     });
+  //   });
+  //   // style all row of excel
+  //   worksheet.eachRow((row, rowNum) => {
+  //     if (rowNum === 1) {
+  //       row.font = {
+  //         name: 'Arial',
+  //         size: 14,
+  //         bold: true
+  //       };
+  //     } else if (rowNum === 2) {
+  //       row.font = {
+  //         name: 'Arial',
+  //         size: 12,
+  //         bold: true
+  //       };
+  //     } else if (rowNum === 4) {
+  //       row.eachCell((cell) => {
+  //         cell.font = {
+  //           name: 'Arial',
+  //           size: 12,
+  //           bold: true
+  //         };
+  //         cell.fill = {
+  //           type: 'pattern',
+  //           pattern: 'solid',
+  //           fgColor: { argb: 'bdbdbd' },
+  //           bgColor: { argb: 'bdbdbd' },
+  //         };
+  //         cell.border = {
+  //           top: { style: 'thin' },
+  //           left: { style: 'thin' },
+  //           bottom: { style: 'thin' },
+  //           right: { style: 'thin' }
+  //         };
+  //         cell.alignment = { horizontal: 'center' };
+  //       });
+  //     } else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+  //       const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+  //       if (cellIndex === -1) {
+  //         row.eachCell((cell) => {
+  //           cell.font = {
+  //             name: 'Arial',
+  //             size: 10,
+  //           };
+  //           cell.alignment = { wrapText: true, horizontal: 'center' };
+  //         });
+  //         if (rowNum % 2 === 0) {
+  //           row.eachCell((cell) => {
+  //             cell.fill = {
+  //               type: 'pattern',
+  //               pattern: 'solid',
+  //               fgColor: { argb: 'ffffff' },
+  //               bgColor: { argb: 'ffffff' },
+  //             };
+  //             cell.border = {
+  //               top: { style: 'thin' },
+  //               left: { style: 'thin' },
+  //               bottom: { style: 'thin' },
+  //               right: { style: 'thin' }
+  //             };
+  //           });
+  //         } else {
+  //           row.eachCell((cell) => {
+  //             cell.fill = {
+  //               type: 'pattern',
+  //               pattern: 'solid',
+  //               fgColor: { argb: 'ffffff' },
+  //               bgColor: { argb: 'ffffff' },
+  //             };
+  //             cell.border = {
+  //               top: { style: 'thin' },
+  //               left: { style: 'thin' },
+  //               bottom: { style: 'thin' },
+  //               right: { style: 'thin' }
+  //             };
+  //           });
+  //         }
+
+  //       }
+  //     }
+  //   });
+
+  //   worksheet.addRow({});
+  //   if (this.groupColumns.length > 0) {
+  //     worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+  //       this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+  //     worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+  //     worksheet.getCell('A' + worksheet._rows.length).font = {
+  //       name: 'Arial',
+  //       size: 10,
+  //       bold: true
+  //     };
+  //   }
+
+  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+  //   // worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as:' + this.getParamValue();
+  //   worksheet.getCell('A' + worksheet._rows.length).font = {
+  //     name: 'Arial',
+  //     size: 10,
+  //     bold: true
+  //   };
+
+  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+  //   worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+  //   worksheet.getCell('A' + worksheet._rows.length).font = {
+  //     name: 'Arial',
+  //     size: 10,
+  //     bold: true
+  //   };
+
+  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+  //   worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+  //     + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+  //   worksheet.getCell('A' + worksheet._rows.length).font = {
+  //     name: 'Arial',
+  //     size: 10,
+  //     bold: true
+  //   };
+
+  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+  //   worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+  //   worksheet.getCell('A' + worksheet._rows.length).font = {
+  //     name: 'Arial',
+  //     size: 10,
+  //     bold: true
+  //   };
+  //   workbook.xlsx.writeBuffer().then(data => {
+  //     const blob = new Blob([data], { type: 'application/octet-stream' });
+  //     saveAs(blob, fileName);
+  //   });
+  // }
+
+	downloadExcel() {
+		alert("Under Construction");
+	}
   getAllEmployee(){
     this.employeeArray = [];
     this.commonService.getAllEmployee({emp_cat_id:2}).subscribe((result: any) => {
@@ -176,7 +497,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
     });
     // this.commonService.getFilterData({}).subscribe((result: any) => {
     //   if (result.status === 'ok') {
-    //     this.employeeArray = result.data;
+    //     tgetSchoolhis.employeeArray = result.data;
     //   }
     // });
   }
@@ -398,10 +719,12 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   }
   finalUpdate() {
     var finalJson: any = {};
-    const itemAssign: any[] = [];
+    const itemAssign: any[] = [];    
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
     }
+    console.log(itemAssign);
+
     const emp:any[] = [];
     for(let item of this.assignStoreForm.value.emp_id){
       const temp = this.employeeArray.find(e => e.emp_login_id == item);

@@ -98,6 +98,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/branch-transfer/findAll', value);
   }
+  getBranchTransferByFilter(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/findAllByFilter', value);
+  }
   itemChangeStatus(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/itemChangeStatus', value);
@@ -226,6 +230,10 @@ export class InventoryService {
     return this.http.post(environment.apiInvUrl + '/location/getAll', value);
     
   }
+  getAllCategories(value){
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/getAllCategories', value);    
+  }
   getGlobalSettingReplace(value) {
     this.service.startLoading();
     return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
@@ -282,5 +290,10 @@ export class InventoryService {
   deleteAssign(value) {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/store-incharge/delete-store-incharge', value);
+  }
+  generateGatePass(value){
+    this.service.startLoading();
+    console.log("gate pass api");    
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/generateGatePass', value);
   }
 }

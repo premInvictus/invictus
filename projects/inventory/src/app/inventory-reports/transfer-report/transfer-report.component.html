@@ -34,8 +34,8 @@
         <mat-label>Status</mat-label>
         <mat-select formControlName="status">
           <mat-option value="">All</mat-option>
-          <mat-option value="approved">Approved</mat-option>
-          <mat-option value="canceled">Canceled</mat-option>
+          <mat-option value="location-transfer">Internal</mat-option>
+          <mat-option value="branch-transfer">External</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -110,4 +110,4 @@
    [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete'"
    (deleteOk)="deleteSaleReceipt($event)">
 </app-delete-with-reason>
-<app-advanced-search-modal-2 (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal-2>
+<app-advanced-search-modal-4 (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal-4>

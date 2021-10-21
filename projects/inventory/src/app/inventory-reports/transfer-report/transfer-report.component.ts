@@ -128,28 +128,74 @@ export class TransferReportComponent implements OnInit {
     44: 'AR',
   };
   locationArray: any[] = [];
+  branchArray: any[];
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, public CommonService: CommonAPIService,
-    private erpCommonService: ErpCommonService, ) {
+    private erpCommonService: ErpCommonService,) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
-    this.allStoreIncharge();
+
     this.getSchool();
     this.getSession();
+    this.getBranch();
+    this.getAllLocations();
+    this.getBranchTransferData();
+
     this.buildForm();
     this.inventory.searchItemsFromMaster({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         // this.displayList(res.data);
         this.itemData = res.data;
-        
+
       }
     });
-    this.erpCommonService.getAllEmployee({}).subscribe((res:any) => {
+    this.erpCommonService.getAllEmployee({}).subscribe((res: any) => {
       console.log("--------------------", res);
       this.allEmployee = res;
     })
+  }
+  getBranch() {
+    this.branchArray = [];
+    this.inventory.getBranch({}).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.branchArray = result.data;
+      }
+    });
+  }
+  getAllLocations() {
+    this.locationArray = [];
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        console.log("all locations", result);
+        this.locationArray = result;
+      }
+    });
+  }
+  getBranchTransferData() {
+    this.inventory.getBranchTransfer({
+    }).subscribe((res: any) => {
+      console.log("get Branch Tranfers", res);
+      if (res && res.status === 'ok') {
+        console.log("i am data");
+        
+        // for (const item of res.data) {
+        //   this.BRANCH_TRANSFER_DATA.push({
+        //     srno: item.inv_bt_id,
+        //     date: item.created_date,
+        //     created_by: item.created_by.name,
+        //     branch_name: item.type == "branch-transfer" ? "External" : "Internal",
+        //     action: item,
+        //   })
+        //   ind++;
+        // }
+        console.log();
+
+        
+      }
+    });
   }
   buildForm() {
     this.reportFilterForm = this.fbuild.group({
@@ -211,7 +257,7 @@ export class TransferReportComponent implements OnInit {
   resetValues() {
     this.reportFilterForm.patchValue({
       'report_type': '',
-      'location_id' : '',
+      'location_id': '',
       'locationid': '',
       'status': '',
       'from_date': '',
@@ -220,10 +266,10 @@ export class TransferReportComponent implements OnInit {
     this.dataset = [];
     this.tableFlag = false;
   }
-  
+
   changeReportType() {
     console.log("i am here", this.objectFilter);
-    
+
     if (this.reportFilterForm.valid) {
       this.dataArr = [];
       this.totalRow = {};
@@ -357,12 +403,12 @@ export class TransferReportComponent implements OnInit {
 
         },
         {
-          id: 'receipt_date', name: 'Date', field: 'receipt_date', sortable: true,
+          id: 'ch_no', name: 'Ch No', field: 'ch_no', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           width: 40,
           grouping: {
-            getter: 'receipt_date',
+            getter: 'ch_no',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -372,13 +418,13 @@ export class TransferReportComponent implements OnInit {
           },
         },
         {
-          id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
+          id: 'date', name: 'Date', field: 'date', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           width: 25,
-          formatter: this.receiptFormatter,
+          // formatter: this.receiptFormatter,
           grouping: {
-            getter: 'receipt_no',
+            getter: 'date',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -388,12 +434,12 @@ export class TransferReportComponent implements OnInit {
           },
         },
         {
-          id: 'item_code', name: 'Item', field: 'item_code', sortable: true,
+          id: 'particulars', name: 'Particulars', field: 'particulars', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           width: 40,
           grouping: {
-            getter: 'item_code',
+            getter: 'particulars',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -402,14 +448,14 @@ export class TransferReportComponent implements OnInit {
             collapsed: false
           },
         },
-        
-        
+
+
         {
-          id: 'location', name: 'Location', field: 'location', sortable: true,
+          id: 'qty', name: 'Qty', field: 'qty', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           grouping: {
-            getter: 'location',
+            getter: 'qty',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -418,13 +464,13 @@ export class TransferReportComponent implements OnInit {
             collapsed: false
           },
         },
-        
+
         {
-          id: 'class', name: 'Class', field: 'class', sortable: true,
+          id: 'type', name: 'Type', field: 'type', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           grouping: {
-            getter: 'class',
+            getter: 'type',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -433,49 +479,19 @@ export class TransferReportComponent implements OnInit {
             collapsed: false,
           },
         },
-        
+
         {
-          id: 'rate', name: 'Rate', field: 'rate', sortable: true,
+          id: 'f_loc', name: 'From Location', field: 'f_loc', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           width: 25,
         }
         ,
         {
-          id: 'count', name: 'Qty', field: 'count', sortable: true,
+          id: 't_loc', name: 'To Location', field: 't_loc', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           width: 25,
-        }
-        // ,
-        // {
-        //   id: 'contact', name: 'Contact No.', field: 'contact', sortable: true,
-        //   filterable: true,
-        //   filterSearchType: FieldType.string,
-        // }
-        ,
-        {
-          id: 'bill_total', name: 'Amount', field: 'bill_total', sortable: true,
-          filterable: true,
-          filterSearchType: FieldType.string,
-          width: 40,
-          groupTotalsFormatter: this.sumTotalsFormatter,
-          formatter: this.checkTotalFormatter,
-        },
-        {
-          id: 'emp_id', name: 'Sold To', field: 'emp_id', sortable: true,
-          filterable: true,
-          filterSearchType: FieldType.string,
-          width: 25,
-          grouping: {
-            getter: 'emp_id',
-            formatter: (g) => {
-              return `${g.value}  <span style="color:green">(${g.count})</span>`;
-            },
-            aggregators: this.aggregatearray,
-            aggregateCollapsed: true,
-            collapsed: false
-          },
         },
         {
           id: 'dept_id', name: 'Department', field: 'dept_id', sortable: true,
@@ -492,17 +508,17 @@ export class TransferReportComponent implements OnInit {
             collapsed: false
           },
         },
+        // {
+        //   id: 'mop', name: 'MOP', field: 'mop', sortable: true,
+        //   filterable: true,
+        //   filterSearchType: FieldType.string,
+        // },
         {
-          id: 'mop', name: 'MOP', field: 'mop', sortable: true,
-          filterable: true,
-          filterSearchType: FieldType.string,
-        },
-        {
-          id: 'status', name: 'Status', field: 'status', sortable: true,
+          id: 'remark', name: 'Remark', field: 'remark', sortable: true,
           filterable: true,
           filterSearchType: FieldType.string,
           grouping: {
-            getter: 'status',
+            getter: 'remark',
             formatter: (g) => {
               return `${g.value}  <span style="color:green">(${g.count})</span>`;
             },
@@ -525,24 +541,31 @@ export class TransferReportComponent implements OnInit {
             collapsed: false,
           },
         }
-        
+
       ];
       let inputJson: any = {};
       inputJson = {
-        "status": this.reportFilterForm.value.status,
-        "item_location": this.reportFilterForm.value.locationid,
+        "type": this.reportFilterForm.value.status,
         "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
         "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd')
       }
-      this.inventory.storeCollection(inputJson).subscribe((result: any) => {
+      this.inventory.getBranchTransferByFilter(inputJson).subscribe((result: any) => {
         if (result) {
-          repoArray = result;
+          repoArray = result.data;
           let ind = 0;
-          for (let item of repoArray) 
-          {
-            for (let data of item.bill_details) 
-            {
+          for (let item of repoArray) {
+            for (let data of item.inv_item_details) {
               // let count = item.bill_details.reduce((a,b) => a += b.item_quantity,0)
+              let location_from : any = {}
+              let location_to : any = {}
+              for(let det_loc of this.locationArray) {
+                if(parseInt(item.branch_from) == det_loc.location_id) {
+                  location_from = det_loc
+                }
+                if(parseInt(item.branch_to) == det_loc.location_id) {
+                  location_to = det_loc
+                }
+              }
               let data_pic:any = {};
               for(let data_i of this.itemData) {
                 if(data_i.item_code == data.item_code) {
@@ -550,98 +573,77 @@ export class TransferReportComponent implements OnInit {
                   break;
                 }
               }
-              let data_imp:any = {};
-              for(let data_i of this.allEmployee) {
-                if(data_i.emp_login_id == item.created_by) {
-                  data_imp = data_i;
-                  break;
-                }
-                // console.log("i amhere", data_i.emp_login_id, data.created_by);
-              }
-              
+
               let obj: any = {};
               obj['id'] = ind;
-              obj['dept_id'] = data_pic.item_category.name;
-              obj['item_code'] = data.item_code + ' - ' + data.item_name;
               obj['srno'] = ind + 1;
-              obj['rate'] = data.item_selling_price
-              obj['receipt_no'] = item.bill_no;
-              obj['receipt_date'] = item.created_date ? this.CommonService.dateConvertion(item.created_date, 'dd-MMM-y') : '-';
-              if (item.buyer_details.au_role_id == 3) {
-                obj['emp_id'] = 'E - ' + item.buyer_details.emp_id + ' - ' + item.buyer_details.au_full_name;
-                obj['name'] = item.buyer_details.au_full_name;
-                obj['contact'] = item.buyer_details.au_mobile;
-              }
-              else if (item.buyer_details.au_role_id == 4) {
-                obj['emp_id'] =   ((item.buyer_details.em_admission_no != 0) ? ('S - '+ item.buyer_details.em_admission_no): ('P - '+ item.buyer_details.em_provisional_admission_no))  + ' - ' + item.buyer_details.au_full_name;
-                obj['name'] = item.buyer_details.au_full_name;
-                obj['contact'] = item.buyer_details.active_contact;
-              } else {
-                obj['emp_id'] =   'O - Nilesh Shukla';
-                obj['name'] = item.buyer_details.au_full_name;
-                obj['contact'] = item.buyer_details.active_contact;
-                
-              }
-              obj['count'] = data.item_quantity + ' - ' + (data_pic.item_units.name ? data_pic.item_units.name: data_pic.item_units.id);
-              obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_id +' - '+item.location_details[0].location_hierarchy : '' ;
-              obj['action'] = item;
-              obj['class'] = (item.buyer_details.class_name? item.buyer_details.class_name: '')+'-'+(item.buyer_details.sec_name? item.buyer_details.sec_name: '');
-              obj['mop'] = new TitleCasePipe().transform(item.mop);
-              obj['status'] = new TitleCasePipe().transform(item.status);
-              obj['bill_total'] = new TitleCasePipe().transform(item.status) == 'Canceled'?  -data.total_price:data.total_price ;
-              obj['au_role_id'] = item.buyer_details.au_role_id;
-              obj['bill_details'] = item.bill_details;
-              obj['created_by'] = data_imp.emp_name;
+              obj['ch_no'] = item.inv_bt_id;
+              obj['date'] = new DatePipe('en-in').transform(item.created_date, 'dd-MMM-yyyy');
+              obj['particulars'] = data.item_code +' - '+ data.item_name;
+              obj['qty'] = data.item_quantity + " - " + data.item_units;
+              obj['type'] = item.type == "branch-transfer" ? "External" : "Internal";
+              obj['f_loc'] = location_from.location_name;
+              obj['t_loc'] = location_to.location_name;
+              obj['dept_id'] = data_pic.item_category.name;
+              obj['remark'] = item.remarks;
+              obj['created_by'] = item.created_by.name;
               let isAvailable = true;
-              if(Object.keys(this.objectFilter).length > 0) {
-                if(this.objectFilter.created_by) {
-                  if(!this.objectFilter.created_by.includes(obj['created_by']) && !this.objectFilter.created_by.includes(item.created_by)) {
+              if (Object.keys(this.objectFilter).length > 0) {
+                if (this.objectFilter.created_by) {
+                  if (!this.objectFilter.created_by.includes(obj['created_by']) && !this.objectFilter.created_by.includes(item.created_by)) {
                     isAvailable = false
                   }
                 }
-                if(this.objectFilter.item_code) {
-                  if(!this.objectFilter.item_code.includes(obj['dept_id'])) {
+                if (this.objectFilter.item_code) {
+                  if (!this.objectFilter.item_code.includes(obj['dept_id'])) {
                     isAvailable = false
                   }
                 }
-                if(this.objectFilter.item_location) {
-                  console.log("-----------------------", this.objectFilter.item_location, item.location_details[0].location_id);
-                  
-                  if(!this.objectFilter.item_location.includes(item.location_details[0].location_id)) {
+                if (this.objectFilter.item_location_from) {
+                  // console.log("-----------------------", this.objectFilter.item_location, item.location_details[0].location_id);
+
+                  if (!this.objectFilter.item_location_from.includes(location_from.location_id)) {
                     isAvailable = false
                   }
                 }
-                
+                if (this.objectFilter.item_location_to) {
+                  // console.log("-----------------------", this.objectFilter.item_location, item.location_details[0].location_id);
+
+                  if (!this.objectFilter.item_location_to.includes(location_to.location_id)) {
+                    isAvailable = false
+                  }
+                }
+
               } else {
                 isAvailable = true;
               }
-              if(isAvailable) {
+              if (isAvailable) {
                 this.dataset.push(obj);
                 ind++;
               }
-              
+
             }
           }
-          this.totalRow = {};
-          const obj3: any = {};
-          obj3['id'] = 'footer';
-          obj3['srno'] = '';
-          obj3['receipt_no'] = 'Grand Total';
-          obj3['receipt_date'] = '';
-          obj3['emp_id'] = '';
-          obj3['name'] = '';
-          obj3['contact'] = '';
-          obj3['count'] = '';
-          obj3['rate'] = '';
-          obj3['item_code'] = '';
-          obj3['location'] = '';
-          obj3['class'] = '';
-          obj3['mop'] = '';
-          obj3['dept_id'] = '';
-          obj3['status'] = '';
-          obj3['created_by'] = '';
-          obj3['bill_total'] = new IndianCurrency().transform(this.dataset.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
-          this.totalRow = obj3;
+          // this.totalRow = {};
+          // const obj3: any = {};
+          // obj3['id'] = 'footer';
+          // obj3['srno'] = '';
+          // obj3['receipt_no'] = 'Grand Total';
+          // obj3['receipt_date'] = '';
+          // obj3['emp_id'] = '';
+          // obj3['name'] = '';
+          // obj3['contact'] = '';
+          // obj3['count'] = '';
+          // obj3['rate'] = '';
+          // obj3['item_code'] = '';
+          // obj3['location'] = '';
+          // obj3['class'] = '';
+          // obj3['mop'] = '';
+          // obj3['dept_id'] = '';
+          // obj3['status'] = '';
+          // obj3['created_by'] = '';
+          // obj3['bill_total'] = new IndianCurrency().transform(this.dataset.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
+          // this.totalRow = obj3;
           this.aggregatearray.push(new Aggregators.Sum('bill_total'));
           if (this.dataset.length <= 5) {
             this.gridHeight = 350;
@@ -659,7 +661,7 @@ export class TransferReportComponent implements OnInit {
           this.tableFlag = true;
         }
         setTimeout(() => this.groupByPaymentMode(), 2);
-				setTimeout(() => this.groupByBankName(), 2);
+        setTimeout(() => this.groupByBankName(), 2);
         this.objectFilter = {}
       });
     } else {
@@ -668,40 +670,40 @@ export class TransferReportComponent implements OnInit {
 
   }
   groupByPaymentMode() {
-		this.dataviewObj.setGrouping({
-			getter: 'receipt_date',
-			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-			},
-			comparer: (a, b) => {
-				// (optional) comparer is helpful to sort the grouped data
-				// code below will sort the grouped value in ascending order
-        
-				return Sorters.date(a, b, SortDirectionNumber.desc);
-			},
-			aggregators: this.aggregatearray,
-			aggregateCollapsed: true,
-			collapsed: false,
-		});
-		this.draggableGroupingPlugin.setDroppedGroups('receipt_date');
-	}
-	groupByBankName() {
-		this.dataviewObj.setGrouping({
-			getter: 'receipt_no',
-			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-			},
-			comparer: (a, b) => {
-				// (optional) comparer is helpful to sort the grouped data
-				// code below will sort the grouped value in ascending order
-				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-			},
-			aggregators: this.aggregatearray,
-			aggregateCollapsed: true,
-			collapsed: false,
-		});
-		this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
-	}
+    this.dataviewObj.setGrouping({
+      getter: 'date',
+      formatter: (g) => {
+        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+      },
+      comparer: (a, b) => {
+        // (optional) comparer is helpful to sort the grouped data
+        // code below will sort the grouped value in ascending order
+
+        return Sorters.date(a, b, SortDirectionNumber.desc);
+      },
+      aggregators: this.aggregatearray,
+      aggregateCollapsed: true,
+      collapsed: false,
+    });
+    this.draggableGroupingPlugin.setDroppedGroups('date');
+  }
+  groupByBankName() {
+    this.dataviewObj.setGrouping({
+      getter: 'ch_no',
+      formatter: (g) => {
+        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+      },
+      comparer: (a, b) => {
+        // (optional) comparer is helpful to sort the grouped data
+        // code below will sort the grouped value in ascending order
+        return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+      },
+      aggregators: this.aggregatearray,
+      aggregateCollapsed: true,
+      collapsed: false,
+    });
+    this.draggableGroupingPlugin.setDroppedGroups('ch_no');
+  }
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
     this.clearGrouping();
@@ -739,38 +741,38 @@ export class TransferReportComponent implements OnInit {
     this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
-    if (this.totalRow) {
-      let columnIdx = grid.getColumns().length;
-      while (columnIdx--) {
-        const columnId = grid.getColumns()[columnIdx].id;
-        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
-      }
-    }
+    // if (this.totalRow) {
+    //   let columnIdx = grid.getColumns().length;
+    //   while (columnIdx--) {
+    //     const columnId = grid.getColumns()[columnIdx].id;
+    //     const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+    //     columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+    //   }
+    // }
   }
   receiptFormatter(row, cell, value, columnDef, dataContext) {
     return '<a style="text-decoration:underline !important;cursor:pointer">' + value + '</a>';
   }
   onCellClicked(e, args) {
     if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
-			const index = this.rowsChosen.indexOf(args.row);
-			if (index === -1) {
-				this.rowsChosen.push(args.row);
-			} else {
-				this.rowsChosen.splice(index, 1);
-			}
-			const item = args.grid.getDataItem(args.row);
-			const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
-			if (index2 === -1) {
-				this.rowChosenData.push({
-					data: item,
-					index: args.row
-				});
-			} else {
-				this.rowChosenData.splice(index2, 1);
-			}
-			console.log('this.rowChosenData',this.rowChosenData);
-		}
+      const index = this.rowsChosen.indexOf(args.row);
+      if (index === -1) {
+        this.rowsChosen.push(args.row);
+      } else {
+        this.rowsChosen.splice(index, 1);
+      }
+      const item = args.grid.getDataItem(args.row);
+      const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
+      if (index2 === -1) {
+        this.rowChosenData.push({
+          data: item,
+          index: args.row
+        });
+      } else {
+        this.rowChosenData.splice(index2, 1);
+      }
+      console.log('this.rowChosenData', this.rowChosenData);
+    }
     if (args.cell === args.grid.getColumnIndex('receipt_no')) {
       const item: any = args.grid.getDataItem(args.row);
       if (item['receipt_no']) {
@@ -779,66 +781,49 @@ export class TransferReportComponent implements OnInit {
     }
   }
   onSelectedRowsChanged(e, args) {
-		if (args.rows.length === this.dataset.length) {
-			this.rowChosenData = [];
-			this.rowsChosen = args.rows;
-			for (const item of this.rowsChosen) {
-				this.rowChosenData.push({
-					data: this.dataset[item],
-					index: item
-				});
-			}
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		} else if (args.rows.length === 0) {
-			this.rowsChosen = [];
-			this.rowChosenData = [];
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		} else {
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		}
+    if (args.rows.length === this.dataset.length) {
+      this.rowChosenData = [];
+      this.rowsChosen = args.rows;
+      for (const item of this.rowsChosen) {
+        this.rowChosenData.push({
+          data: this.dataset[item],
+          index: item
+        });
+      }
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    } else if (args.rows.length === 0) {
+      this.rowsChosen = [];
+      this.rowChosenData = [];
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    } else {
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    }
   }
-  deleteSaleReceipt(value){
-    console.log('value -----',value);
-		if(value.reason_id && value.reason_remark) {
-      const param:any[] = [];
-      const data:any={};
-			data.reason_id = value.reason_id;
-			data.reason_remark = value.reason_remark;
+  deleteSaleReceipt(value) {
+    console.log('value -----', value);
+    if (value.reason_id && value.reason_remark) {
+      const param: any[] = [];
+      const data: any = {};
+      data.reason_id = value.reason_id;
+      data.reason_remark = value.reason_remark;
       data.status = 'canceled';
-      if(value.inv_id.length > 0){
+      if (value.inv_id.length > 0) {
         value.inv_id.forEach(element => {
           param.push(element.data.action.bill_id);
         });
-        this.inventory.deleteSaleReeipt({bill_id:param,data:data}).subscribe((result:any) => {
-          if(result && result.status == 'ok'){
-            this.CommonService.showSuccessErrorMessage(result.data,'success');
+        this.inventory.deleteSaleReeipt({ bill_id: param, data: data }).subscribe((result: any) => {
+          if (result && result.status == 'ok') {
+            this.CommonService.showSuccessErrorMessage(result.data, 'success');
           }
           this.changeReportType();
         })
       }
-		}
+    }
   }
   deleteModal() {
     console.log(this.rowChosenData);
-		this.deleteWithReasonModal.openModal(this.rowChosenData);
-		// const change: any = this.deleteWithReasonModal.subscribeModalChange();
-		// change.afterClosed().subscribe((res: any) => {
-		// 	if (res && res.data && res.data.length > 0) {
-		// 		this.rowsChosen = [];
-		// 		this.rowChosenData = [];
-		// 		for (const item of res.data) {
-		// 			this.rowsChosen.push(item.index);
-		// 		}
-		// 		this.gridObj.setSelectedRows(this.rowsChosen);
-		// 		this.rowChosenData = res.data;
-
-		// 	} else {
-		// 		this.rowsChosen = [];
-		// 		this.rowChosenData = [];
-		// 		this.gridObj.setSelectedRows(this.rowsChosen);
-		// 	}
-		// });
-	}
+    this.deleteWithReasonModal.openModal(this.rowChosenData);
+  }
   actionList(item, action) {
     this.billDetailsModal.openModal(item);
   }
@@ -858,7 +843,7 @@ export class TransferReportComponent implements OnInit {
     this.exportColumnDefinitions = [];
     let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     for (const item of exportColumnDefinitions) {
-      if(!(item.id.includes('checkbox_select'))) {
+      if (!(item.id.includes('checkbox_select'))) {
         this.exportColumnDefinitions.push(item)
       }
     }
@@ -1091,16 +1076,16 @@ export class TransferReportComponent implements OnInit {
 
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['dept_id']='';
-          obj3['item_code']='';
-          obj3['rate']='';
-          obj3['count']='';
-          obj3['location']='';
-          obj3['action']='';
-          obj3['class']='';
-          obj3['mop']='';
-          obj3['status']='';
-          obj3['au_role_id']='';
+          obj3['dept_id'] = '';
+          obj3['item_code'] = '';
+          obj3['rate'] = '';
+          obj3['count'] = '';
+          obj3['location'] = '';
+          obj3['action'] = '';
+          obj3['class'] = '';
+          obj3['mop'] = '';
+          obj3['status'] = '';
+          obj3['au_role_id'] = '';
           obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
           obj3['emp_id'] = '';
@@ -1143,16 +1128,16 @@ export class TransferReportComponent implements OnInit {
           obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
           obj3['emp_id'] = '';
-          obj3['dept_id']='';
-          obj3['item_code']='';
-          obj3['rate']='';
-          obj3['count']='';
-          obj3['location']='';
-          obj3['action']='';
-          obj3['class']='';
-          obj3['mop']='';
-          obj3['status']='';
-          obj3['au_role_id']='';
+          obj3['dept_id'] = '';
+          obj3['item_code'] = '';
+          obj3['rate'] = '';
+          obj3['count'] = '';
+          obj3['location'] = '';
+          obj3['action'] = '';
+          obj3['class'] = '';
+          obj3['mop'] = '';
+          obj3['status'] = '';
+          obj3['au_role_id'] = '';
           obj3['name'] = '';
           obj3['contact'] = '';
           obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
@@ -1192,7 +1177,7 @@ export class TransferReportComponent implements OnInit {
     this.exportColumnDefinitions = [];
     let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     for (const item of exportColumnDefinitions) {
-      if(!(item.id.includes('checkbox_select'))) {
+      if (!(item.id.includes('checkbox_select'))) {
         this.exportColumnDefinitions.push(item)
       }
     }
@@ -1567,16 +1552,16 @@ export class TransferReportComponent implements OnInit {
   searchOk($event) {
     console.log("i am here", $event);
     this.objectFilter = {}
-    for(let i = 0; i <$event.filters.length; i++) {
-     if(this.objectFilter[$event.filters[i].filter_type] != '') {
-      if(this.objectFilter[$event.filters[i].filter_type]) {
-        this.objectFilter[$event.filters[i].filter_type].push($event.filters[i].filter_value)
-      } else {
-        this.objectFilter[$event.filters[i].filter_type] = [$event.filters[i].filter_value]
+    for (let i = 0; i < $event.filters.length; i++) {
+      if (this.objectFilter[$event.filters[i].filter_type] != '') {
+        if (this.objectFilter[$event.filters[i].filter_type]) {
+          this.objectFilter[$event.filters[i].filter_type].push($event.filters[i].filter_value)
+        } else {
+          this.objectFilter[$event.filters[i].filter_type] = [$event.filters[i].filter_value]
+        }
       }
-     }
     }
-    
+
     // this.getAllEmployee($event);
   }
 }
