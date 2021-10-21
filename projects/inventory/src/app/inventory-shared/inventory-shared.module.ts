@@ -36,7 +36,10 @@ import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.compo
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 import { AdvancedSearchModalComponentTwo } from './advanced-search-modal-2/advanced-search-modal-2.component';
+import {AdvancedSearchModalComponentThree } from './advanced-search-model-3/advanced-search-modal-3.component';
+import {AdvancedSearchModalComponentFour } from './advanced-search-modal-4/advanced-search-modal-4.component';
 const moment = _moment;
+
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { InvItemDetailsComponent } from './inv-item-details/inv-item-details.component';
 import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
@@ -125,6 +128,8 @@ export const MY_FORMATS = {
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		AdvancedSearchModalComponentTwo,
+		AdvancedSearchModalComponentThree,
+		AdvancedSearchModalComponentFour,
 		InvItemDetailsComponent,
 		HighlightPipe,
 		LocationSearchAndAddComponent,
@@ -148,6 +153,8 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		AdvancedSearchModalComponent,
 		AdvancedSearchModalComponentTwo,
+		AdvancedSearchModalComponentThree,
+		AdvancedSearchModalComponentFour,
 		InvItemDetailsComponent,
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
@@ -201,6 +208,8 @@ export const MY_FORMATS = {
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		AdvancedSearchModalComponentTwo,
+		AdvancedSearchModalComponentThree,
+		AdvancedSearchModalComponentFour,
 		InvItemDetailsComponent,
 		MatProgressBarModule,
 		HighlightPipe,

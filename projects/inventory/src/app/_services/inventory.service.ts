@@ -90,9 +90,17 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMaster', value);
   }
+  getOrderMasterFilter(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMasterFilter', value);
+  }
   getBranchTransfer(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/branch-transfer/findAll', value);
+  }
+  getBranchTransferByFilter(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/findAllByFilter', value);
   }
   itemChangeStatus(value) {
     this.service.stopLoading();

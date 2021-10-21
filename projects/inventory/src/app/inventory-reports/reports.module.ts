@@ -15,7 +15,7 @@ import { ConsumptionReportsComponent } from './consumption-reports/consumption-r
 import { StoreAssignReportComponent } from './store-assign-report/store-assign-report.component';
 import { StoreCollectionReportComponent } from './store-collection-report/store-collection-report.component';
 import { StoreDetailSaleReportComponent } from './store-detail-sale-report/store-detail-sale-report.component';
-
+import { TransferReportComponent } from './transfer-report/transfer-report.component'
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -45,7 +45,8 @@ export const MY_FORMATS = {
 		ConsumptionReportsComponent,
 		StoreAssignReportComponent,
 		StoreCollectionReportComponent,
-		StoreDetailSaleReportComponent
+		StoreDetailSaleReportComponent,
+		TransferReportComponent
 	],
 	entryComponents: [],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
