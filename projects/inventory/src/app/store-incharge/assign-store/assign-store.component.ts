@@ -44,18 +44,72 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   bundleArrayMain: any[] = [];
   schoolInfo: any;
   currentTabIndex: number;
-  pageLength: number;
-  pageSize = 300;
-  pageSizeOptions = [100, 300, 1000];
+  pageLength = 10;
+  pageSize = 10;
+  pageSizeOptions = [10, 50, 100];
   tableDivFlag = false;
   tabledataFlag = false;
   ELEMENT_DATA: any[] = [];
+  displayedColumns_heading: any = {position:'Sr. No.',item_code:'Item code',item_name:'Item Name', item_quantity:'Item Quantity', item_selling_price:'Selling Price'};
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
 dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 @ViewChild(MatPaginator) paginator: MatPaginator;
   priceForm: FormGroup;
   uploadComponent: string;
+  sessionName: string;
 
+  reportDate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+
+  alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
+  length: any;
+  currentUser: any;
+  
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -65,7 +119,8 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     public dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-  ) { }
+  ) { 
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser')); }
 
   ngOnInit() {
     this.getSchool();
@@ -119,6 +174,13 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.formGroupArray = [];
   }
 
+  getAllLocations(){
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        this.allLocationData = result.data;
+      }
+    });
+  }
   editPrice(item){
     console.log("edit item ", item);
     
@@ -159,7 +221,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
                 "type": "autopopulate"
               }
             ],
-            "page_index": 0
+            "page_index": 0,
           };
          
     this.ELEMENT_DATA = [];
@@ -203,7 +265,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           ind++;
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        this.pageLength = this.ELEMENT_DATA.length;
+        // this.pageLength = this.ELEMENT_DATA.length;
         this.dataSource.paginator = this.paginator;
         this.tableDivFlag = true;
         this.tabledataFlag = true;
@@ -244,21 +306,43 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		});
 	}
 
+  addWaterMark(doc) {
+    var totalPages = doc.internal.getNumberOfPages();
+    // let imgData = this.schoolInfo.school_logo;
+    var img = new Image();
+    img.src = this.schoolInfo.school_logo;
+    // var imgData = 'data:image/jpeg;base64,'+ Base64.encode(this.schoolInfo.school_logo);
+    // console.log(imgData);
+    
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.addImage(img, 'PNG', 40, 40, 75, 75);
+      doc.setTextColor(150);
+      // doc.text(50, doc.internal.pageSize.height - 30, 'Watermark');
+    }
+  
+    return doc;
+  }
   downloadPdf() {
     var prepare=[];
+    console.log(this.tableDataArray);
+    let position = 1;
     this.tableDataArray.forEach(e=>{
       var tempObj =[];
+      tempObj.push(position);
       tempObj.push(e.item_code);
       tempObj.push(e.item_name);
-      tempObj.push( e.item_qty);
+      tempObj.push( e.item_quantity);
       tempObj.push( e.item_selling_price);
       prepare.push(tempObj);
+      position++;
     });
     const doc = new jsPDF('p', 'mm', 'a4');
     doc.autoTable({
-        head: [['Item Code','Item Name','Item Quantity','Selling Price']],
+        head: [['#','Item Code','Item Name','Item Quantity','Selling Price']],
         body: prepare
     });
+    // this.addWaterMark(doc);
     doc.save('assign-item' + '.pdf');
   }
 
@@ -276,217 +360,208 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
        /* save to file */
        XLSX.writeFile(wb, this.fileName);
+       this.exportAsExcel();
 			
   }
+  checkWidth(id, header) {
+		const res = this.ELEMENT_DATA.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getColor(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
 
-  // exportToExcel(json: any[]) {
-  //   this.notFormatedCellArray = [];
-  //   let reportType: any = '';
-  //   const columns: any[] = [];
-  //   const columValue: any[] = [];
-  //   let exportColumnDefinitions = this.displayedColumns;
+	getBorder(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
 
-  //   for (const item of this.exportColumnDefinitions) {
-  //     columns.push({
-  //       key: item.id,
-  //       width: 10
-  //     });
-  //     columValue.push(item.name);
-  //   }
-  //   this.sessionName = this.getSessionName(this.session.ses_id);
-  //   reportType = new TitleCasePipe().transform('store_assign_report') + this.sessionName;
-  //   let reportType2: any = '';
-  //   reportType2 = new TitleCasePipe().transform('store assign report: ') + this.sessionName;
-  //   const fileName = reportType + '.xlsx';
-  //   const workbook = new Excel.Workbook();
-  //   const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
-  //     { pageSetup: { fitToWidth: 7 } });
-  //   worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
-  //   worksheet.getCell('A1').value =
-  //     new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
-  //   worksheet.getCell('A1').alignment = { horizontal: 'left' };
-  //   worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-  //   worksheet.getCell('A2').value = reportType2;
-  //   worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
-  //   worksheet.getRow(4).values = columValue;
-  //   worksheet.columns = columns;
-  //   if (this.dataviewObj.getGroups().length === 0) {
-  //     Object.keys(json).forEach(key => {
-  //       const obj: any = {};
-  //       for (const item2 of this.exportColumnDefinitions) {
-  //         obj[item2.id] = this.checkReturn(this.CommonService.htmlToText(json[key][item2.id]));
+  getLocationName(location_id) {
+    const sindex = this.allLocationData.findIndex(f => Number(f.location_id) === Number(location_id));
+    if (sindex !== -1) {
+      return this.allLocationData[sindex].location_hierarchy;
+    } else {
+      return '-';
+    }
+  }
 
-  //       }
-  //       worksheet.addRow(obj);
-  //     });
-  //   } else {
-  //     // iterate all groups
-  //     this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
-  //   }
-  //   if (this.totalRow) {
-  //     worksheet.addRow(this.totalRow);
-  //   }
-  //   //style grand total
-  //   worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-  //     this.columnDefinitions.forEach(element => {
-  //       cell.font = {
-  //         color: { argb: 'ffffff' },
-  //         bold: true,
-  //         name: 'Arial',
-  //         size: 10
-  //       };
-  //       cell.alignment = { wrapText: true, horizontal: 'center' };
-  //       cell.fill = {
-  //         type: 'pattern',
-  //         pattern: 'solid',
-  //         fgColor: { argb: '439f47' },
-  //         bgColor: { argb: '439f47' }
-  //       };
-  //       cell.border = {
-  //         top: { style: 'thin' },
-  //         left: { style: 'thin' },
-  //         bottom: { style: 'thin' },
-  //         right: { style: 'thin' }
-  //       };
-  //     });
-  //   });
-  //   // style all row of excel
-  //   worksheet.eachRow((row, rowNum) => {
-  //     if (rowNum === 1) {
-  //       row.font = {
-  //         name: 'Arial',
-  //         size: 14,
-  //         bold: true
-  //       };
-  //     } else if (rowNum === 2) {
-  //       row.font = {
-  //         name: 'Arial',
-  //         size: 12,
-  //         bold: true
-  //       };
-  //     } else if (rowNum === 4) {
-  //       row.eachCell((cell) => {
-  //         cell.font = {
-  //           name: 'Arial',
-  //           size: 12,
-  //           bold: true
-  //         };
-  //         cell.fill = {
-  //           type: 'pattern',
-  //           pattern: 'solid',
-  //           fgColor: { argb: 'bdbdbd' },
-  //           bgColor: { argb: 'bdbdbd' },
-  //         };
-  //         cell.border = {
-  //           top: { style: 'thin' },
-  //           left: { style: 'thin' },
-  //           bottom: { style: 'thin' },
-  //           right: { style: 'thin' }
-  //         };
-  //         cell.alignment = { horizontal: 'center' };
-  //       });
-  //     } else if (rowNum > 4 && rowNum < worksheet._rows.length) {
-  //       const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
-  //       if (cellIndex === -1) {
-  //         row.eachCell((cell) => {
-  //           cell.font = {
-  //             name: 'Arial',
-  //             size: 10,
-  //           };
-  //           cell.alignment = { wrapText: true, horizontal: 'center' };
-  //         });
-  //         if (rowNum % 2 === 0) {
-  //           row.eachCell((cell) => {
-  //             cell.fill = {
-  //               type: 'pattern',
-  //               pattern: 'solid',
-  //               fgColor: { argb: 'ffffff' },
-  //               bgColor: { argb: 'ffffff' },
-  //             };
-  //             cell.border = {
-  //               top: { style: 'thin' },
-  //               left: { style: 'thin' },
-  //               bottom: { style: 'thin' },
-  //               right: { style: 'thin' }
-  //             };
-  //           });
-  //         } else {
-  //           row.eachCell((cell) => {
-  //             cell.fill = {
-  //               type: 'pattern',
-  //               pattern: 'solid',
-  //               fgColor: { argb: 'ffffff' },
-  //               bgColor: { argb: 'ffffff' },
-  //             };
-  //             cell.border = {
-  //               top: { style: 'thin' },
-  //               left: { style: 'thin' },
-  //               bottom: { style: 'thin' },
-  //               right: { style: 'thin' }
-  //             };
-  //           });
-  //         }
+  exportAsExcel() {
+    let notExport:string[] = ['action'];
+		let reportType: any = '';
+		let reportType2: any = '';
+    const columns: any = [];
+    this.displayedColumns.forEach(element => {
+      if(notExport.indexOf(element) == -1) {
+        columns.push({
+          key: element,
+          width: this.checkWidth(element, this.displayedColumns_heading[element])
+        });
+      }
+    });
+    console.log(">>>>>>>", this.locationId);
+		reportType = new TitleCasePipe().transform('store_item_list: ' + this.getLocationName(this.locationId));
+    let reportType1 = new TitleCasePipe().transform('Store Item List: ' + this.getLocationName(this.locationId));
+    const fileName =reportType + '_' + this.reportDate +'.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType1;
+    worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+    this.displayedColumns.forEach((element,index) => {
+      console.log('index',index)
+      if(notExport.indexOf(element) == -1) {
+        worksheet.getCell(this.alphabetJSON[index+1]+'4').value = this.displayedColumns_heading[element];
+      }
+    });
+		worksheet.columns = columns;
+    this.length = worksheet._rows.length;
+    let srno=1;
+		for (const dety of this.ELEMENT_DATA) {
+			const obj: any = {};
+      this.length++;
+      this.displayedColumns.forEach((element,index) => {
+        if(notExport.indexOf(element) == -1) {
+          worksheet.getCell(this.alphabetJSON[index+1]+this.length).value = dety[element];
+        }
+      });
+			worksheet.addRow(obj);
+    }
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 4) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum > 4 && rowNum <= worksheet._rows.length) {
+				row.eachCell(cell => {
+					// tslint:disable-next-line: max-line-length
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+		});
 
-  //       }
-  //     }
-  //   });
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === worksheet._rows.length) {
+				row.eachCell(cell => {
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '004261' },
+						bgColor: { argb: '004261' },
+					};
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+    });
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+      + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
 
-  //   worksheet.addRow({});
-  //   if (this.groupColumns.length > 0) {
-  //     worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-  //       this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-  //     worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
-  //     worksheet.getCell('A' + worksheet._rows.length).font = {
-  //       name: 'Arial',
-  //       size: 10,
-  //       bold: true
-  //     };
-  //   }
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
 
-  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-  //   // worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as:' + this.getParamValue();
-  //   worksheet.getCell('A' + worksheet._rows.length).font = {
-  //     name: 'Arial',
-  //     size: 10,
-  //     bold: true
-  //   };
-
-  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-  //   worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
-  //   worksheet.getCell('A' + worksheet._rows.length).font = {
-  //     name: 'Arial',
-  //     size: 10,
-  //     bold: true
-  //   };
-
-  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-  //   worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
-  //     + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
-  //   worksheet.getCell('A' + worksheet._rows.length).font = {
-  //     name: 'Arial',
-  //     size: 10,
-  //     bold: true
-  //   };
-
-  //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-  //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-  //   worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
-  //   worksheet.getCell('A' + worksheet._rows.length).font = {
-  //     name: 'Arial',
-  //     size: 10,
-  //     bold: true
-  //   };
-  //   workbook.xlsx.writeBuffer().then(data => {
-  //     const blob = new Blob([data], { type: 'application/octet-stream' });
-  //     saveAs(blob, fileName);
-  //   });
-  // }
+  }
 
 	downloadExcel() {
-		alert("Under Construction");
+    let workbook = new Excel.Workbook();
+    let worksheet = workbook.addWorksheet('Item Price');
+   
+    worksheet.columns = [
+      { header: 'Item Code', key: 'id', width: 10 },
+      { header: 'Item Name', key: 'name', width: 32 },
+      { header: 'Item Location', key: 'brand', width: 30, default: "location"},
+      { header: 'Price', key: 'price', width: 10, style: { font: { name: 'Arial Black', size:10} } },
+    ];
 	}
   getAllEmployee(){
     this.employeeArray = [];

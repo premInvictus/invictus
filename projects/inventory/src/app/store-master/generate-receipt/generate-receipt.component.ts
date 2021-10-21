@@ -4,6 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ErpCommonService } from 'src/app/_services';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
+import {  IndianCurrency } from '../../_pipes/index';
 
 @Component({
   selector: 'app-generate-receipt',
@@ -53,6 +56,8 @@ export class GenerateReceiptComponent implements OnInit {
   toHighlight: string = '';
   opacityClass = '';
   viewOnly = false;
+  schoolInfo: any = {};
+  schoolGroupData: any[];
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -68,6 +73,7 @@ export class GenerateReceiptComponent implements OnInit {
     this.session = JSON.parse(localStorage.getItem('session'));
   }
   ngOnInit() {
+    this.getSchool();
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
@@ -189,7 +195,7 @@ export class GenerateReceiptComponent implements OnInit {
           item_location: this.currentLocationId
         });
         this.createOrderForm.value.item_status = 'pending';
-        this.createOrderForm.value.item_location = this.currentLocationId;
+        this.createOrderForm.value.item_location = this.currentLocationId + " - " + this.getLocationName(this.currentLocationId);
         this.finalRequistionArray.push(this.createOrderForm.value);
       }
       this.resetForm();
@@ -334,7 +340,56 @@ export class GenerateReceiptComponent implements OnInit {
 
   }
 
+
+  getSchool() {
+    this.sisService.getSchool().subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.schoolInfo = res.data[0];
+        console.log("scholl >>>>>>>>>>>",this.schoolInfo);
+        this.getGroupedSchool();
+      }
+    });
+  }
+
+  getGroupedSchool() {
+		console.log('this.schoolInfo', this.schoolInfo)
+		this.schoolGroupData = [];
+		this.sisService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.sisService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						this.schoolGroupData  = [];
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolGroupData.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolGroupData);
+					}
+				})
+			}
+		})
+	}
+
   finalSubmit($event) {
+
+    let printArray : any ;
+    let inv_total = 0;
+    // console.log("hello final submit ",$event); return;
     if ($event) {
       for (let item of this.requistionArray) {
         for (let dety of item.pm_item_details) {
@@ -350,6 +405,12 @@ export class GenerateReceiptComponent implements OnInit {
           }
         }
       };
+      const currencyPipe = new IndianCurrency();
+      this.finalRequistionArray.forEach(element => {
+        inv_total += element.item_price * element.item_quantity;
+      });
+      let total = currencyPipe.transform(inv_total);
+
       this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
       this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
       this.finalSubmitArray['pm_source'] = 'GR';
@@ -373,21 +434,63 @@ export class GenerateReceiptComponent implements OnInit {
       }
       this.finalSubmitArray['pm_vendor'] = {
         ven_id: Number(this.finalReceiptForm.value.ven_id),
-        ven_name: this.finalReceiptForm.value.ven_name
+        ven_name: this.finalReceiptForm.value.ven_name,
+        ven_phone: this.finalReceiptForm.value.ven_contact,
+        ven_email: this.finalReceiptForm.value.ven_email
       }
       this.finalSubmitArray['pm_status'] = 'pending';
       this.finalSubmitArray['pm_session'] = this.session.ses_id;
       this.finalSubmitArray['pm_details'] = {
         purchase_order_id: this.finalReceiptForm.value.po_no,
         invoice_no: this.finalReceiptForm.value.invoice_no,
-        invoice_pdf: this.imageArray
+        invoice_pdf: this.imageArray,
+        po_total : total
       }
+      
+      let newDate = new Date();
+
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
         if (result_r) {
+          printArray = result_r;
+          console.log("pA >>>>>>>>>",printArray, result_r);
+          if($event.type == 'Save-Print'){
+            let tempDate = result_r.pm_created.created_date.split(",")[0].split(" ");
+            let prepDate = tempDate[1]+"-"+tempDate[0]+"-"+tempDate[2];
+            const JSON = {
+              "bill_id": result_r.pm_id,
+              "bill_type": "Goods Receipt Note",
+              "bill_date": prepDate,
+              "remarks": result_r.pm_intended_use,
+              "bill_created_by": result_r.pm_created.created_by_name,
+              "bill_details": result_r.pm_item_details,
+              "school_name": this.schoolInfo.school_name,
+              "school_logo": this.schoolInfo.school_logo,
+              "school_address": this.schoolInfo.school_address,
+              "school_phone": this.schoolInfo.school_phone,
+              "school_city":  this.schoolInfo.school_city,
+              "school_state":  this.schoolInfo.school_state,
+              "school_afflication_no":  this.schoolInfo.school_afflication_no,
+              "school_website":  this.schoolInfo.school_website,
+              "name": "",
+              "vendor_name": result_r.pm_vendor.ven_name,
+              "vendor_phone": result_r.pm_vendor.ven_phone,
+              "po_no": result_r.pm_details.purchase_order_id,
+              "invoice_no": result_r.pm_details.invoice_no,
+              "grand_total": result_r.pm_details.po_total,
+          };
+            this.inventory.printGoodsReceipt(JSON).subscribe((result: any) => {
+              if (result) {      
+                saveAs(result.data.fileUrl, result.data.fileName);
+                this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
+              }
+            });
+          }
+          // return;
           if (this.requistionArray.length > 0) {
             this.requistionArray[0].pm_status = this.statusFlag;
             this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
               if (result) {
+                printArray = result.data;
                 this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
                   if (result_p) {
                     let finalArray: any = [];
@@ -395,10 +498,12 @@ export class GenerateReceiptComponent implements OnInit {
                     finalArray.push(result_r);
                     this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
                       if (result_q) {
-                        this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-                        this.finalSubmitArray = [];
-                        this.finalRequistionArray = [];
-                        this.itemCodeArray = [];
+                       
+                          this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                          this.finalSubmitArray = [];
+                          this.finalRequistionArray = [];
+                          this.itemCodeArray = [];
+                        
                       }
                     });
                   }
@@ -422,6 +527,7 @@ export class GenerateReceiptComponent implements OnInit {
           this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
         }
       });
+      console.log("printArray >>>", printArray);
     }
   }
   getFilterLocation(locationData) {
@@ -523,4 +629,18 @@ export class GenerateReceiptComponent implements OnInit {
       }
     }
   }
+
+
+  printGoodsReceipt(event) {
+    console.log("event", event);
+    if (this.finalReceiptForm.valid) {
+      this.submitParam.text = 'Generate Receipt';
+      this.submitParam.type = 'Save-Print';
+      this.deleteModal.openModal(this.submitParam);
+      this.commonService.showSuccessErrorMessage('Receipt created and saved', 'success');
+    } else {
+      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
+  }
+
 }

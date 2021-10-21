@@ -21,3 +21,9 @@
 .mat-column-pm_intended_use{
     width: 25% !important;
 }
+
+.divider-div {
+    border: 1px solid #d3d8dc;
+    margin-right: 5px;
+    margin-left: 5px;
+}

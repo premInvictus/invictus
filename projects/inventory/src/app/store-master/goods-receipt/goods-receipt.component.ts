@@ -32,7 +32,7 @@ export class GoodsReceiptComponent implements OnInit {
   pageSizeOptions = [100, 300, 1000];
   submitParam: any = {};
   displayedColumns: string[] = ['position', 'po_number', 'po_date', 'created_by', 'vendor_id', 'vendor_name',
-    'vendor_category', 'vendor_contact', 'vendor_email', 'print', 'action'];
+    'vendor_category', 'vendor_contact', 'vendor_email', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];

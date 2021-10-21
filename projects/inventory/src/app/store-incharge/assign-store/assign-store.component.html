@@ -123,7 +123,7 @@
         <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
                        matTooltip="Download as Pdf" (click)="downloadPdf()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
         <img *ngIf="adjustmentStatus ? currentTabIndex != 5:currentTabIndex != 4 " style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
-                        matTooltip="Download as Excel" (click)="exportExcel()" [matTooltipPosition]="'left'" />
+                        matTooltip="Download as Excel" (click)="exportAsExcel()" [matTooltipPosition]="'left'" />
       </div>
     </div>
   </div>
@@ -178,9 +178,23 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator *ngIf="ELEMENT_DATA.length > 0" #paginator [length]="pageLength" [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="changePage($event)"></mat-paginator>
-
+  <table class="table-100" *ngIf="dataSource.length == 0">
+    <tbody>
+      <tr class="text-center">
+        <td colspan="12">
+          <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+          <br><br><br>
+          <br><span class="font-size-20 font-light font-color-brown">
+            No Data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <mat-paginator *ngIf="ELEMENT_DATA.length > 0" #paginator [length]="pageLength" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator> -->
+    <mat-paginator [length]="pageLength" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"></mat-paginator>
   <!-- <table class="custom-table">
     <thead>
       <tr class="custom-tr">
