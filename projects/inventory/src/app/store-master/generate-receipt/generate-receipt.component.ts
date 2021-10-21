@@ -6,6 +6,7 @@ import { CommonAPIService, SisService, AxiomService, InventoryService } from '..
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
 import { DatePipe } from '@angular/common';
+import {  IndianCurrency } from '../../_pipes/index';
 
 @Component({
   selector: 'app-generate-receipt',
@@ -194,7 +195,7 @@ export class GenerateReceiptComponent implements OnInit {
           item_location: this.currentLocationId
         });
         this.createOrderForm.value.item_status = 'pending';
-        this.createOrderForm.value.item_location = this.currentLocationId;
+        this.createOrderForm.value.item_location = this.currentLocationId + " - " + this.getLocationName(this.currentLocationId);
         this.finalRequistionArray.push(this.createOrderForm.value);
       }
       this.resetForm();
@@ -387,6 +388,7 @@ export class GenerateReceiptComponent implements OnInit {
   finalSubmit($event) {
 
     let printArray : any ;
+    let inv_total = 0;
     // console.log("hello final submit ",$event); return;
     if ($event) {
       for (let item of this.requistionArray) {
@@ -403,6 +405,12 @@ export class GenerateReceiptComponent implements OnInit {
           }
         }
       };
+      const currencyPipe = new IndianCurrency();
+      this.finalRequistionArray.forEach(element => {
+        inv_total += element.item_price * element.item_quantity;
+      });
+      let total = currencyPipe.transform(inv_total);
+
       this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
       this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
       this.finalSubmitArray['pm_source'] = 'GR';
@@ -435,43 +443,49 @@ export class GenerateReceiptComponent implements OnInit {
       this.finalSubmitArray['pm_details'] = {
         purchase_order_id: this.finalReceiptForm.value.po_no,
         invoice_no: this.finalReceiptForm.value.invoice_no,
-        invoice_pdf: this.imageArray
+        invoice_pdf: this.imageArray,
+        po_total : total
       }
-      console.log(">>>>>>>>>>R ", this.requistionArray);
-      console.log(">>>>>>>>>>>>>", this.finalSubmitArray);
+      
       let newDate = new Date();
-      if($event.type == 'Save-Print'){
-        const JSON = {
-          "bill_id": this.finalSubmitArray.pm_details.invoice_no,
-          "bill_type": "Goods Receipt Note",
-          "bill_date": this.finalSubmitArray.pm_created.created_date ? this.finalSubmitArray.pm_created.created_date : newDate,
-          "remarks": this.finalSubmitArray.pm_intended_use,
-          "bill_created_by": this.finalSubmitArray.pm_created.created_by_name,
-          "bill_details": this.finalSubmitArray.pm_item_details,
-          "school_name": this.schoolInfo.school_name,
-          "school_logo": this.schoolInfo.school_logo,
-          "school_address": this.schoolInfo.school_address,
-          "school_phone": this.schoolInfo.school_phone,
-          "school_city":  this.schoolInfo.school_city,
-          "school_state":  this.schoolInfo.school_state,
-          "school_afflication_no":  this.schoolInfo.school_afflication_no,
-          "school_website":  this.schoolInfo.school_website,
-          "name": "",
-          "vendor_name": this.finalSubmitArray.pm_vendor.ven_name,
-          "vendor_phone": this.finalSubmitArray.pm_vendor.ven_phone,
-          "po_no": this.finalSubmitArray.pm_details.purchase_order_id,
-          "invoice_no": this.finalSubmitArray.pm_details.invoice_no,
-      };
-        this.inventory.printGoodsReceipt(JSON).subscribe((result: any) => {
-          if (result) {      
-            saveAs(result.data.fileUrl, result.data.fileName);
-            this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
-          }
-        });
-      }
-      // return;
+
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
         if (result_r) {
+          printArray = result_r;
+          console.log("pA >>>>>>>>>",printArray, result_r);
+          if($event.type == 'Save-Print'){
+            let tempDate = result_r.pm_created.created_date.split(",")[0].split(" ");
+            let prepDate = tempDate[1]+"-"+tempDate[0]+"-"+tempDate[2];
+            const JSON = {
+              "bill_id": result_r.pm_id,
+              "bill_type": "Goods Receipt Note",
+              "bill_date": prepDate,
+              "remarks": result_r.pm_intended_use,
+              "bill_created_by": result_r.pm_created.created_by_name,
+              "bill_details": result_r.pm_item_details,
+              "school_name": this.schoolInfo.school_name,
+              "school_logo": this.schoolInfo.school_logo,
+              "school_address": this.schoolInfo.school_address,
+              "school_phone": this.schoolInfo.school_phone,
+              "school_city":  this.schoolInfo.school_city,
+              "school_state":  this.schoolInfo.school_state,
+              "school_afflication_no":  this.schoolInfo.school_afflication_no,
+              "school_website":  this.schoolInfo.school_website,
+              "name": "",
+              "vendor_name": result_r.pm_vendor.ven_name,
+              "vendor_phone": result_r.pm_vendor.ven_phone,
+              "po_no": result_r.pm_details.purchase_order_id,
+              "invoice_no": result_r.pm_details.invoice_no,
+              "grand_total": result_r.pm_details.po_total,
+          };
+            this.inventory.printGoodsReceipt(JSON).subscribe((result: any) => {
+              if (result) {      
+                saveAs(result.data.fileUrl, result.data.fileName);
+                this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
+              }
+            });
+          }
+          // return;
           if (this.requistionArray.length > 0) {
             this.requistionArray[0].pm_status = this.statusFlag;
             this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
