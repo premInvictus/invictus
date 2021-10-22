@@ -44,6 +44,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	settingsArray: any[] = [];
 	currentTab: number;
 	accountDetails: any = {};
+	studentClass: any;
 	constructor(private sisService: SisService,
 		public common: CommonAPIService,
 		private processtypeService: ProcesstypeService,
@@ -54,7 +55,11 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		this.common.tabChange.subscribe((data: any) => {
 			this.currentTab = data.currrentTab;
 			if (data && (data.currrentTab === 1)) {
-				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
+				this.studentClass = this.context.studentdetails.studentdetails.au_class_id;
+				console.log("this.context.studentdetails >>", this.context.studentdetails);
+				console.log("this.context.studentclass >>", this.context.studentdetails.studentdetails.au_class_id);
+				
+				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.valid);
 				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
 				const processType = this.processtypeService.getProcesstype();
 				if (processType === '1') {
@@ -122,7 +127,83 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 	}
-	ngOnChanges() { }
+	ngOnChanges() { 
+		this.settingsArray = this.context.configSetting;
+		this.common.tabChange.subscribe((data: any) => {
+			this.currentTab = data.currrentTab;
+			if (data && (data.currrentTab === 1)) {
+				this.studentClass = this.context.studentdetails.studentdetails.au_class_id;
+				console.log("this.context.studentdetails >>", this.context.studentdetails);
+				console.log("this.context.studentclass >>", this.context.studentdetails.studentdetails.au_class_id);
+				
+				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.valid);
+				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
+				const processType = this.processtypeService.getProcesstype();
+				if (processType === '1') {
+					this.parentId = '157';
+				}
+				if (processType === '2') {
+					this.parentId = '158';
+				}
+				if (processType === '3') {
+					this.parentId = '159';
+				}
+				if (processType === '4') {
+					this.parentId = '160';
+				}
+				if (processType === '5') {
+					this.parentId = '161';
+				}
+			}
+		});
+		this.common.studentData.subscribe((data: any) => {
+			if (data) {
+				this.login_id = data.au_login_id;
+				this.editableStatus = data.editable_status;
+			}
+			if (this.currentTab === 1) {
+				this.getAdditionalDetails(data.au_login_id);
+				this.getFeeAccount(data.au_login_id);
+			}
+		});
+		this.common.reRenderForm.subscribe((data: any) => {
+			if (data && data.addMode) {
+				this.viewOnly = false;
+				this.addOnly = true;
+				if (this.edu) {
+					this.edu.previousEducations = [];
+				}
+				if (this.doc) {
+					this.doc.finalDocumentArray = [];
+				}
+
+				if (this.skill) {
+					this.skill.finalAwardArray = [];
+					this.skill.finalSpannedArray = [];
+				}
+				this.educationDetails = [];
+				this.documentDetails = [];
+				this.awardsDetails = [];
+				this.awardsDetailsNew = [];
+				this.accountDetails = {};
+
+				if (this.account) {
+					this.account.accountsForm.reset();
+				}
+			}
+			if (data && data.viewMode) {
+				this.viewOnly = true;
+				this.addOnly = false;
+				this.editOnly = false;
+				this.saveFlag = false;
+				this.editRequestFlag = false;
+			}
+			if (data && data.editMode) {
+				this.viewOnly = false;
+				this.saveFlag = true;
+			}
+		});
+	}
 	saveForm() {
 		this.disabledApiCall = true;
 		for (const item of this.educationDetails) {

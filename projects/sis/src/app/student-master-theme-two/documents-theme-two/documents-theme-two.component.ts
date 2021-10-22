@@ -34,6 +34,7 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() documentFormData: any;
 	@Input() docContext: any;
 	@Input() configSetting: any;
+	@Input() studentClass: any;
 	
 	constructor(
 		private fbuild: FormBuilder,
@@ -52,6 +53,7 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.getDocuments();
+		this.getDocumentRequired();
 	}
 	buildForm() {
 		this.Documents_Form = this.fbuild.group({
@@ -67,14 +69,27 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getDocumentRequired() {
+		console.log("studentClass >>>>>>>>>>", this.studentClass, JSON.parse(localStorage.getItem('currentStudent'));
+		this.studentClass =  this.studentClass ? this.studentClass : JSON.parse(localStorage.getItem('currentStudent'));
 		this.sisService.getDocumentRequired().subscribe((result: any) => {
 			if (result) {
+				this.documentsArray = [];
+				console.log("studentClass >>>>", result.data);
+				
 				for (const item of result.data) {
+					// if(item.docreq_status === '1' && item.docreq_class.length > 0){
+					// 	for (const itemI of item.docreq_class) {
+					// 		console.log("studentClass docreq", itemI);
+							
+					// 		if(itemI == this.studentClass) this.documentsArray.push(item);
+					// 	}
+					// }
 					if (item.docreq_status === '1') {
+						if(item.docreq_class.includes(this.studentClass) || item.docreq_class.includes(''))
 						this.documentsArray.push(item);
 					}
 				}
-				console.log('www',this.documentArray);
+				console.log('studentClass www',this.documentsArray);
 			}
 		});
 		

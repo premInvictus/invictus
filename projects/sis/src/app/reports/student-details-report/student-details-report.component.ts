@@ -270,6 +270,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
+
+			{ id: 'au_house', name: 'House', field: 'au_house', sortable: true, filterable: true, minWidth: 200 },
 			
 			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 100 },
 			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true, minWidth: 100 },
@@ -1287,6 +1289,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
 				tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
 				tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
+				tempObj['au_house'] = new TitleCasePipe().transform(this.reportProcessWiseData[key]['au_house']);
 				console.log("process type", process_type);
 				if(process_type == '1'|| process_type == '2' || process_type == '4') {
 					tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
@@ -1295,7 +1298,6 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 					tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
 				}
 				
-				console.log("status",this.reportProcessWiseData[key]['au_status']);
 				this.dataset.push(tempObj);
 
 				counter++;
