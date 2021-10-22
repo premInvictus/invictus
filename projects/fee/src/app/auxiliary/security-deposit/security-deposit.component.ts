@@ -234,7 +234,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 	}
 
 	changeTab(event) {
-		console.log('change tab', event.index);
+		console.log('change tab -----------',event,'--------', event.index);
 		this.currentTab = event.index;
 		
 		if (this.currentTab) {
@@ -286,9 +286,9 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 		this.deleteModal.openModal(item);
 	}
 	approvePay(item) {
-		console.log(item);
+		console.log(item,'------------------', this.currentTab);
 		var inputJson = {};
-		if (this.currentTab) {
+		if (!this.currentTab) {
 			
 			inputJson['fsd_enrollment_no'] = 1;
 			inputJson['fsd_enrollment_no'] = item.au_admission_no;
