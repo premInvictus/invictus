@@ -583,7 +583,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.studentdetails = [];
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
-
+						localStorage.setItem('currentStudent',result.data[0].au_class_id);
+						
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
@@ -774,6 +775,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.sisService.getStudentInformation({ au_login_id: admno }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.lastRecordId = result.data[0].au_login_id;
+				localStorage.setItem('currentStudent',result.data[0].au_class_id);
+				console.log("studentClass > new student", localStorage.getItem('currentStudent'));
 				this.commonAPIService.studentData.next(
 					{
 						last_record: admno, au_login_id: result.data[0].au_login_id, editable_status: result.data[0].editable_status

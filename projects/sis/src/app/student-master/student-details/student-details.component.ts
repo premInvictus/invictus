@@ -358,7 +358,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 	getStudentDetailsByAdmno(admno) {
 		this.sisService.getStudentDetails({ au_login_id: admno }).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				localStorage.setItem('currentStudent',result.data);
+				// localStorage.setItem('currentStudent',result.data);
 				console.log("studentClass ls >>>>>>>>>>",localStorage.getItem('currentStudent'));
 				this.commonAPIService.studentData.next({ last_record: admno, au_login_id: result.data[0].au_login_id });
 			} else {
