@@ -582,10 +582,10 @@ export class TransferReportComponent implements OnInit {
               obj['particulars'] = data.item_code +' - '+ data.item_name;
               obj['qty'] = data.item_quantity + " - " + data.item_units;
               obj['type'] = item.type == "branch-transfer" ? "External" : "Internal";
-              obj['f_loc'] = location_from.location_name;
-              obj['t_loc'] = location_to.location_name;
-              obj['dept_id'] = data_pic.item_category.name;
-              obj['remark'] = item.remarks;
+              obj['f_loc'] = location_from.location_name?  location_from.location_name: '-';
+              obj['t_loc'] = location_to.location_name ? location_to.location_name : '-';
+              obj['dept_id'] = data_pic.item_category && data_pic.item_category.name ? data_pic.item_category.name: '-';
+              obj['remark'] = item.remarks? item.remarks: '-';
               obj['created_by'] = item.created_by.name;
               let isAvailable = true;
               if (Object.keys(this.objectFilter).length > 0) {
@@ -849,7 +849,7 @@ export class TransferReportComponent implements OnInit {
     }
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Transfer Detailed Sales Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -1189,9 +1189,9 @@ export class TransferReportComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('store_detail_sales_report') + this.sessionName;
+    reportType = new TitleCasePipe().transform('transfer_detail_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('Store Detailed Sales Report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('Transfer Detailed  Report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
