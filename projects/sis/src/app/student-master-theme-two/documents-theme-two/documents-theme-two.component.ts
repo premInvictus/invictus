@@ -69,7 +69,6 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getDocumentRequired() {
-		console.log("studentClass >>>>>>>>>>", this.studentClass, JSON.parse(localStorage.getItem('currentStudent'));
 		this.studentClass =  this.studentClass ? this.studentClass : JSON.parse(localStorage.getItem('currentStudent'));
 		this.sisService.getDocumentRequired().subscribe((result: any) => {
 			if (result) {
