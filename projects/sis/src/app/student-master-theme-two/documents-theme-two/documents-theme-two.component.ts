@@ -69,12 +69,12 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getDocumentRequired() {
-		this.studentClass =  this.studentClass ? this.studentClass : JSON.parse(localStorage.getItem('currentStudent'));
+		this.studentClass =  JSON.parse(localStorage.getItem('currentStudent')).toString();
 		this.sisService.getDocumentRequired().subscribe((result: any) => {
 			if (result) {
 				this.documentsArray = [];
-				console.log("studentClass >>>>", result.data);
-				
+				console.log("studentClass g d r>>>>", result.data);
+				let tempArray = [];
 				for (const item of result.data) {
 					// if(item.docreq_status === '1' && item.docreq_class.length > 0){
 					// 	for (const itemI of item.docreq_class) {
@@ -83,12 +83,17 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 					// 		if(itemI == this.studentClass) this.documentsArray.push(item);
 					// 	}
 					// }
-					if (item.docreq_status === '1') {
+					console.log("studentClass > l storage >>>", this.studentClass);
+					if (item.docreq_status == '1') {
+						tempArray.push(item);
+						console.log("studentClass tA>>>>",tempArray);
+						console.log("studentClass > class present tA>>>>",tempArray.includes(this.studentClass));
+						
 						if(item.docreq_class.includes(this.studentClass) || item.docreq_class.includes(''))
 						this.documentsArray.push(item);
 					}
 				}
-				console.log('studentClass www',this.documentsArray);
+				console.log('studentClass > www',this.documentsArray);
 			}
 		});
 		
