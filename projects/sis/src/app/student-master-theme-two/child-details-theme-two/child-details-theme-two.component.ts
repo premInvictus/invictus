@@ -618,7 +618,14 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				upd_tag_id: personalDetails[0].upd_tag_id,
 				upd_is_online: personalDetails[0].upd_is_online ? (personalDetails[0].upd_is_online == "" ? 'offline' : personalDetails[0].upd_is_online) : 'offline'
 			});
-			if (personalDetails[0].addressDetails.length > 0) {
+
+			console.log("len >>>>>>>>", personalDetails[0].addressDetails.length);
+			let permanentAddress = [];
+			let presentAddress = [];
+			let counter = 0;
+
+			if (personalDetails[0].addressDetails.length > 0) {																							
+				
 				personalDetails[0].addressDetails.forEach(element => {
 					if (element.ea_address_type === 'permanent') {
 						if (element.cit_name) {
@@ -628,23 +635,74 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								}
 							});
 						}
-						console.log("i am eeeee", element);
-
+						if(counter < 1){
+							permanentAddress.push({
+								ea_id: element.ea_id,
+								ea_login_id: element.ea_login_id,
+								ea_address_type: 'permanent',
+								ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+								ea_address_for: 'S',
+								ea_address1: element.ea_address1,
+								ea_city: element.ea_city,
+								ea_city1: element.cit_name,
+								ea_state: element.ea_state,
+								ea_district: element.ea_district,
+								ea_country: element.ea_country,
+								ea_pincode: element.ea_pincode
+							});
+						}
+						counter++;
+					}
+				});
+				counter=0;
+				personalDetails[0].addressDetails.forEach(element => {
+					if (element.ea_address_type === 'present') {
+						if (element.cit_name) {
+							this.sisService.getStateCountryByCity({ cit_name: element.cit_name }).subscribe((result: any) => {
+								if (result.status === 'ok') {
+									this.cityCountryArray = result.data;
+									console.log("cityCountryArray >>>>", this.cityCountryArray);
+								}
+							});
+						}
+						if(counter < 1){
+							presentAddress.push({
+								ea_id: element.ea_id,
+								ea_login_id: element.ea_login_id,
+								ea_address_type: 'permanent',
+								ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+								ea_address_for: 'S',
+								ea_address1: element.ea_address1,
+								ea_city: element.ea_city,
+								ea_city1: element.cit_name,
+								ea_state: element.ea_state,
+								ea_district: element.ea_district,
+								ea_country: element.ea_country,
+								ea_pincode: element.ea_pincode
+							});
+						}
+						counter++;
+					}
+				});
+				console.log("cityCountryArray >>>>", this.cityCountryArray);
+				console.log("p address >>>>", permanentAddress);
+				console.log("pr address >>>>", presentAddress);
+				if(permanentAddress.length > 0){
 						this.paddressform.patchValue({
-							ea_id: element.ea_id,
-							ea_login_id: element.ea_login_id,
+							ea_id: permanentAddress[0].ea_id,
+							ea_login_id: permanentAddress[0].ea_login_id,
 							ea_address_type: 'permanent',
-							ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+							ea_same_residential_address: permanentAddress[0].ea_same_residential_address === 'Y' ? true : false,
 							ea_address_for: 'S',
-							ea_address1: element.ea_address1,
-							ea_city: element.ea_city,
-							ea_city1: element.cit_name,
-							ea_state: element.ea_state,
-							ea_district: element.ea_district,
-							ea_country: element.ea_country,
-							ea_pincode: element.ea_pincode
+							ea_address1: permanentAddress[0].ea_address1,
+							ea_city: permanentAddress[0].ea_city,
+							ea_city1: permanentAddress[0].ea_city1,
+							ea_state: permanentAddress[0].ea_state,
+							ea_district: permanentAddress[0].ea_district,
+							ea_country: permanentAddress[0].ea_country,
+							ea_pincode: permanentAddress[0].ea_pincode
 						});
-						if (element.ea_same_residential_address === 'N') {
+						if (permanentAddress[0].ea_same_residential_address === false) {
 							this.showAddressFlag = false;
 							this.addressStatus = 'Yes';
 							this.opacityClass = 'opacity-class';
@@ -653,28 +711,141 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							this.showAddressFlag = true;
 							this.addressStatus = 'No';
 						}
-					} else if (element.ea_address_type === 'present') {
-						this.raddressform.patchValue({
-							ea_id: element.ea_id,
-							ea_login_id: element.ea_login_id,
-							ea_address_type: 'present',
-							ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
-							ea_address_for: 'S',
-							ea_address1: element.ea_address1,
-							ea_city: element.ea_city,
-							ea_city1: element.cit_name,
-							ea_state: element.ea_state,
-							ea_district: element.ea_district,
-							ea_country: element.ea_country,
-							ea_pincode: element.ea_pincode
-						});
+				}else{
+					this.resetraddressform();
+				}
+				if(presentAddress.length > 0){
+					this.raddressform.patchValue({
+						ea_id: presentAddress[0].ea_id,
+						ea_login_id: presentAddress[0].ea_login_id,
+						ea_address_type: 'permanent',
+						ea_same_residential_address: presentAddress[0].ea_same_residential_address === 'Y' ? true : false,
+						ea_address_for: 'S',
+						ea_address1: presentAddress[0].ea_address1,
+						ea_city: presentAddress[0].ea_city,
+						ea_city1: presentAddress[0].ea_city1,
+						ea_state: presentAddress[0].ea_state,
+						ea_district: presentAddress[0].ea_district,
+						ea_country: presentAddress[0].ea_country,
+						ea_pincode: presentAddress[0].ea_pincode
+					});
+				}else{
+					this.resetraddressform();
+				}
+				// personalDetails[0].addressDetails.forEach(element => {
+				// 	if (element.ea_address_type === 'permanent') {
+				// 		if (element.cit_name) {
+				// 			this.sisService.getStateCountryByCity({ cit_name: element.cit_name }).subscribe((result: any) => {
+				// 				if (result.status === 'ok') {
+				// 					this.cityCountryArray = result.data;
+				// 				}
+				// 			});
+				// 		}
+				// 		console.log("i am eeeee", element);
 
-					}
-				});
+				// 		this.paddressform.patchValue({
+				// 			ea_id: element.ea_id,
+				// 			ea_login_id: element.ea_login_id,
+				// 			ea_address_type: 'permanent',
+				// 			ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+				// 			ea_address_for: 'S',
+				// 			ea_address1: element.ea_address1,
+				// 			ea_city: element.ea_city,
+				// 			ea_city1: element.cit_name,
+				// 			ea_state: element.ea_state,
+				// 			ea_district: element.ea_district,
+				// 			ea_country: element.ea_country,
+				// 			ea_pincode: element.ea_pincode
+				// 		});
+				// 		if (element.ea_same_residential_address === 'N') {
+				// 			this.showAddressFlag = false;
+				// 			this.addressStatus = 'Yes';
+				// 			this.opacityClass = 'opacity-class';
+				// 		} else {
+				// 			this.opacityClass = '';
+				// 			this.showAddressFlag = true;
+				// 			this.addressStatus = 'No';
+				// 		}
+				// 	} else if (element.ea_address_type === 'present') {
+				// 		this.raddressform.patchValue({
+				// 			ea_id: element.ea_id,
+				// 			ea_login_id: element.ea_login_id,
+				// 			ea_address_type: 'present',
+				// 			ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+				// 			ea_address_for: 'S',
+				// 			ea_address1: element.ea_address1 ? element.ea_address1 : '' ,
+				// 			ea_city: element.ea_city,
+				// 			ea_city1: element.cit_name,
+				// 			ea_state: element.ea_state,
+				// 			ea_district: element.ea_district,
+				// 			ea_country: element.ea_country,
+				// 			ea_pincode: element.ea_pincode
+				// 		});
+
+				// 	}
+				// });
 			} else {
 				this.resetpaddressform();
 				this.resetraddressform();
 			}
+			
+			// if (personalDetails[0].addressDetails.length > 0) {
+			// 	personalDetails[0].addressDetails.forEach(element => {
+			// 		if (element.ea_address_type === 'permanent') {
+			// 			if (element.cit_name) {
+			// 				this.sisService.getStateCountryByCity({ cit_name: element.cit_name }).subscribe((result: any) => {
+			// 					if (result.status === 'ok') {
+			// 						this.cityCountryArray = result.data;
+			// 					}
+			// 				});
+			// 			}
+			// 			console.log("i am eeeee", element);
+
+			// 			this.paddressform.patchValue({
+			// 				ea_id: element.ea_id,
+			// 				ea_login_id: element.ea_login_id,
+			// 				ea_address_type: 'permanent',
+			// 				ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+			// 				ea_address_for: 'S',
+			// 				ea_address1: element.ea_address1,
+			// 				ea_city: element.ea_city,
+			// 				ea_city1: element.cit_name,
+			// 				ea_state: element.ea_state,
+			// 				ea_district: element.ea_district,
+			// 				ea_country: element.ea_country,
+			// 				ea_pincode: element.ea_pincode
+			// 			});
+			// 			if (element.ea_same_residential_address === 'N') {
+			// 				this.showAddressFlag = false;
+			// 				this.addressStatus = 'Yes';
+			// 				this.opacityClass = 'opacity-class';
+			// 			} else {
+			// 				this.opacityClass = '';
+			// 				this.showAddressFlag = true;
+			// 				this.addressStatus = 'No';
+			// 			}
+			// 		} else if (element.ea_address_type === 'present') {
+			// 			this.raddressform.patchValue({
+			// 				ea_id: element.ea_id,
+			// 				ea_login_id: element.ea_login_id,
+			// 				ea_address_type: 'present',
+			// 				ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
+			// 				ea_address_for: 'S',
+			// 				ea_address1: element.ea_address1,
+			// 				ea_city: element.ea_city,
+			// 				ea_city1: element.cit_name,
+			// 				ea_state: element.ea_state,
+			// 				ea_district: element.ea_district,
+			// 				ea_country: element.ea_country,
+			// 				ea_pincode: element.ea_pincode
+			// 			});
+
+			// 		}
+			// 	});
+			// } else {
+			// 	this.resetpaddressform();
+			// 	this.resetraddressform();
+			// }
 			if (personalDetails[0].upd_is_minority) {
 				if (personalDetails[0].upd_is_minority == 'Y') {
 					this.isMinority = true;
