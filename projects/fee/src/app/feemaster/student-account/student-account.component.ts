@@ -569,7 +569,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	getRoutes() {
 		this.feeService.getRoutes({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.routeArray = result.data;
+				result.data.forEach(element => {
+					if(element.tr_status === "1"){
+						this.routeArray.push(element);
+					}
+				});
+				// this.routeArray = result.data;
+				console.log("route array >>>>", this.routeArray);
 			}
 		});
 	}
@@ -1051,7 +1057,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.stoppageArray = [];
 		this.feeService.getStoppagesPerRoute({ tr_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.stoppageArray = result.data;
+				result.data.forEach(element => {
+					if(element.tr_status === "1"){
+						this.stoppageArray.push(element);
+					}
+				});
+				// this.stoppageArray = result.data;
+				console.log("stopageArray >>>>>", this.stoppageArray);
 			}
 		});
 	}
