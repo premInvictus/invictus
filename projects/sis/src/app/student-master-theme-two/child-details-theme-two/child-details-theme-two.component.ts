@@ -788,64 +788,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				this.resetpaddressform();
 				this.resetraddressform();
 			}
-			
-			// if (personalDetails[0].addressDetails.length > 0) {
-			// 	personalDetails[0].addressDetails.forEach(element => {
-			// 		if (element.ea_address_type === 'permanent') {
-			// 			if (element.cit_name) {
-			// 				this.sisService.getStateCountryByCity({ cit_name: element.cit_name }).subscribe((result: any) => {
-			// 					if (result.status === 'ok') {
-			// 						this.cityCountryArray = result.data;
-			// 					}
-			// 				});
-			// 			}
-			// 			console.log("i am eeeee", element);
 
-			// 			this.paddressform.patchValue({
-			// 				ea_id: element.ea_id,
-			// 				ea_login_id: element.ea_login_id,
-			// 				ea_address_type: 'permanent',
-			// 				ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
-			// 				ea_address_for: 'S',
-			// 				ea_address1: element.ea_address1,
-			// 				ea_city: element.ea_city,
-			// 				ea_city1: element.cit_name,
-			// 				ea_state: element.ea_state,
-			// 				ea_district: element.ea_district,
-			// 				ea_country: element.ea_country,
-			// 				ea_pincode: element.ea_pincode
-			// 			});
-			// 			if (element.ea_same_residential_address === 'N') {
-			// 				this.showAddressFlag = false;
-			// 				this.addressStatus = 'Yes';
-			// 				this.opacityClass = 'opacity-class';
-			// 			} else {
-			// 				this.opacityClass = '';
-			// 				this.showAddressFlag = true;
-			// 				this.addressStatus = 'No';
-			// 			}
-			// 		} else if (element.ea_address_type === 'present') {
-			// 			this.raddressform.patchValue({
-			// 				ea_id: element.ea_id,
-			// 				ea_login_id: element.ea_login_id,
-			// 				ea_address_type: 'present',
-			// 				ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
-			// 				ea_address_for: 'S',
-			// 				ea_address1: element.ea_address1,
-			// 				ea_city: element.ea_city,
-			// 				ea_city1: element.cit_name,
-			// 				ea_state: element.ea_state,
-			// 				ea_district: element.ea_district,
-			// 				ea_country: element.ea_country,
-			// 				ea_pincode: element.ea_pincode
-			// 			});
-
-			// 		}
-			// 	});
-			// } else {
-			// 	this.resetpaddressform();
-			// 	this.resetraddressform();
-			// }
 			if (personalDetails[0].upd_is_minority) {
 				if (personalDetails[0].upd_is_minority == 'Y') {
 					this.isMinority = true;
