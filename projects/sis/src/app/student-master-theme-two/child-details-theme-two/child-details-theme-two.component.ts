@@ -619,7 +619,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				upd_is_online: personalDetails[0].upd_is_online ? (personalDetails[0].upd_is_online == "" ? 'offline' : personalDetails[0].upd_is_online) : 'offline'
 			});
 
-			console.log("len >>>>>>>>", personalDetails[0].addressDetails.length);
+			console.log("len >>>>>>>>", personalDetails[0]);
 			let permanentAddress = [];
 			let presentAddress = [];
 			let counter = 0;
@@ -712,13 +712,13 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							this.addressStatus = 'No';
 						}
 				}else{
-					this.resetraddressform();
+					this.resetpaddressform();
 				}
 				if(presentAddress.length > 0){
 					this.raddressform.patchValue({
 						ea_id: presentAddress[0].ea_id,
 						ea_login_id: presentAddress[0].ea_login_id,
-						ea_address_type: 'permanent',
+						ea_address_type: 'present',
 						ea_same_residential_address: presentAddress[0].ea_same_residential_address === 'Y' ? true : false,
 						ea_address_for: 'S',
 						ea_address1: presentAddress[0].ea_address1,
