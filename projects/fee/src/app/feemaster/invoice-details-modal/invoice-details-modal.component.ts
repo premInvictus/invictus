@@ -203,6 +203,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			item2.bifurcation.forEach(item => {
 				adj2.adjustment.push({ invg_id: item.invg_id, invg_adj_amount: item.adjustment });
 			});
+			adj2.remark = this.adjRemark;
 			obcheck.push(adj2);
 		})
 		adj.remark = this.adjRemark;
