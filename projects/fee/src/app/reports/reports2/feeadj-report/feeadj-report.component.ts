@@ -548,11 +548,18 @@ export class FeeadjReportComponent implements OnInit {
 						console.log(this.findRecursive(repoArray, keys));
 
 						this.findRecursive(repoArray, keys);
-						obj['inv_id'] = this.objany && this.objany['inv_id'] ? this.objany['inv_id'] : '-';
-						console.log("i am data", this.objany, repoArray[Number(keys)]['inv_consolidate_id']);
-						obj['invoice_no'] = this.objany && this.objany['invoice_no'] ? this.objany['invoice_no'] : '-';
-						obj['inv_remark'] =
-						this.objany && this.objany['inv_remark'] ? new CapitalizePipe().transform(this.objany['inv_remark']) : '-';
+						if(Object.keys(this.objany).length > 0) {
+							obj['inv_id'] = this.objany && this.objany['inv_id'] ? this.objany['inv_id'] : '-';
+							console.log("i am data", this.objany, repoArray[Number(keys)]['inv_consolidate_id']);
+							obj['invoice_no'] = this.objany && this.objany['invoice_no'] ? this.objany['invoice_no'] : '-';
+							obj['inv_remark'] =
+							this.objany && this.objany['inv_remark'] ? new CapitalizePipe().transform(this.objany['inv_remark']) : '-';
+						} else {
+							obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+							obj['inv_remark'] =
+								repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
+						}
+						
 
 					} else {
 						obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
