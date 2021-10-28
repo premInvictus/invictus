@@ -127,6 +127,7 @@ export class FeeadjReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	objany: {};
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -546,12 +547,12 @@ export class FeeadjReportComponent implements OnInit {
 					if (repoArray[Number(keys)]['inv_consolidate_id'] && repoArray[Number(keys)]['inv_consolidate_id'] != "0") {
 						console.log(this.findRecursive(repoArray, keys));
 
-						const data = this.findRecursive(repoArray, keys);
-						obj['inv_id'] = data && data['inv_id'] ? data['inv_id'] : '-';
-						console.log("i am data", data, repoArray[Number(keys)]['inv_consolidate_id']);
-						obj['invoice_no'] = data && data['invoice_no'] ? data['invoice_no'] : '-';
+						this.findRecursive(repoArray, keys);
+						obj['inv_id'] = this.objany && this.objany['inv_id'] ? this.objany['inv_id'] : '-';
+						console.log("i am data", this.objany, repoArray[Number(keys)]['inv_consolidate_id']);
+						obj['invoice_no'] = this.objany && this.objany['invoice_no'] ? this.objany['invoice_no'] : '-';
 						obj['inv_remark'] =
-							data && data['inv_remark'] ? new CapitalizePipe().transform(data['inv_remark']) : '-';
+						this.objany && this.objany['inv_remark'] ? new CapitalizePipe().transform(this.objany['inv_remark']) : '-';
 
 					} else {
 						obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
@@ -2116,30 +2117,26 @@ export class FeeadjReportComponent implements OnInit {
 		}
 	}
 	findRecursive(repoArray, keys) {
+		this.objany = {};
 		for (let p = 0; p < repoArray.length; p++) {
-			let obj: any = {};
-
 			if (repoArray[Number(keys)]['inv_consolidate_id'] == repoArray[Number(p)]['inv_id']) {
-
 				if (repoArray[Number(p)]['inv_consolidate_id'] && repoArray[Number(p)]['inv_consolidate_id'] != "0" && repoArray[Number(p)]['inv_consolidate_id'] != 0 && repoArray[Number(p)]['inv_consolidate_id'] != "") {
 					console.log(repoArray[Number(keys)]['inv_consolidate_id'], '-----------', repoArray[Number(p)]['inv_id']);
-					this.findRecursive(repoArray, p)
+					this.findRecursive(repoArray, p);
 				} else {
 					console.log(repoArray[Number(keys)]['inv_consolidate_id'], '-----+------', repoArray[Number(p)]['inv_id']);
 					console.log("in here", repoArray[Number(p)]);
-
-					obj['inv_id'] = repoArray[Number(p)]['inv_id'];
-					obj['invoice_no'] = repoArray[Number(p)]['inv_invoice_no'];
-					obj['inv_remark'] =
+					this.objany['inv_id'] = repoArray[Number(p)]['inv_id'];
+					this.objany['invoice_no'] = repoArray[Number(p)]['inv_invoice_no'];
+					this.objany['inv_remark'] =
 						repoArray[Number(p)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(p)]['inv_remark']) : '-';
-					console.log("-------", obj);
-
-					return obj;
+					console.log("-------", this.objany);
+					break;					
 				}
-
-
 			}
 		}
+		// console.log("------+-", obj);
+		// return obj;
 	}
 }
 
