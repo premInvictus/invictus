@@ -818,10 +818,8 @@
                                                          >
                                                       </table>
                                                    </div>
-                                                   <mat-paginator *ngIf="configValue != '27'" #paginator [pageSizeOptions]=[5,10,20]
-                                                      [pageSize]="10"></mat-paginator>
-                                                      <mat-paginator *ngIf="configValue == '27'" #paginator [pageSizeOptions]=[5,10,20]
-                                                         [pageSize]="20"></mat-paginator>
+                                                   <mat-paginator #paginator [pageSizeOptions]=pageSizeOptions
+                                                      [pageSize]=pageSize ></mat-paginator>
                                                 </div>
                                              </div>
                                           </div>
