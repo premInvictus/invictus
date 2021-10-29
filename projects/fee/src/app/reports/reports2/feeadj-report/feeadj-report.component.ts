@@ -127,6 +127,7 @@ export class FeeadjReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	objany: {};
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -145,7 +146,7 @@ export class FeeadjReportComponent implements OnInit {
 		this.reportTypeArray.push({ report_type: 'adjdetail', report_name: 'Adjustment Detail Report' });
 		this.reportTypeArray.push({ report_type: 'cumulativedetail', report_name: 'Cumulative Adjustment Concession Report' });
 		// this.getFeeAdjReport(this.reportFilterForm.value);
-		
+
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -155,50 +156,50 @@ export class FeeadjReportComponent implements OnInit {
 		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	parseRoman(s) {
-        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
-        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
-            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
-        }, 0);
+		var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+		return s.toUpperCase().split('').reduce((r, a, i, aa) => {
+			return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+		}, 0);
 	}
 	isRoman(s) {
-        // http://stackoverflow.com/a/267405/1447675
-        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+		// http://stackoverflow.com/a/267405/1447675
+		return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
 	}
-	updateClassSort(grid:any,dataView:any) {
+	updateClassSort(grid: any, dataView: any) {
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx];
 			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
-				grid.onSort.subscribe((e, args)=> {
+				grid.onSort.subscribe((e, args) => {
 					console.log('in, args', args);
 					// args.multiColumnSort indicates whether or not this is a multi-column sort.
 					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
 					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
-				  
+
 					// We'll use a simple comparer function here.
 					args = args.sortCols[0];
-					var comparer = (a, b) =>{
+					var comparer = (a, b) => {
 						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
-							
-							
+
+
 						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
-							
+
 							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
-						
-						
+
+
 						} else {
-							
+
 							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
 						}
-					
+
 					}
-				  
+
 					// Delegate the sorting to DataView.
 					// This will fire the change events and update the grid.
 					dataView.sort(comparer, args.sortAsc);
-				  });
+				});
 			}
 		}
 	}
@@ -254,12 +255,12 @@ export class FeeadjReportComponent implements OnInit {
 	}
 
 
-	changeReportType($event) {		
+	changeReportType($event) {
 		this.reportType = this.reportFilterForm.value.report_type;
 		console.log('')
 		if (this.reportType === 'adjdetail') {
 			this.getFeeAdjReport(this.reportFilterForm.value)
-		} else if (this.reportType === 'cumulativedetail'){
+		} else if (this.reportType === 'cumulativedetail') {
 			this.getCumulativeFeeAdjConcessionReport(this.reportFilterForm.value)
 		}
 	}
@@ -288,7 +289,7 @@ export class FeeadjReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			fullWidthRows: true,
-			rowHeight:65,
+			rowHeight: 65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -485,7 +486,8 @@ export class FeeadjReportComponent implements OnInit {
 								filter: { model: Filters.compoundInputNumber },
 								cssClass: 'fee-ledger-no',
 								formatter: this.checkReceiptFormatter
-							}];
+							}
+						];
 					}
 					if (repoArray[Number(keys)]['student_adjustment_fee_heads_data']) {
 						let k = 0;
@@ -505,7 +507,7 @@ export class FeeadjReportComponent implements OnInit {
 										filter: { model: Filters.compoundInput },
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter,
-										type:FieldType.number,
+										type: FieldType.number,
 									});
 									feeObj['fh_name' + j] = '';
 									feeHead.push(feeObj);
@@ -525,22 +527,44 @@ export class FeeadjReportComponent implements OnInit {
 										obj['stu_class_name'] = repoArray[Number(keys)]['class_name'] + '-' +
 											repoArray[Number(keys)]['sec_name'];
 									} else {
-										obj['stu_class_name'] = repoArray[Number(keys)]['class_name']; 
+										obj['stu_class_name'] = repoArray[Number(keys)]['class_name'];
 									}
-									obj['inv_id'] = repoArray[Number(keys)]['inv_id'];
-									obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+
+
 									obj[key2 + k] = titem['invg_adj_amount'] ? Number(titem['invg_adj_amount']) : 0;
 									tot = tot + (titem['invg_adj_amount'] ? Number(titem['invg_adj_amount']) : 0);
 									obj['adjusted_by'] =
 										repoArray[Number(keys)]['adjusted_by'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['adjusted_by']) : '-';
 									obj['adjustment_date'] = repoArray[Number(keys)]['adjustment_date'];
 									obj['invg_adj_amount'] = Number(tot) ? Number(tot) : 0;
-									obj['inv_remark'] =
-										repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
+
 									k++;
 								}
 							});
 						}
+					}
+					obj['inv_id'] = repoArray[Number(keys)]['inv_id'];
+					if (repoArray[Number(keys)]['inv_consolidate_id'] && repoArray[Number(keys)]['inv_consolidate_id'] != "0") {
+						console.log(this.findRecursive(repoArray, keys));
+
+						this.findRecursive(repoArray, keys);
+						if(Object.keys(this.objany).length > 0) {
+							obj['inv_id'] = this.objany && this.objany['inv_id'] ? this.objany['inv_id'] : '-';
+							console.log("i am data", this.objany, repoArray[Number(keys)]['inv_consolidate_id']);
+							obj['invoice_no'] = this.objany && this.objany['invoice_no'] ? this.objany['invoice_no'] : '-';
+							obj['inv_remark'] =
+							this.objany && this.objany['inv_remark'] ? new CapitalizePipe().transform(this.objany['inv_remark']) : '-';
+						} else {
+							obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+							obj['inv_remark'] =
+								repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
+						}
+						
+
+					} else {
+						obj['invoice_no'] = repoArray[Number(keys)]['inv_invoice_no'] ? repoArray[Number(keys)]['inv_invoice_no'] : '-';
+						obj['inv_remark'] =
+							repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
 					}
 					i++;
 					this.dataset.push(obj);
@@ -572,7 +596,7 @@ export class FeeadjReportComponent implements OnInit {
 						cssClass: 'amount-report-fee',
 						filterable: true,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
+						type: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						groupTotalsFormatter: this.sumTotalsFormatter,
 						formatter: this.checkFeeFormatter
@@ -608,10 +632,10 @@ export class FeeadjReportComponent implements OnInit {
 					}
 				);
 				if (this.columnDefinitions.length > 18) {
-					this.gridOptions.defaultColumnWidth =100;
-					this.gridOptions.forceFitColumns=false;
-					this.gridOptions.enableAutoResize=false;
-					this.gridOptions.autoFitColumnsOnFirstLoad=false;
+					this.gridOptions.defaultColumnWidth = 100;
+					this.gridOptions.forceFitColumns = false;
+					this.gridOptions.enableAutoResize = false;
+					this.gridOptions.autoFitColumnsOnFirstLoad = false;
 				}
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
 				this.totalRow = {};
@@ -681,7 +705,7 @@ export class FeeadjReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			fullWidthRows: true,
-			rowHeight:65,
+			rowHeight: 65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -898,7 +922,7 @@ export class FeeadjReportComponent implements OnInit {
 										filter: { model: Filters.compoundInput },
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter,
-										type:FieldType.number,
+										type: FieldType.number,
 									});
 									feeObj['fh_name' + j] = '';
 									feeHead.push(feeObj);
@@ -936,10 +960,10 @@ export class FeeadjReportComponent implements OnInit {
 						}
 					}
 					i++;
-					if(obj && obj['id']) {
+					if (obj && obj['id']) {
 						this.dataset.push(obj);
 					}
-					
+
 				});
 				console.log('this.dataset-->', this.dataset);
 				this.columnDefinitions.push(
@@ -969,7 +993,7 @@ export class FeeadjReportComponent implements OnInit {
 						cssClass: 'amount-report-fee',
 						filterable: true,
 						filterSearchType: FieldType.number,
-						type:FieldType.number,
+						type: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						groupTotalsFormatter: this.sumTotalsFormatter,
 						formatter: this.checkFeeFormatter
@@ -1005,10 +1029,10 @@ export class FeeadjReportComponent implements OnInit {
 					}
 				);
 				if (this.columnDefinitions.length > 18) {
-					this.gridOptions.defaultColumnWidth =100;
-					this.gridOptions.forceFitColumns=false;
-					this.gridOptions.enableAutoResize=false;
-					this.gridOptions.autoFitColumnsOnFirstLoad=false;
+					this.gridOptions.defaultColumnWidth = 100;
+					this.gridOptions.forceFitColumns = false;
+					this.gridOptions.enableAutoResize = false;
+					this.gridOptions.autoFitColumnsOnFirstLoad = false;
 				}
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
 				this.totalRow = {};
@@ -1114,7 +1138,7 @@ export class FeeadjReportComponent implements OnInit {
 			} else {
 				return '';
 			}
-			
+
 		}
 		return '';
 	}
@@ -1122,9 +1146,9 @@ export class FeeadjReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
 		}
@@ -1133,9 +1157,9 @@ export class FeeadjReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			if (value ) {
+			if (value) {
 				return new DecimalPipe('en-in').transform(value);
-			}else {
+			} else {
 				return '-';
 			}
 		}
@@ -1144,7 +1168,7 @@ export class FeeadjReportComponent implements OnInit {
 		if (value === '-') {
 			return '-';
 		} else {
-			if(value)
+			if (value)
 				return '<a>' + value + '</a>';
 			else
 				return '-';
@@ -1335,20 +1359,21 @@ export class FeeadjReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('fee adj_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('fee adjustment report: ') + this.sessionName;
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
 		for (const item of this.exportColumnDefinitions) {
-			if(!(item.id.includes('checkbox_select'))) {
-			columns.push({
-			key: item.id,
-			width: 8
-			//width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);}
+			if (!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: 8
+					//width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);
 			}
-		worksheet.properties.defaultRowHeight =40;
+		}
+		worksheet.properties.defaultRowHeight = 40;
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -1358,10 +1383,10 @@ export class FeeadjReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
-		for(var i=1; i<=columns.length;i++) {
-			
-			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
-			
+		for (var i = 1; i <= columns.length; i++) {
+
+			worksheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
@@ -1441,7 +1466,7 @@ export class FeeadjReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { wrapText:true,horizontal: 'center' };
+					cell.alignment = { wrapText: true, horizontal: 'center' };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
@@ -2098,4 +2123,28 @@ export class FeeadjReportComponent implements OnInit {
 			}
 		}
 	}
+	findRecursive(repoArray, keys) {
+		this.objany = {};
+		for (let p = 0; p < repoArray.length; p++) {
+			if (repoArray[Number(keys)]['inv_consolidate_id'] == repoArray[Number(p)]['inv_id']) {
+				if (repoArray[Number(p)]['inv_consolidate_id'] && repoArray[Number(p)]['inv_consolidate_id'] != "0" && repoArray[Number(p)]['inv_consolidate_id'] != 0 && repoArray[Number(p)]['inv_consolidate_id'] != "") {
+					console.log(repoArray[Number(keys)]['inv_consolidate_id'], '-----------', repoArray[Number(p)]['inv_id']);
+					this.findRecursive(repoArray, p);
+				} else {
+					console.log(repoArray[Number(keys)]['inv_consolidate_id'], '-----+------', repoArray[Number(p)]['inv_id']);
+					console.log("in here", repoArray[Number(p)]);
+					this.objany['inv_id'] = repoArray[Number(p)]['inv_id'];
+					this.objany['invoice_no'] = repoArray[Number(p)]['inv_invoice_no'];
+					this.objany['inv_remark'] =
+						repoArray[Number(p)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(p)]['inv_remark']) : '-';
+					console.log("-------", this.objany);
+					break;					
+				}
+			}
+		}
+		// console.log("------+-", obj);
+		// return obj;
+	}
 }
+
+
