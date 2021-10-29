@@ -61,6 +61,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
 	{ docreq_is_required: '0', docreq_is_required_name: 'No' }];
 	reason_type: any = '1';
+	pageSize: number = 100;
+	pageSizeOptions: number[] = [100,200,300];
 	constructor(private fbuild: FormBuilder,
 		private SmartService: SmartService,
 		private sisService: SisService,
@@ -1028,6 +1030,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1092,6 +1096,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			that.CONFIG_ELEMENT_DATA.sort((a,b) => (a.order > b.order? 1:-1));
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 			that.configDataSource.sort = that.sort;
 
@@ -1119,6 +1125,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			});
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
+			this.pageSize = 100;
+			this.pageSizeOptions = [100,200,300];
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 			
 		})
@@ -1141,6 +1149,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			});
 			that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 			that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 			that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 			
 		})
@@ -1163,6 +1173,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1191,6 +1203,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1213,6 +1227,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1235,6 +1251,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1257,6 +1275,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1279,6 +1299,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1301,6 +1323,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1323,6 +1347,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1345,6 +1371,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1367,6 +1395,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1393,6 +1423,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1415,6 +1447,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1437,6 +1471,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1464,6 +1500,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+				this.pageSize = 20;
+				this.pageSizeOptions = [20,40,60];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 				// this.getSlcTcTemplateSetting();
@@ -1512,6 +1550,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1534,6 +1574,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1556,6 +1598,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1578,6 +1622,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1602,6 +1648,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -1624,6 +1672,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -2258,7 +2308,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		}
 	}
-	applyFilter(event) { }
+	
+	applyFilter(filterValue: string) {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.configDataSource.filter = filterValue;
+	}
+
 	deleteCancel() { }
 	deleteEntry(deletedData, serviceName, next) {
 		if (serviceName == 'deleteSubjectStatusId') {
@@ -2332,6 +2388,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 				this.commonService.showSuccessErrorMessage('Fetched Succesfully', 'success');
@@ -2355,6 +2413,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
@@ -2377,6 +2437,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 				that.configDataSource.paginator = that.paginator;
+			this.pageSize = 10;
+				this.pageSizeOptions = [10,20,30];
 				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
 				that.configDataSource.sort = that.sort;
 			}
