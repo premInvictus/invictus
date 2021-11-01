@@ -567,7 +567,10 @@ export class FeeadjReportComponent implements OnInit {
 							repoArray[Number(keys)]['inv_remark'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['inv_remark']) : '-';
 					}
 					i++;
-					this.dataset.push(obj);
+					if(repoArray[Number(keys)]['inv_fm_id'].length < 3) {
+						this.dataset.push(obj);
+					}
+					
 				});
 				this.columnDefinitions.push(
 					{
