@@ -1,0 +1,350 @@
+<ng-template #deleteWithReasonModal>
+   <div class="modal-main-box">
+      <div>
+         <div>
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="close-button-content">
+                     <button mat-icon-button class="close-button" (click)="closeDialog()">
+                        <img src="/assets/images/clear-button.svg"></button>
+                  </div>
+               </div>
+            </div>
+            <br>
+            <!-- <div class="row">
+               <div class="col-lg-3">
+                  <div>
+                     <h6 class="text-center"><b>&nbsp;</b></h6>
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div>
+                     <h6 class="text-center"><b>Confirmation Message With Reason</b></h6>
+                  </div>
+               </div>
+               <div class="col-lg-3">
+                  <div>
+                     <h6 class="text-center"><b>Security Depost : {{globalSecurity}}</b></h6>
+                  </div>
+               </div>
+            </div> -->
+            <div class="row">
+               <div class="col-1">
+                  <div class="vertical-line-divider"></div>
+                </div>
+               <div class="col-3 text-center">
+                 <img style="border-radius:50%"
+                   [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
+                 <div class="">
+                   <div>
+                     <span class="font-size-16 font-bold">{{invoiceDetails.au_process_type == '3' ? 'Pro. Admn.': 'Adm. No.'}} {{invoiceDetails?.au_admission_no}}
+                     </span>
+                   </div>
+                 </div>
+                 <div class="">
+                  <div>
+                    <span class="font-size-16 font-bold">{{invoiceDetails.au_process_type == '5' ? 'Alm. no': ''}} {{invoiceDetails.au_process_type == '5' ? invoiceDetails.au_alumni_no: ''}}
+                    </span>
+                  </div>
+                </div>
+               </div>
+               <div class="col-1 smart-col-3">
+                 <div class="vertical-line-divider"></div>
+               </div>
+               <div class="col-7 fee-col-80 remove-col-padding">
+                 <div class="row remove-top-margin">
+                   <div class="col-5 remove-col-padding">
+                     <div class="row remove-top-margin">
+                       <div class="col-12">
+                         <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
+                           {{class_sec}}</span>
+                       </div>
+                     </div>
+                     <div class="row">
+                       <div class="col-12">
+                         <span class="font-size-16 font-light">Class: </span><span
+                           class="font-size-16 font-regular">{{invoiceDetails?.class_name | titlecase}} - {{invoiceDetails?.sec_name}}</span>
+                       </div>
+                     </div>
+                     <div class="row">
+                       <div class="col-12">
+                         <span class="font-size-16 font-light">Invoice Number: </span><span
+                           class="font-size-16 font-bold">{{invoiceDetails?.inv_invoice_no}}</span>
+                       </div>
+                     </div>
+           
+                   </div>
+                   <div class="col-1">
+                     <div class="vertical-line-divider"></div>
+                   </div>
+                   <div class="col-5">
+                     <div class="row remove-top-margin">
+                       <div class="col-12">
+                         <span class="font-size-16 font-light">Receipt no: </span><span
+                           class="font-size-16 font-bold">{{invoiceDetails?.rpt_receipt_no}}</span>
+                       </div>
+                     </div>
+                     <div class="row">
+                       <div class="col-12">
+                         <span class="font-size-16 font-light">Receipt Date: </span><span
+                           class="font-size-16 font-regular"><b>{{invoiceDetails?.rpt_receipt_date | date:'dd MMM, yyyy'}}</b></span>
+                       </div>
+                     </div>
+                     <div class="row">
+                       <div class="col-12">
+                         <span class="font-size-16 font-light">Security Deposit: </span><span
+                           class="font-size-16 font-bold">{{globalSecurity}}</span>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="col-1">
+                     <div class="vertical-line-divider"></div>
+                   </div>
+                   
+                 </div>
+               </div>
+               
+             </div>
+         </div>
+         <form [formGroup]="reasonForm">
+            <div class="text-center">
+               <br>
+               <p [innerHTML]="deleteMessage"></p>
+               <br>
+               <div class="row">
+                  <div class="col-6">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Change Status</mat-label>
+                        <mat-select placeholder="Status" formControlName="fsd_status" required>
+                           <mat-option value="2">Refund</mat-option>
+                           <mat-option value="3">Forfiet</mat-option>
+                           <mat-option value="4">Adjustment</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Select Date</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                           formControlName="fsd_created_date" (dateInput)="addEvent()" (dateChange)="addEvent()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                     </mat-form-field>
+                  </div>
+               </div>
+               
+               <!-- <div class="row">
+                  <div class="col-12">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Select Date</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                           formControlName="fsd_created_date" (dateInput)="addEvent()" (dateChange)="addEvent()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                     </mat-form-field>
+                  </div>
+               </div> -->
+               <!-- <div class="row">
+                  <div class="col-12">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Remarks</mat-label>
+                        <textarea placeholder="Write your message" required formControlName="fsd_remarks" matInput
+                           rows="4"></textarea>
+                     </mat-form-field>
+                  </div>
+               </div> -->
+               
+               <div class="row margin-top-20" *ngIf="reasonForm.value.fsd_status == '4' && showTable">
+                  <div class="col-12">
+                     <table mat-table [dataSource]="adjsource" class="table-100 text-center">
+                        <ng-container matColumnDef="select">
+                           
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> 
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> 
+                           </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> 
+                              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(element) : null"
+                              [checked]="selection.isSelected(element)" [aria-label]="checkboxLabel(element)"></mat-checkbox>
+                           </td>
+                           
+                         </ng-container>
+                        <ng-container matColumnDef="srno">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Inv. No. </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.inv_invoice_no}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="feeperiod">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Fee Period </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.fp_months[0]}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="concession">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Fee Due. </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.amount_static}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="adjustment">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Adjustment </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.getadjustment}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="netpay">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Net Payable
+                           </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.fee_amount}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let celement; columns: displayedColumns;">
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+               <div class="row margin-top-20" *ngIf="reasonForm.value.fsd_status == '4' && !showTable">
+                  <div class="col-12">
+                     No data to adjust
+                  </div>
+               </div>
+
+               <div *ngIf="selection.selected.length > 0">
+                  <div *ngFor="let item of getdatafinalarray">
+                     <div *ngIf="checkinvoice(item)" style="margin-top: 10px;">
+                        <div class="row">
+                           <div class="col-lg-12">
+                                 <h6 class="text-center"><b> For : {{item.inv_no.join(",")}}</b></h6>
+                           </div>
+                        </div>
+                        <table mat-table [dataSource]="item.concess_arr ? item.concess_arr :item.bifurcation" class="table-100 text-center">
+                              <ng-container matColumnDef="inv_no">
+                                <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Invoice Number
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.inv_invoice_no}} </td>
+                              </ng-container>
+                              <ng-container matColumnDef="fm_period">
+                                 <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Fee Month
+                                 </th>
+                                 <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.fp_months.join(",")}} </td>
+                               </ng-container>
+                               <ng-container matColumnDef="invg_fh_name">
+                                 <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Fee Head
+                                 </th>
+                                 <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.invg_fh_name}} </td>
+                               </ng-container>
+                               <ng-container matColumnDef="fh_amount">
+                                 <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Amount
+                                 </th>
+                                 <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.invg_fh_amount}} </td>
+                               </ng-container>
+                               
+                              <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Adjustment
+                                  (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                                <td mat-cell *matCellDef="let element" class="text-nowrap">
+                                  <ng-template [ngIf]="element.inv_invoice_no" [ngIfElse]="elseContaint">
+                                    <mat-form-field class="margin-top-10 form-field-60">
+                                      <input matInput type="number" [value]="element.invg_adj_amount"
+                                        (change)="changeAdjAmt2(element, $event)">
+                                    </mat-form-field>
+                                  </ng-template>
+                                  <ng-template #elseContaint>
+                                    {{element.invg_adj_amount | number | zerodash}}
+                                  </ng-template>
+                                </td>
+                              </ng-container>
+                              <ng-container matColumnDef="net_payable">
+                                 <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Net Payable
+                                 </th>
+                                 <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.head_bal_amount}} </td>
+                               </ng-container>
+                              <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumns2;" (click)="selection.toggle(row)">
+                            
+                        </table>
+                     </div>
+                  </div>
+                  
+               </div>
+
+               <!-- <div class="row margin-top-20" *ngIf="reasonForm.value.fsd_status == '4' && selection.selected.length > 0">
+                  <div class="col-12">
+                     <table mat-table [dataSource]="adjsource" class="table-100 text-center">
+                        <ng-container matColumnDef="select">
+                          
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> 
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> 
+                           </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> 
+                              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(element) : null"
+                              [checked]="selection.isSelected(element)" [aria-label]="checkboxLabel(element)"></mat-checkbox>
+                           </td>
+                           
+                         </ng-container>
+                        <ng-container matColumnDef="srno">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Inv. No. </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.inv_invoice_no}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="feeperiod">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Fee Period </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.fp_months[0]}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="concession">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Conc. </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.getconcession}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="adjustment">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Adjustment </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.getadjustment}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="netpay">
+                           <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5%"> Net Payable
+                           </th>
+                           <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.fee_amount}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let celement; columns: displayedColumns;">
+                        </tr>
+                     </table>
+                  </div>
+               </div> -->
+               <div class="row" *ngIf="reasonForm.value.fsd_status == '2'">
+                  <div class="col-6" *ngIf="reasonForm.value.fsd_status == '2'">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Payment Type</mat-label>
+                        <!-- <textarea placeholder="Write your message" required formControlName="reason_remark"
+                         matInput rows="4"></textarea> -->
+                        <mat-select placeholder="Payment Type" formControlName="fsd_payment_type" required>
+                           <mat-option *ngFor="let reason of reasonArr" [value]="reason.pay_id">{{reason.pay_name}}
+                           </mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Remarks</mat-label>
+                        <input placeholder="Write your message" required formControlName="fsd_remarks" matInput/>
+                     </mat-form-field>
+                  </div>
+                  
+               </div>
+               <div class="row" *ngIf="reasonForm.value.fsd_status != '2'">
+                 
+                  <div class="col-12">
+                     <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Remarks</mat-label>
+                        <input placeholder="Write your message" required formControlName="fsd_remarks" matInput/>
+                     </mat-form-field>
+                  </div>
+                  
+               </div>
+
+            </div>
+            <div class="text-center">
+               <br>
+
+               <button mat-raised-button class="btn-success"
+                  (click)="$event.preventDefault();delete();">Submit</button>&nbsp;
+               <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</ng-template>

@@ -22,21 +22,114 @@
                 <span>With in System</span>
               </div>
             </ng-template>
+            <div class="row">
+              <div class="col-12 remove-col-padding" *ngIf="showPdf">
+                <form [formGroup]="filterForm" id="formFlag">
+                  <div class="row margin-top-5">
+                    <div class="col-12 remove-col-padding">
+                      <div class="inline-flex margin-left-15">
 
+                        <mat-form-field appearance="outline" class="form-field-220">
+                          <mat-label>Class</mat-label>
+                          <mat-select formControlName="tt_class_id" required placeholder="Select Class">
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                              {{item.class_name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="inline-flex margin-left-15 ">
+                        <mat-form-field appearance="outline" class="form-field-220">
+                          <mat-label>Status</mat-label>
+                          <mat-select formControlName="tt_status" required placeholder="Select Status">
+                            <mat-option value="1">Active</mat-option>
+                            <mat-option value="0">In active</mat-option>
+                            <mat-option value="5">Left</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="inline-flex margin-left-15 ">
+                        <mat-form-field appearance="outline" class="form-field-220">
+                          <mat-label>Session.</mat-label>
+                          <mat-select formControlName="tt_ses_id" required placeholder="Select Session">
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
+                              {{item.ses_name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="inline-flex margin-left-15 ">
+                        <mat-form-field appearance="outline" class="form-field-220">
+                          <mat-label>Payment Status.</mat-label>
+                          <mat-select formControlName="tt_payment_status" required placeholder="Select Status">
+                            <mat-option value="">Active</mat-option>
+                            <mat-option value="2">Refund</mat-option>
+                            <mat-option value="3">Forefiet</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="inline-flex margin-left-15">
+
+                        <span><button mat-raised-button class="apply-btn"
+                            (click)="getSecurityDepositListAll()">Apply</button></span>
+
+                        &nbsp;
+                        <span>
+                          <button mat-raised-button class="rst-btn " (click)="reset()">Reset</button>
+                        </span>
+                        &nbsp;
+
+                      </div>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
             <div class="row">
               <div class="col-6">
                 <mat-form-field [hidden]="!(SECURITY_DEPOST_ELEMENT_DATA.length > 0)">
-                  <input matInput placeholder="Filter" #input (keyup)="applyFilter(input.value)">
+                  <input matInput placeholder="Filter" #input (keyup)="applyFilter($event.target.value)">
                   <i class="fas fa-filter table-filter" matPrefix></i>
                 </mat-form-field>
-              </div>
-              <div class="col-6">
+
+                
+
 
               </div>
+              <div class="col-6">
+                <div class="col-12 text-right margin-top-5">
+                  
+                    <button mat-raised-button class="my-filter-btn" (click)="enableSearch()">Filter
+                      Search</button>&nbsp;
+                  
+                  <button mat-raised-button *ngIf="!isTeacher && (selection.selected.length > 0)"
+                    class="btn-danger margin-left-10" (click)="openAddAttachmentDialog()">Bulk Action</button>
+                </div>
+              </div>
+
             </div>
             <div class="row" [hidden]="!(SECURITY_DEPOST_ELEMENT_DATA.length > 0)">
               <div class="col-12">
                 <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
+                  <ng-container matColumnDef="select" *ngIf="!isTeacher">
+                    <th mat-header-cell *matHeaderCellDef class="select-checkbox">
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Select</th>
+                    <td mat-cell *matCellDef="let row" class="select-checkbox">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [disabled]="row.security_status === '2' || row.security_status === '3'" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
                   <ng-container matColumnDef="srno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="5%"> Sr. No. </th>
                     <ng-container *matCellDef="let item">
@@ -48,13 +141,19 @@
                         <b>{{item?.srno}}</b>
                       </td>
                     </ng-container>
-
-
                   </ng-container>
+
+
                   <ng-container matColumnDef="stu_enrollment_no">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Enrollment No. </th>
                     <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize">
                       {{item.stu_enrollment_no}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="stu_alumni_no">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> Alumni No. </th>
+                    <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize">
+                      {{item.stu_alumni_no}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="stu_full_name">
@@ -73,6 +172,10 @@
                     <td mat-cell *matCellDef="let item" class="text-nowrap">
                       <p [innerHtml]="item?.stu_security_amt"> </p>
                     </td>
+                  </ng-container>
+                  <ng-container matColumnDef="stu_rpt_date">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> Date </th>
+                    <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_rpt_date}} </td>
                   </ng-container>
                   <ng-container matColumnDef="stu_security_session">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
@@ -107,7 +210,7 @@
                     <td mat-cell *matCellDef="let item" class="text-nowrap">
                       <!-- (click)="openCheckOperationModal(item.action)" -->
                       <span
-                        *ngIf="!(item.srno==='Total') && (item.security_status !=='2') && item.au_process_type == '5'">
+                        *ngIf="!(item.srno==='Total') && (item.security_status !=='2') && (item.security_status !=='3') ">
                         <i class="fas fa-credit-card" style="cursor: pointer" [matTooltip]="'Pay'"
                           (click)="openDeleteModal(item.action)"></i>
                       </span>
@@ -168,7 +271,16 @@
                   <i class="fas fa-filter table-filter" matPrefix></i>
                 </mat-form-field>
               </div>
+
               <div class="col-6">
+                <div class="col-8 text-right margin-top-5">
+                  <button mat-raised-button class="btn-success-green"
+                    *ngIf="!isTeacher && (selection.selected.length > 0)" (click)="openSendModal({})"><i
+                      class="fas fa-location-arrow"></i> Send</button>
+                  <button mat-raised-button class="btn-success-blue margin-left-10"
+                    (click)="openAddAttachmentDialog()">Add
+                    Assignment</button>
+                </div>
                 <div class="float-right">
                   <!-- <button mat-raised-button class="my-filter-btn" (click)="enableSearch()">Filter
                                     Search</button> -->
@@ -189,6 +301,20 @@
             <div class="row" [hidden]="!(BULK_SECURITY_DEPOST_ELEMENT_DATA.length > 0)">
               <div class="col-12">
                 <table mat-table [dataSource]="bulkDataSource" class="fee-table-100 text-center">
+                  <ng-container matColumnDef="select" *ngIf="!isTeacher">
+                    <th mat-header-cell *matHeaderCellDef class="select-checkbox">
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Select</th>
+                    <td mat-cell *matCellDef="let row" class="select-checkbox">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
                   <ng-container matColumnDef="srno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="5%"> Sr. No. </th>
                     <ng-container *matCellDef="let item">
@@ -208,6 +334,12 @@
                     <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize"> {{item.stu_enrollment_no}}
                     </td>
                   </ng-container>
+                  <ng-container matColumnDef="stu_alumni_no">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> Alumni No. </th>
+                    <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize">
+                      {{item.stu_alumni_no}}
+                    </td>
+                  </ng-container>
                   <ng-container matColumnDef="stu_full_name">
                     <th mat-header-cell *matHeaderCellDef width="25%"> Student Name </th>
                     <td mat-cell *matCellDef="let item" class="text-nowrap text-left text-capitalize">
@@ -224,6 +356,10 @@
                     <td mat-cell *matCellDef="let item" class="text-nowrap">
                       <p [innerHtml]="item?.stu_security_amt"> </p>
                     </td>
+                  </ng-container>
+                  <ng-container matColumnDef="stu_rpt_date">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> Date </th>
+                    <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_rpt_date}} </td>
                   </ng-container>
                   <ng-container matColumnDef="stu_security_session">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
@@ -318,5 +454,7 @@
 
 
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Do you want to make Payment ?'" (deleteOk)="approvePay($event)">
-</app-delete-modal>
+
+<app-bulk-update-model #bulkuploadmodel (clickOkModel)="checkStatusBulk($event)"></app-bulk-update-model>
+<payment-forfit-modal #deleteModal  (deleteOk)="approvePay($event)">
+</payment-forfit-modal>
