@@ -387,7 +387,7 @@
                   *ngIf="checkIfFieldExist('ea_district')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>District</mat-label>
-                    <mat-select formControlName="ea_district" placeholder="District" required
+                    <mat-select formControlName="ea_district" placeholder="District" required disabled="true"
                       [errorStateMatcher]="confirmValidParentMatcher" ngDefaultControl>
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayDist2" [value]="item.dist_id">

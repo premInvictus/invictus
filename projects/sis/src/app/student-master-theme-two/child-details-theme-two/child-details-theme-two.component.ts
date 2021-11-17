@@ -427,6 +427,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			(result: any) => {
 				if (result.status === 'ok') {
 					this.arrayDist = result.data;
+					this.arrayDist2 = result.data;
 				}
 			}
 		);
