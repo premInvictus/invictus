@@ -45,6 +45,8 @@ import { SearchDialogComponent } from './search-dialog/search-dialog.component';
 import { FeeCommunicationModalComponent } from './fee-communication-modal/fee-communication-modal.component';
 import { WalletReceiptDetailsModalComponent } from './wallet-receipt-details-modal/wallet-receipt-details-modal.component';
 import { BillDetailsModalComponent } from './bill-details-modal/bill-details-modal.component'
+import { AppBulkUpdateSecurityModel } from './app-bulk-update-model/app-bulk-update-model.component'
+import {PaymentForfitModalComponent} from './payment-forfit-modal/payment-forfit-modal.component'
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -121,7 +123,9 @@ export const MY_FORMATS = {
 		TruncatetextPipe,
 		FeeCommunicationModalComponent,
 		WalletReceiptDetailsModalComponent,
-		BillDetailsModalComponent
+		BillDetailsModalComponent,
+		AppBulkUpdateSecurityModel,
+		PaymentForfitModalComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -163,6 +167,8 @@ export const MY_FORMATS = {
 		ReceiptDetailsModalComponent,
 		WalletReceiptDetailsModalComponent,
 		BillDetailsModalComponent,
+		AppBulkUpdateSecurityModel,
+		PaymentForfitModalComponent,
 		CommonDynamicChartComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
@@ -182,6 +188,8 @@ export const MY_FORMATS = {
 		ReceiptDetailsModalComponent,
 		WalletReceiptDetailsModalComponent,
 		BillDetailsModalComponent,
+		AppBulkUpdateSecurityModel,
+		PaymentForfitModalComponent,
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,

@@ -182,6 +182,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceBifurcation', value);
 	}
+	getInvoiceBifurcationByLoginId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceBifurcationByLoginId', value);
+	}
 	getConcessionInvoiceBifurcation(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getConcessionInvoiceBifurcation', value);
@@ -246,6 +250,10 @@ export class FeeService {
 	attachReceipt(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/attachReceipt', value);
+	}
+	createSecurityAdjustment(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/createSecurityAdjustment', value);
 	}
 	getInvoice(value) {
 		this.service.startLoading();
@@ -514,6 +522,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/securityDeposit/insertSecurityDeposit', value);
 	}
+	insertSecurityDepositBulk(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/insertSecurityDepositBulk', value);
+	}
 
 	updateSecurityDeposit(value) {
 		this.service.startLoading();
@@ -749,5 +761,9 @@ export class FeeService {
 	getReceiptLog(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getReceiptLog', value);
+	}
+	updateSecurityInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/updateSecurityInvoice', value);
 	}
 }
