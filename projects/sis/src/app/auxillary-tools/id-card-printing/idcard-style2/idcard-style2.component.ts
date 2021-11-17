@@ -42,11 +42,17 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 	showParentMobile = false;
 	showParentName = false;
 	photo: any;
+	header_portrait: any;
+	header_landscape: any;
 	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService) { }
 
 	ngOnInit() {
 		this.getSchool();
+		this.header_portrait = (this.idCardConfig.ps_header);
+		this.header_landscape = (this.idCardConfig.ps_l_header);
+		console.log(">>>", this.idCardConfig.ps_header);	
+		console.log(">>>", this.idCardConfig);		
 	}
 	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
