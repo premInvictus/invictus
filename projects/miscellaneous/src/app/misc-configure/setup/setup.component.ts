@@ -116,6 +116,8 @@ export class SetupComponent implements OnInit {
     showSchoolImage2 = false;
     showWaterImage2 = false;
     waterMarkImage2: any = '';
+    header: any = '';
+    header2: any = '';
     ckeConfig: any = {};
     processForms: any[] = [];
     paymentFormArray: any[] = [];
@@ -138,6 +140,9 @@ export class SetupComponent implements OnInit {
     total_subject_in_the_class : any = [];
     scholastic_subject: any[] = [];
     coscholastic_subject: any[] = [];
+    l_header: any;
+    l_header2: any;
+    ps_demo_blah: any;
 
 
     constructor(private fbuild: FormBuilder,
@@ -641,6 +646,8 @@ export class SetupComponent implements OnInit {
         this.schoolLogo2 = data.ps_school_logo;
         this.templateImage2 = data.ps_template_image;
         this.waterMarkImage2 = data.ps_watermark_image;
+        this.header2 = data.ps_header ? data.ps_header : '';
+        this.l_header2 = data.ps_l_header ? data.ps_l_header : '';
         if (this.templateImage2) {
             this.showTempImage2 = true;
         }
@@ -715,6 +722,8 @@ export class SetupComponent implements OnInit {
         this.schoolLogo = data.ps_school_logo;
         this.templateImage = data.ps_template_image;
         this.waterMarkImage = data.ps_watermark_image;
+        this.header = data.ps_header ? data.ps_header : '';
+        this.l_header = data.ps_l_header ? data.ps_l_header : '';
         if (this.templateImage) {
             this.showTempImage = true;
         }
@@ -767,6 +776,8 @@ export class SetupComponent implements OnInit {
             ps_auth_sign_text: data.ps_auth_sign_text === '1' ? true : false,
             ps_show_stu_addr: data.ps_show_stu_addr === '1' ? true : false,
             ps_hide_stu_bg: data.ps_hide_stu_bg === '1' ? true : false,
+            ps_header: data.ps_header ? data.ps_header : '',
+            ps_l_header: data.ps_l_header ? data.ps_l_header : ''
         });
     }
     assignEmailSmsFormats() {
@@ -856,6 +867,11 @@ export class SetupComponent implements OnInit {
                 ]
             }
         ];
+    }
+    heyTest(){
+        console.log("idcardForm >>>>>", this.idcardForm);
+        console.log("idcardForm2 >>>>>", this.idcardForm2);
+        
     }
     getClassTerm() {
         this.termsArray = [];
@@ -1386,7 +1402,10 @@ export class SetupComponent implements OnInit {
             ps_hide_stu_bg: '',
             ps_school_logo: '',
             ps_template_image: '',
-            ps_watermark_image: ''
+            ps_watermark_image: '',
+            ps_header: '',
+            ps_l_header: '',
+            ps_demo_blah: ''
         });
         this.idcardForm2 = this.fbuild.group({
             ps_card_style: '',
@@ -1423,7 +1442,9 @@ export class SetupComponent implements OnInit {
             ps_hide_stu_bg: '',
             ps_school_logo: '',
             ps_template_image: '',
-            ps_watermark_image: ''
+            ps_watermark_image: '',
+            ps_header: '',
+            ps_l_header: ''
         });
         this.printForm = this.fbuild.group({
             'spt_id': '',
@@ -1587,7 +1608,7 @@ export class SetupComponent implements OnInit {
             if (this.idCardSettings.length > 0) {
                 const findex = this.idCardSettings.findIndex(f => f.type === 'student');
                 if (findex !== -1) {
-                    console.log(this.idcardForm);
+                    console.log("inserting data",this.idcardForm);
                     if (this.idcardForm.value.ps_border) {
                         this.idcardForm.value.ps_border = '1';
                     } else {
@@ -1682,7 +1703,13 @@ export class SetupComponent implements OnInit {
                     this.idcardForm.value.ps_school_logo = this.schoolLogo;
                     this.idcardForm.value.ps_template_image = this.templateImage;
                     this.idcardForm.value.ps_watermark_image = this.waterMarkImage;
+                    // this.idcardForm.value.ps_header = this.header;
+                    // this.idcardForm.value.ps_l_header = this.l_header;
+                    console.log("ID card update ",this.idcardForm.value);
+                    
                     this.idCardSettings[findex].details = this.idcardForm.value;
+                    console.log("id card settings >>>>>>", this.idCardSettings);
+                    
                 }
                 const findex2 = this.idCardSettings.findIndex(f => f.type === 'employee');
                 if (findex2 !== -1) {
@@ -1780,6 +1807,8 @@ export class SetupComponent implements OnInit {
                     this.idcardForm2.value.ps_school_logo = this.schoolLogo2;
                     this.idcardForm2.value.ps_template_image = this.templateImage2;
                     this.idcardForm2.value.ps_watermark_image = this.waterMarkImage2;
+                    this.idcardForm2.value.ps_header = this.header2;
+                    this.idcardForm2.value.ps_l_header = this.l_header2;
                     this.idCardSettings[findex2].details = this.idcardForm2.value;
 
                 }
