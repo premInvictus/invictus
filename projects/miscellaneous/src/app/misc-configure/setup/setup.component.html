@@ -1362,6 +1362,18 @@
                                               </div>
                                             </div>
                                           </div>
+                                          <div class="row">
+                                            <div class="col-6">
+                                              <label class="btn-document-label"><span><b>Portrait Header</b></span></label>
+                                              <ckeditor [config]="ckeConfig" formControlName="ps_header" (blur)="heyTest()">
+                                              </ckeditor>
+                                            </div>
+                                            <div class="col-6">
+                                              <label class="btn-document-label"><span><b>Landscape Header</b></span></label>
+                                              <ckeditor [config]="ckeConfig" formControlName="ps_l_header">
+                                              </ckeditor>
+                                            </div>
+                                          </div>
                                           <br>
                                           <div class="row">
                                             <div class="col-6">
