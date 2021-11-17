@@ -157,7 +157,7 @@
     <ng-container matColumnDef="item_selling_price">
       <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Selling Price </th>
       <td mat-cell class="cell-left" *matCellDef="let element;">
-        <form [formGroup]="formGroupArray[element.position].formGroup">
+        <form [formGroup]="formGroupArray[element.position-1].formGroup">
           <input matInput type="text" class="remark-text" placeholder="Enter Price"
             formControlName="item_selling_price" value="{{element.item_selling_price}}">
         </form>         
@@ -227,7 +227,7 @@
     <div class="col-12 text-center">
       <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="!showDefaultData"
         (click)="finalSubmit();">Submit</button>
-      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData"
+      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData && edit"
         (click)="finalUpdate();">Update</button>
       <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
     </div>

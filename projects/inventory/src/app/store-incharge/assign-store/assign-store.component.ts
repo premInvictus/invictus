@@ -795,18 +795,22 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   finalUpdate() {
     var finalJson: any = {};
     const itemAssign: any[] = [];    
+    
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
+    // console.log("item update ", item.formGroup.value);
     }
     console.log(itemAssign);
 
     const emp:any[] = [];
+    
     for(let item of this.assignStoreForm.value.emp_id){
       const temp = this.employeeArray.find(e => e.emp_login_id == item);
       if(temp){
         emp.push({emp_id:temp.emp_login_id,emp_name: temp.emp_name,emp_login_id:temp.emp_login_id})
       }
     }
+    
     finalJson = {
       employees: emp,
       item_location: Number(this.assignEmpArray.item_location),
@@ -873,11 +877,13 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     });
   }
   getSellingPrice(item_code) {
-    const findex = this.assignEmpArray.item_assign.findIndex(f => Number(f.item_code) === Number(item_code));
-    if (findex !== -1) {
-      return this.assignEmpArray.item_assign[findex].item_selling_price
-    } else {
-      return '';
+    if(this.assignEmpArray.item_assign && this.assignEmpArray){
+      const findex = this.assignEmpArray.item_assign.findIndex(f => Number(f.item_code) === Number(item_code));
+      if (findex !== -1) {
+        return this.assignEmpArray.item_assign[findex].item_selling_price
+      } else {
+        return '';
+      }
     }
   }
   addBundle(value=null){
