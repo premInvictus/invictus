@@ -843,16 +843,16 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_country: item.cou_id,
 			ea_district: item.dist_id
 		});
-		this.paddressform.controls.ea_city.markAsTouched();
+		this.raddressform.controls.ea_city.markAsTouched();
 		// this.paddressform.controls.ea_city.markAsPending();
-		this.paddressform.controls.ea_city.markAsDirty();
-		this.paddressform.controls.ea_city1.markAsPristine();
-		this.paddressform.controls.ea_state.markAsTouched();
+		this.raddressform.controls.ea_city.markAsDirty();
+		this.raddressform.controls.ea_city1.markAsPristine();
+		this.raddressform.controls.ea_state.markAsTouched();
 		// this.paddressform.controls.ea_state.markAsPending();
-		this.paddressform.controls.ea_state.markAsDirty();
-		this.paddressform.controls.ea_district.markAsTouched();
+		this.raddressform.controls.ea_state.markAsDirty();
+		this.raddressform.controls.ea_district.markAsTouched();
 		// this.paddressform.controls.ea_district.markAsPending();
-		this.paddressform.controls.ea_district.markAsDirty();
+		this.raddressform.controls.ea_district.markAsDirty();
 		// console.log("i am check", this.raddressform);
 	}
 	getCityPerId(item: any) {

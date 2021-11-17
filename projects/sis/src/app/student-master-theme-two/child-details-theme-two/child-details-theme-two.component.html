@@ -248,7 +248,7 @@
                     <mat-autocomplete #autoGroup="matAutocomplete" autocomplete="off">
                       <mat-option (onSelectionChange)="getCityPerId(item)" (click)="getCityPerId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
-                        {{item.sta_name}} - {{item.dist_name}} - {{item.cou_name}}</mat-option>
+                        {{item.dist_name}} - {{item.sta_name}} - {{item.cou_name}}</mat-option>
                     </mat-autocomplete>
                     <mat-error *ngIf="paddressform.get('ea_city').hasError('required')">
                       This field is required
@@ -361,7 +361,7 @@
                     <mat-autocomplete #autoGroup="matAutocomplete">
                       <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
-                        {{item.sta_name}} - {{item.cou_name}}</mat-option>
+                        {{item.dist_name}} - {{item.sta_name}} - {{item.cou_name}}</mat-option>
                     </mat-autocomplete>
                     <mat-error>
                       This field is required
@@ -436,7 +436,7 @@
           <div class="col-12">
             <span>Whether the address of correspondence is different from the Permanent address
               ?</span>
-            <mat-slide-toggle [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly"
+            <mat-slide-toggle [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly" formControlName="ea_same_residential_address"
               (change)="ea_same_residential_address_change($event)">{{addressStatus}}</mat-slide-toggle>
           </div>
 
