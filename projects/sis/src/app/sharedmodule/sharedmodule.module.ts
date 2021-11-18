@@ -65,7 +65,7 @@ import { ManagementRemarksThemeTwoComponent } from '../student-master-theme-two/
 // tslint:disable-next-line: max-line-length
 import { AdmissionRemarksThemeTwoComponent } from '../student-master-theme-two/admission-remarks-theme-two/admission-remarks-theme-two.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
-import { CapitalizePipe, TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe } from '../_pipes';
+import { CapitalizePipe, TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe, SafeHtmlPipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/account-details-theme-two/account-details-theme-two.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
@@ -128,7 +128,7 @@ export const MY_FORMATS = {
 		InvictusSharedModule,
 	],
 	declarations: [CommonDynamicChartComponent, DynamicContentComponent,
-		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe,
+		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe, SafeHtmlPipe,
 		ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent, AdmissionConcessionComponent,
 		AdmissionRemarksComponent, ThemeTwoTabOneContainerComponent, ThemeTwoTabTwoContainerComponent, ThemeTwoTabThreeContainerComponent,
@@ -180,7 +180,7 @@ export const MY_FORMATS = {
 		ManagementRemarksThemeTwoComponent, CommonDynamicChartComponent,
 		AccountDetailsThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent,
 		ProcessdateModalComponent,
-		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe
+		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe, SafeHtmlPipe
 	],
 	entryComponents: [ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent,
