@@ -12,7 +12,7 @@ import 'jspdf-autotable';
 import { IndianCurrency } from 'projects/admin-app/src/app/_pipes';
 import * as XLSX from 'xlsx'; 
 import 'jspdf-autotable';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
   selector: 'app-assign-store',
@@ -22,6 +22,7 @@ import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 export class AssignStoreComponent implements OnInit,OnDestroy {
   assignStoreForm: FormGroup;
   existForm: FormGroup;
+	loading = false;
   notFormatedCellArray: any[] = [];
   currentLocationId: any;
   created_date: any;
@@ -53,6 +54,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   displayedColumns_heading: any = {position:'Sr. No.',item_code:'Item code',item_name:'Item Name', item_quantity:'Item Quantity', item_selling_price:'Selling Price'};
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
 dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+
 @ViewChild(MatPaginator) paginator: MatPaginator;
   priceForm: FormGroup;
   uploadComponent: string;
@@ -153,7 +155,11 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         }
       }
     });
-    this.getAllAssignMaster();
+    // this.getAllAssignMaster();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
   ngOnDestroy(){
     this.inventory.setcurrentChildTab('');
@@ -207,7 +213,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   }
 
   getAllAssignMaster() {
-
+    this.loading = true;
     if (this.assignStoreForm.valid) {
       this.tableDataArray = [];
       this.tableDataArrayMain = [];
@@ -265,10 +271,12 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           ind++;
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        // this.pageLength = this.ELEMENT_DATA.length;
+        this.paginator.pageIndex = 0;
+        this.pageLength = this.ELEMENT_DATA.length;
         this.dataSource.paginator = this.paginator;
         this.tableDivFlag = true;
         this.tabledataFlag = true;
+        this.loading = false;
       }
       console.log("get all items ", this.dataSource);
     });
@@ -710,6 +718,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
   // }
   getItemList() {
+    this.loading = true;
     if (this.assignStoreForm.valid) {
       this.tableDataArray = [];
       this.tableDataArrayMain = [];
@@ -728,6 +737,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
             if (result && result.status === 'ok') {
               this.itemArray = result.data;
+              let ind = 0;
               for (let item of this.itemArray) {
                 this.tableDataArray.push({
                   item_code: item.item_code,
@@ -750,6 +760,25 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
                   })
                 });
               }
+
+              for (const item of this.itemArray) {
+                this.ELEMENT_DATA.push({
+                  "position": ind + 1,            
+                  "item_code": item.item_code,
+                  "item_name": item.item_name,
+                  "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
+                  "item_selling_price": this.getSellingPrice(item.item_code),
+                  "action": { 'item_code': item.item_code, 'status': item.status }
+                });
+                ind++;
+              }
+              this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+              this.pageLength = this.ELEMENT_DATA.length;
+              this.dataSource.paginator = this.paginator;
+              this.tableDivFlag = true;
+              this.tabledataFlag = true;
+              this.loading = false;
+
             } else {
               this.commonService.showSuccessErrorMessage('No item added this location', 'error');
             }
@@ -839,6 +868,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.showDefaultData = false;
   }
   editAssignData(itemArray) {
+    this.loading = true;
     this.tableDataArray = [];
     this.formGroupArray = [];
     this.itemArray = [];
@@ -855,6 +885,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.itemArray = result.data;
+        let ind = 0;
         for (let item of this.itemArray) {
           this.tableDataArray.push({
             item_code: item.item_code,
@@ -871,6 +902,25 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
             })
           });
         }
+
+
+        for (const item of this.itemArray) {
+          this.ELEMENT_DATA.push({
+            "position": ind + 1,            
+            "item_code": item.item_code,
+            "item_name": item.item_name,
+            "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
+            "item_selling_price": this.getSellingPrice(item.item_code),
+            "action": { 'item_code': item.item_code, 'status': item.status }
+          });
+          ind++;
+        }
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.pageLength = this.ELEMENT_DATA.length;
+        this.dataSource.paginator = this.paginator;
+        this.tableDivFlag = true;
+        this.tabledataFlag = true;
+        this.loading = false;
       } else {
         this.commonService.showSuccessErrorMessage('No item added this location', 'error');
       }

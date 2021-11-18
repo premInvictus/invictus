@@ -1,3 +1,4 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading> -->
 <ng-container *ngIf="showDefaultData">
   <form [formGroup]="existForm" novalidate>
     <div class="row">
@@ -128,7 +129,6 @@
     </div>
   </div>
   <br>
-  
   <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag" id="excel-table">
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
@@ -191,10 +191,11 @@
       </tr>
     </tbody>
   </table>
+  <mat-paginator [pageSize]="pageLength" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true" ></mat-paginator>
   <!-- <mat-paginator *ngIf="ELEMENT_DATA.length > 0" #paginator [length]="pageLength" [pageSize]="pageSize"
     [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator> -->
-    <mat-paginator [length]="pageLength" [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    <!-- <mat-paginator [length]="pageLength" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"></mat-paginator> -->
   <!-- <table class="custom-table">
     <thead>
       <tr class="custom-tr">
