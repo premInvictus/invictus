@@ -4,7 +4,7 @@
       <img [src]="idCardConfig.ps_watermark_image ? 
          idCardConfig.ps_watermark_image: ''" class="watermark-image2">
 
-      <div [innerHTML]="header_landscape"></div>
+      <div [innerHTML]="header_landscape | safeHtml"></div>
 
       <!-- <table cellpadding="0" cellspacing="0" width="100%">
          <tbody>
@@ -119,7 +119,7 @@
             + '&h=40&w=40'" height="40" width="40">
          <div style="width:100%;font-size: 9px !important;">Principal's Sign</div>
       </div>
-      <div [innerHTML]="header_portrait"></div>
+      <div [innerHTML]="header_portrait | safeHtml"></div>
       <!-- <table cellpadding="5" cellspacing="5" width="100%">
          <tbody>
             <tr [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
