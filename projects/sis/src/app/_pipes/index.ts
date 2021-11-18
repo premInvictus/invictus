@@ -3,3 +3,4 @@ export * from './truncatetext.pipe';
 export * from './ indianCurrency.pipe';
 export * from './number-to-word.pipe';
 export * from './zerodash.pipe';
+export * from './safeHtml.pipe';
