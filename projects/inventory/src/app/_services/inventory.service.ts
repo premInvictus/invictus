@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
-import { ReceiptDetailsModalComponent } from 'projects/fee/src/app/sharedmodule/receipt-details-modal/receipt-details-modal.component';
 
 @Injectable({
   providedIn: 'root'

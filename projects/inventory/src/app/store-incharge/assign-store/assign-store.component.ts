@@ -53,7 +53,7 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   ELEMENT_DATA: any[] = [];
   displayedColumns_heading: any = {position:'Sr. No.',item_code:'Item code',item_name:'Item Name', item_quantity:'Item Quantity', item_selling_price:'Selling Price'};
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
-dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 @ViewChild(MatPaginator) paginator: MatPaginator;
   priceForm: FormGroup;
@@ -161,6 +161,9 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+  ngOnChanges(){
+    if(this.loading) this.commonService.startLoading(); else this.commonService.stopLoading();
+  }
   ngOnDestroy(){
     this.inventory.setcurrentChildTab('');
   }
@@ -248,7 +251,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
             item_code: item.item_code,
             item_name: item.item_name,
             item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-            item_selling_price: ''
+            item_selling_price: this.getSellingPrice(item.item_code)
           });
           this.formGroupArray.push({
             formGroup: this.fbuild.group({
@@ -719,7 +722,15 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   // }
   getItemList() {
     this.loading = true;
+
     if (this.assignStoreForm.valid) {
+      // this.inventory.setAssignEmp(this.assignStoreForm.value.emp_id);
+
+      // if (this.inventory.getAssignEmp()) {
+      //   this.assignEmpArray = this.inventory.getAssignEmp();
+      //   console.log('this.assignEmpArray >>>>',this.assignEmpArray);
+      // }
+
       this.tableDataArray = [];
       this.tableDataArrayMain = [];
           this.formGroupArray = [];
@@ -736,6 +747,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           };
           this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
             if (result && result.status === 'ok') {
+              console.log("item master >>", result.data);              
               this.itemArray = result.data;
               let ind = 0;
               for (let item of this.itemArray) {
@@ -743,20 +755,20 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
                   item_code: item.item_code,
                   item_name: item.item_name,
                   item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-                  item_selling_price: ''
+                  item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                 });
                 this.tableDataArrayMain.push({
                   item_code: item.item_code,
                   item_name: item.item_name,
                   item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-                  item_selling_price: ''
+                  item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                 });
                 this.formGroupArray.push({
                   formGroup: this.fbuild.group({
                     item_code: item.item_code,
                     item_name: item.item_name,
                     item_quantity: item.item_location[0].item_qty,
-                    item_selling_price: ''
+                    item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                   })
                 });
               }
@@ -767,7 +779,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
                   "item_code": item.item_code,
                   "item_name": item.item_name,
                   "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
-                  "item_selling_price": this.getSellingPrice(item.item_code),
+                  "item_selling_price": this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price,
                   "action": { 'item_code': item.item_code, 'status': item.status }
                 });
                 ind++;
@@ -778,7 +790,9 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
               this.tableDivFlag = true;
               this.tabledataFlag = true;
               this.loading = false;
-
+              console.log(">>>>>>>>",this.assignEmpArray);
+              console.log(">>>>>>>>",this.ELEMENT_DATA);
+              
             } else {
               this.commonService.showSuccessErrorMessage('No item added this location', 'error');
             }
