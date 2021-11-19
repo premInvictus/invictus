@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Whatsapp Message</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <mat-tab-group
+            animationDuration="0ms"
+            [selectedIndex]="tabSelectedIndex"
+            class="mat-tab-customize-class"
+            (selectedIndexChange)="setTabValue($event)"
+          >
+            <mat-tab label="Static Message"> </mat-tab>
+            <mat-tab label="Dynamic Message"> </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="col-12">
+        <ng-container *ngIf="tabSelectedIndex === 0">
+          <app-whatsapp-static></app-whatsapp-static>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 1">
+          <app-whatsapp-dynamic></app-whatsapp-dynamic>
+        </ng-container>
+      </div>
+    </mat-card>
+  </div>
+</div>

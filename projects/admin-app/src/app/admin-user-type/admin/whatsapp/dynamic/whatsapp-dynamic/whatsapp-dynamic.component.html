@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-12">
+    <div style="display: inline-flex">
+      <label class="file-input__label" for="file-input">
+        <input type="file" id="file-input" class="file-input__input"/>
+        <i class="fas fa-upload upload-icon"></i> &nbsp;
+        <span>Upload</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-3">
+    <div class="manage-message"></div>
+  </div>
+  <span (click)="sendSelector()">
+    <i class="fas fa-arrow-right font-size-24 arrow-icon"></i>
+  </span>
+  <div class="col-8">
+    <div class="manage-message">
+      <textarea name="message" id="message"></textarea>
+    </div>
+  </div>
+  <div class="col-12">
+    <button mat-raised-button class="submit-button" (click)="showPreview()">
+      Message Preview
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <h4 class="title">Number/Message Preview*</h4>
+  </div>
+
+  <div class="col-12">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8 full-width"
+    >
+      <!-- Serial Number Column -->
+      <ng-container matColumnDef="sr_no">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let element">{{ element.sr_no }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <!-- Mobile No. Column -->
+      <ng-container matColumnDef="mobile_no">
+        <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
+        <td mat-cell *matCellDef="let element">{{ element.mobile_no }}</td>
+      </ng-container>
+
+      <!-- Message Column -->
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef>Message</th>
+        <td mat-cell *matCellDef="let element">{{ element.message }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <div class="col-12">
+    <button mat-raised-button class="submit-button" (click)="sendMessage()">
+      Submit
+    </button>
+  </div>
+</div>
