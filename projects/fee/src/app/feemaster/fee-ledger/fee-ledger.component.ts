@@ -130,7 +130,7 @@ export class FeeLedgerComponent implements OnInit {
 		44: 'AR',
 
 	};
-
+	isLoading = true;
 	spans = [];
 	showMore = false;
 	currentShowMoreId = '';
@@ -1074,6 +1074,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.FEE_LEDGER_ELEMENT = [];
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				let pos = 1;
+				var carry_balance = 0;
 				this.footerRecord = {
 					feeduetotal: 0,
 					concessiontotal: 0,
@@ -1174,6 +1175,13 @@ export class FeeLedgerComponent implements OnInit {
 						this.footerRecord.balancetotal += Number(element.balance);
 					}
 
+					console.log("p >>>>>>>",element.particular);					
+					if(element.particular == "Opening Balance"){
+						carry_balance = Number(element.balance) ;
+						console.log("cb >>>>>>>",carry_balance);
+					}
+
+					this.footerRecord.balancetotal = (this.footerRecord.netpayabletotal - this.footerRecord.receipttotal) + carry_balance;
 
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
@@ -1181,6 +1189,7 @@ export class FeeLedgerComponent implements OnInit {
 
 					//console.log(this.FEE_LEDGER_ELEMENT);
 				}
+				this.isLoading = false;
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				//this.feeRenderId = '';
 				console.log('this.FEE_LEDGER_ELEMENT', this.FEE_LEDGER_ELEMENT);
