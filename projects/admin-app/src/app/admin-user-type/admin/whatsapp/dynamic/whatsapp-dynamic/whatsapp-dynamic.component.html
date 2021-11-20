@@ -2,7 +2,13 @@
   <div class="col-12">
     <div style="display: inline-flex">
       <label class="file-input__label" for="file-input">
-        <input type="file" id="file-input" class="file-input__input" />
+        <input
+          type="file"
+          id="file-input"
+          class="file-input__input"
+          (change)="onFileChange($event)"
+          multiple="false"
+        />
         <i class="fas fa-upload upload-icon"></i> &nbsp;
         <span>Upload File</span>
       </label>
@@ -36,30 +42,36 @@
 
   <div class="col-12">
     <mat-card class="mat-elevation-z2">
-      <table
+      <table class="sjs-table">
+        <tbody>
+          <tr *ngFor="let row of data">
+            <td *ngFor="let val of row">
+              {{ val }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <table
         mat-table
         [dataSource]="dataSource"
         class="mat-elevation-z2 full-width"
       >
-        <!-- Serial Number Column -->
         <ng-container matColumnDef="sr_no">
           <th mat-header-cell *matHeaderCellDef>No.</th>
           <td mat-cell *matCellDef="let element">{{ element.sr_no }}</td>
         </ng-container>
 
-        <!-- Name Column -->
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Name</th>
           <td mat-cell *matCellDef="let element">{{ element.name }}</td>
         </ng-container>
 
-        <!-- Mobile No. Column -->
         <ng-container matColumnDef="mobile_no">
           <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
           <td mat-cell *matCellDef="let element">{{ element.mobile_no }}</td>
         </ng-container>
 
-        <!-- Message Column -->
         <ng-container matColumnDef="message">
           <th mat-header-cell *matHeaderCellDef>Message</th>
           <td mat-cell *matCellDef="let element">{{ element.message }}</td>
@@ -67,7 +79,7 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+      </table> -->
     </mat-card>
   </div>
   <div class="col-12">

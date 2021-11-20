@@ -1,6 +1,29 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import { WhatsappService } from "../../../services/whatsapp.service";
+import * as XLSX from "xlsx";
+
+const excelToJson = require("convert-excel-to-json");
+
+type AOA = any[][];
+
+/**
+ * TODO:
+ *
+ * - File Uploaded:
+ *  - Get the data
+ *  - Extract the headers from the sheet
+ *  - Display column header in the left box
+ *
+ *  - Functionality of the Selector
+ *    - When a header is clicked that header to be shown in a curly braces [as a variable] in the message body
+ *
+ *  - When Messge Preview is clicked
+ *    - The dynamic table with mobile number, name and dynamic message to be shown
+ *
+ *  - Submit Button
+ *    - When clicked it calls the backend API with POST route and sends the message to the respective numbers
+ */
 
 @Component({
   selector: "app-whatsapp-dynamic",
@@ -8,56 +31,71 @@ import { WhatsappService } from "../../../services/whatsapp.service";
   styleUrls: ["./whatsapp-dynamic.component.css"],
 })
 export class WhatsappDynamicComponent implements OnInit {
-  ELEMENT_DATA: any[] = [
-    { sr_no: 1, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-  ];
-
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = ["sr_no", "name", "mobile_no", "message"];
   dataSource: MatTableDataSource<Element>;
-  // dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
   constructor(private whatsapp: WhatsappService) {}
+
+  data: any;
+
+  onFileChange(evt: any) {
+    console.log("the EVENT ", evt.target.files[0].name);
+
+    const fileName = evt.target.files[0].name;
+
+    const result = excelToJson({
+      sourceFile: fileName,
+    });
+
+    console.log(result);
+    // ---------------------------------------------------------------------
+    /* wire up file reader */
+    const target: DataTransfer = <DataTransfer>evt.target;
+    if (target.files.length !== 1) throw new Error("Cannot use multiple files");
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      /* read workbook */
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: "binary" });
+
+      // console.log("Result: ", wb);
+
+      /* grab first sheet */
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      /* save data */
+      this.data = <AOA>XLSX.utils.sheet_to_json(ws, { header: 1 });
+      console.log(this.data);
+    };
+    reader.readAsBinaryString(target.files[0]);
+  }
 
   ngOnInit() {}
 
   sendSelector() {
-    alert("Selector binding in progress...");
+    console.log("Selector binding in progress...");
   }
 
   showPreview() {
-    let temp = {};
     this.whatsapp.getMobileNumbers().subscribe((result: any) => {
-      result.data.map((ele: any) => {
-        temp["sr_no"] = ele.id + 1;
-        temp["name"] = ele.first_name;
-        temp["mobile_no"] = 1;
-        temp["message"] = ele.last_name;
-        console.log("temp ---", temp);
-        this.ELEMENT_DATA.push(temp);
-        console.log("The ELEMENT DATA: ", this.ELEMENT_DATA);
-      });
+      if (result) {
+        result.data.forEach((ele: any) => {
+          this.ELEMENT_DATA.push({
+            name: ele.first_name,
+            mobile_no: 1,
+            message: ele.last_name,
+          });
+        });
 
-      // res.data.forEach((ele: any) => {
-      //   // temp["sr_no"] = ele.id;
-      //   // temp["name"] = ele.first_name;
-      //   // temp["mobile_no"] = 1;
-      //   // temp["message"] = ele.last_name;
-
-      //   // console.log("DATA before push---", this.ELEMENT_DATA);
-      //   // if (ele.id === temp["sr_no"]) {
-      //   //   alert("Inside if");
-      //   //   console.log("Different: \n", this.ELEMENT_DATA);
-      //   // }
-      //   this.ELEMENT_DATA.push(temp);
-      //   // console.log("DATA after push---", this.ELEMENT_DATA);
-      // });
-      // console.log("DATA ----------", this.ELEMENT_DATA);
-
-      this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+      } else {
+        console.error("Error Occured !!");
+      }
     });
   }
 
-  sendMessage() {
-    alert("Sending Message in progress...");
-  }
+  sendMessage() {}
 }
