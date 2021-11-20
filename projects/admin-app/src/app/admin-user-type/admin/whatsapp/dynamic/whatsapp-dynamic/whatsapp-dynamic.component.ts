@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
+import { WhatsappService } from "../../../services/whatsapp.service";
 
 @Component({
   selector: "app-whatsapp-dynamic",
@@ -9,21 +10,13 @@ import { MatTableDataSource } from "@angular/material";
 export class WhatsappDynamicComponent implements OnInit {
   ELEMENT_DATA: any[] = [
     { sr_no: 1, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 2, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 3, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 4, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 5, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 6, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 7, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 8, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 9, name: "Prem", mobile_no: "0123456789", message: "Hello" },
-    { sr_no: 10, name: "Prem", mobile_no: "0123456789", message: "Hello" },
   ];
 
   displayedColumns: string[] = ["sr_no", "name", "mobile_no", "message"];
-  dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  dataSource: MatTableDataSource<Element>;
+  // dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
-  constructor() {}
+  constructor(private whatsapp: WhatsappService) {}
 
   ngOnInit() {}
 
@@ -32,7 +25,36 @@ export class WhatsappDynamicComponent implements OnInit {
   }
 
   showPreview() {
-    alert("Dynamic Preview in progress...");
+    let temp = {};
+    this.whatsapp.getMobileNumbers().subscribe((result: any) => {
+      result.data.map((ele: any) => {
+        temp["sr_no"] = ele.id + 1;
+        temp["name"] = ele.first_name;
+        temp["mobile_no"] = 1;
+        temp["message"] = ele.last_name;
+        console.log("temp ---", temp);
+        this.ELEMENT_DATA.push(temp);
+        console.log("The ELEMENT DATA: ", this.ELEMENT_DATA);
+      });
+
+      // res.data.forEach((ele: any) => {
+      //   // temp["sr_no"] = ele.id;
+      //   // temp["name"] = ele.first_name;
+      //   // temp["mobile_no"] = 1;
+      //   // temp["message"] = ele.last_name;
+
+      //   // console.log("DATA before push---", this.ELEMENT_DATA);
+      //   // if (ele.id === temp["sr_no"]) {
+      //   //   alert("Inside if");
+      //   //   console.log("Different: \n", this.ELEMENT_DATA);
+      //   // }
+      //   this.ELEMENT_DATA.push(temp);
+      //   // console.log("DATA after push---", this.ELEMENT_DATA);
+      // });
+      // console.log("DATA ----------", this.ELEMENT_DATA);
+
+      this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    });
   }
 
   sendMessage() {
