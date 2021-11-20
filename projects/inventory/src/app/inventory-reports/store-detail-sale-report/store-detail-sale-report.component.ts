@@ -588,7 +588,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
               obj['class'] = (item.buyer_details.class_name? item.buyer_details.class_name: '')+'-'+(item.buyer_details.sec_name? item.buyer_details.sec_name: '');
               obj['mop'] = new TitleCasePipe().transform(item.mop);
               obj['status'] = new TitleCasePipe().transform(item.status);
-              obj['bill_total'] = data.total_price;
+              obj['bill_total'] = new TitleCasePipe().transform(item.status) == 'Canceled'?  -data.total_price:data.total_price ;
               obj['au_role_id'] = item.buyer_details.au_role_id;
               obj['bill_details'] = item.bill_details;
               obj['created_by'] = data_imp.emp_name;
@@ -1091,6 +1091,16 @@ export class StoreDetailSaleReportComponent implements OnInit {
 
           obj3['id'] = 'footer';
           obj3['srno'] = '';
+          obj3['dept_id']='';
+          obj3['item_code']='';
+          obj3['rate']='';
+          obj3['count']='';
+          obj3['location']='';
+          obj3['action']='';
+          obj3['class']='';
+          obj3['mop']='';
+          obj3['status']='';
+          obj3['au_role_id']='';
           obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
           obj3['emp_id'] = '';
@@ -1133,6 +1143,16 @@ export class StoreDetailSaleReportComponent implements OnInit {
           obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
           obj3['emp_id'] = '';
+          obj3['dept_id']='';
+          obj3['item_code']='';
+          obj3['rate']='';
+          obj3['count']='';
+          obj3['location']='';
+          obj3['action']='';
+          obj3['class']='';
+          obj3['mop']='';
+          obj3['status']='';
+          obj3['au_role_id']='';
           obj3['name'] = '';
           obj3['contact'] = '';
           obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));

@@ -1137,7 +1137,7 @@ export class FeeLedgerComponent implements OnInit {
 						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
 						colorCode: item.color_code ? item.color_code : '',
 						// bank: item.tb_name ? item.tb_name : '-',
-						netpayableamount: item.flgr_particulars === 'Ad-Hoc Payment' ? '0' : (item.net_payable_amount ? item.net_payable_amount : '0'),
+						netpayableamount: (item.flgr_particulars === 'Ad-Hoc Payment' || item.ftr_status === '7') ? '0' : (item.net_payable_amount ? item.net_payable_amount : '0'),
 						eachActionFlag: tempactionFlag,
 						action: item,
 						flgr_payment_mode: item.flgr_payment_mode ? item.flgr_payment_mode : ''
@@ -1159,15 +1159,20 @@ export class FeeLedgerComponent implements OnInit {
 						this.footerRecord.feeduetotal += Number(element.amount);
 						this.footerRecord.concessiontotal += Number(element.concession);
 						this.footerRecord.adjustmenttotal += Number(element.adjustment);
-						this.footerRecord.netpayabletotal += Number(element.netpayableamount);
+						if(item.ftr_status !== "7") {
+							this.footerRecord.netpayabletotal += Number(element.netpayableamount);
+						}
+						
 						this.footerRecord.finetotal += Number(element.fine);
+						
 					}
 
 
 
 
-					if (item.ftr_status !== "2" && item.ftr_status !== "6") {
+					if (item.ftr_status !== "2" && item.ftr_status !== "6" && item.ftr_status !== "7") {
 						this.footerRecord.receipttotal += Number(element.reciept);
+						this.footerRecord.balancetotal += Number(element.balance);
 					}
 
 					console.log("p >>>>>>>",element.particular);					
