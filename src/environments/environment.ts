@@ -10,7 +10,8 @@ export const environment = {
   apiInvUrl: "http://dev-api-inventory.invictusprojects.in",
   apiFaUrl: "http://dev-api-fa.invictusprojects.in",
   apiTransportUrl: "http://dev-api-transport.invictusprojects.in",
-  apiWhatsappUrl: "http://localhost:8000", // Whatsapp development Url
+  apiWhatsappStaticUrl: "http://localhost:8000/static", // Whatsapp development Url Static
+  apiWhatsappDynamicUrl: "http://localhost:8000/dynamic", // Whatsapp development Url Dynamic
   logoutUrl: "http://devlogin.invictusprojects.in",
   socketUrl: "http://socket.invictusprojects.in",
   helpDeskUrl: "http://support.invictusprojects.in/autologin.php",
