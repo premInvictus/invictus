@@ -1,29 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import { WhatsappService } from "../../../services/whatsapp.service";
 import * as XLSX from "xlsx";
-
-const excelToJson = require("convert-excel-to-json");
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 type AOA = any[][];
-
-/**
- * TODO:
- *
- * - File Uploaded:
- *  - Get the data
- *  - Extract the headers from the sheet
- *  - Display column header in the left box
- *
- *  - Functionality of the Selector
- *    - When a header is clicked that header to be shown in a curly braces [as a variable] in the message body
- *
- *  - When Messge Preview is clicked
- *    - The dynamic table with mobile number, name and dynamic message to be shown
- *
- *  - Submit Button
- *    - When clicked it calls the backend API with POST route and sends the message to the respective numbers
- */
 
 @Component({
   selector: "app-whatsapp-dynamic",
@@ -31,25 +12,23 @@ type AOA = any[][];
   styleUrls: ["./whatsapp-dynamic.component.css"],
 })
 export class WhatsappDynamicComponent implements OnInit {
-  ELEMENT_DATA: any[] = [];
-  displayedColumns: string[] = ["sr_no", "name", "mobile_no", "message"];
-  dataSource: MatTableDataSource<Element>;
+  // ELEMENT_DATA: any[] = [];
+  // displayedColumns: string[] = ["sr_no", "name", "mobile_no", "message"];
+  // dataSource: MatTableDataSource<Element>;
 
-  constructor(private whatsapp: WhatsappService) {}
+  constructor(private whatsapp: WhatsappService, private fBuild: FormBuilder) {}
 
+  whatsappDynamicForm: FormGroup;
+
+  @ViewChild("headers") headersElem: ElementRef;
+  @ViewChild("d_message") dMessageElem: ElementRef;
   data: any;
+  headers: any[] = [];
+  dMessage: any = [];
+
+  // From Static
 
   onFileChange(evt: any) {
-    console.log("the EVENT ", evt.target.files[0].name);
-
-    const fileName = evt.target.files[0].name;
-
-    const result = excelToJson({
-      sourceFile: fileName,
-    });
-
-    console.log(result);
-    // ---------------------------------------------------------------------
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>evt.target;
     if (target.files.length !== 1) throw new Error("Cannot use multiple files");
@@ -60,42 +39,73 @@ export class WhatsappDynamicComponent implements OnInit {
       const bstr: string = e.target.result;
       const wb: XLSX.WorkBook = XLSX.read(bstr, { type: "binary" });
 
-      // console.log("Result: ", wb);
-
       /* grab first sheet */
       const wsname: string = wb.SheetNames[0];
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
       /* save data */
-      this.data = <AOA>XLSX.utils.sheet_to_json(ws, { header: 1 });
-      console.log(this.data);
+      this.data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+      this.getHeaders(this.data);
     };
     reader.readAsBinaryString(target.files[0]);
   }
 
+  getHeaderValue(e: any) {
+    console.log(typeof e.target.value);
+    console.log("The Event value is :", e.target.value);
+  }
+
+  /**
+   * 1. Function -> Get the header
+   */
+  getHeaders(data) {
+    let something = Object.entries(data[0]);
+
+    something.forEach((e) => {
+      this.headers.push(e);
+    });
+
+    this.headersElem.nativeElement.value = this.headers;
+  }
+
+  showVal(items: any) {
+    const msgDiv = document.getElementById("message");
+    msgDiv.innerHTML = items;
+  }
+
+  /**
+   * 2. Function -> Compose the Message
+   */
+  composeMessage(value: any) {
+    this.dMessageElem.nativeElement.value += "{" + value[1] + "}";
+  }
+
   ngOnInit() {}
 
-  sendSelector() {
-    console.log("Selector binding in progress...");
-  }
-
   showPreview() {
-    this.whatsapp.getMobileNumbers().subscribe((result: any) => {
-      if (result) {
-        result.data.forEach((ele: any) => {
-          this.ELEMENT_DATA.push({
-            name: ele.first_name,
-            mobile_no: 1,
-            message: ele.last_name,
-          });
-        });
-
-        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-      } else {
-        console.error("Error Occured !!");
-      }
-    });
+    /**
+     * The dynamic table with mobile number, name and dynamic message to be shown
+     */
+    const messageDiv = document.getElementById("message");
+    //
+    // this.whatsapp.getMobileNumbers().subscribe((result: any) => {
+    //   if (result) {
+    //     result.data.forEach((ele: any) => {
+    //       this.ELEMENT_DATA.push({
+    //         name: ele.first_name,
+    //         mobile_no: 1,
+    //         message: ele.last_name,
+    //       });
+    //     });
+    //     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    //   } else {
+    //     console.error("Error Occured !!");
+    //   }
+    // });
   }
 
-  sendMessage() {}
+  sendMessage() {
+    // - When clicked it calls the backend API with POST route and sends the message to the respective numbers
+  }
 }

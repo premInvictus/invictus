@@ -18,14 +18,29 @@
 
 <div class="row">
   <div class="col-3">
-    <div class="manage-message"></div>
+    <div class="manage-message" id="headersDiv">
+      <ul>
+        <li
+          *ngFor="let items of headers"
+          #headers
+          (click)="composeMessage(items)"
+        >
+          {{ items }}
+        </li>
+      </ul>
+      <!-- <textarea
+        name="headers"
+        id="headers"
+        readonly
+        #headers
+        (click)="getHeaderValue($event)"
+      >`
+      </textarea> -->
+    </div>
   </div>
-  <span (click)="sendSelector()">
-    <i class="fas fa-arrow-right font-size-24 arrow-icon"></i>
-  </span>
   <div class="col-8">
     <div class="manage-message">
-      <textarea name="message" id="message"></textarea>
+      <textarea name="message" id="message" #d_message></textarea>
     </div>
   </div>
   <div class="col-12">
@@ -35,6 +50,59 @@
   </div>
 </div>
 
+<!-- <div class="row">
+  <form [formGroup]="whatsappDynamicForm" class="form">
+    <div class="row">
+      <div class="col-4">
+        <div class="manage-message" formContronName="headers" #headers>
+          <ul>
+            <li *ngFor="let item of headers" (click)="getValue($event)">
+              {{ item }}
+            </li>
+          </ul>
+        </div> 
+        <mat-form-field apprearance="fill">
+          <textarea
+            formContronName="headers"
+            matInput
+            #headers
+            id="headers"
+            rows="10"
+            cols="30"
+            (click)="getValue($event)"
+          >
+          </textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-1">
+        <span (click)="sendSelector()">
+          <i class="fas fa-arrow-right font-size-24 arrow-icon"></i>
+        </span>
+      </div>
+      <div class="col-8">
+        <mat-form-field apprearance="fill">
+          <mat-label>Enter Message</mat-label>
+          <textarea
+            formContronName="d_message"
+            matInput
+            #d_message
+            name="d_message"
+            id="d_message"
+            rows="10"
+            cols="30"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <div class="col-12">
+    <button mat-raised-button class="submit-button" (click)="showPreview()">
+      Message Preview *
+    </button>
+  </div>
+</div> -->
+
 <div class="row">
   <div class="col-12">
     <h4 class="title">Number/Message Preview*</h4>
@@ -42,7 +110,7 @@
 
   <div class="col-12">
     <mat-card class="mat-elevation-z2">
-      <table class="sjs-table">
+      <!-- <table>
         <tbody>
           <tr *ngFor="let row of data">
             <td *ngFor="let val of row">
@@ -50,7 +118,7 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
 
       <!-- <table
         mat-table
