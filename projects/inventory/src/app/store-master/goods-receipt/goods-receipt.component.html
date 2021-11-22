@@ -80,14 +80,14 @@
             <div class="inline-flex margin-top-10">
               <i class="fa fa-print modify-icon" *ngIf="element.action.pm_status === 'pending'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
                 title="print"></i>
-              <i class="fa fa-download modify-icon" *ngIf="element.action.pm_status === 'approved'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
-                title="download"></i>
-              <!-- <div class="divider-div"></div>
+              <!-- <i class="fa fa-download modify-icon" *ngIf="element.action.pm_status === 'approved'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
+                title="download"></i>-->
+              <div class="divider-div"></div> 
               <i class="far fa-eye modify-icon" (click)="actionList(element.action.pm_id,'view')"
-                style="cursor:pointer" title="Edit"></i> -->
-              <div class="divider-div"></div>
-              <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status != 'deleted'"  (click)="actionList(element.action.pm_id,'edit')"
                 style="cursor:pointer" title="Edit"></i>
+              <!-- <div class="divider-div"></div> -->
+              <!-- <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status != 'deleted'"  (click)="actionList(element.action.pm_id,'edit')"
+                style="cursor:pointer" title="Edit"></i> -->
               <div class="divider-div"></div>
               <i class="far fa-trash-alt delete-icon"  *ngIf="element.action.pm_status != 'deleted'" (click)="actionList(element.action.pm_id,'delete')"
                 style="cursor:pointer" title="Delete"></i>
