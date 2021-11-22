@@ -77,7 +77,7 @@ export class GenerateReceiptComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
-     // console.log(this.requistionArray, 'this.requistionArray');
+     console.log('this.requistionArray', this.requistionArray);
       this.getTablevalue();
     }
   }
@@ -141,7 +141,8 @@ export class GenerateReceiptComponent implements OnInit {
     }
     this.finalReceiptForm.patchValue({
       ven_id: this.ven_id,
-      po_no: this.pm_id
+      po_no: this.pm_id,
+      intended_use: this.requistionArray[0].pm_intended_use
     });
     this.vendor(this.ven_id);
   }
@@ -268,7 +269,7 @@ export class GenerateReceiptComponent implements OnInit {
     if (this.requistionArray.length > 0) {
       this.inventory.setrequisitionArray(this.setBlankArray);
       this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-      this.inventory.setTabIndex({ 'currentTab': 1 });
+      this.inventory.setTabIndex({ 'currentTab': 2 });
     } else {
       this.inventory.setrequisitionArray(this.setBlankArray);
       this.router.navigate(['../procurement-master'], { relativeTo: this.route });
@@ -389,7 +390,9 @@ export class GenerateReceiptComponent implements OnInit {
 
     let printArray : any ;
     let inv_total = 0;
-    // console.log("hello final submit ",$event); return;
+      
+    let newDate = new Date();
+    console.log("hello final submit ",this.requistionArray); 
     if ($event) {
       for (let item of this.requistionArray) {
         for (let dety of item.pm_item_details) {
@@ -415,6 +418,9 @@ export class GenerateReceiptComponent implements OnInit {
       this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
       this.finalSubmitArray['pm_source'] = 'GR';
       this.finalSubmitArray['pm_type'] = 'GR';
+      // if(this.requistionArray[0].pm_created){
+      //   this.finalSubmitArray['pm_created'] = this.requistionArray[0].pm_created;
+      // }
       if (this.pm_type !== 'GR') {
         this.finalSubmitArray['pm_created'] = {
           created_by: Number(this.currentUser.login_id),
@@ -430,7 +436,7 @@ export class GenerateReceiptComponent implements OnInit {
       this.finalSubmitArray['pm_updated'] = {
         updated_by: Number(this.currentUser.login_id),
         updated_by_name: this.currentUser.full_name,
-        update_date: ''
+        update_date: newDate
       }
       this.finalSubmitArray['pm_vendor'] = {
         ven_id: Number(this.finalReceiptForm.value.ven_id),
@@ -446,89 +452,134 @@ export class GenerateReceiptComponent implements OnInit {
         invoice_pdf: this.imageArray,
         po_total : total
       }
-      
-      let newDate = new Date();
-
-      this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
-        if (result_r) {
-          printArray = result_r;
-          console.log("pA >>>>>>>>>",printArray, result_r);
-          if($event.type == 'Save-Print'){
-            let tempDate = result_r.pm_created.created_date.split(",")[0].split(" ");
-            let prepDate = tempDate[1]+"-"+tempDate[0]+"-"+tempDate[2];
-            const JSON = {
-              "bill_id": result_r.pm_id,
-              "bill_type": "Goods Receipt Note",
-              "bill_date": prepDate,
-              "remarks": result_r.pm_intended_use,
-              "bill_created_by": result_r.pm_created.created_by_name,
-              "bill_details": result_r.pm_item_details,
-              "school_name": this.schoolInfo.school_name,
-              "school_logo": this.schoolInfo.school_logo,
-              "school_address": this.schoolInfo.school_address,
-              "school_phone": this.schoolInfo.school_phone,
-              "school_city":  this.schoolInfo.school_city,
-              "school_state":  this.schoolInfo.school_state,
-              "school_afflication_no":  this.schoolInfo.school_afflication_no,
-              "school_website":  this.schoolInfo.school_website,
-              "name": "",
-              "vendor_name": result_r.pm_vendor.ven_name,
-              "vendor_phone": result_r.pm_vendor.ven_phone,
-              "po_no": result_r.pm_details.purchase_order_id,
-              "invoice_no": result_r.pm_details.invoice_no,
-              "grand_total": result_r.pm_details.po_total,
-          };
-            this.inventory.printGoodsReceipt(JSON).subscribe((result: any) => {
-              if (result) {      
-                saveAs(result.data.fileUrl, result.data.fileName);
-                this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
-              }
-            });
-          }
-          // return;
-          if (this.requistionArray.length > 0) {
-            this.requistionArray[0].pm_status = this.statusFlag;
-            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-              if (result) {
-                printArray = result.data;
-                this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
-                  if (result_p) {
-                    let finalArray: any = [];
-                    result_r.pm_status = 'approved';
-                    finalArray.push(result_r);
-                    this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
-                      if (result_q) {
-                       
-                          this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-                          this.finalSubmitArray = [];
-                          this.finalRequistionArray = [];
-                          this.itemCodeArray = [];
-                        
-                      }
-                    });
+      console.log("final submit", this.finalSubmitArray);
+      // return;
+      if(this.requistionArray.length > 0 && this.requistionArray[0].pm_id){
+        // this.requistionArray[0].pm_status = this.statusFlag;
+        this.requistionArray[0].pm_item_details = this.finalSubmitArray['pm_item_details'];
+        this.requistionArray[0].pm_vendor = this.finalSubmitArray['pm_vendor'];
+        this.requistionArray[0].pm_item_details = this.finalRequistionArray;
+        this.requistionArray[0].pm_intended_use = this.finalReceiptForm.value.intended_use;
+        this.requistionArray[0].pm_vendor = {
+          ven_id: Number(this.finalReceiptForm.value.ven_id),
+          ven_name: this.finalReceiptForm.value.ven_name,
+          ven_phone: this.finalReceiptForm.value.ven_contact,
+          ven_email: this.finalReceiptForm.value.ven_email
+        }
+        this.requistionArray[0].pm_updated = {
+          updated_by: Number(this.currentUser.login_id),
+          updated_by_name: this.currentUser.full_name,
+          update_date: newDate
+        }
+        console.log("hey m updating", this.requistionArray);
+        // return;
+        this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+          if (result) {
+            printArray = result.data;
+            this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+              if (result_p) {
+                let finalArray: any = [];
+                finalArray.push(this.requistionArray[0]);
+                console.log();
+                
+                this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
+                  if (result_q) {
+                  
+                      this.commonService.showSuccessErrorMessage('Receipt Updated Successfully', 'success');
+                    
                   }
                 });
               }
             });
-            this.requistionArray = [];
-            this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-            this.inventory.setTabIndex({ 'currentTab': 1 });
-          } else {
-            this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
-              if (result_p) {
-                this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-                this.requistionArray = [];
-                this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-                this.inventory.setTabIndex({ 'currentTab': 2 });
+          }
+        });
+        this.requistionArray = [];
+        this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+        this.inventory.setTabIndex({ 'currentTab': 2 });
+      }else{
+            this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
+              if (result_r) {
+                printArray = result_r;
+                console.log("pA >>>>>>>>>",printArray, result_r);
+                if($event.type == 'Save-Print'){
+                  let tempDate = result_r.pm_created.created_date.split(",")[0].split(" ");
+                  let prepDate = tempDate[1]+"-"+tempDate[0]+"-"+tempDate[2];
+                  const JSON = {
+                    "bill_id": result_r.pm_id,
+                    "bill_type": "Goods Receipt Note",
+                    "bill_date": prepDate,
+                    "remarks": result_r.pm_intended_use,
+                    "bill_created_by": result_r.pm_created.created_by_name,
+                    "bill_details": result_r.pm_item_details,
+                    "school_name": this.schoolInfo.school_name,
+                    "school_logo": this.schoolInfo.school_logo,
+                    "school_address": this.schoolInfo.school_address,
+                    "school_phone": this.schoolInfo.school_phone,
+                    "school_city":  this.schoolInfo.school_city,
+                    "school_state":  this.schoolInfo.school_state,
+                    "school_afflication_no":  this.schoolInfo.school_afflication_no,
+                    "school_website":  this.schoolInfo.school_website,
+                    "name": "",
+                    "vendor_name": result_r.pm_vendor.ven_name,
+                    "vendor_phone": result_r.pm_vendor.ven_phone,
+                    "po_no": result_r.pm_details.purchase_order_id,
+                    "invoice_no": result_r.pm_details.invoice_no,
+                    "grand_total": result_r.pm_details.po_total,
+                };
+                  this.inventory.printGoodsReceipt(JSON).subscribe((result: any) => {
+                    if (result) {      
+                      saveAs(result.data.fileUrl, result.data.fileName);
+                      this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
+                    }
+                  });
+                }
+                // return;
+                if (this.requistionArray.length > 0) {
+                  this.requistionArray[0].pm_status = this.statusFlag;
+                  this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+                    if (result) {
+                      printArray = result.data;
+                      this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+                        if (result_p) {
+                          let finalArray: any = [];
+                          result_r.pm_status = 'approved';
+                          finalArray.push(result_r);
+                          console.log();
+                          
+                          this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
+                            if (result_q) {
+                            
+                                this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                                this.finalSubmitArray = [];
+                                this.finalRequistionArray = [];
+                                this.itemCodeArray = [];
+                              
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                  this.requistionArray = [];
+                  this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+                  this.inventory.setTabIndex({ 'currentTab': 2 });
+                } else {
+                  this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+                    if (result_p) {
+                      this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                      this.requistionArray = [];
+                      this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+                      this.inventory.setTabIndex({ 'currentTab': 2 });
+                    }
+                  });
+                }
+              } else {
+                this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
               }
             });
+            console.log("printArray >>>", printArray);
           }
-        } else {
-          this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
         }
-      });
-      console.log("printArray >>>", printArray);
-    }
   }
   getFilterLocation(locationData) {
     this.currentLocationId = locationData.location_id;
