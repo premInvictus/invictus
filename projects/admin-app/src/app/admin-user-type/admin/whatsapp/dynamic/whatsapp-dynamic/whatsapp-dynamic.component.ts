@@ -25,8 +25,17 @@ export class WhatsappDynamicComponent implements OnInit {
   data: any;
   headers: any[] = [];
   dMessage: any = [];
+  finalMessage: any = "";
+  tableHead: any = ["Mobile No.", "Message"];
+  tableData: any = [];
+  count: any = 0;
 
-  // From Static
+  ngOnInit() {
+    this.whatsappDynamicForm = this.fBuild.group({
+      phone: "",
+      text_message: "",
+    });
+  }
 
   onFileChange(evt: any) {
     /* wire up file reader */
@@ -50,45 +59,75 @@ export class WhatsappDynamicComponent implements OnInit {
     };
     reader.readAsBinaryString(target.files[0]);
   }
+  yemerafunction(e) {
+    // console.log(e);
 
-  getHeaderValue(e: any) {
-    console.log(typeof e.target.value);
-    console.log("The Event value is :", e.target.value);
+    console.log(this.whatsappDynamicForm.value.text_message);
   }
-
   /**
    * 1. Function -> Get the header
    */
-  getHeaders(data) {
-    let something = Object.entries(data[0]);
-
-    something.forEach((e) => {
-      this.headers.push(e);
-    });
-
+  getHeaders(data: any) {
+    for (const [key, value] of Object.entries(data[0])) {
+      this.headers.push(value);
+    }
     this.headersElem.nativeElement.value = this.headers;
-  }
-
-  showVal(items: any) {
-    const msgDiv = document.getElementById("message");
-    msgDiv.innerHTML = items;
   }
 
   /**
    * 2. Function -> Compose the Message
    */
-  composeMessage(value: any) {
-    this.dMessageElem.nativeElement.value += "{" + value[1] + "}";
+  composeMessage(header: any) {
+    this.dMessageElem.nativeElement.value += "{" + header + "}";
   }
-
-  ngOnInit() {}
 
   showPreview() {
     /**
-     * The dynamic table with mobile number, name and dynamic message to be shown
+     * Create the finalMessage
      */
-    const messageDiv = document.getElementById("message");
-    //
+    this.count += 1;
+    let example = "hello mr how are {you}";
+    let temp = "";
+    if (this.count > 0) {
+      this.tableData.length = 0;
+      this.data.forEach((item: any, i: number) => {
+        if (i !== 0 && i < this.data.length - 1) {
+          // console.log(item);
+
+          // Composing the message
+          temp = this.whatsappDynamicForm.value.text_message;
+          // console.log(temp);
+
+          // TODO: Remove the hardcoded values
+          // get the values of the left array -> this.headers
+
+          //order same rakna hoga left right dono ka : WHY ?
+          if (temp) {
+            // this.headers.forEach((item, index) => {
+            //   var rpl_str = "{" + item + "}";
+            //   temp = temp.replace(rpl_str, item[index]);
+            // });
+            temp = temp.replace("{School Name}", item[0]);
+            temp = temp.replace("{Student Name}", item[1]);
+            temp = temp.replace("{Mobile Number}", item[2]);
+            temp = temp.replace("{Id}", item[3]);
+          } else {
+            alert("message cant be empty");
+          }
+
+          // Creating the table data [Done]
+          if (this.tableData) {
+            this.tableData.unshift({
+              mobile_no: item[2],
+              message: temp,
+            });
+          }
+        }
+        // call the api now
+        // but it is not dynamic, it's hardcoded !! as of now lets build
+      });
+    }
+
     // this.whatsapp.getMobileNumbers().subscribe((result: any) => {
     //   if (result) {
     //     result.data.forEach((ele: any) => {
@@ -107,5 +146,28 @@ export class WhatsappDynamicComponent implements OnInit {
 
   sendMessage() {
     // - When clicked it calls the backend API with POST route and sends the message to the respective numbers
+
+    // have some delay while sending the message 1 - 5s
+
+    //sending vai static route
+
+    // if (this.whatsappDynamicForm.valid) {
+    //   this.tableData.forEach((e: any) => {
+    //     this.whatsapp
+    //       .sendStaticMessage(e.message, e.mobile_no)
+    //       .subscribe((result: any) => {
+    //         console.log("message sent", result);
+    //       });
+    //   });
+    // }
+
+    // Sending via dynamic route
+    if (this.whatsappDynamicForm.valid) {
+      this.whatsapp
+        .sendDynamicMessage(this.tableData)
+        .subscribe((result: any) => {
+          console.log("message sent", result);
+        });
+    }
   }
 }

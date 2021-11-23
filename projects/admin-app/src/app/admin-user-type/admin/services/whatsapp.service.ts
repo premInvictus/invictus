@@ -15,13 +15,14 @@ export class WhatsappService {
     });
   }
 
-  sendDynamicMessage() {
+  // TODO: Send Dynamic Message
+  sendDynamicMessage(value) {
     /**
      * Send the dynamic message to the participants with values as follows
      * Numbers and message in an array
      */
     this.loaderService.startLoading();
-    return this.http.get(environment.apiWhatsappStaticUrl);
+    return this.http.post(environment.apiWhatsappDynamicUrl, value);
   }
 
   getMobileNumbers() {

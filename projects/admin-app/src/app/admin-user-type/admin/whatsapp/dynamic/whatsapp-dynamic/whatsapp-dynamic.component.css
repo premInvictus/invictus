@@ -13,14 +13,24 @@
 
 .manage-message {
   display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 8px;
   height: 200px;
   width: 100%;
   border: 3px solid #b4b4b06e;
   background-color: #efefef;
   overflow: auto;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  width: 100%;
+}
+
+li {
+  padding: 10px 0;
+  margin: 5px 0;
+  background-color: #a5a4a4;
 }
 
 .form {
@@ -86,4 +96,113 @@ ul {
 li {
   background-color: #efefef;
   padding: "5px 0";
+}
+
+/* Table CSS */
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid steelblue;
+}
+
+thead {
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+th {
+  background: #215a8e;
+  color: #fff;
+}
+
+td:nth-child(1) {
+  background: #215a8e;
+  color: #fff;
+}
+
+th,
+td {
+  padding: 1em;
+}
+
+tr,
+td {
+  display: block;
+}
+
+td {
+  position: relative;
+}
+
+td::before {
+  content: attr(data-label);
+  position: absolute;
+  left: 0;
+  padding-left: 1em;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+tr {
+  margin-bottom: 1.5em;
+  border: 1px solid #ddd;
+  text-align: right;
+}
+
+tr:last-of-type {
+  margin-bottom: 0;
+}
+
+td:nth-child(n + 2):nth-child(odd) {
+  background-color: #ddd;
+}
+
+@media only screen and (min-width: 768px) {
+  table {
+    margin: 0 auto;
+  }
+
+  thead {
+    visibility: visible;
+    position: relative;
+  }
+
+  th {
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.9em;
+  }
+
+  tr {
+    display: table-row;
+    border: none;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #ddd;
+  }
+
+  td {
+    display: table-cell;
+  }
+
+  td::before {
+    content: none;
+  }
+
+  td:nth-child(1) {
+    background: transparent;
+    color: #444;
+  }
+
+  td:nth-child(n + 2):nth-child(odd) {
+    background-color: transparent;
+  }
 }

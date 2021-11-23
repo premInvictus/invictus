@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { WhatsappService } from "../services/whatsapp.service";
 
+import * as XLSX from "xlsx";
 @Component({
   selector: "app-whatsapp",
   templateUrl: "./whatsapp.component.html",
@@ -14,11 +15,11 @@ export class WhatsappComponent implements OnInit {
 
   ngOnInit() {
     this.whatsapp.getMobileNumbers().subscribe((result: any) => {
-      console.log("The DATA: ", result);
+      // console.log("The DATA: ", result);
     });
   }
 
-  setTabValue(value) {
+  setTabValue(value: number) {
     this.tabSelectedIndex = value;
   }
 }
