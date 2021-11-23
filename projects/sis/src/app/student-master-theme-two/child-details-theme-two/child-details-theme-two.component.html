@@ -242,6 +242,7 @@
                 <div class="col-12 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
+                    <input type="hidden" formControlName="ea_city">
                     <input type="text" matInput placeholder="City" formControlName="ea_city1" required
                       [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
                       [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
@@ -355,6 +356,7 @@
                 <div class="col-12 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
+                    <input type="hidden" formControlName="ea_city">
                     <input type="text" matInput placeholder="City" formControlName="ea_city1" [readonly]="viewOnly || (editOnly && !showAddressFlag)
                     || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher"
                       [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
@@ -436,7 +438,7 @@
           <div class="col-12">
             <span>Whether the address of correspondence is different from the Permanent address
               ?</span>
-            <mat-slide-toggle [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly"
+            <mat-slide-toggle [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly"  formControlName="ea_same_residential_address"
               (change)="ea_same_residential_address_change($event)">{{addressStatus}}</mat-slide-toggle>
           </div>
 
