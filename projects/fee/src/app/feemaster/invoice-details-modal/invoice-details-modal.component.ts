@@ -360,9 +360,9 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
-						console.log("i am here--------------", result.data[0].fp_months[0].includes("-"));
+						// console.log("i am here--------------", result.data[0].fp_months[0].includes("-"));
 						
-						if (result.data[0].fp_months.length > 1 || result.data[0].fp_months[0].includes("-")) {
+						if (result.data[0].fp_months.length > 1 || (result.data[0].fp_months.length > 0 && result.data[0].fp_months[0].includes("-"))) {
 							this.readonlyadjustment = true;
 							this.feePeriodArray = result.data[0].fp_months;
 
