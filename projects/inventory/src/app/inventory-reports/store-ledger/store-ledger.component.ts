@@ -311,21 +311,28 @@ export class StoreLedgerComponent implements OnInit {
         filterSearchType: FieldType.string,
         width: 50,
       },
+      // {
+      //   id: 'quantity_in', name: 'Quantity In', field: 'quantity_in', sortable: true,
+      //   filterable: true,
+      //   filterSearchType: FieldType.string,
+      //   width: 30,
+      //   groupTotalsFormatter: this.sumTotalsFormatter,
+      // },
       {
-        id: 'quantity_in', name: 'Quantity In', field: 'quantity_in', sortable: true,
+        id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
         width: 30,
         groupTotalsFormatter: this.sumTotalsFormatter,
       }
       ,
-      {
-        id: 'quantity_out', name: 'Quantity Out', field: 'quantity_out', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 30,
-        groupTotalsFormatter: this.sumTotalsFormatter,
-      }
+      // {
+      //   id: 'quantity_out', name: 'Quantity Out', field: 'quantity_out', sortable: true,
+      //   filterable: true,
+      //   filterSearchType: FieldType.string,
+      //   width: 30,
+      //   groupTotalsFormatter: this.sumTotalsFormatter,
+      // }
     ];
     this.inventory.getStockLedger().subscribe((result: any) => {
       if (result) {
@@ -341,6 +348,7 @@ export class StoreLedgerComponent implements OnInit {
             obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
             obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
             obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+            obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
             obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
             obj['quantity_out'] = item.quantity_out ? item.quantity_out : '-';
           } else {
@@ -348,15 +356,22 @@ export class StoreLedgerComponent implements OnInit {
             obj['item_code'] = item.item_code;
             obj['item_name'] = new CapitalizePipe().transform(this.getItemName(item.item_code));
             obj['item_code_name'] = item.item_code + '-' + new CapitalizePipe().transform(this.getItemName(item.item_code));
-            obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
+            obj['date'] = item.date && item.date != '-' ? this.CommonService.dateConvertion(item.date, 'dd-MMM-y') : '';
             obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
             obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+            if(item.particulars == "Branch Transfer"){
+              obj['quantity'] = item.quantity_out ? item.quantity_out : 0;
+            }else{
+              obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
+            }
             obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
             obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
           }
           this.dataset.push(obj);
           ind++; 
         }
+        console.log("dataset >>>>>>",this.dataset);
+        
         const sortedArr: any[] = this.dataset.sort((a, b) => {
           const isAsc = false;
           return compare(new Date(a.date).getTime(), new Date(b.date).getTime(), isAsc);
