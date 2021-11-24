@@ -9,6 +9,7 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
+import { Observable, Observer } from 'rxjs';
 @Component({
   selector: 'app-bounced-cheque-multiple',
   templateUrl: './bounced-cheque-multiple.component.html',
@@ -93,11 +94,37 @@ export class BouncedChequeMultipleComponent implements OnInit {
         for (var i = 0; i < result.data.length; i++) {
           if ((!(result.data[i]['bnk_module_list'] == '')) || (result.data[i]['bnk_module_list'].includes('fees'))) {
             this.banks.push(result.data[i]);
+            console.log("banks", this.banks);
+            
           }
         }
       }
     });
   }
+
+
+  getBase64ImageFromURL(url: string) {
+    return new Observable((observer: Observer<string>) => {
+      // create an image object
+      let img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = url;
+      if (!img.complete) {
+        // This will call another method that will create image from url
+        img.onload = () => {
+          observer.next(this.getBase64Image(img));
+          observer.complete();
+        };
+        img.onerror = (err) => {
+          observer.error(err);
+        };
+      } else {
+        observer.next(this.getBase64Image(img));
+        observer.complete();
+      }
+    });
+  }
+
   getBase64Image(img) {
     var canvas = document.createElement("canvas");
     canvas.width = img.width;
@@ -121,6 +148,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
   }
   
   submit(event) {
+    console.log("event",event);
+    
     let finalArray: any[] = [];
     for (let item of this.studentDetails) {
       if (this.bouncedForm.value.fcc_status === 'cd') {
@@ -260,6 +289,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
   
+    console.log("hey >>>>>>>>>>>", bankName);
     setTimeout(() => {
       const doc = new jsPDF('portrait',"mm", "a4", true);
       
@@ -438,8 +468,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
 
   }
 
-  submitAndPrint() {
-    
+  submitAndPrint() { 
 
 
     this.CHEQUE_ELEMENT_DATA = [];

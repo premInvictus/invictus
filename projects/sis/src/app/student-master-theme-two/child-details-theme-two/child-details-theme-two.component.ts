@@ -99,6 +99,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.getMotherTongue();
 		this.getStudentTags();
 		this.settingsArray = this.configSetting;
+		console.log("settings >>>>>>>>>>>>>>>>>>>", this.configSetting);
 		// this.getConfigureSetting();
 		this.addressStatus = 'No';
 		this.siblingStaus = 'No';
@@ -598,7 +599,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 
 	patchPersonalDetails(personalDetails) {
 		this.cityCountryArray = [];
-		console.log("in here----------", personalDetails);
+		console.log("in personalDetails----------", personalDetails);
 		
 		if (personalDetails.length > 0) {
 			this.baseform.patchValue({
@@ -626,6 +627,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			let counter = 0;
 
 			if (personalDetails[0].addressDetails.length > 0) {																							
+				console.log("permanent address form values >>", this.paddressform.value);
 				
 				personalDetails[0].addressDetails.forEach(element => {
 					if (element.ea_address_type === 'permanent') {
@@ -636,6 +638,18 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								}
 							});
 						}
+						if(element.ea_same_residential_address  == 'N'){
+							this.addressStatus = 'Yes';
+							this.paddressform.patchValue({
+								ea_same_residential_address: true
+							});
+							this.raddressform.patchValue({
+								ea_same_residential_address: true
+							});
+							this.showAddressFlag = true;
+							this.raddressviewonly = false;
+							this.opacityClass = '';
+						}
 						if(counter < 1){
 							permanentAddress.push({
 								ea_id: element.ea_id,
@@ -644,8 +658,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
 								ea_address_for: 'S',
 								ea_address1: element.ea_address1,
-								ea_city: element.ea_city,
-								ea_city1: element.cit_name,
+								ea_city: element.ea_city ? element.ea_city : this.paddressform.value.ea_city,
+								ea_city1: element.cit_name ? element.cit_name : this.paddressform.value.ea_city1,
 								ea_state: element.ea_state,
 								ea_district: element.ea_district,
 								ea_country: element.ea_country,
@@ -674,8 +688,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								ea_same_residential_address: element.ea_same_residential_address === 'Y' ? true : false,
 								ea_address_for: 'S',
 								ea_address1: element.ea_address1,
-								ea_city: element.ea_city,
-								ea_city1: element.cit_name,
+								ea_city: element.ea_city ? element.ea_city : this.raddressform.value.ea_city,
+								ea_city1: element.cit_name ? element.cit_name : this.raddressform.value.ea_city1,
 								ea_state: element.ea_state,
 								ea_district: element.ea_district,
 								ea_country: element.ea_country,
