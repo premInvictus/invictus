@@ -481,14 +481,7 @@ export class GenerateReceiptComponent implements OnInit {
                 let finalArray: any = [];
                 finalArray.push(this.requistionArray[0]);
                 console.log();
-                
-                this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
-                  if (result_q) {
-                  
-                      this.commonService.showSuccessErrorMessage('Receipt Updated Successfully', 'success');
-                    
-                  }
-                });
+                this.commonService.showSuccessErrorMessage('Receipt Updated Successfully', 'success');
               }
             });
           }
