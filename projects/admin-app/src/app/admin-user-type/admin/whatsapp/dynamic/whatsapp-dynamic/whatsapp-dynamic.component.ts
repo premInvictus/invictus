@@ -24,19 +24,18 @@ export class WhatsappDynamicComponent implements OnInit {
   @ViewChild("d_message") dMessageElem: ElementRef;
   data: any;
   headers: any[] = [];
-  dMessage: any = [];
-  finalMessage: any = "";
-  tableHead: any = ["Mobile No.", "Message"];
-  tableData: any = [];
+  tableHead: any[] = ["Mobile No.", "Message"];
+  tableData: any[] = [];
   count: any = 0;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.whatsappDynamicForm = this.fBuild.group({
       phone: "",
       text_message: "",
     });
   }
 
+  // When we Upload File
   onFileChange(evt: any) {
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>evt.target;
@@ -59,14 +58,8 @@ export class WhatsappDynamicComponent implements OnInit {
     };
     reader.readAsBinaryString(target.files[0]);
   }
-  yemerafunction(e) {
-    // console.log(e);
 
-    console.log(this.whatsappDynamicForm.value.text_message);
-  }
-  /**
-   * 1. Function -> Get the header
-   */
+  // Get the header
   getHeaders(data: any) {
     for (const [key, value] of Object.entries(data[0])) {
       this.headers.push(value);
@@ -74,100 +67,56 @@ export class WhatsappDynamicComponent implements OnInit {
     this.headersElem.nativeElement.value = this.headers;
   }
 
-  /**
-   * 2. Function -> Compose the Message
-   */
+  // Compose the Message
   composeMessage(header: any) {
     this.dMessageElem.nativeElement.value += "{" + header + "}";
   }
 
   showPreview() {
-    /**
-     * Create the finalMessage
-     */
-    this.count += 1;
-    let example = "hello mr how are {you}";
-    let temp = "";
-    if (this.count > 0) {
-      this.tableData.length = 0;
-      this.data.forEach((item: any, i: number) => {
-        if (i !== 0 && i < this.data.length - 1) {
-          // console.log(item);
+    console.log(this.data);
 
+    this.count += 1;
+    let d_msg = "";
+    this.tableData.length = 0;
+
+    if (this.count > 0) {
+      this.data.forEach((header: any, i: number) => {
+        if (i !== 0 && this.data.length - 1) {
           // Composing the message
-          temp = this.whatsappDynamicForm.value.text_message;
-          // console.log(temp);
+          d_msg = this.whatsappDynamicForm.value.text_message;
 
           // TODO: Remove the hardcoded values
-          // get the values of the left array -> this.headers
-
-          //order same rakna hoga left right dono ka : WHY ?
-          if (temp) {
-            // this.headers.forEach((item, index) => {
-            //   var rpl_str = "{" + item + "}";
-            //   temp = temp.replace(rpl_str, item[index]);
+          // Get the values of the left array -> this.headers
+          if (d_msg) {
+            // this.headers.forEach((header, index) => {
+            //   var rpl_str = "{" + header + "}";
+            //   d_msg = d_msg.replace(rpl_str, header[index]);
             // });
-            temp = temp.replace("{School Name}", item[0]);
-            temp = temp.replace("{Student Name}", item[1]);
-            temp = temp.replace("{Mobile Number}", item[2]);
-            temp = temp.replace("{Id}", item[3]);
-          } else {
-            alert("message cant be empty");
+
+            d_msg = d_msg.replace("{School Name}", header[0]);
+            d_msg = d_msg.replace("{Student Name}", header[1]);
+            d_msg = d_msg.replace("{Mobile Number}", header[2]);
+            d_msg = d_msg.replace("{Id}", header[3]);
           }
 
-          // Creating the table data [Done]
+          // Creating the table data
           if (this.tableData) {
-            this.tableData.unshift({
-              mobile_no: item[2],
-              message: temp,
+            this.tableData.push({
+              mobile_no: header[2],
+              message: d_msg,
             });
           }
         }
-        // call the api now
-        // but it is not dynamic, it's hardcoded !! as of now lets build
       });
     }
-
-    // this.whatsapp.getMobileNumbers().subscribe((result: any) => {
-    //   if (result) {
-    //     result.data.forEach((ele: any) => {
-    //       this.ELEMENT_DATA.push({
-    //         name: ele.first_name,
-    //         mobile_no: 1,
-    //         message: ele.last_name,
-    //       });
-    //     });
-    //     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    //   } else {
-    //     console.error("Error Occured !!");
-    //   }
-    // });
   }
 
   sendMessage() {
-    // - When clicked it calls the backend API with POST route and sends the message to the respective numbers
-
-    // have some delay while sending the message 1 - 5s
-
-    //sending vai static route
-
-    // if (this.whatsappDynamicForm.valid) {
-    //   this.tableData.forEach((e: any) => {
-    //     this.whatsapp
-    //       .sendStaticMessage(e.message, e.mobile_no)
-    //       .subscribe((result: any) => {
-    //         console.log("message sent", result);
-    //       });
-    //   });
-    // }
-
-    // Sending via dynamic route
     if (this.whatsappDynamicForm.valid) {
-      this.whatsapp
-        .sendDynamicMessage(this.tableData)
-        .subscribe((result: any) => {
-          console.log("message sent", result);
-        });
+      console.log("Sending message ---------");
+
+      this.whatsapp.sendDynamicMessage(this.tableData);
+      console.log("Message Sent");
     }
   }
 }

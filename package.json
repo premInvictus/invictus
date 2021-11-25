@@ -84,7 +84,7 @@
     "rxjs": "~6.2.0",
     "rxjs-compat": "^6.5.2",
     "sass": "^1.19.0",
-    "xlsx": "^0.14.1",
+    "xlsx": "^0.17.4",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
