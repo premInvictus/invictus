@@ -58,6 +58,7 @@ export class GenerateReceiptComponent implements OnInit {
   viewOnly = false;
   schoolInfo: any = {};
   schoolGroupData: any[];
+  locationArray: any[];
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -80,6 +81,9 @@ export class GenerateReceiptComponent implements OnInit {
      console.log('this.requistionArray', this.requistionArray);
       this.getTablevalue();
     }
+  }
+  ngAfterViewInit(){
+    this.getAllLocations();
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -184,6 +188,9 @@ export class GenerateReceiptComponent implements OnInit {
   // Add item list function
 
   addList() {
+    this.allLocationData = [];
+    this.getAllLocations();
+
     if (this.createOrderForm.valid) {
      // console.log(this.createOrderForm.value, 'this.createOrderForm');
       const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createOrderForm.value.item_code)
@@ -196,7 +203,7 @@ export class GenerateReceiptComponent implements OnInit {
           item_location: this.currentLocationId
         });
         this.createOrderForm.value.item_status = 'pending';
-        this.createOrderForm.value.item_location = this.currentLocationId + " - " + this.getLocationName(this.currentLocationId);
+        this.createOrderForm.value.item_location = this.currentLocationId;
         this.finalRequistionArray.push(this.createOrderForm.value);
       }
       this.resetForm();
@@ -578,10 +585,22 @@ export class GenerateReceiptComponent implements OnInit {
     this.currentLocationId = locationData.location_id;
     this.locationDataArray.push(locationData);
   }
+
+  getAllLocations(){
+    this.locationArray = [];
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        console.log("all locations",result);
+        this.locationArray = result;
+      }
+    });
+}
+
   getLocationName(location_id) {
-    const sindex = this.locationDataArray.findIndex(f => Number(f.location_id) === Number(location_id));
+    const sindex = this.locationArray.findIndex(f => Number(f.location_id) === Number(location_id));
     if (sindex !== -1) {
-      return this.locationDataArray[sindex].location_hierarchy;
+      return this.locationArray[sindex].location_hierarchy;
     } else {
       return '-';
     }
