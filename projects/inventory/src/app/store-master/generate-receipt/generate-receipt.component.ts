@@ -118,6 +118,7 @@ export class GenerateReceiptComponent implements OnInit {
   }
 
   getTablevalue() {
+    this.getAllLocations();
     for (let item of this.requistionArray) {
       this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
       this.pm_type = item.pm_type;
