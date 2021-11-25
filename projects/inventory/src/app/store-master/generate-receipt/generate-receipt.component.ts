@@ -126,7 +126,7 @@ export class GenerateReceiptComponent implements OnInit {
         this.viewOnly = false;
       }
       for (let dety of item.pm_item_details) {
-        if (dety.item_status === 'pending') {
+        if (dety.item_status === 'pending' || dety.item_status === 'approved') {
           const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
           if (sindex !== -1) {
             this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
