@@ -78,10 +78,10 @@
           <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
           <td mat-cell class="cell-left" *matCellDef="let element;">
             <div class="inline-flex margin-top-10">
-              <i class="fa fa-print modify-icon" *ngIf="element.action.pm_status === 'pending'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
+              <i class="fa fa-print modify-icon" *ngIf="element.action.pm_status === 'pending' && element.action.pm_status != 'deleted'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
                 title="print"></i>
-              <!-- <i class="fa fa-download modify-icon" *ngIf="element.action.pm_status === 'approved'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
-                title="download"></i>-->
+              <i class="fa fa-download modify-icon" *ngIf="element.action.pm_status === 'approved' && element.action.pm_status != 'deleted'" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
+                title="download"></i>
               <div class="divider-div"></div> 
               <i class="far fa-eye modify-icon" (click)="actionList(element.action.pm_id,'view')"
                 style="cursor:pointer" title="Edit"></i>
