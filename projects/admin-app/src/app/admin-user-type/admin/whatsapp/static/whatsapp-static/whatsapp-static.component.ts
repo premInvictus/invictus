@@ -65,16 +65,16 @@ export class WhatsappStaticComponent implements OnInit {
   sendMessage() {
     if (this.whatsappStaticForm.valid) {
       var message = this.whatsappStaticForm.value.text_message;
-      var numbers = this.whatsappStaticForm.value.phone;
       console.log("Sending Message");
 
-      this.phone.forEach((element: any) => {
+      this.phone.forEach((number: any) => {
         this.whatsapp
-          .sendStaticMessage(message, element)
+          .sendStaticMessage(message, number)
           .subscribe((result: any) => {
             console.log("message sent", result);
           });
       });
     }
+    this.whatsapp.resetForm(this.whatsappStaticForm)
   }
 }

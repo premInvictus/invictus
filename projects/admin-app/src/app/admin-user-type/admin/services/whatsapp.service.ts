@@ -11,7 +11,7 @@ export class WhatsappService {
     this.loaderService.startLoading();
     return this.http.post(environment.apiWhatsappStaticUrl, {
       message: message,
-      phone: phone,
+      number: phone,
     });
   }
 
@@ -20,11 +20,6 @@ export class WhatsappService {
 
     this.loaderService.startLoading();
     return this.http.post(environment.apiWhatsappDynamicUrl, value);
-  }
-
-  getMobileNumbers() {
-    this.loaderService.startLoading();
-    return this.http.get("apiWhatsappDynamcicUrl");
   }
 
   resetForm(form: any) {

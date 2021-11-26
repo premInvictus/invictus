@@ -111,12 +111,11 @@ export class WhatsappDynamicComponent implements OnInit {
     }
   }
 
-  sendMessage() {
-    if (this.whatsappDynamicForm.valid) {
-      console.log("Sending message ---------");
-
-      this.whatsapp.sendDynamicMessage(this.tableData);
-      console.log("Message Sent");
+  sendMessage() { 
+    if (this.whatsappDynamicForm.valid) {      
+      this.whatsapp.sendDynamicMessage(this.tableData).subscribe((e:any)=>{
+      });
     }
+    this.whatsapp.resetForm(this.whatsappDynamicForm)
   }
 }
