@@ -116,6 +116,7 @@ export class StoreLedgerComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
+  locationArray: any[];
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
     private erpCommonService: ErpCommonService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -127,6 +128,7 @@ export class StoreLedgerComponent implements OnInit {
     this.getReport();
     this.getSchool();
     this.getSession();
+    this.getAllLocations();
   }
   getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -160,6 +162,7 @@ export class StoreLedgerComponent implements OnInit {
     }
   }
   getReport() {
+    this.getAllLocations();
     this.dataArr = [];
     this.totalRow = {};
     this.columnDefinitions = [];
@@ -297,6 +300,7 @@ export class StoreLedgerComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 40,
+        groupTotalsFormatter: this.srnTotalsFormatter,
       },
       {
         id: 'particulars', name: 'Particulars', field: 'particulars', sortable: true,
@@ -306,26 +310,40 @@ export class StoreLedgerComponent implements OnInit {
       }
       ,
       {
-        id: 'stu_name', name: 'Name', field: 'stu_name', sortable: true,
+        id: 'location', name: 'Location', field: 'location', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 50,
+        width: 25
       },
       // {
-      //   id: 'quantity_in', name: 'Quantity In', field: 'quantity_in', sortable: true,
+      //   id: 'stu_name', name: 'Name', field: 'stu_name', sortable: true,
+      //   filterable: true,
+      //   filterSearchType: FieldType.string,
+      //   width: 50,
+      // },
+      // {
+      //   id: 'quantity_in', name: 'Quantity', field: 'quantity_in', sortable: true,
       //   filterable: true,
       //   filterSearchType: FieldType.string,
       //   width: 30,
       //   groupTotalsFormatter: this.sumTotalsFormatter,
       // },
+      
+     
       {
         id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 30,
+        width: 20,
         groupTotalsFormatter: this.sumTotalsFormatter,
       }
       ,
+      {
+        id: 'remarks', name: 'Remarks', field: 'remarks', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 50,
+      },
       // {
       //   id: 'quantity_out', name: 'Quantity Out', field: 'quantity_out', sortable: true,
       //   filterable: true,
@@ -348,9 +366,13 @@ export class StoreLedgerComponent implements OnInit {
             obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
             obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
             obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+            obj['branch_to'] = item.branch_to ? item.branch_to : item.branch_from;
+            obj['branch_from'] = item.branch_from ? item.branch_from : '-';
             obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
-            obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
-            obj['quantity_out'] = item.quantity_out ? item.quantity_out : '-';
+            obj['location'] = (item.branch_to) ? this.getLocationName(item.branch_to) : this.getLocationName(item.branch_from);
+            obj['remarks'] = item.remarks ? item.remarks + '-' + new CapitalizePipe().transform(item.stu_name) : '-';
+            // obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
+            // obj['quantity_out'] = item.quantity_out ? item.quantity_out : '-';
           } else {
             obj['id'] = item.item_name + ind;
             obj['item_code'] = item.item_code;
@@ -359,13 +381,20 @@ export class StoreLedgerComponent implements OnInit {
             obj['date'] = item.date && item.date != '-' ? this.CommonService.dateConvertion(item.date, 'dd-MMM-y') : '';
             obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
             obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
-            if(item.particulars == "Branch Transfer"){
+            console.log(item.item_code, obj['particulars'] );
+            obj['branch_to'] = item.branch_to ? item.branch_from : '-';
+            obj['branch_from'] = item.branch_from ? item.branch_from : '-';
+            if(item.particulars == "Branch-Transfer"){
+              obj['quantity'] = item.quantity_out ? item.quantity_out : 0;
+            }else if(item.particulars == "Sale"){
               obj['quantity'] = item.quantity_out ? item.quantity_out : 0;
             }else{
               obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
             }
-            obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
-            obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
+            obj['location'] =  (item.branch_to) ? this.getLocationName(item.branch_to) : this.getLocationName(item.branch_from);
+            obj['remarks'] = item.remarks ? item.remarks + '-' + new CapitalizePipe().transform(item.stu_name) : '-';
+            // obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
+            // obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
           }
           this.dataset.push(obj);
           ind++; 
@@ -381,16 +410,20 @@ export class StoreLedgerComponent implements OnInit {
         this.totalRow = {};
         const obj3: any = {};
         obj3['id'] = 'footer';
-        obj3['date'] = 'Grand Total';
+        obj3['date'] = '';
         obj3['item_code'] = '';
-        obj3['item_name'] = '';
+        obj3['item_name'] = 'Grand Total';
         obj3['particulars'] = '';
         obj3['stu_name'] = '';
-        obj3['quantity_in'] = this.dataset.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
-        obj3['quantity_out'] = this.dataset.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0)
+        obj3['remarks'] = '';
+        obj3['location'] = '';
+        // obj3['quantity_in'] = this.dataset.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        // obj3['quantity_out'] = this.dataset.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        obj3['quantity'] = this.dataset.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
         this.totalRow = obj3;
-        this.aggregatearray.push(new Aggregators.Sum('quantity_in'));
-        this.aggregatearray.push(new Aggregators.Sum('quantity_out'));
+        // this.aggregatearray.push(new Aggregators.Sum('quantity_in'));
+        // this.aggregatearray.push(new Aggregators.Sum('quantity_out'));
+        this.aggregatearray.push(new Aggregators.Sum('quantity'));
         if (this.dataset.length <= 5) {
           this.gridHeight = 300;
         } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -413,6 +446,30 @@ export class StoreLedgerComponent implements OnInit {
     }
 
   }
+
+
+  getAllLocations(){
+    this.locationArray = [];
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        console.log("all locations",result);
+        this.locationArray = result;
+      }
+    });
+}
+
+  getLocationName(location_id) {
+    console.log("location name", location_id);
+    
+    const sindex = this.locationArray.findIndex(f => Number(f.location_id) === Number(location_id));
+    if (sindex !== -1) {
+      return this.locationArray[sindex].location_hierarchy;
+    } else {
+      return '-';
+    }
+  }
+  
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
     this.clearGrouping();
@@ -687,8 +744,11 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
-          obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
-          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['remarks'] = '';
+          obj3['location'] = '';
+          // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -726,8 +786,11 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
-          obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
-          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['remarks'] = '';
+          obj3['location'] = '';
+          // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1006,8 +1069,11 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
-          obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
-          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['remarks'] = '';
+          obj3['location'] = '';
+          // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           // style row having total
@@ -1071,8 +1137,11 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
-          obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
-          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['remarks'] = '';
+          obj3['location'] = '';
+          // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           if (groupItem.level === 0) {
@@ -1152,4 +1221,15 @@ export class StoreLedgerComponent implements OnInit {
       return 'Sub Total (' + groupItem.value + ')';
     }
   }
+
+	srnTotalsFormatter(totals, columnDef) {
+		console.log('srnTotalsFormatter ', totals);
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total level ' + totals.group.level + ' </b>';
+		}
+	}
+  
 }

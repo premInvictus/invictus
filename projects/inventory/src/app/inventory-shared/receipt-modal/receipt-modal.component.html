@@ -96,8 +96,8 @@
             <ng-container matColumnDef="item_location">
                 <th mat-header-cell *matHeaderCellDef class="cell-left"> Location </th>
                 <td mat-cell class="cell-left" *matCellDef="let element;">
-                  {{(element.item_location)}} 
-                  <!-- {{getLocationName(element.item_location)}}  -->
+                  <!-- {{(element.item_location)}}  -->
+                  {{getLocationName(element.item_location)}} 
                 </td>
               </ng-container>
   
