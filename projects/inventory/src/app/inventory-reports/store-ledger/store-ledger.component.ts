@@ -116,6 +116,7 @@ export class StoreLedgerComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
+  locationArray: any[];
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
     private erpCommonService: ErpCommonService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -127,6 +128,7 @@ export class StoreLedgerComponent implements OnInit {
     this.getReport();
     this.getSchool();
     this.getSession();
+    this.getAllLocations();
   }
   getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -160,6 +162,7 @@ export class StoreLedgerComponent implements OnInit {
     }
   }
   getReport() {
+    this.getAllLocations();
     this.dataArr = [];
     this.totalRow = {};
     this.columnDefinitions = [];
@@ -305,6 +308,12 @@ export class StoreLedgerComponent implements OnInit {
         width: 35
       }
       ,
+      {
+        id: 'location', name: 'Location', field: 'location', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 25
+      },
       // {
       //   id: 'stu_name', name: 'Name', field: 'stu_name', sortable: true,
       //   filterable: true,
@@ -321,21 +330,15 @@ export class StoreLedgerComponent implements OnInit {
       
      
       {
-        id: 'location', name: 'Location', field: 'location', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 35
-      },
-      {
         id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 30,
+        width: 20,
         groupTotalsFormatter: this.sumTotalsFormatter,
       }
       ,
       {
-        id: 'stu_name', name: 'Remarks', field: 'stu_name', sortable: true,
+        id: 'remarks', name: 'Remarks', field: 'remarks', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
         width: 50,
@@ -365,7 +368,8 @@ export class StoreLedgerComponent implements OnInit {
             obj['branch_to'] = item.branch_to ? item.branch_to : item.branch_from;
             obj['branch_from'] = item.branch_from ? item.branch_from : '-';
             obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
-            obj['location'] = item.branch_to ? item.branch_to : item.branch_from;
+            obj['location'] = (item.branch_to) ? this.getLocationName(item.branch_to) : this.getLocationName(item.branch_from);
+            obj['remarks'] = item.remarks ? item.remarks + '-' + new CapitalizePipe().transform(item.stu_name) : '-';
             // obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
             // obj['quantity_out'] = item.quantity_out ? item.quantity_out : '-';
           } else {
@@ -386,7 +390,8 @@ export class StoreLedgerComponent implements OnInit {
             }else{
               obj['quantity'] = item.quantity_in ? item.quantity_in : 0;
             }
-            obj['location'] = item.branch_to ? item.branch_to : item.branch_from;
+            obj['location'] =  (item.branch_to) ? this.getLocationName(item.branch_to) : this.getLocationName(item.branch_from);
+            obj['remarks'] = item.remarks ? item.remarks + '-' + new CapitalizePipe().transform(item.stu_name) : '-';
             // obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
             // obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
           }
@@ -409,6 +414,8 @@ export class StoreLedgerComponent implements OnInit {
         obj3['item_name'] = '';
         obj3['particulars'] = '';
         obj3['stu_name'] = '';
+        obj3['remarks'] = '';
+        obj3['location'] = '';
         // obj3['quantity_in'] = this.dataset.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
         // obj3['quantity_out'] = this.dataset.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
         obj3['quantity'] = this.dataset.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
@@ -438,6 +445,30 @@ export class StoreLedgerComponent implements OnInit {
     }
 
   }
+
+
+  getAllLocations(){
+    this.locationArray = [];
+    this.inventory.getAllLocations({}).subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        console.log("all locations",result);
+        this.locationArray = result;
+      }
+    });
+}
+
+  getLocationName(location_id) {
+    console.log("location name", location_id);
+    
+    const sindex = this.locationArray.findIndex(f => Number(f.location_id) === Number(location_id));
+    if (sindex !== -1) {
+      return this.locationArray[sindex].location_hierarchy;
+    } else {
+      return '-';
+    }
+  }
+  
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
     this.clearGrouping();
@@ -712,6 +743,8 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
+          obj3['remarks'] = '';
+          obj3['location'] = '';
           // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
           // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
           obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
@@ -752,6 +785,8 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
+          obj3['remarks'] = '';
+          obj3['location'] = '';
           // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
           // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
           obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
@@ -1033,6 +1068,8 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
+          obj3['remarks'] = '';
+          obj3['location'] = '';
           // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
           // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
           obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
@@ -1099,6 +1136,8 @@ export class StoreLedgerComponent implements OnInit {
           obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['particulars'] = '';
           obj3['stu_name'] = '';
+          obj3['remarks'] = '';
+          obj3['location'] = '';
           // obj3['quantity_in'] = groupItem.rows.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
           // obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
           obj3['quantity'] = groupItem.rows.map(t => t['quantity']).reduce((acc, val) => Number(acc) + Number(val), 0);
