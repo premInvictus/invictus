@@ -300,6 +300,7 @@ export class StoreLedgerComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 40,
+        groupTotalsFormatter: this.srnTotalsFormatter,
       },
       {
         id: 'particulars', name: 'Particulars', field: 'particulars', sortable: true,
@@ -409,9 +410,9 @@ export class StoreLedgerComponent implements OnInit {
         this.totalRow = {};
         const obj3: any = {};
         obj3['id'] = 'footer';
-        obj3['date'] = 'Grand Total';
+        obj3['date'] = '';
         obj3['item_code'] = '';
-        obj3['item_name'] = '';
+        obj3['item_name'] = 'Grand Total';
         obj3['particulars'] = '';
         obj3['stu_name'] = '';
         obj3['remarks'] = '';
@@ -1220,4 +1221,15 @@ export class StoreLedgerComponent implements OnInit {
       return 'Sub Total (' + groupItem.value + ')';
     }
   }
+
+	srnTotalsFormatter(totals, columnDef) {
+		console.log('srnTotalsFormatter ', totals);
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total level ' + totals.group.level + ' </b>';
+		}
+	}
+  
 }
