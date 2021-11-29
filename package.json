@@ -80,6 +80,8 @@
     "ngx-treeview": "^6.0.2",
     "node": "^11.14.0",
     "primeng": "^6.0.0-alpha.1",
+    "qrcode-generator": "^1.4.4",
+    "qrcode-terminal": "^0.12.0",
     "quagga": "^0.12.1",
     "rxjs": "~6.2.0",
     "rxjs-compat": "^6.5.2",

@@ -18,6 +18,7 @@ export class WhatsappStaticComponent implements OnInit {
   @ViewChild("number") myNameElem: ElementRef;
   data: any;
   phone: any[] = [];
+  temp: any[] = [];
 
   ngOnInit() {
     this.buildForm();
@@ -49,14 +50,12 @@ export class WhatsappStaticComponent implements OnInit {
       /* save data */
       this.data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-      let temp = [];
       for (let i = 1; i < this.data.length; i++) {
         if (this.data.length > 1) {
-          temp.push(this.data[i][2]);
+          this.temp.push(this.data[i][2]);
           this.phone.push(this.data[i][2]);
         }
       }
-
       this.myNameElem.nativeElement.value = this.phone.toString();
     };
     reader.readAsBinaryString(target.files[0]);
@@ -75,6 +74,10 @@ export class WhatsappStaticComponent implements OnInit {
           });
       });
     }
-    this.whatsapp.resetForm(this.whatsappStaticForm)
+    this.whatsapp.resetForm(this.whatsappStaticForm);
+  }
+
+  showQr() {  
+    this.whatsapp.showQrCode().subscribe(result => alert(result));
   }
 }

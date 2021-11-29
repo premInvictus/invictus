@@ -73,8 +73,6 @@ export class WhatsappDynamicComponent implements OnInit {
   }
 
   showPreview() {
-    console.log(this.data);
-
     this.count += 1;
     let d_msg = "";
     this.tableData.length = 0;
@@ -83,20 +81,18 @@ export class WhatsappDynamicComponent implements OnInit {
       this.data.forEach((header: any, i: number) => {
         if (i !== 0 && this.data.length - 1) {
           // Composing the message
-          d_msg = this.whatsappDynamicForm.value.text_message;
+          d_msg = this.whatsappDynamicForm.value.text_message;          
 
-          // TODO: Remove the hardcoded values
-          // Get the values of the left array -> this.headers
           if (d_msg) {
-            // this.headers.forEach((header, index) => {
-            //   var rpl_str = "{" + header + "}";
-            //   d_msg = d_msg.replace(rpl_str, header[index]);
-            // });
+            const sc_name = '\{School Name\}'
+            const st_name = '\{Student Name\}'
+            const mb_no = '\{Mobile Number\}'
+            const id = '\{Id\}'
 
-            d_msg = d_msg.replace("{School Name}", header[0]);
-            d_msg = d_msg.replace("{Student Name}", header[1]);
-            d_msg = d_msg.replace("{Mobile Number}", header[2]);
-            d_msg = d_msg.replace("{Id}", header[3]);
+            if (sc_name) d_msg = d_msg.replace(new RegExp(sc_name, 'g'), header[0]);
+            if (st_name) d_msg = d_msg.replace(new RegExp(st_name, 'g'), header[1]);
+            if (mb_no) d_msg = d_msg.replace(new RegExp(mb_no, 'g'), header[2]);
+            if (id) d_msg = d_msg.replace(new RegExp(id, 'g'), header[3]); 
           }
 
           // Creating the table data
@@ -111,11 +107,12 @@ export class WhatsappDynamicComponent implements OnInit {
     }
   }
 
-  sendMessage() { 
-    if (this.whatsappDynamicForm.valid) {      
-      this.whatsapp.sendDynamicMessage(this.tableData).subscribe((e:any)=>{
-      });
+  sendMessage() {
+    if (this.whatsappDynamicForm.valid) {
+      this.whatsapp
+        .sendDynamicMessage(this.tableData)
+        .subscribe((e: any) => {});
     }
-    this.whatsapp.resetForm(this.whatsappDynamicForm)
+    this.whatsapp.resetForm(this.whatsappDynamicForm);
   }
 }
