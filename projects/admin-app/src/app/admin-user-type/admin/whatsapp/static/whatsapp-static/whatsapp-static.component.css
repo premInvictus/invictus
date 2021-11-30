@@ -54,3 +54,8 @@
   height: 16px;
   margin-right: 4px;
 }
+
+#placeholder {
+  height: 124px;
+  width: 124px;
+}

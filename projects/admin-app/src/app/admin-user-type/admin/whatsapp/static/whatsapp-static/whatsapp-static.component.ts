@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { WhatsappService } from "../../../services/whatsapp.service";
 import * as XLSX from "xlsx";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import QRCode from "qrcode";
 
 type AOA = any[][];
 
@@ -19,6 +20,7 @@ export class WhatsappStaticComponent implements OnInit {
   data: any;
   phone: any[] = [];
   temp: any[] = [];
+  count: number = 0;
 
   ngOnInit() {
     this.buildForm();
@@ -77,7 +79,33 @@ export class WhatsappStaticComponent implements OnInit {
     this.whatsapp.resetForm(this.whatsappStaticForm);
   }
 
-  showQr() {  
-    this.whatsapp.showQrCode().subscribe(result => alert(result));
-  }
+  showQr: any = async () => {
+    this.count += 1;
+    console.log(this.count, "Outside the ShowQr");
+
+    if (this.count < 2) {
+      console.log(this.count, "Inside the ShowQr");
+
+      this.whatsapp.showQrCode().subscribe((data) => {
+        if (data) {
+          var opts = {
+            errorCorrectionLevel: "M",
+            type: "image/jpeg",
+            quality: 0.3,
+            margin: 1,
+            color: {
+              dark: "#00F",
+              light: "#0000",
+            },
+          };
+
+          QRCode.toCanvas(data, opts, function (err: any, canvas: any) {
+            if (err) throw err;
+
+            document.getElementById("placeholder").appendChild(canvas);
+          });
+        }
+      });
+    }
+  };
 }

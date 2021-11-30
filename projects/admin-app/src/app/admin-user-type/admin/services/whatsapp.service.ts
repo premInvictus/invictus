@@ -3,17 +3,16 @@ import { HttpClient } from "@angular/common/http";
 import { LoaderService } from "projects/axiom/src/app/_services/index";
 import { environment } from "src/environments/environment";
 
-const qrcode = require('qrcode-terminal');
+const qrcode = require("qrcode-terminal");
 
 @Injectable()
 export class WhatsappService {
   constructor(private http: HttpClient, private loaderService: LoaderService) {}
 
   showQrCode() {
-    // qrcode.generate(qr)
-    
-    // console.log(this.http.get('http://localhost:8000/qr')); 
-   return  this.http.get('http://localhost:8000/qrCode')
+    return this.http.get("http://localhost:8000/qrCode", {
+      responseType: "text",
+    });
   }
 
   sendStaticMessage(message, phone) {
