@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulat
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService, FeeService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -19,17 +19,19 @@ import {
 	Filters,
 	Formatters,
 	DelimiterType,
-	FileType
+	FileType,
+	Sorters,
+	SortDirectionNumber
 } from 'angular-slickgrid';
 
 @Component({
-  selector: 'app-remarks-report',
-  templateUrl: './remarks-report.component.html',
-  styleUrls: ['./remarks-report.component.css']
+	selector: 'app-house-report',
+	templateUrl: './house-report.component.html',
+	styleUrls: ['./house-report.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
-export class RemarksReportComponent implements OnInit {
-
-  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+export class HouseReportComponent implements OnInit, AfterViewInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -86,20 +88,38 @@ export class RemarksReportComponent implements OnInit {
 	showDateRange = false;
 	events: any;
 	@ViewChild('TABLE') table: ElementRef;
-	enrollMentTypeArray: any[] = [];
+	enrollMentTypeArray: any[] = [{
+		au_process_type: '1', au_process_name: 'Enquiry'
+	},
+	{
+		au_process_type: '2', au_process_name: 'Registration'
+	},
+	{
+		au_process_type: '3', au_process_name: 'Provisional Admission'
+	},
+	{
+		au_process_type: '4', au_process_name: 'Admission'
+	},
+	{
+		au_process_type: '5', au_process_name: 'Alumini'
+	}];
 
 
-	studentDetailReportForm: FormGroup;
+	houseReportForm: FormGroup;
 
 	reportProcessWiseData: any[] = [];
+	exportcolumndefination: any;
+	feeOtherCategory: any;
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
+		private feeService: FeeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
+		this.getFeeOtherCategory();
 		this.getSession();
 		this.buildForm();
 		this.gridOptions = {
@@ -146,11 +166,11 @@ export class RemarksReportComponent implements OnInit {
 				onCommand: (e, args) => {
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF(this.dataset);
+						this.exportAsPDF(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset);
+						this.exportToExcel(this.angularGrid.dataView.getFilteredItems());
 					}
 					if (args.command === 'export-csv') {
 						this.exportToFile('csv');
@@ -176,9 +196,135 @@ export class RemarksReportComponent implements OnInit {
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
 		};
-	}
+		this.columnDefinitions = [
+			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true, minWidth: 100,
+			groupTotalsFormatter: this.srnTotalsFormatter  },
+			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true, minWidth: 200,
+			groupTotalsFormatter: this.countTotalsFormatter },
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, minWidth: 150,
+			grouping: {
+				getter: 'class_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				comparer: (a, b) => {
+					// (optional) comparer is helpful to sort the grouped data
+					// code below will sort the grouped value in ascending order
+					return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			}},
+			{ id: 'dob', name: 'Date of Birth', field: 'dob', sortable: true, filterable: true, minWidth: 200,
+				 formatter: this.checkDateFormatter },
+			{ id: 'admission_date', name: 'Date of Admn.', field: 'admission_date', sortable: true, filterable: true, minWidth: 200,
+			 	formatter: this.checkDateFormatter },
+			// { id: 'au_process_class', name: 'Admitted In', field: 'au_process_class', sortable: true, filterable: true, minWidth: 100 },
+			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, minWidth: 50,
+			grouping: {
+				getter: 'gender',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			// { id: 'category', name: 'Category', field: 'category', sortable: true, filterable: true, minWidth: 150,
+			// grouping: {
+			// 	getter: 'category',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'rel_name', name: 'Religion', field: 'rel_name', sortable: true, filterable: true, minWidth: 100,
+			// grouping: {
+			// 	getter: 'rel_name',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'is_single', name: 'Single Child', field: 'is_single', sortable: true, filterable: true, minWidth: 100},
+			// { id: 'upd_special_need', name: 'Special Child', field: 'upd_special_need', sortable: true, filterable: true, minWidth: 100 },
+			// { id: 'upd_is_minority', name: 'Minority', field: 'upd_is_minority', sortable: true, filterable: true, minWidth: 100 },
+			// { id: 'upd_is_ews', name: 'EWS', field: 'upd_is_ews', sortable: true, filterable: true , minWidth: 100},
+			// { id: 'upd_is_online', name: 'Source', field: 'upd_is_online', sortable: true, filterable: true , minWidth: 100},
+			// { id: 'upd_aadhaar_no', name: 'Aadhar Number', field: 'upd_aadhaar_no', sortable: true, filterable: true, minWidth: 200 },
+			// { id: 'au_reference_no', name: 'Reference No', field: 'au_reference_no', sortable: true, filterable: true , minWidth: 200},
+			// { id: 'upd_reference', name: 'Reference', field: 'upd_reference', sortable: true, filterable: true, minWidth: 200 },
+			
+			// { id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true, minWidth: 200,
+			// grouping: {
+			// 	getter: 'tag_name',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
 
+			{ id: 'au_house', name: 'House', field: 'au_house', sortable: true, filterable: true, minWidth: 200, 
+			grouping: {
+				getter: 'au_house',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			}  },
+			
+			// { id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 100 },
+			// { id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true, minWidth: 100 },
+			// { id: 'father_contact', name: 'F-Contact', field: 'father_contact', sortable: true, filterable: true, minWidth: 120 },
+			// { id: 'father_email', name: 'F-Email', field: 'father_email', sortable: true, filterable: true, minWidth: 200 },
+
+			// { id: 'mother_name', name: 'Mother Name', field: 'mother_name', sortable: true, filterable: true, minWidth: 100 },
+			// { id: 'mother_contact', name: 'M-Contact', field: 'mother_contact', sortable: true, filterable: true, minWidth: 120 },
+			// { id: 'mother_email', name: 'M-Email', field: 'mother_email', sortable: true, filterable: true, minWidth: 200 },
+
+			// { id: 'ea_address1', name: 'Address 1', field: 'ea_address1', sortable: true, filterable: true, minWidth: 400 },
+			// { id: 'promotion', name: 'Promotion Status', field: 'promotion', sortable: true, filterable: true, minWidth: 100,
+			// grouping: {
+			// 	getter: 'promotion',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			// { id: 'accd_fo_id', name: 'Admn. Status', field: 'accd_fo_id', sortable: true, filterable: true, minWidth: 120,
+			// grouping: {
+			// 	getter: 'accd_fo_id',
+			// 	formatter: (g) => {
+			// 		return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 	},
+			// 	aggregators: this.aggregatearray,
+			// 	aggregateCollapsed: true,
+			// 	collapsed: false,
+			// } },
+			
+			// { id: 'student_prev_school', name: 'Previous School', field: 'student_prev_school', sortable: true, filterable: true, minWidth: 100 }
+		];
+	}
+	getFeeOtherCategory() {
+		this.feeService.getFeeOthers({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.feeOtherCategory = result.data;
+			}
+		});
+	}
 	ngAfterViewInit() {
+		console.log("hello ji");
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -292,13 +438,14 @@ export class RemarksReportComponent implements OnInit {
 			theme: 'striped'
 		});
 		const rowData: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportcolumndefination = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportcolumndefination) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const arr: any[] = [];
-				this.columnDefinitions.forEach(element1 => {
+				this.exportcolumndefination.forEach(element1 => {
 					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
@@ -310,7 +457,7 @@ export class RemarksReportComponent implements OnInit {
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
-			for (const item of this.columnDefinitions) {
+			for (const item of this.exportcolumndefination) {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
@@ -479,10 +626,10 @@ export class RemarksReportComponent implements OnInit {
 				if (groupItem.groups) {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
-					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'em_no') {
+					for (const item2 of this.exportcolumndefination) {
+						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'au_full_name') {
+						} else if (item2.id === 'full_name') {
 							levelArray.push( groupItem.rows.length);
 						} else {
 							levelArray.push('');
@@ -501,17 +648,17 @@ export class RemarksReportComponent implements OnInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const earr: any[] = [];
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportcolumndefination) {
 							earr.push(groupItem.rows[key][item2.id]);
 						}
 						rowData.push(earr);
 						this.pdfrowdata.push(earr);
 					});
 					const levelArray: any[] = [];
-					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'em_no') {
+					for (const item2 of this.exportcolumndefination) {
+						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'au_full_name') {
+						} else if (item2.id === 'full_name') {
 							levelArray.push( groupItem.rows.length);
 						} else {
 							levelArray.push('');
@@ -561,10 +708,10 @@ export class RemarksReportComponent implements OnInit {
 				if (groupItem.groups) {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
-						if (element.id === 'em_no') {
+					this.exportcolumndefination.forEach(element => {
+						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'au_full_name') {
+						} else if (element.id === 'full_name') {
 							blankTempObj[element.id] = groupItem.rows.length;
 						} else {
 							blankTempObj[element.id] = '';
@@ -575,7 +722,7 @@ export class RemarksReportComponent implements OnInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							this.exportcolumndefination.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -598,7 +745,7 @@ export class RemarksReportComponent implements OnInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							this.exportcolumndefination.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -616,16 +763,16 @@ export class RemarksReportComponent implements OnInit {
 				} else {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportcolumndefination) {
 							obj[item2.id] = groupItem.rows[key][item2.id];
 						}
 						worksheet.addRow(obj);
 					});
 					const blankTempObj = {};
-					this.columnDefinitions.forEach(element => {
-						if (element.id === 'em_no') {
+					this.exportcolumndefination.forEach(element => {
+						if (element.id === 'admission_no') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'au_full_name') {
+						} else if (element.id === 'full_name') {
 							blankTempObj[element.id] = groupItem.rows.length;
 						} else {
 							blankTempObj[element.id] = '';
@@ -636,7 +783,7 @@ export class RemarksReportComponent implements OnInit {
 					// style row having total
 					if (groupItem.level === 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							this.exportcolumndefination.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -659,7 +806,7 @@ export class RemarksReportComponent implements OnInit {
 						});
 					} else if (groupItem.level > 0) {
 						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.columnDefinitions.forEach(element => {
+							this.exportcolumndefination.forEach(element => {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
@@ -680,11 +827,12 @@ export class RemarksReportComponent implements OnInit {
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
-		console.log('excel json', json);
+		console.log('excel json', );
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportcolumndefination  = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportcolumndefination) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -710,7 +858,7 @@ export class RemarksReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const excelobj: any = {};
-				this.columnDefinitions.forEach(element1 => {
+				this.exportcolumndefination.forEach(element1 => {
 					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
 				});
 				worksheet.addRow(excelobj);
@@ -724,7 +872,7 @@ export class RemarksReportComponent implements OnInit {
 		}
 		// style grand total
 		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-			this.columnDefinitions.forEach(element => {
+			this.exportcolumndefination.forEach(element => {
 				cell.font = {
 					color: { argb: 'ffffff' },
 					bold: true,
@@ -882,21 +1030,21 @@ export class RemarksReportComponent implements OnInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		if(this.studentDetailReportForm.value.enrolment_type) {
-			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
+		if(this.houseReportForm.value.enrolment_type) {
+			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.houseReportForm.value.enrolment_type).au_process_name);
 		}
 		if (this.showDateRange) {
 			paramArr.push(
-				this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'd-MMM-y') + ' - ' +
-				this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'd-MMM-y'));
+				this.notif.dateConvertion(this.houseReportForm.value.fdate, 'd-MMM-y') + ' - ' +
+				this.notif.dateConvertion(this.houseReportForm.value.tdate, 'd-MMM-y'));
 		} else {
 			paramArr.push(
-				this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'd-MMM-y'));
+				this.notif.dateConvertion(this.houseReportForm.value.cdate, 'd-MMM-y'));
 		}
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Remarks Report Followup';
+		return 'Houses Details Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -923,8 +1071,8 @@ export class RemarksReportComponent implements OnInit {
 		}
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		console.log('totals ', totals);
-		console.log('columnDef ', columnDef);
+		// console.log('totals ', totals);
+		// console.log('columnDef ', columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -937,31 +1085,13 @@ export class RemarksReportComponent implements OnInit {
 	}
 
 	buildForm() {
-		this.studentDetailReportForm = this.fbuild.group({
+		this.houseReportForm = this.fbuild.group({
 			enrolment_type: '',
 			fdate: new Date(),
 			cdate: new Date(),
-      tdate: new Date(),
-      reviewReport: '3'
-    });
-    this.setProcessArray();
-  }
-  resetDataset() {
-		this.reportProcessWiseData = [];
-		this.dataset = [];
-		this.columnDefinitions = [];
-		this.tableFlag = false;
+			tdate: new Date()
+		});
 	}
-	setProcessArray(){
-		  this.enrollMentTypeArray = [];
-		  if(this.studentDetailReportForm.value.reviewReport === '3'){
-			  this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
-			  this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
-		  }else if(this.studentDetailReportForm.value.reviewReport === '2'){
-			this.enrollMentTypeArray.push({au_process_type: '3', au_process_name: 'Provisional Adminssion'});
-			this.enrollMentTypeArray.push({au_process_type: '4', au_process_name: 'Admission'});
-		  }
-	  }
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
 		if (value && value !== '-') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
@@ -984,30 +1114,18 @@ export class RemarksReportComponent implements OnInit {
 		this.resetGrid();
 		const inputJson = {};
 		if (this.showDate) {
-			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.cdate, 'yyyy-MM-dd');
+			inputJson['from_date'] = this.notif.dateConvertion(this.houseReportForm.value.cdate, 'yyyy-MM-dd');
 		} else {
-			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'yyyy-MM-dd');
-			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
+			inputJson['from_date'] = this.notif.dateConvertion(this.houseReportForm.value.fdate, 'yyyy-MM-dd');
+			inputJson['to_date'] = this.notif.dateConvertion(this.houseReportForm.value.tdate, 'yyyy-MM-dd');
 		}
-		inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
-		inputJson['era_type'] = 'followup';
-		inputJson['au_status'] = 1;
+		inputJson['au_process_type'] = this.houseReportForm.value.enrolment_type;
+		// if(this.houseReportForm.value.enrolment_type) {
+
+		// }
 		const validateFlag = this.checkValidation();
-		if (validateFlag && this.studentDetailReportForm.value.reviewReport === '3') {
-			this.sisService.getRemarks(inputJson).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.reportProcessWiseData = result.data;
-					this.prepareDataSource(inputJson['au_process_type']);
-					this.tableFlag = true;
-				} else {
-					this.notif.showSuccessErrorMessage(result.data, 'error');
-					this.resetGrid();
-					this.tableFlag = true;
-				}
-			});
-		}else if (validateFlag && this.studentDetailReportForm.value.reviewReport === '2'){
-			inputJson['era_type'] = 'general';
-			this.sisService.getGeneralRemarks(inputJson).subscribe((result: any) => {
+		if (validateFlag) {
+			this.sisService.getStudentReportDetails(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.reportProcessWiseData = result.data;
 					this.prepareDataSource(inputJson['au_process_type']);
@@ -1025,13 +1143,13 @@ export class RemarksReportComponent implements OnInit {
 	checkValidation() {
 		let validateFlag = 0;
 		if (this.showDate) {
-			if (!this.studentDetailReportForm.value.cdate) {
+			if (!this.houseReportForm.value.cdate) {
 				this.notif.showSuccessErrorMessage('Please Choose Date', 'error');
 			} else {
 				validateFlag = 1;
 			}
 		} else {
-			if (!this.studentDetailReportForm.value.fdate) {
+			if (!this.houseReportForm.value.fdate) {
 				this.notif.showSuccessErrorMessage('Please Choose From Date', 'error');
 			} else {
 				validateFlag = 1;
@@ -1075,87 +1193,138 @@ export class RemarksReportComponent implements OnInit {
 	}
 
 	prepareDataSource(process_type) {
-    if (this.studentDetailReportForm.value.reviewReport === '3') {
-      let process_type_name='';
-			let process_type_field_no='';
-			let process_type_field_date='';
-			if (this.studentDetailReportForm.value.enrolment_type === '1'){
-				process_type_name = 'Enq. ';
-				process_type_field_no = 'em_enq_no';
-				process_type_field_date = 'em_enq_date';
-			} else if (this.studentDetailReportForm.value.enrolment_type === '2'){
-				process_type_name = 'Regn. ';
-				process_type_field_no = 'em_regd_no';
-				process_type_field_date = 'em_regd_date';
-			} else if (this.studentDetailReportForm.value.enrolment_type === '3'){
-				process_type_name = 'Pro Admn. ';
-				process_type_field_no = 'em_provisional_admission_no';
-				process_type_field_date = 'em_provisional_admission_date';
-			} else if (this.studentDetailReportForm.value.enrolment_type === '4'){
-				process_type_name = 'Admn. ';
-				process_type_field_no = 'em_admission_no';
-				process_type_field_date = 'em_admission_date';
-			}  
-			this.columnDefinitions = [
-        { id: 'pos', name: 'S. No', field: 'pos', sortable: true, filterable: true, resizable: true },
-        { id: 'em_no', name: process_type_name+'No', field: 'em_no', sortable: true, filterable: true, resizable: true ,
-        grouping: {
-					getter: 'em_no',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-        groupTotalsFormatter: this.srnTotalsFormatter
-        },
-        { id: 'au_full_name', name: 'Student Name', field: 'au_full_name', sortable: true, filterable: true, resizable: true,
-        groupTotalsFormatter: this.countTotalsFormatter },
-        
-				{ id: 'em_date', name: process_type_name+'Date', field: 'em_date', sortable: true, filterable: true, resizable: true,
-				formatter: this.checkDateFormatter },
-         { id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true },
-         { id: 'epd_parent_name', name: 'Active Parent Name', field: 'epd_parent_name', sortable: true, filterable: true, resizable: true },
-         { id: 'epd_contac_no', name: 'Active Parent Contact No', field: 'epd_contac_no', sortable: true, filterable: true, resizable: true },
-         { id: 'era_doj', name: 'Date', field: 'era_doj', sortable: true, filterable: true, resizable: true,
-         formatter: this.checkDateFormatter }	,
-         { id: 'ar_name', name: 'Area', field: 'ar_name', sortable: true, filterable: true, resizable: true },
-         { id: 'era_teachers_remark', name: 'Remark', field: 'era_teachers_remark', width:200, sortable: true, filterable: true, resizable: true },
-			];
-			let counter = 1;
-			for (let i = 0; i < this.reportProcessWiseData.length; i++) {
-				const tempObj = {};
-		  		tempObj['id'] = counter;
-				tempObj['pos'] = counter;
-				tempObj['au_full_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['au_full_name'] ? this.reportProcessWiseData[i]['au_full_name'] : '' );
-				tempObj['em_no'] = this.reportProcessWiseData[i][process_type_field_no]? this.reportProcessWiseData[i][process_type_field_no]: '';
-				tempObj['em_date'] = this.reportProcessWiseData[i][process_type_field_date] ? this.reportProcessWiseData[i][process_type_field_date]: '';
-        tempObj['class_name'] = this.reportProcessWiseData[i]['class_name'] ? this.reportProcessWiseData[i]['class_name']: '';
-        tempObj['epd_parent_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['epd_parent_name'] ? this.reportProcessWiseData[i]['epd_parent_name']: '');
-        tempObj['epd_contac_no'] = this.reportProcessWiseData[i]['epd_contac_no'] ? this.reportProcessWiseData[i]['epd_contac_no']: '';
-        tempObj['era_doj'] = this.reportProcessWiseData[i]['era_doj'] ? this.reportProcessWiseData[i]['era_doj']: '';
-        tempObj['ar_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['ar_name'] ? this.reportProcessWiseData[i]['ar_name']: '');
-        tempObj['era_teachers_remark'] = new TitleCasePipe().transform(this.reportProcessWiseData[i]['era_teachers_remark'] ? this.reportProcessWiseData[i]['era_teachers_remark']: '');
+		let counter = 1;
+		const total = 0;
+		if((process_type == '1'|| process_type == '2' || process_type == '4') && this.columnDefinitions.length < 34)
+		{
+			this.columnDefinitions.push(
+				{ id: 'student_remark_answer', name: 'Source', field: 'student_remark_answer', sortable: true, filterable: true, minWidth:100 },
+				{ id: 'au_status', name: 'Status', field: 'au_status', sortable: true, filterable: true, minWidth:100 }
+			)
+		}
+		// } else {
+		// 	this.columnDefinitions = this.columnDefinitions.filter(item => item.id != 'student_remark_answer' );
+		// }
+		console.log("Process wise report",this.reportProcessWiseData);
+		for (let i = 0; i < Object.keys(this.reportProcessWiseData).length; i++) {
+			const tempObj = {};
+			const key = Object.keys(this.reportProcessWiseData)[i];
+
+			if(this.reportProcessWiseData[key]['au_status'] == '1'){
+
+				tempObj['id'] = key + counter;
+				tempObj['counter'] = counter;
+
+				tempObj['class_name'] = this.reportProcessWiseData[key]['sec_name'] ?
+				this.reportProcessWiseData[key]['class_name'] + '-' + this.reportProcessWiseData[key]['sec_name'] :
+				this.reportProcessWiseData[key]['class_name'];
+
+				tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_admission_no']);
+				tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[key]['dob']);
+				tempObj['au_reference_no'] = this.valueAndDash(this.reportProcessWiseData[key]['au_reference_no']);
+				tempObj['au_process_class'] = this.valueAndDash(this.reportProcessWiseData[key]['au_process_class']);
+				tempObj['is_single'] = this.valueAndDash(this.reportProcessWiseData[key]['is_single']);
+				tempObj['upd_is_minority'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_minority'] == "n" ? 'No' : 'Yes');
+				tempObj['upd_is_ews'] = (this.reportProcessWiseData[key]['upd_is_ews'] ? (this.reportProcessWiseData[key]['upd_is_ews'] =="Y"? "Yes":'No'): 'No');
+				tempObj['upd_special_need'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_special_need'] == "Y" ? "Yes": "No");
+				tempObj['upd_aadhaar_no'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_aadhaar_no']);
+				tempObj['upd_reference'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_reference']);
+				tempObj['upd_is_online'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_is_online']);
+				const father_honorific = this.getParentHonorific((this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][0]) ?
+				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific'] : '');
+
+				const mother_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][1] ?
+				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_honorific'] : '');
+
+				const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+				this.reportProcessWiseData[key]['student_parent_data'][2] ?
+				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
+				let fdetail = {
+					name: '-',
+					contact: '-',
+					email: '-'
+				}
+				let mdetail = {
+					name: '-',
+					contact: '-',
+					email: '-'
+				}
+				if(this.reportProcessWiseData[key]['student_parent_data'].length > 0) {
+					this.reportProcessWiseData[key]['student_parent_data'].forEach(element => {
+						if(element.epd_parent_type == "M") {
+							mdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific) + ' ' + element.epd_parent_name )
+							mdetail.contact = element.epd_contact_no;
+							mdetail.email = element.epd_email ? element.epd_email: '-';
+						} else if(element.epd_parent_type == "F") {
+							fdetail.name = new TitleCasePipe().transform( this.getParentHonorific(element.epd_parent_honorific)  + ' ' + element.epd_parent_name )
+							fdetail.contact = element.epd_contact_no;
+							fdetail.email = element.epd_email ? element.epd_email : '-';
+						}
+					});
+				}
+				tempObj['father_name'] = fdetail.name;
+				tempObj['father_contact'] = fdetail.contact;
+				tempObj['father_email'] = fdetail.email;
+				tempObj['mother_name'] = mdetail.name;
+				tempObj['mother_contact'] = mdetail.contact;
+				tempObj['mother_email'] = mdetail.email;
+				tempObj['guardian_name'] = new TitleCasePipe().transform( this.reportProcessWiseData[key]['student_parent_data'] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] ?
+					guardian_honorific+' '+this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] : '-');
+				tempObj['guardian_contact'] = this.reportProcessWiseData[key]['student_parent_data'] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2] &&
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] ?
+					this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] : '-';
+				tempObj['gender'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_gender']);
+				tempObj['tag_name'] = this.valueAndDash(this.reportProcessWiseData[key]['tag_name']);
+				
+				tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
+				tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[key]['em_admission_date']);
+				tempObj['email'] = this.valueAndDash(this.reportProcessWiseData[key]['au_email']);
+				tempObj['contact'] = this.valueAndDash(this.reportProcessWiseData[key]['au_mobile']);
+				tempObj['category'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['category']));
+				tempObj['rel_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['rel_name']));
+				tempObj['emergency_name'] =
+				new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_name']));
+				tempObj['emergency_contact'] = this.valueAndDash(this.reportProcessWiseData[key]['mi_emergency_contact_no']);
+				tempObj['ea_address1'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_address1']) + " - " + (new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['cit_name']))) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name'])) + " - " + new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name'])) + " - " + this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']) ;
+				// tempObj['cit_name'] = ;
+				// tempObj['sta_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['sta_name']));
+				// tempObj['dist_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['dist_name']));
+				// tempObj['ea_pincode'] = this.valueAndDash(this.reportProcessWiseData[key]['ea_pincode']);
+				tempObj['promotion'] = this.reportProcessWiseData[key]['pmap_status'] == "0" ? 'Promoted' : 'Pending';
+				tempObj['accd_fo_id'] = this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']) ? this.feeOtherCategory.find(o => o.fo_id === this.reportProcessWiseData[key]['accd_fo_id']).fo_name: '-';
+				tempObj['student_prev_school'] = this.valueAndDash(this.reportProcessWiseData[key]['student_prev_school']);
+				tempObj['active_parent'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['active_parent']));
+				tempObj['au_house'] = new TitleCasePipe().transform(this.reportProcessWiseData[key]['au_house']);
+				console.log("process type", process_type);
+				if(process_type == '1'|| process_type == '2' || process_type == '4') {
+					tempObj['student_remark_answer'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['student_remark_answer']));
+					tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
+				}else if(process_type == '3'){
+					tempObj['au_status'] = (this.reportProcessWiseData[key]['au_status'] == '1') ? 'Active':'In-active';
+				}
+				
 				this.dataset.push(tempObj);
+
 				counter++;
 			}
-	
-			const blankTempObj = {};
-			this.columnDefinitions.forEach(element => {
-        if (element.id === 'em_no') {
-          blankTempObj[element.id] = 'Grand Total';
-        } else if (element.id === 'au_full_name') {
-          blankTempObj[element.id] = '  ' + this.dataset.length;
-        } else {
-          blankTempObj[element.id] = '';
-        }
-      });
-			// this.dataset.push(blankTempObj);
-			this.totalRow = blankTempObj;
-      console.log('dataset  ', this.dataset);
-      this.aggregatearray.push(new Aggregators.Sum('em_no'));
-    }
+		}
+		const blankTempObj = {};
+		this.columnDefinitions.forEach(element => {
+			if (element.id === 'admission_no') {
+				blankTempObj[element.id] = 'Grand Total';
+			} else if (element.id === 'full_name') {
+				blankTempObj[element.id] = '  ' + this.dataset.length;
+			} else {
+				blankTempObj[element.id] = '';
+			}
+		});
+		this.totalRow = blankTempObj;
+		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
@@ -1165,6 +1334,42 @@ export class RemarksReportComponent implements OnInit {
 		} else {
 			this.gridHeight = 400;
 		}
+		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
+		setTimeout(() => {this.groupByClass(); this.groupByHouse()}, 2);
+	}
+	groupByClass() {
+		this.dataviewObj.setGrouping({
+			getter: 'class_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('class_name');
+	}
+	groupByHouse() {
+		this.dataviewObj.setGrouping({
+			getter: 'au_house',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('au_house');
 	}
 	exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
@@ -1172,21 +1377,20 @@ export class RemarksReportComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'StudentDetailReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'HouseReport_' + (new Date).getTime() + '.xlsx');
 
 	}
 
 	print() {
-		const printModal2 = document.getElementById('studentDetailReportPrint');
+		const printModal2 = document.getElementById('houseReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
 		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Detail Report</h2></center></div>'
+			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>House Detail Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
 	}
 
 
 }
-

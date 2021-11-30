@@ -30,6 +30,7 @@ import { SlctcReportComponent } from './slctc-report/slctc-report.component';
 import { RemarksReportComponent } from './remarks-report/remarks-report.component';
 import { UtilizationReportComponent } from './utilization-report/utilization-report.component';
 import { PromotionReportComponent } from './promotion-report/promotion-report.component';
+import { HouseReportComponent } from './house-report/house-report.component';
 
 @NgModule({
 	imports: [
@@ -64,7 +65,8 @@ import { PromotionReportComponent } from './promotion-report/promotion-report.co
 		SlctcReportComponent,
 		RemarksReportComponent,
 		UtilizationReportComponent,
-		PromotionReportComponent
+		PromotionReportComponent,
+		HouseReportComponent
 	],
 	providers: [TranslateService],
 })

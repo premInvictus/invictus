@@ -4,7 +4,8 @@
           <mat-form-field class="form-field" appearance="outline">
               <mat-label>Report Type</mat-label>
               <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="setProcessArray();resetDataset()">
-                  <mat-option value="3">Followup</mat-option>
+                <mat-option value="3">Followup</mat-option>
+                <mat-option value="2">General</mat-option>
               </mat-select>
           </mat-form-field>
       </div> 
