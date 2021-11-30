@@ -178,6 +178,17 @@ export class ReportComponent implements OnInit {
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
 		}
+		,
+		{
+			report_id: '18',
+			report_name: 'House Details',
+			report_image:
+				'/assets/images/house.svg',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		}
 	];
 	reportType: string;
 	reportHeader: any;
@@ -318,6 +329,10 @@ export class ReportComponent implements OnInit {
 		}
 		if (actionT === '17') {
 			return this.CommonAPIService.isExistUserAccessMenu('847');
+			// return true;
+		}
+		if (actionT === '18') {
+			return this.CommonAPIService.isExistUserAccessMenu('880');
 			// return true;
 		}
 	}
