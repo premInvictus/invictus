@@ -10,7 +10,7 @@ export class WhatsappService {
   constructor(private http: HttpClient, private loaderService: LoaderService) {}
 
   showQrCode() {
-    return this.http.get("http://localhost:8000/qrCode", {
+    return this.http.get(environment.apiWhatsappQrCodeUrl, {
       responseType: "text",
     });
   }

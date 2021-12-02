@@ -82,7 +82,7 @@ const routes: Routes = [
         loadChildren:
           "projects/admin-app/src/app/support/support.module#SupportModule",
       },
-      { path: "whatsappMessage", component: WhatsappComponent },
+      { path: "whatsapp-message", component: WhatsappComponent },
     ],
   },
 ];
