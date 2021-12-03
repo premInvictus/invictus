@@ -10,10 +10,16 @@ import QRCode from "qrcode";
 export class WhatsappComponent implements OnInit {
   tabSelectedIndex = 0;
   tabIndex: any;
+  socket: any;
 
   constructor(private whatsapp: WhatsappService) {}
 
   ngOnInit() {
+    // Here we want to listen to an event from the socket.io server
+    this.whatsapp.listen("test event").subscribe((data) => {
+      console.log("DATA FROM SERVICE FILE: ", data);
+    });
+
     this.showQr();
   }
 
