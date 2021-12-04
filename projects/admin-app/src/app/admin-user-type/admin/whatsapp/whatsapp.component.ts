@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { WhatsappService } from "../services/whatsapp.service";
 import QRCode from "qrcode";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-whatsapp",
@@ -12,12 +13,17 @@ export class WhatsappComponent implements OnInit {
   tabIndex: any;
   socket: any;
 
-  constructor(private whatsapp: WhatsappService) {}
+  constructor(private whatsapp: WhatsappService, private route: Router) {}
 
   ngOnInit() {
     // Here we want to listen to an event from the socket.io server
     this.whatsapp.listen("test event").subscribe((data) => {
       console.log("DATA FROM SERVICE FILE: ", data);
+      if (data) {
+        alert("Now change the route!");
+        console.log("THE DATA: ", data);
+        // this.showWhatsappChildPage();
+      }
     });
 
     this.showQr();
@@ -52,5 +58,9 @@ export class WhatsappComponent implements OnInit {
         });
       }
     });
+  };
+
+  showWhatsappChildPage = () => {
+    this.route.navigate(["whatsapp/whatsapp_static"]);
   };
 }

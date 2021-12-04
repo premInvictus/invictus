@@ -11,6 +11,8 @@ import { UserCredentialComponent } from "./user-credential/user-credential.compo
 import { ProjectComponent } from "src/app/invictus-shared/project/project.component";
 import { ViewProfileComponent } from "./admin/view-profile/view-profile.component";
 import { WhatsappComponent } from "./admin/whatsapp/whatsapp.component";
+import { WhatsappStaticComponent } from "./admin/whatsapp/static/whatsapp-static/whatsapp-static.component";
+import { WhatsappDynamicComponent } from "./admin/whatsapp/dynamic/whatsapp-dynamic/whatsapp-dynamic.component";
 
 const routes: Routes = [
   {
@@ -82,7 +84,23 @@ const routes: Routes = [
         loadChildren:
           "projects/admin-app/src/app/support/support.module#SupportModule",
       },
-      { path: "whatsapp-message", component: WhatsappComponent },
+      // {
+      //   path: "whatsapp_qr",
+      //   loadChildren:
+      //     "projects/admin-app/src/app/admin-user-type/admin/whatsapp/whatsapp.module.ts#WhatsappModule",
+      // },
+      {
+        path: "whatsapp_qr",
+        component: WhatsappComponent,
+      },
+      {
+        path: "whatsapp/whatsapp_static",
+        component: WhatsappStaticComponent,
+      },
+      {
+        path: "whatsapp/whatsapp_dynamic",
+        component: WhatsappDynamicComponent,
+      },
     ],
   },
 ];

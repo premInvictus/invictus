@@ -59,7 +59,10 @@
         <mat-grid-tile>
           <div id="placeholder" style="height: auto; width: auto"></div>
         </mat-grid-tile>
-        <mat-grid-tile><h1>Scan the QR code to connect</h1></mat-grid-tile>
+        <mat-grid-tile
+          ><h1>Scan the QR code to connect</h1>
+          <button (click)="showWhatsappChildPage()">Compose Message</button>
+        </mat-grid-tile>
       </mat-grid-list>
     </mat-card>
   </div>
