@@ -24,9 +24,9 @@ import { SchoolsetupComponent } from "./admin/schoolsetup/schoolsetup.component"
 import { AdminDashboardComponent } from "./admin/admin-dashboard/admin-dashboard.component";
 import { AdminComponent } from "./admin/admin.component";
 import { ViewProfileComponent } from "./admin/view-profile/view-profile.component";
-import { WhatsappComponent } from "./admin/whatsapp/whatsapp.component";
-import { WhatsappStaticComponent } from "./admin/whatsapp/static/whatsapp-static/whatsapp-static.component";
-import { WhatsappDynamicComponent } from "./admin/whatsapp/dynamic/whatsapp-dynamic/whatsapp-dynamic.component";
+import { WhatsappComponent } from "../whatsapp/whatsapp.component";
+import { WhatsappStaticComponent } from "../whatsapp/static/whatsapp-static/whatsapp-static.component";
+import { WhatsappDynamicComponent } from "../whatsapp/dynamic/whatsapp-dynamic/whatsapp-dynamic.component";
 
 @NgModule({
   imports: [

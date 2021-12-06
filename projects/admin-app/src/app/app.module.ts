@@ -19,7 +19,7 @@ import { QelementService } from "./questionbank/service/qelement.service";
 import { AdminService } from "./admin-user-type/admin/services/admin.service";
 import { AcsetupService } from "./acsetup/service/acsetup.service";
 import { QbankService } from "./questionbank/service/qbank.service";
-import { WhatsappService } from "./admin-user-type/admin/services/whatsapp.service";
+import { WhatsappService } from "./_services/whatsapp.service";
 const providers = [
   AuthGuard,
   LoaderService,
