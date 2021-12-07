@@ -908,9 +908,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     });
 
     doc.autoTable({
-      head: [[
-        new TitleCasePipe().transform(accountName)
-      ]],
+      head: [[` A/c - ${new TitleCasePipe().transform(accountName)}`]],
       didDrawPage: function (data) {
         doc.setFont('Roboto');
       },
