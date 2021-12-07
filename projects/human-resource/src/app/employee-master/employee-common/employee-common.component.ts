@@ -55,13 +55,19 @@ export class EmployeeCommonComponent implements OnInit {
 	settingsArray: any[] = [];
 	enrolmentPlaceholder = 'Enrollment Id';
 	deleteMessage = 'Are you sure, you want to delete ?';
+	activateMessage = 'Are you sure, you want to activate the Employee ?';
+	processAction = 'activate';
 	studentdetailsflag = false;
 	lastRecordId = 0;
 	categoryOneArray: any[] = [];
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('activateModal') activateModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
 		this.deleteModal.openModal({ text: '' });
+	}
+	openActivateDialog = (data) => {
+		this.activateModal.openModal({ text: '' });
 	}
 	getStuData = (data) => {
 		//this.getStudentDetailsByAdmno(data);
@@ -450,7 +456,38 @@ export class EmployeeCommonComponent implements OnInit {
 			}
 		});
 	}
+
+	activateUser($event) {
+
+		const date = new DatePipe('en-in').transform($event.processDate, 'yyyy-MM-dd')
+		this.commonAPIService.deleteEmployee({
+			"emp_id": this.employeeDetailsForm.value.emp_id,
+			"emp_status": 'live',
+			"emp_salary_detail.emp_organisation_relation_detail.dol": date
+
+		}).subscribe((result: any) => {
+			if (result) {
+				const empData = new FormData();
+				empData.append('au_login_id', this.employeedetails.emp_login_id.toString());
+				empData.append('au_status', '0');
+				this.commonAPIService.updateUser(empData).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonAPIService.showSuccessErrorMessage('Employee Detail Activated Successfully', 'success');
+							this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Activating Employee Detail', 'error');
+						}
+					});
+
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error While Activating Employee Detail', 'error');
+			}
+		});
+	}
+
 	deleteCancel() { }
+	activateCancel() { }
 	openConfig() {
 
 	}

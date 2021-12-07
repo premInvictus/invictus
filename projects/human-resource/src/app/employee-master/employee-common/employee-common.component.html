@@ -19,6 +19,11 @@
       <mat-icon class="btn-top-icon">exit_to_app</mat-icon><span class="right-btn-text">Mark As Left</span>
     </button>
   </div>
+  <div class="functional-button-five" *ngIf="employeedetails?.last_record > 0">
+    <button mat-fab *ngIf="deleteOnly && (employeedetails.emp_status=='left')" (click)="openActivateDialog()">
+      <mat-icon class="btn-top-icon">assignment_turned_in</mat-icon><span class="right-btn-text">Mark As Live</span>
+    </button>
+  </div>
   <div class="row remove-top-margin">
     <div class="col-12 remove-col-padding">
       <div class="container-box__white">
@@ -167,6 +172,9 @@
   </div>
 </form>
 <app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
-  <app-processdate-modal #deleteModal (processOk)="deleteUser($event)"
-  [processMessage] ="deleteMessage"
-  (processCancel)="deleteCancel()"></app-processdate-modal>
+<app-processdate-modal #deleteModal (processOk)="deleteUser($event)"
+[processMessage] ="deleteMessage"
+(processCancel)="deleteCancel()"></app-processdate-modal>
+<app-processdate-modal #activateModal (processOk)="activateUser($event)"
+[processMessage] ="activateMessage" [processAction]="processAction"
+(processCancel)="activateCancel()"></app-processdate-modal>

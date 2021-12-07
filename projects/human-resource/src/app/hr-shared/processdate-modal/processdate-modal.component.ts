@@ -13,6 +13,7 @@ export class ProcessdateModalComponent implements OnInit {
 	dateFlag = false;
 	dateForm: FormGroup;
 	@Input() processMessage;
+	@Input() processAction;
 	@Output() processOk = new EventEmitter<any>();
 	@Output() processCancel = new EventEmitter<any>();
 	dialogRef: MatDialogRef<ProcessdateModalComponent>;
