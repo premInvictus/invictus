@@ -865,7 +865,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     tablecmp.forEach((element)=>{
       var temp = [];
       for (var key in element) {
-        var value = element[key];   
+        var value = Number.isNaN(element[key]) ? '-' : element[key];   
         temp.push(value)     
       }
       console.log("temp", temp);
