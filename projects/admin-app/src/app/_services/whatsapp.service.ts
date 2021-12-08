@@ -24,6 +24,8 @@ export class WhatsappService {
   listen(eventName: string) {
     return new Observable((subscriber) => {
       this.socket.on(eventName, (data: any) => {
+        console.log("SOCKET : ", data, "\n", eventName);
+
         subscriber.next(data);
       });
     });
@@ -48,8 +50,6 @@ export class WhatsappService {
   }
 
   sendDynamicMessage(value: any[]) {
-    console.log(value);
-
     this.loaderService.startLoading();
     return this.http.post(
       environment.apiWhatsappBackendURl + "/dynamic",
