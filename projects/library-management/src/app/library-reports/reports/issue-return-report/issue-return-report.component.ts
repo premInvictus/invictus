@@ -322,7 +322,7 @@ export class IssueReturnReportComponent implements OnInit {
 				maxWidth: 40
 			},
 			{
-				id: 'user_login_id', name: 'Id', field: 'user_login_id', sortable: true,
+				id: 'user_login_id', name: 'ID', field: 'user_login_id', sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
@@ -368,6 +368,21 @@ export class IssueReturnReportComponent implements OnInit {
 			// 		collapsed: false,
 			// 	},
 			// },
+			{
+				id: 'user_role', name: 'User Role', field: 'user_role', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'user_role',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
 			
 			{
 				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
@@ -874,15 +889,19 @@ export class IssueReturnReportComponent implements OnInit {
 					}
 
 					var login_id = '';
+					let user_role = '';
 
-					if (repoArray[Number(index)]['user_role_id'] === '2') {
+					if (repoArray[Number(index)]['user_role_id'] === 2) {
 						login_id = repoArray[Number(index)]['user_login_id'] ? 'A - '+repoArray[Number(index)]['user_login_id'] : '';
+						user_role = 'Admin';
 					}
-					if (repoArray[Number(index)]['user_role_id'] === '3') {
+					if (repoArray[Number(index)]['user_role_id'] === 3) {
 						login_id = repoArray[Number(index)]['user_login_id'] ? ' T - '+repoArray[Number(index)]['user_login_id']  : '';
+						user_role = 'Teacher';
 					}
 					if (repoArray[Number(index)]['user_role_id'] === '4') {
 						login_id = repoArray[Number(index)]['user_admission_no'] ? ' S - ' +repoArray[Number(index)]['user_admission_no'] : '';
+						user_role = 'Student';
 					}
 
 
@@ -892,7 +911,8 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['book_no'] = repoArray[Number(index)]['reserv_user_logs'] ?
 						repoArray[Number(index)]['reserv_user_logs']['book_no'] : '-';
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) : '-';
-					obj['user_login_id'] = login_id ? login_id : '-';					
+					obj['user_login_id'] = login_id ? login_id : '-';	
+					obj['user_role'] = user_role ? user_role : '-';				
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) : '-';
 					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) : '-';
 					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) : '-';
