@@ -1164,7 +1164,7 @@ export class FeeLedgerComponent implements OnInit {
 						}
 						
 						this.footerRecord.finetotal += Number(element.fine);
-						
+						this.footerRecord.balancetotal += Number(element.balance);//added this by amit
 					}
 
 
@@ -1172,16 +1172,16 @@ export class FeeLedgerComponent implements OnInit {
 
 					if (item.ftr_status !== "2" && item.ftr_status !== "6" && item.ftr_status !== "7") {
 						this.footerRecord.receipttotal += Number(element.reciept);
-						this.footerRecord.balancetotal += Number(element.balance);
+						//this.footerRecord.balancetotal += Number(element.balance);///comment by amit
 					}
 
-					console.log("p >>>>>>>",element.particular);					
-					if(element.particular == "Opening Balance"){
-						carry_balance = Number(element.balance) ;
-						console.log("cb >>>>>>>",carry_balance);
-					}
+					// console.log("p >>>>>>>",element.particular);					
+					// if(element.particular == "Opening Balance"){
+					// 	carry_balance = Number(element.balance) ;
+					// 	console.log("cb >>>>>>>",carry_balance);
+					// }
 
-					this.footerRecord.balancetotal = (this.footerRecord.netpayabletotal - this.footerRecord.receipttotal) + carry_balance;
+					// this.footerRecord.balancetotal = (this.footerRecord.netpayabletotal - this.footerRecord.receipttotal) + carry_balance;
 
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
