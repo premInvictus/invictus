@@ -65,11 +65,11 @@ export class WhatsappStaticComponent implements OnInit {
         }
       }
       this.myNameElem.nativeElement.value = this.phone.toString();
-      alert(`line 68: ${this.phone.length}`);
     };
     reader.readAsBinaryString(target.files[0]);
   }
 
+  // TODO:
   getNumbersCount() {
     alert(`line 74: ${this.phone.length}`);
   }
@@ -89,8 +89,10 @@ export class WhatsappStaticComponent implements OnInit {
             console.log("RESULT FROM STATIC:", result);
           });
       });
-      this.notif.showSuccessErrorMessage("Static Message Sent", "info");
-      this.whatsapp.resetForm(this.whatsappStaticForm);
+      if (message && this.phone) {
+        this.notif.showSuccessErrorMessage("Static Message Sent", "info");
+      }
+      this.reset();
     }
   }
 

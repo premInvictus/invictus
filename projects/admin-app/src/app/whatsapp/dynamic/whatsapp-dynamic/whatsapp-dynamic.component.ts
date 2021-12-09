@@ -79,12 +79,8 @@ export class WhatsappDynamicComponent implements OnInit {
     this.tableData.length = 0;
 
     if (this.count > 0) {
-      console.log("count!!");
-
       this.data.forEach((header: any, i: number) => {
         if (i !== 0 && this.data.length - 1) {
-          console.log("The data is ", this.data, "the header is ", header);
-
           // Composing the message
           d_msg = this.whatsappDynamicForm.value.text_message;
 
@@ -118,20 +114,19 @@ export class WhatsappDynamicComponent implements OnInit {
     this.whatsapp.showWhatsappChildPage(msgFlag);
   };
 
-  sendToast() {
-    this.notif.showSuccessErrorMessage("Dynamic Message Sent", "info");
-  }
-
   sendMessage() {
     if (this.whatsappDynamicForm.valid) {
       this.whatsapp
         .sendDynamicMessage(this.tableData)
         .subscribe((result: any) => {
           console.log("RESULT FROM DYNAMIC:", result);
-          if (result.length > 0) this.sendToast();
         });
     }
-    this.whatsapp.resetForm(this.whatsappDynamicForm);
+    if (this.tableData.length > 0) {
+      console.log("Table Data", this.tableData);
+      this.notif.showSuccessErrorMessage("Dynamic Message Sent", "info");
+    }
+    this.reset();
   }
 
   reset() {

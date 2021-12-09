@@ -34,6 +34,8 @@ export class WhatsappComponent implements OnInit {
 
     this.whatsapp.listen("disconnect event").subscribe((result: any) => {
       console.log("SOCKET DISCONNECT: ", result);
+      this.notif.showSuccessErrorMessage(`Loging out ${result}`, "error");
+
       if (result) {
         this.route.navigate(["admin/whatsapp_qr"]);
       }
