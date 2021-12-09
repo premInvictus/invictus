@@ -131,6 +131,7 @@ export class IssueReturnReportComponent implements OnInit {
 	@Input() userName: any = '';
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('bookDet') bookDet;
+	isLoading: boolean = true;
 	constructor(translate: TranslateService,
 		private common: CommonAPIService,
 		private erpCommonService: ErpCommonService,
@@ -321,7 +322,7 @@ export class IssueReturnReportComponent implements OnInit {
 				maxWidth: 40
 			},
 			{
-				id: 'user_login_id', name: 'Admission No.', field: 'user_login_id', sortable: true,
+				id: 'user_login_id', name: 'Id', field: 'user_login_id', sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
@@ -352,21 +353,21 @@ export class IssueReturnReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'section', name: 'Section', field: 'section', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'section',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
+			// {
+			// 	id: 'section', name: 'Section', field: 'section', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'section',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
 			
 			{
 				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
@@ -818,10 +819,16 @@ export class IssueReturnReportComponent implements OnInit {
 			// 	},
 			// }
 		];
+
+		this.common.startLoading();
 		this.erpCommonService.getIssueReturnReport(accessionJSON).subscribe((result: any) => {
+			this.common.stopLoading();
+			this.isLoading = false;
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.all;
+				console.log("hola >>>>>>>>>>>>>>",repoArray);
+				
 				this.totalRecords = Number(result.data.all.length);
 				let index = 0;
 				for (const item of repoArray) {
@@ -907,7 +914,9 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) : '-';
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) : '-';
 					obj['fine'] = repoArray[Number(index)]['reserv_user_logs']['fine'] > 0 ? repoArray[Number(index)]['reserv_user_logs']['fine'] :  '-';
-					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
+					let userClass = (new CapitalizePipe().transform(repoArray[Number(index)]['user_class_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['user_class_name']) : '')+'-'+(new CapitalizePipe().transform(repoArray[Number(index)]['user_sec_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['user_sec_name']) : '');
+					obj['class'] = userClass ? userClass : '';
+					// obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
 					obj['section'] = new CapitalizePipe().transform(currentSectionName) ? new CapitalizePipe().transform(currentSectionName) : '-';
 					obj['subject'] = new CapitalizePipe().transform(currentSubjectName) ? new CapitalizePipe().transform(currentSubjectName) : '-';
 					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] ? repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] : '-';
