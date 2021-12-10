@@ -124,12 +124,13 @@ export class WhatsappDynamicComponent implements OnInit {
     }
     if (this.tableData.length > 0) {
       console.log("Table Data", this.tableData);
-      this.notif.showSuccessErrorMessage("Dynamic Message Sent", "info");
+      this.notif.showSuccessErrorMessage("Message Sent Successfully", "info");
     }
     this.reset();
   }
 
   reset() {
+    this.headers = [];
     this.tableData = [];
     this.whatsapp.resetForm(this.whatsappDynamicForm);
   }

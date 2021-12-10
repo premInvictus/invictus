@@ -1,24 +1,11 @@
 <div class="row">
   <div class="col-12">
-    <mat-card class="remove-card-padding">
-      <div class="row" style="align-items: center">
-        <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">
-              Whatsapp Static Message
-            </span>
-          </div>
-        </div>
-        <div class="col-6">
-          <button
-            mat-raised-button
-            class="btn submit-btn"
-            (click)="showWhatsappChildPage(2)"
-          >
-            Dynamic Message
-          </button>
-        </div>
-      </div>
+    <mat-card>
+      <mat-card-title>
+        <h1 class="remove-bottom-margin font-size-24">
+          Whatsapp Static Message
+        </h1>
+      </mat-card-title>
     </mat-card>
   </div>
 </div>
@@ -26,75 +13,81 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <div class="row">
-        <div class="col-12">
-          <div style="display: inline-flex">
-            <label class="file-input__label" for="file-input">
-              <input
-                type="file"
-                id="file-input"
-                class="file-input__input"
-                (change)="onFileChange($event)"
-                multiple="false"
-              />
-              <i class="fas fa-upload upload-icon"></i> &nbsp;
-              <span>Upload File</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <form [formGroup]="whatsappStaticForm">
+      <mat-card-content>
         <div class="row">
-          <div class="col-4">
-            <mat-form-field appearance="fill">
-              <mat-label>Mobile Numbers</mat-label>
-              <textarea
-                formControlName="phone"
-                id="number"
-                #number
-                matInput
-                rows="10"
-                placeholder="Ex. 1234567890, 0987654321"
-              ></textarea>
-            </mat-form-field>
-          </div>
-          <div class="col-8">
-            <mat-form-field appearance="fill">
-              <mat-label>Enter Message</mat-label>
-              <textarea
-                formControlName="text_message"
-                matInput
-                rows="10"
-                placeholder="Ex. Good Morning"
-                #staticMessage
-              ></textarea>
-            </mat-form-field>
-          </div>
-          <!-- <div class="col-12">
-            <div class="count-label"><span id="count"></span> numbers</div>
-            <button
-              mat-raised-button
-              class="btn submit-btn"
-              style="float: left"
-            >
-              Remove Duplicate
-            </button>
-          </div> -->
           <div class="col-12">
-            <button mat-raised-button class="btn reset-btn" (click)="reset()">
-              Reset
-            </button>
-            <button
-              mat-raised-button
-              class="btn submit-btn"
-              (click)="sendMessage()"
-            >
-              Send
-            </button>
+            <div class="float-left">
+              <label class="file-input__label" for="file-input">
+                <input
+                  type="file"
+                  id="file-input"
+                  class="file-input__input"
+                  (change)="onFileChange($event)"
+                  multiple="false"
+                />
+                <i class="fas fa-upload upload-icon"></i> &nbsp;
+                <span>Upload File</span>
+              </label>
+            </div>
+
+            <div class="float-right">
+              <button
+                mat-raised-button
+                class="btn submit-btn"
+                (click)="showWhatsappChildPage(2)"
+              >
+                Dynamic Message
+              </button>
+            </div>
           </div>
         </div>
-      </form>
+
+        <form [formGroup]="whatsappStaticForm">
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12">
+              <mat-form-field appearance="fill">
+                <mat-label>Mobile Numbers</mat-label>
+                <textarea
+                  formControlName="phone"
+                  id="number"
+                  #number
+                  matInput
+                  rows="10"
+                  placeholder="Ex. 1234567890, 0987654321"
+                ></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-8 col-md-12 col-sm-12 message">
+              <mat-form-field appearance="fill">
+                <mat-label>Enter Message</mat-label>
+                <textarea
+                  formControlName="text_message"
+                  matInput
+                  rows="10"
+                  placeholder="Ex. Good Morning"
+                  #staticMessage
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button mat-raised-button class="btn reset-btn" (click)="reset()">
+                Reset
+              </button>
+              <button
+                mat-raised-button
+                class="btn submit-btn"
+                (click)="sendMessage()"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

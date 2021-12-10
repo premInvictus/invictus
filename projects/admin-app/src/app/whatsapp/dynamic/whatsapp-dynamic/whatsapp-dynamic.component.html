@@ -1,24 +1,11 @@
 <div class="row">
   <div class="col-12">
-    <mat-card class="remove-card-padding">
-      <div class="row" style="align-items: center">
-        <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">
-              Whatsapp Dynamic Message
-            </span>
-          </div>
-        </div>
-        <div class="col-6">
-          <button
-            mat-raised-button
-            class="btn submit-btn"
-            (click)="showWhatsappChildPage(1)"
-          >
-            Static Message
-          </button>
-        </div>
-      </div>
+    <mat-card>
+      <mat-card-title>
+        <h1 class="remove-bottom-margin font-size-24">
+          Whatsapp Dynamic Message
+        </h1>
+      </mat-card-title>
     </mat-card>
   </div>
 </div>
@@ -26,98 +13,110 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <div class="row">
-        <div class="col-12">
-          <div style="display: inline-flex">
-            <label class="file-input__label" for="file-input">
-              <input
-                type="file"
-                id="file-input"
-                class="file-input__input"
-                (change)="onFileChange($event)"
-                multiple="false"
-              />
-              <i class="fas fa-upload upload-icon"></i> &nbsp;
-              <span>Upload File</span>
-            </label>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <div class="float-left">
+              <label class="file-input__label" for="file-input">
+                <input
+                  type="file"
+                  id="file-input"
+                  class="file-input__input"
+                  (change)="onFileChange($event)"
+                  multiple="false"
+                />
+                <i class="fas fa-upload upload-icon"></i> &nbsp;
+                <span>Upload File</span>
+              </label>
+            </div>
+
+            <div class="float-right">
+              <button
+                mat-raised-button
+                class="btn submit-btn"
+                (click)="showWhatsappChildPage(1)"
+              >
+                Static Message
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <form [formGroup]="whatsappDynamicForm">
-        <div class="row">
-          <div class="col-4">
-            <div class="manage-message" id="headersDiv">
-              <ul>
-                <li
-                  *ngFor="let items of headers"
-                  #headers
-                  (click)="composeMessage(items)"
+        <form [formGroup]="whatsappDynamicForm">
+          <div class="row">
+            <div class="col-4">
+              <div class="manage-message" id="headersDiv">
+                <ul>
+                  <li
+                    *ngFor="let items of headers"
+                    #headers
+                    (click)="composeMessage(items)"
+                  >
+                    {{ items }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="manage-message">
+                <textarea
+                  name="message"
+                  id="message"
+                  value=""
+                  formControlName="text_message"
+                  #d_message
                 >
-                  {{ items }}
-                </li>
-              </ul>
+                </textarea>
+              </div>
+            </div>
+            <div class="col-12">
+              <button
+                style="float: left; margin-left: 0"
+                mat-raised-button
+                class="btn submit-btn"
+                (click)="showPreview()"
+              >
+                Message Preview *
+              </button>
             </div>
           </div>
-          <div class="col-8">
-            <div class="manage-message">
-              <textarea
-                name="message"
-                id="message"
-                value=""
-                formControlName="text_message"
-                #d_message
-              >
-              </textarea>
-            </div>
+        </form>
+
+        <div class="row">
+          <div class="col-12">
+            <h4 class="title">Number/Message Preview*</h4>
+          </div>
+
+          <div class="col-12">
+            <mat-card class="mat-elevation-z2">
+              <table>
+                <thead>
+                  <th *ngFor="let head of tableHead">{{ head }}</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of tableData; let i = index">
+                    <td>
+                      {{ item.mobile_no }}
+                    </td>
+                    <td>{{ item.message }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
           </div>
           <div class="col-12">
+            <button mat-raised-button class="btn reset-btn" (click)="reset()">
+              Reset
+            </button>
             <button
-              style="float: left; margin-left: 0"
               mat-raised-button
               class="btn submit-btn"
-              (click)="showPreview()"
+              (click)="sendMessage()"
             >
-              Message Preview *
+              Send
             </button>
           </div>
         </div>
-      </form>
-
-      <div class="row">
-        <div class="col-12">
-          <h4 class="title">Number/Message Preview*</h4>
-        </div>
-
-        <div class="col-12">
-          <mat-card class="mat-elevation-z2">
-            <table>
-              <thead>
-                <th *ngFor="let head of tableHead">{{ head }}</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of tableData; let i = index">
-                  <td>
-                    {{ item.mobile_no }}
-                  </td>
-                  <td>{{ item.message }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </mat-card>
-        </div>
-        <div class="col-12">
-          <button mat-raised-button class="btn reset-btn" (click)="reset()">
-            Reset
-          </button>
-          <button
-            mat-raised-button
-            class="btn submit-btn"
-            (click)="sendMessage()"
-          >
-            Send
-          </button>
-        </div>
-      </div>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

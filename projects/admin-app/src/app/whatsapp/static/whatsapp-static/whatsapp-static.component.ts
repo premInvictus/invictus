@@ -22,7 +22,6 @@ export class WhatsappStaticComponent implements OnInit {
   @ViewChild("number") myNameElem: ElementRef;
   data: any;
   phone: any[] = [];
-  temp: any[] = [];
   msgFlag: any;
 
   ngOnInit() {
@@ -60,7 +59,6 @@ export class WhatsappStaticComponent implements OnInit {
 
       for (let i = 1; i < this.data.length; i++) {
         if (this.data.length > 1) {
-          this.temp.push(this.data[i][2]);
           this.phone.push(this.data[i][2]);
         }
       }
@@ -72,6 +70,7 @@ export class WhatsappStaticComponent implements OnInit {
   // TODO:
   getNumbersCount() {
     alert(`line 74: ${this.phone.length}`);
+    console.log(`total numbers: 2`);
   }
 
   showWhatsappChildPage = (msgFlag: any) => {
@@ -90,13 +89,13 @@ export class WhatsappStaticComponent implements OnInit {
           });
       });
       if (message && this.phone) {
-        this.notif.showSuccessErrorMessage("Static Message Sent", "info");
+        this.notif.showSuccessErrorMessage("Message Sent Successfully", "info");
       }
       this.reset();
     }
   }
 
   reset() {
-    this.whatsapp.resetForm(this.whatsappStaticForm);
+    this.data = this.whatsapp.resetForm(this.whatsappStaticForm);
   }
 }
