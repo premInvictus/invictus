@@ -461,10 +461,12 @@ export class ProcurementReportComponent implements OnInit {
           for (let check of item.pm_item_details) {
             let data_pic: any = {};
             let deptObj: any = {}
-            for (let data_i of this.itemData2) {
-              if (data_i.location_id == check.item_location) {
-                data_pic = data_i;
-                break
+            if(this.itemData2){
+              for (let data_i of this.itemData2) {
+                if (data_i.location_id == check.item_location) {
+                  data_pic = data_i;
+                  break
+                }
               }
             }
             for (let data_i of this.itemData) {
