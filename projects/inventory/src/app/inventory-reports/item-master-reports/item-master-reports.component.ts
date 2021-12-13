@@ -69,6 +69,7 @@ export class ItemMasterReportsComponent implements OnInit {
   angularGrid: AngularGridInstance;
   dataArr: any[] = [];
   columnDefinitions: Column[] = [];
+  isLoading: boolean = false;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -116,7 +117,7 @@ export class ItemMasterReportsComponent implements OnInit {
     44: 'AR',
   };
   constructor(private fbuild: FormBuilder, private inventory: InventoryService,
-    private erpCommonService: ErpCommonService, private CommonService: CommonAPIService, ) {
+    private erpCommonService: ErpCommonService, private CommonService: CommonAPIService,) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
@@ -131,12 +132,12 @@ export class ItemMasterReportsComponent implements OnInit {
     //   {
     //     report_type: 'location', report_name: 'Location-wise Report'
     //   });
-      if(this.CommonService.isExistUserAccessMenu('680')) {
-        this.reportTypeArray.push({report_type: 'department', report_name: 'Department-wise Report'});
-      }
-      if(this.CommonService.isExistUserAccessMenu('681')) {
-        this.reportTypeArray.push({report_type: 'location', report_name: 'Location-wise Report'});
-      }
+    if (this.CommonService.isExistUserAccessMenu('680')) {
+      this.reportTypeArray.push({ report_type: 'department', report_name: 'Department-wise Report' });
+    }
+    if (this.CommonService.isExistUserAccessMenu('681')) {
+      this.reportTypeArray.push({ report_type: 'location', report_name: 'Location-wise Report' });
+    }
 
   }
   getSession() {
@@ -168,6 +169,7 @@ export class ItemMasterReportsComponent implements OnInit {
     });
   }
   changeReportType($event) {
+    this.isLoading = true;
     this.filterResult = [];
     this.sortResult = [];
     this.tableFlag = false;
@@ -342,6 +344,7 @@ export class ItemMasterReportsComponent implements OnInit {
       };
       this.inventory.searchItemsFromMaster({}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
+          this.isLoading = false;
           repoArray = result.data;
           let i = 1;
           for (let item of repoArray) {
@@ -474,6 +477,7 @@ export class ItemMasterReportsComponent implements OnInit {
       // const obj: any = {};
       this.inventory.searchItemsFromMaster({}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
+          this.isLoading = false;
           repoArray = result.data;
           let finalSet = [];
           for (let item of repoArray) {

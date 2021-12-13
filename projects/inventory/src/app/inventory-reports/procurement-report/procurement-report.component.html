@@ -3,7 +3,7 @@
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Report Type</mat-label>
-        <mat-select formControlName="report_type" (selectionChange)="changeStatus($event)" >
+        <mat-select formControlName="report_type" (selectionChange)="changeStatus($event)">
           <mat-option value="">Please Select</mat-option>
           <mat-option *ngFor="let item of reportTypeArray" [value]="item.report_type">
             {{item.report_name}}</mat-option>
@@ -26,7 +26,7 @@
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="col-4" >
+    <div class="col-4">
       <div class="margin-top-10">
         <button *ngIf="showFilter" class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
           filter
@@ -43,7 +43,12 @@
     </div>
   </div>
 </form>
-
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+</div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
@@ -51,7 +56,7 @@
     (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
-<div *ngIf="dataset.length === 0">
+<div *ngIf="dataset.length === 0 && !isLoading">
   <div class="text-center">
     <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
