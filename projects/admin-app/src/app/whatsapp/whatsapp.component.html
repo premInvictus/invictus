@@ -11,12 +11,18 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>
-          <div id="placeholder" style="height: auto; width: auto"></div>
-        </mat-grid-tile>
-        <mat-grid-tile><h1>Scan the QR code to connect</h1> </mat-grid-tile>
-      </mat-grid-list>
+      <div class="mat-card-content">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 mx-auto m-3">
+            <div class="qr" matTooltip="Scan QR">
+              <div id="placeholder"></div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 my-auto text-center">
+            <h2 class="mb-0">Scan the QR code to connect</h2>
+          </div>
+        </div>
+      </div>
     </mat-card>
   </div>
 </div>

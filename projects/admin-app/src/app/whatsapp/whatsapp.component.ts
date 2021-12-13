@@ -13,6 +13,7 @@ export class WhatsappComponent implements OnInit {
   tabIndex: any;
   socket: any;
   msgFlag: any;
+  cName: any;
 
   constructor(
     private whatsapp: WhatsappService,
@@ -27,14 +28,15 @@ export class WhatsappComponent implements OnInit {
 
       if (result) {
         console.log("THE RESULT IS: ", result);
-        this.notif.showSuccessErrorMessage(`Welcome ${result}`, "info");
+        this.cName = result;
+        this.notif.showSuccessErrorMessage(`Welcome ${this.cName}`, "info");
         this.showWhatsappChildPage(1);
       }
     });
 
     this.whatsapp.listen("disconnect event").subscribe((result: any) => {
-      console.log("SOCKET DISCONNECT: ", result);
-      this.notif.showSuccessErrorMessage(`Loging out ${result}`, "error");
+      console.log("SOCKET DISCONNECTED: ", result);
+      this.notif.showSuccessErrorMessage(`Loging out ${this.cName}`, "error");
 
       if (result) {
         this.route.navigate(["admin/whatsapp_qr"]);

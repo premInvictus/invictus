@@ -33,7 +33,7 @@
             <div class="float-right">
               <button
                 mat-raised-button
-                class="btn submit-btn"
+                class="btn submit-btn mt-0"
                 (click)="showWhatsappChildPage(1)"
               >
                 Static Message
@@ -43,10 +43,11 @@
         </div>
         <form [formGroup]="whatsappDynamicForm">
           <div class="row">
-            <div class="col-4">
+            <div class="col-lg-4 col-md-4 col-sm-12">
               <div class="manage-message" id="headersDiv">
                 <ul>
                   <li
+                    matTooltip="Select Header"
                     *ngFor="let items of headers"
                     #headers
                     (click)="composeMessage(items)"
@@ -56,7 +57,7 @@
                 </ul>
               </div>
             </div>
-            <div class="col-8">
+            <div class="col-lg-8 col-md-8 col-sm-12 msg">
               <div class="manage-message">
                 <textarea
                   name="message"
@@ -64,15 +65,17 @@
                   value=""
                   formControlName="text_message"
                   #d_message
+                  placeholder="Compose Message"
                 >
                 </textarea>
               </div>
             </div>
             <div class="col-12">
               <button
-                style="float: left; margin-left: 0"
+                style="float: left"
+                matTooltip="Show preview"
                 mat-raised-button
-                class="btn submit-btn"
+                class="btn submit-btn ml-0 mt-3"
                 (click)="showPreview()"
               >
                 Message Preview *
@@ -103,7 +106,7 @@
               </table>
             </mat-card>
           </div>
-          <div class="col-12">
+          <div class="col-12 mt-3">
             <button mat-raised-button class="btn reset-btn" (click)="reset()">
               Reset
             </button>

@@ -36,6 +36,7 @@ mat-form-field {
   border-radius: 4px;
   float: right;
 }
+
 .btn + .btn {
   margin-right: 10px;
 }
@@ -70,10 +71,6 @@ mat-form-field {
   margin-right: 4px;
 }
 
-#placeholder {
-  height: auto; /* 124px */
-  width: 124px;
-}
 .count-label {
   background-color: #e5e3e3;
   width: fit-content;
@@ -82,9 +79,8 @@ mat-form-field {
   border-radius: 5px;
 }
 
-@media only screen and (max-width: 600px) {
-  .message {
-    background-color: red;
-    margin: 10px 0;
+@media screen and (max-width: 600px) {
+  mat-card mat-card-content form .msg {
+    margin-top: 10px;
   }
 }
