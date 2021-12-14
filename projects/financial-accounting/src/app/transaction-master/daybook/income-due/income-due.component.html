@@ -1,10 +1,10 @@
 <ngx-loading [show]="showLoadingFlag" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 
-<div *ngIf="tableDivFlag">
+<div class="mt-2" *ngIf="tableDivFlag">
 
   <div class="row remove-top-margin">
     <div class="col-12">
-      <table *ngIf="ELEMENT_DATA.length > 0" class="table table-borderd table-stripped custom-table text-center"
+      <table *ngIf="ELEMENT_DATA.length > 0 && dataIsReady" class="table table-borderd table-stripped custom-table text-center"
         style="margin-top: 5px;">
         <thead>
           <tr class="mat-header-row">
@@ -89,6 +89,11 @@
       </table>
     </div>
   </div>
+</div>
+<div class="container" *ngIf="!dataIsReady && tableDivFlag">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+  </p>
 </div>
 <div class="row" *ngIf="!tableDivFlag">
   <div class="col-12 text-center">

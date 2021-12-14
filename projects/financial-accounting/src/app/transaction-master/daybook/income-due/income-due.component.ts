@@ -50,6 +50,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   globalsetup: any;
   showLoadingFlag = false;
   currentses: any = {};
+  dataIsReady: boolean = false;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -108,7 +109,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     console.log('tempDate--', tempDate, tempDate.split("T"), tempDate.split("T")[0])
     const dialogRefFilter = this.dialog.open(ModeltableComponent, {
       width: '70%',
-      height: '70%',
+      height: '80%',
       data: {
         month_id: this.param.month,
         date: yesterday.toLocaleDateString('en-CA'),
@@ -399,7 +400,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe(
       (result: any) => {
-        // this.showLoadingFlag = true;
+        this.dataIsReady = true;
         // this.commonAPIService.stopLoading();
         // this.commonAPIService.startLoading();
         console.log("COA for COA function ", result);
