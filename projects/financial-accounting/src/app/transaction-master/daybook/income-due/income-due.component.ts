@@ -32,7 +32,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   partialPaymentStatus = 1;
   apiInvoiceData = [];
   apiReceiptData = [];
-  apiData:any[]=[];
+  apiData: any[] = [];
   chartsOfAccount: any[] = [];
   vcData: any;
   currentVcType = 'Journal';
@@ -40,16 +40,16 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   sessionName: any;
   voucherDate: any;
   currentVoucherData: any;
-  vcYearlyStatus   = 0;
+  vcYearlyStatus = 0;
   feeReceivableAccountId = 0;
   feeReceivableAccountName = 'Fee Receivable';
   adjustmentStatus = 0;
   previousBalanceObject = {};
   previousYearVoucherExists = false;
-  previousYearVoucherData:any[] = [];
-  globalsetup:any;
+  previousYearVoucherData: any[] = [];
+  globalsetup: any;
   showLoadingFlag = false;
-  currentses:any={};
+  currentses: any = {};
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -86,53 +86,53 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
   openModel(e) {
     const dialogRefFilter = this.dialog.open(ModeltableComponent, {
-			width: '70%',
-			height: '70%',
-			data: {
+      width: '70%',
+      height: '70%',
+      data: {
         month_id: this.param.month,
         date: e.date,
         reportType: 'feedue'
-			}
-		});
-		dialogRefFilter.afterClosed().subscribe(result => {
-		});
+      }
+    });
+    dialogRefFilter.afterClosed().subscribe(result => {
+    });
   }
 
   openPreviousModel(e) {
-    var eDate=new Date(this.ELEMENT_DATA[0]['date']);
-    console.log('eDate--',eDate)
+    var eDate = new Date(this.ELEMENT_DATA[0]['date']);
+    console.log('eDate--', eDate)
     var yesterday = new Date(eDate.getTime());
-yesterday.setDate(eDate.getDate() - 1);
-console.log('yesterday.toString().split("T")[0]--',yesterday.toLocaleDateString('en-CA'))
-var tempDate =yesterday.toString();
-console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
+    yesterday.setDate(eDate.getDate() - 1);
+    console.log('yesterday.toString().split("T")[0]--', yesterday.toLocaleDateString('en-CA'))
+    var tempDate = yesterday.toString();
+    console.log('tempDate--', tempDate, tempDate.split("T"), tempDate.split("T")[0])
     const dialogRefFilter = this.dialog.open(ModeltableComponent, {
-			width: '70%',
-			height: '70%',
-			data: {
+      width: '70%',
+      height: '70%',
+      data: {
         month_id: this.param.month,
         date: yesterday.toLocaleDateString('en-CA'),
         reportType: 'feedue',
         previousData: true
-			}
-		});
-		dialogRefFilter.afterClosed().subscribe(result => {
-		});
+      }
+    });
+    dialogRefFilter.afterClosed().subscribe(result => {
+    });
   }
   getGlobalSetting() {
-		let param: any = {};
-		this.globalsetup = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status','fee_invoice_includes_adjustments','fa_session_freez','fa_monthwise_freez'];
-		this.faService.getGlobalSetting(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				result.data.forEach(element => {
-					this.globalsetup[element.gs_alias] = element.gs_value
-				});
+    let param: any = {};
+    this.globalsetup = {};
+    param.gs_alias = ['fa_voucher_code_format_yearly_status', 'fee_invoice_includes_adjustments', 'fa_session_freez', 'fa_monthwise_freez'];
+    this.faService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        result.data.forEach(element => {
+          this.globalsetup[element.gs_alias] = element.gs_value
+        });
         this.vcYearlyStatus = Number(this.globalsetup['fa_voucher_code_format_yearly_status']);
-        this.adjustmentStatus = this.globalsetup['fee_invoice_includes_adjustments'] == '1' ? 1 : 0 ;
-			}
-		})
-	}
+        this.adjustmentStatus = this.globalsetup['fee_invoice_includes_adjustments'] == '1' ? 1 : 0;
+      }
+    })
+  }
   checkPartialPaymentStatus() {
     let param: any = {};
     param.gs_alias = ['fa_partial_payment'];
@@ -147,14 +147,14 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
   }
 
   getPreviousHeadAmt(item) {
-    var flag=0;
-    for(var i=0; i< this.apiData.length;i++) {
-      
-      if(this.apiData[i]['fh_name']==item['name']) {
-        
+    var flag = 0;
+    for (var i = 0; i < this.apiData.length; i++) {
+
+      if (this.apiData[i]['fh_name'] == item['name']) {
+
         //flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
-        flag= Number(this.apiData[i]['head_amt']);
-        
+        flag = Number(this.apiData[i]['total_amt']);
+
         break;
       }
     }
@@ -162,31 +162,31 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
   }
 
   checkForPreviousYearVoucher() {
-    
-    this.faService.checkPreviosuDueStatus({vc_narrations: 'Previous Due' }).subscribe((data:any)=> {
+
+    this.faService.checkPreviosuDueStatus({ vc_narrations: 'Previous Due' }).subscribe((data: any) => {
       // this.commonAPIService.startLoading();
       console.log('data--', data);
-      if(data && data[0] && data[0]['vc_id']) {
+      if (data && data[0] && data[0]['vc_id']) {
         this.previousYearVoucherData = data[0];
         this.previousYearVoucherExists = true;
         this.previousBalanceObject = {};
-          this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
-          this.previousBalanceObject['vc_id'] =  this.previousYearVoucherData['vc_id'];
-          this.previousBalanceObject['vc_state'] = this.previousYearVoucherData['vc_state'];
-          this.previousBalanceObject['vc_records'] = [this.previousYearVoucherData];
-          this.previousBalanceObject['value'] = this.apiData;
-          this.previousBalanceObject['prev_balance_voucher'] = true;
-          this.previousBalanceObject['date'] = '';
-          for(var i=0; i <this.apiData.length;i++) {
-            if (!(this.apiData[i]['fh_name'])) {
-              this.apiData[i]['fh_name'] = 'Transport Fee';
-              this.apiData[i]['fh_id'] = 0;
-              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'];
-            } else {
-              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'];
-            }
+        this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
+        this.previousBalanceObject['vc_id'] = this.previousYearVoucherData['vc_id'];
+        this.previousBalanceObject['vc_state'] = this.previousYearVoucherData['vc_state'];
+        this.previousBalanceObject['vc_records'] = [this.previousYearVoucherData];
+        this.previousBalanceObject['value'] = this.apiData;
+        this.previousBalanceObject['prev_balance_voucher'] = true;
+        this.previousBalanceObject['date'] = '';
+        for (var i = 0; i < this.apiData.length; i++) {
+          if (!(this.apiData[i]['fh_name'])) {
+            this.apiData[i]['fh_name'] = 'Transport Fee';
+            this.apiData[i]['fh_id'] = 0;
+            this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'];
+          } else {
+            this.previousBalanceObject['id_' + this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'];
           }
-          console.log('this.previousBalanceObject--',this.previousBalanceObject)
+        }
+        console.log('this.previousBalanceObject--', this.previousBalanceObject)
       } else {
         this.previousYearVoucherExists = false;
       }
@@ -205,42 +205,43 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     this.previousBalanceObject = {};
     this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
       // this.commonAPIService.startLoading();
-      console.log("invoice due data ", data);
+      console.log("invoice due data >>>>>>", data);
       if (data && data.invoice_due_data.length > 0) {
         this.displayedColumns = [];
-        if (Number(this.param.month)==4) {
+        if (Number(this.param.month) == 4) {
           this.checkForPreviousYearVoucher();
-        
-        
-        this.apiData = data.previous_years_data ? data.previous_years_data: [];
-        if (this.previousYearVoucherData.length > 0) {
-          
-        } else {
-        this.previousBalanceObject = {};
-        this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
-        this.previousBalanceObject['vc_id'] = '';
-        this.previousBalanceObject['vc_state'] = 'draft';
-        this.previousBalanceObject['vc_records'] = [];
-        this.previousBalanceObject['value'] = this.apiData;
-        this.previousBalanceObject['prev_balance_voucher'] = true;
-        this.previousBalanceObject['date'] = '';
-        for(var i=0; i <this.apiData.length;i++) {
-          if (!(this.apiData[i]['fh_name'])) {
-            this.apiData[i]['fh_name'] = 'Transport Fee';
-            this.apiData[i]['fh_id'] = 0;
-            this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+
+
+          this.apiData = data.previous_years_data ? data.previous_years_data : [];
+          if (this.previousYearVoucherData.length > 0) {
+
           } else {
-            this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+            this.previousBalanceObject = {};
+            this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
+            this.previousBalanceObject['vc_id'] = '';
+            this.previousBalanceObject['vc_state'] = 'draft';
+            this.previousBalanceObject['vc_records'] = [];
+            this.previousBalanceObject['value'] = this.apiData;
+            this.previousBalanceObject['prev_balance_voucher'] = true;
+            this.previousBalanceObject['date'] = '';
+            for (var i = 0; i < this.apiData.length; i++) {
+              if (!(this.apiData[i]['fh_name'])) {
+                this.apiData[i]['fh_name'] = 'Transport Fee';
+                this.apiData[i]['fh_id'] = 0;
+                this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+              } else {
+                this.previousBalanceObject['id_' + this.apiData[i]['fh_id']] = this.apiData[i]['head_amt'] - this.apiData[i]['adjustment_amt'] - this.apiData[i]['concession_amt'];
+              }
+            }
+            console.log('this.previousBalanceObject--', this.previousBalanceObject)
           }
         }
-        console.log('this.previousBalanceObject--',this.previousBalanceObject)
-      }}
-        
 
 
-        
+
+
         this.apiInvoiceData = data.invoice_due_data;
-        console.log('data.invoice_due_data--',data.invoice_due_data)
+        console.log('data.invoice_due_data--', data.invoice_due_data)
         this.apiReceiptData = data.receipt_data;
         const tempData: any = data.invoice_due_data;
         const tempHeader: any[] = [];
@@ -256,11 +257,11 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         this.displayedColumns.forEach(ee => {
           this.con_adj_details['id_' + ee.id] = 0;
           this.eachheadtotal_details['id_' + ee.id] = 0;
-          if(this.previousBalanceObject['id_'+ee.id]) {
-            console.log(this.previousBalanceObject['id_'+ee.id]);  
-            
-            this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_'+ee.id]);
-            this.headtoatl += Number(this.previousBalanceObject['id_'+ee.id]);
+          if (this.previousBalanceObject['id_' + ee.id]) {
+            console.log(this.previousBalanceObject['id_' + ee.id]);
+
+            this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_' + ee.id]);
+            this.headtoatl += Number(this.previousBalanceObject['id_' + ee.id]);
           }
 
         });
@@ -282,59 +283,59 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
             tempelement['vc_records'] = e.vc_data;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
-              
+
               this.displayedColumns.forEach(ee => {
-                
+
                 tempvalue.value.forEach(element => {
                   if (element.fh_id == ee.id) {
                     let tempvaluehead = 0;
                     if (this.adjustmentStatus) {
                       if (element.fine_amt > 0)
-                        fine_amt=Number(element.fine_amt);
+                        fine_amt = Number(element.fine_amt);
                       console.log(fine_amt);
-                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt) ;
+                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
                     } else {
                       if (element.fine_amt)
-                        fine_amt=Number(element.fine_amt);
+                        fine_amt = Number(element.fine_amt);
                       console.log(fine_amt);
                       tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
                     }
 
-                    if(ee.id == -1) {
+                    if (ee.id == -1) {
                       console.log('in', fine_amt);
-                      tempvaluehead=fine_amt;
+                      tempvaluehead = fine_amt;
                     }
-                    
+
                     let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
                     this.headtoatl += tempvaluehead;
                     this.contoatl += tempvaluecon;
                     tempelement['id_' + ee.id] = tempvaluehead;
                     this.con_adj_details['id_' + ee.id] += tempvaluecon;
                     this.eachheadtotal_details['id_' + ee.id] += tempvaluehead;
-                    
+
                   }
-                  
-                    
-                  
-                  
+
+
+
+
                 });
                 //
 
               });
-              fine_amt=0;
-              
+              fine_amt = 0;
+
             }
             // console.log('tempelement--',tempelement);
             this.ELEMENT_DATA.push(tempelement);
           });
-          
+
         }
         console.log("------------------------", this.ELEMENT_DATA);
         // console.log(this.eachheadtotal_details);
         // console.log(this.con_adj_details);
 
       }
-      
+
       // this.commonAPIService.stopLoading();
       this.showLoadingFlag = false;
       this.tableDivFlag = true;
@@ -366,10 +367,10 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
             this.sessionArray[citem.ses_id] = citem.ses_name;
             let tdate = new Date();
             const sessionarr = citem.ses_name.split('-');
-            var from = new Date(sessionarr[0]+'-04-01');
-            var to = new Date(sessionarr[1]+'-03-31');
-            if(tdate >= from && tdate <= to) {
-                this.currentses['ses_id'] = citem.ses_id;
+            var from = new Date(sessionarr[0] + '-04-01');
+            var to = new Date(sessionarr[1] + '-03-31');
+            if (tdate >= from && tdate <= to) {
+              this.currentses['ses_id'] = citem.ses_id;
             }
           }
           if (this.session) {
@@ -379,11 +380,11 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         }
       });
   }
-  monthwiseFreez(date){
-    if(date) {
+  monthwiseFreez(date) {
+    if (date) {
       let datearr = date.split('-');
-      if(this.session.ses_id == this.currentses.ses_id) {
-        if(this.globalsetup['fa_monthwise_freez'] && this.globalsetup['fa_monthwise_freez'].includes(datearr[1])) {
+      if (this.session.ses_id == this.currentses.ses_id) {
+        if (this.globalsetup['fa_monthwise_freez'] && this.globalsetup['fa_monthwise_freez'].includes(datearr[1])) {
           return true;
         }
       } else {
@@ -399,39 +400,40 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     this.faService.getAllChartsOfAccount({}).subscribe(
       (result: any) => {
         // this.showLoadingFlag = true;
-      // this.commonAPIService.stopLoading();
-      // this.commonAPIService.startLoading();
-      console.log("COA for COA function ", result);
-      for (var i = 0; i < result.length; i++) {
-        //console.log(result[i]);
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
-          console.log('result--', result[i]);
-          this.chartsOfAccount.push(result[i]);
+        // this.commonAPIService.stopLoading();
+        // this.commonAPIService.startLoading();
+        console.log("COA for COA function ", result);
+        for (var i = 0; i < result.length; i++) {
+          //console.log(result[i]);
+          if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
+            console.log('result--', result[i]);
+            this.chartsOfAccount.push(result[i]);
+          }
+          if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
+            console.log('result--', result[i]);
+            //this.chartsOfAccount.push(result[i]);
+            this.feeReceivableAccountId = result[i]['coa_id'];
+            this.feeReceivableAccountName = result[i]['coa_acc_name'];
+          } else {
+            this.chartsOfAccount.push(result[i]);
+          }
+
         }
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
-          console.log('result--', result[i]);
-          //this.chartsOfAccount.push(result[i]);
-          this.feeReceivableAccountId = result[i]['coa_id'];
-          this.feeReceivableAccountName = result[i]['coa_acc_name'];
-        }else{
-          this.chartsOfAccount.push(result[i]);
-        }
-        
+      },
+      function (error) { console.log("Error happened" + error) },
+      function () {
+        console.log("the subscription is completed");
+        this.commonAPIService.stopLoading();
+        this.showLoadingFlag = false;
       }
-    },
-    function(error) { console.log("Error happened" + error)},
-    function() { console.log("the subscription is completed"); 
-      this.commonAPIService.stopLoading();
-      this.showLoadingFlag = false;
-    } 
-    
-    
+
+
     );
   }
 
   createVoucher(item, action) {
     console.log('item-- create voucher', item);
-    console.log('this.apiInvoiceData--',this.apiInvoiceData)
+    console.log('this.apiInvoiceData--', this.apiInvoiceData)
     this.currentVoucherData = item;
     console.log('this.currentvoucherData', this.currentVoucherData)
     if (item && item['prev_balance_voucher']) {
@@ -447,13 +449,13 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         }
       }
     }
-    
+
   }
 
-  checkForHeadData(invoiceHeadArr, action,prev_balance_voucher) {
+  checkForHeadData(invoiceHeadArr, action, prev_balance_voucher) {
     //invoiceHeadArr[0]['total_amt']=5500;
     // invoiceHeadArr[6]['total_amt']=3500;
-    console.log("COA  from create for head data ",this.chartsOfAccount);
+    console.log("COA  from create for head data ", this.chartsOfAccount);
     console.log("invoice Head array", invoiceHeadArr);
     var voucherEntryArray = [];
     var feeReceivableAmt = 0;
@@ -471,7 +473,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
               vc_debit: 0,
               vc_credit: invoiceHeadArr[i]['total_amt']
             };
-            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+            feeReceivableAmt = feeReceivableAmt + (invoiceHeadArr[i]['total_amt'])
             voucherEntryArray.push(vFormJson);
           } else {
             var mathchedFlag = 0;
@@ -479,12 +481,12 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
             var accountDebitSum = 0;
             var accountCreditSum = 0;
             var totalPrevHeadAmt = 0;
-            for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
-              for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
-                
-                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
+            for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+              for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
                   mathchedFlag = 1;
-                  
+
                   accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
                   accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
 
@@ -494,7 +496,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
               }
             }
             console.log(mathchedFlag, 'matchedFlag')
-            if(!mathchedFlag) {
+            if (!mathchedFlag) {
               let vFormJson = {};
               vFormJson = {
                 vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -502,16 +504,16 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                 vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                 vc_grno: '',
                 vc_invoiceno: '',
-                vc_debit:  0,
+                vc_debit: 0,
                 vc_credit: invoiceHeadArr[i]['total_amt']
               };
-              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+              feeReceivableAmt = feeReceivableAmt + (invoiceHeadArr[i]['total_amt'])
               voucherEntryArray.push(vFormJson);
             } else {
               totalPrevHeadAmt = accountDebitSum - accountCreditSum;
               deviation = invoiceHeadArr[i]['total_amt'] - totalPrevHeadAmt;
               feeReceivableAmt = feeReceivableAmt + deviation;
-              if (deviation < 0 ) {
+              if (deviation < 0) {
                 let vFormJson = {};
                 vFormJson = {
                   vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -519,12 +521,12 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  -deviation,
+                  vc_debit: -deviation,
                   vc_credit: 0
                 };
                 voucherEntryArray.push(vFormJson);
               }
-              if (deviation > 0 ) {
+              if (deviation > 0) {
                 let vFormJson = {};
                 vFormJson = {
                   vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -532,14 +534,14 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  0,
+                  vc_debit: 0,
                   vc_credit: deviation
                 };
                 voucherEntryArray.push(vFormJson);
               }
             }
           }
-        }else{
+        } else {
           if (action != 'update') {
             let vFormJson = {};
             vFormJson = {
@@ -552,7 +554,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
               vc_credit: invoiceHeadArr[i]['total_amt']
             };
             console.log(vFormJson);
-            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+            feeReceivableAmt = feeReceivableAmt + (invoiceHeadArr[i]['total_amt'])
             voucherEntryArray.push(vFormJson);
           } else {
             var mathchedFlag = 0;
@@ -560,12 +562,12 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
             var accountDebitSum = 0;
             var accountCreditSum = 0;
             var totalPrevHeadAmt = 0;
-            for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
-              for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
-                
-                if (this.chartsOfAccount[j]['coa_acc_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
+            for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+              for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                if (this.chartsOfAccount[j]['coa_acc_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
                   mathchedFlag = 1;
-                  
+
                   accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
                   accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
 
@@ -575,7 +577,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
               }
             }
             console.log(mathchedFlag, 'matchedFlag')
-            if(!mathchedFlag) {
+            if (!mathchedFlag) {
               let vFormJson = {};
               vFormJson = {
                 vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -583,16 +585,16 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                 vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                 vc_grno: '',
                 vc_invoiceno: '',
-                vc_debit:  0,
+                vc_debit: 0,
                 vc_credit: invoiceHeadArr[i]['total_amt']
               };
-              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+              feeReceivableAmt = feeReceivableAmt + (invoiceHeadArr[i]['total_amt'])
               voucherEntryArray.push(vFormJson);
             } else {
               totalPrevHeadAmt = accountDebitSum - accountCreditSum;
               deviation = invoiceHeadArr[i]['total_amt'] - totalPrevHeadAmt;
               feeReceivableAmt = feeReceivableAmt + deviation;
-              if (deviation < 0 ) {
+              if (deviation < 0) {
                 let vFormJson = {};
                 vFormJson = {
                   vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -600,12 +602,12 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  -deviation,
+                  vc_debit: -deviation,
                   vc_credit: 0
                 };
                 voucherEntryArray.push(vFormJson);
               }
-              if (deviation > 0 ) {
+              if (deviation > 0) {
                 let vFormJson = {};
                 vFormJson = {
                   vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -613,7 +615,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  0,
+                  vc_debit: 0,
                   vc_credit: deviation
                 };
                 voucherEntryArray.push(vFormJson);
@@ -623,7 +625,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         }
       }
     }
-    if (voucherEntryArray.length > 0  && action != 'update') {
+    if (voucherEntryArray.length > 0 && action != 'update') {
       let vFormJson = {
         vc_account_type: this.feeReceivableAccountName,
         vc_account_type_id: this.feeReceivableAccountId,
@@ -636,8 +638,8 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
       voucherEntryArray.push(vFormJson);
       this.getVoucherTypeMaxId(voucherEntryArray, prev_balance_voucher);
     }
-    if (voucherEntryArray.length > 0  && action == 'update') {
-      
+    if (voucherEntryArray.length > 0 && action == 'update') {
+
       let vFormJson = {
         vc_account_type: this.feeReceivableAccountName,
         vc_account_type_id: this.feeReceivableAccountId,
@@ -651,7 +653,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
       this.getVoucherTypeMaxId(voucherEntryArray, prev_balance_voucher);
     }
 
-    if (voucherEntryArray.length  === 0) {
+    if (voucherEntryArray.length === 0) {
       this.commonAPIService.showSuccessErrorMessage('There is no information to update / create', 'error');
     }
 
@@ -706,7 +708,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
     let vcYear = nYear;
     let vcNumber = vcData.vc_code;
     this.vcData = { vc_code: vcData.vc_code, vc_name: this.vcYearlyStatus ? vcType + '/' + ((vcNumber.toString()).padStart(4, '0')) : vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
-    
+
 
 
     if (this.vcData) {
@@ -714,7 +716,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
         vc_id: null,
         vc_type: 'Journal',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
-        vc_date: prev_balance_voucher  ? '' : this.voucherDate,
+        vc_date: prev_balance_voucher ? '' : this.voucherDate,
         vc_narrations: prev_balance_voucher ? 'Previous Due' : 'Invoice Due of Date ' + this.voucherDate,
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
@@ -735,7 +737,7 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
           }
         });
       } else {
-        
+
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
             this.getInvoiceDayBook();
@@ -754,8 +756,8 @@ console.log('tempDate--', tempDate, tempDate.split("T"),tempDate.split("T")[0])
 
   }
   isExistUserAccessMenu(mod_id) {
-		return this.commonAPIService.isExistUserAccessMenu(mod_id);
-	}
+    return this.commonAPIService.isExistUserAccessMenu(mod_id);
+  }
 
 
 
