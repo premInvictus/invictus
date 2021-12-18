@@ -149,7 +149,16 @@
                 </div>
             </div>
             <div class="row mt-5 mb-5 text-center" *ngIf="isPreparingCard">
-                <h2 class="text-success">Preparing grade card ..........</h2>
+                <div class="container">
+                    <p class="text-center mt-5 mb-2">
+                      <img src="assets/1494.gif" alt="loading">
+                      <!-- Loading..... -->
+                    </p>
+                    <p class="text-center mb-2">
+                        Preparing Grade Card
+                    </p>
+                  </div>
+                <!-- <h2 class="text-success">Preparing grade card ..........</h2> -->
             </div>
             <ng-container *ngIf="data.param.eme_term_id != 'comulative' && printDataFlag && !isPreparingCard">
                 <ng-container *ngFor="let term of termArray">
