@@ -6,3 +6,4 @@ export * from './smart.service';
 export * from './exam.service';
 export * from './fee.service';
 export * from './examprocesstype.service';
+export * from './hrms.service';

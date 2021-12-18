@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
+import { CommonAPIService, SisService, AxiomService, SmartService, ExamService, HumanResourceService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
@@ -41,6 +41,7 @@ export class MarkAttendanceComponent implements OnInit {
 		{ aid: 1, a_name: 'Present' },
 	];
 	requiredAll = true;
+	selectedUserArr: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -49,6 +50,7 @@ export class MarkAttendanceComponent implements OnInit {
 		public axiomService: AxiomService,
 		public sisService: SisService,
 		public examService: ExamService,
+		public humanResourceService: HumanResourceService
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -264,7 +266,7 @@ export class MarkAttendanceComponent implements OnInit {
 			}
 		}
 		if (this.requiredAll) {
-			this.disableApiCall = true;
+			// this.disableApiCall = true;
 			const checkParam: any = {};
 			checkParam.au_class_id = this.firstForm.value.syl_class_id;
 			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
@@ -275,6 +277,8 @@ export class MarkAttendanceComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
 						if (result_u && result_u.status === 'ok') {
+							this.selectedUserArr = result_u.data;
+							this.sendPushMessage();
 							this.disableApiCall = false;
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance  Updated Successfully', 'success');
@@ -286,6 +290,8 @@ export class MarkAttendanceComponent implements OnInit {
 				} else {
 					this.examService.insertAttendance(this.finalArray).subscribe((result_i: any) => {
 						if (result_i && result_i.status === 'ok') {
+							this.selectedUserArr = result_i.data;
+							this.sendPushMessage();
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance Marked Successfully', 'success');
 							this.disableApiCall = false;
@@ -300,5 +306,118 @@ export class MarkAttendanceComponent implements OnInit {
 			this.commonService.showSuccessErrorMessage('Mark all student attendance', 'error');
 		}
 
+	}
+
+	sendPushMessage() {
+		var validationFlag = true;
+		const devices: any[] = [];
+		if (validationFlag) {
+			console.log("user asasdada >>>>>>", this.selectedUserArr);
+			let messageBody = "";
+			let msgToArr = [];
+			let userJson: any = {}
+			let inputJson: any = {};
+
+			//PUSH NOTIFICATION
+				for (var i = 0; i < this.selectedUserArr.length; i++) {
+					if (this.selectedUserArr[i].user_details['device_id']) {
+						devices.push(this.selectedUserArr[i].user_details['device_id']);
+					}
+					userJson = {
+						"login_id": this.selectedUserArr[i].user_details['au_login_id'],
+						"au_full_name": this.selectedUserArr[i].user_details['au_full_name'],
+						"class_id": this.selectedUserArr[i].user_details['class_id'],
+						"class_name": this.selectedUserArr[i].user_details['class_name'],
+						"sec_id": this.selectedUserArr[i].user_details['sec_id'],
+						"sec_name": this.selectedUserArr[i].user_details['sec_name'],
+						"email": this.selectedUserArr[i].user_details['au_email'],
+						"mobile": this.selectedUserArr[i].user_details['au_mobile'],
+						"role_id": this.selectedUserArr[i].user_details['au_role_id'],
+						"msg_status": [
+							{ "status_name": "sent" },
+							{ "status_name": "unread" }],
+						"msg_sent_date_time": ""
+					}
+					msgToArr.push(userJson);
+					messageBody = this.selectedUserArr[i].push_message;
+				}
+				
+				inputJson = {
+					"msg_from": this.currentUser.login_id,
+					"msg_to": msgToArr,
+					"msg_type": 'notification',
+					"msg_template_id": '1',
+					"msg_receivers": 'Student',
+					"notification_type": {
+						"type": "push",
+						"module": "attendance"
+					},
+					"msg_subject": "Attendance Alert",
+					"msg_description": this.commonService.htmlToText(messageBody),
+					"msg_attachment": "",
+					"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
+					"msg_thread": [],
+					"user_type": 'Student',
+					"message_title": "Attendance",
+					"message_content": this.commonService.htmlToText(messageBody),
+					"message_type": {
+						"module": "attendance",
+						"type": "push",
+					},
+					"message_to": devices,
+					"message_image":  '',
+				}
+			
+			console.log("sendPushMessage >>>>>>",inputJson);
+			this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Message has been sent Successfully', 'success');					
+					this.resetForm();
+				} else {
+					this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
+				}
+			});
+
+			//SMS NOTIFICATION 
+
+			// if (this.editMode) {
+			// 	inputJson['msg_id'] = this.formData['msg_id'];
+			// 	this.commonAPIService.updateMessage(inputJson).subscribe((result: any) => {
+			// 		if (result) {
+			// 			this.disabledApiButton = false;
+			// 			this.commonAPIService.showSuccessErrorMessage('Message has been updated Successfully', 'success');
+			// 			this.back();
+			// 			this.resetForm();
+			// 		} else {
+			// 			this.disabledApiButton = false;
+			// 			this.commonAPIService.showSuccessErrorMessage('Error While Updating Message', 'error');
+			// 		}
+			// 	});
+			// } else {
+
+			// 	if (this.messageForm.value.messageType === 'S') {
+			// 		var consumeMessage = this.msgMultipleCount * (this.selectedUserArr.length);
+
+			// 		inputJson['delTitle'] = "Information";
+			// 		inputJson['delMessage'] = "This will consume " + consumeMessage + " SMS" + "<br/> Would you like to broadcast this message as shown";
+			// 		this.deleteModal.openModal(inputJson);
+			// 	} else {
+				
+			// 		console.log(this.messageForm.value);
+			// 		this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
+			// 			if (result) {
+			// 				this.disabledApiButton = false;
+			// 				this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
+			// 				this.back();
+			// 				this.resetForm();
+			// 			} else {
+			// 				this.disabledApiButton = false;
+			// 				this.commonAPIService.showSuccessErrorMessage('Error While Sending Message', 'error');
+			// 			}
+			// 		});
+			// 	}
+			// }
+		}
 	}
 }
