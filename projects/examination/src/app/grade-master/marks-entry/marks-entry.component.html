@@ -181,7 +181,7 @@
                             (click)="saveForm('4','1');$event.stopPropagation()" [disabled]="disabledApiButton">Final
                             Publish</button>
                         <button *ngIf="(isAnyoneEditableFinal('1') || isAnyoneEditableFinal('2')
-                        || isAnyoneEditableFinal('3') || isAnyoneEditableFinal('4')) && isExistUserAccessMenu('474') && isAnyoneEditabelStu()" mat-button
+                        || isAnyoneEditableFinal('3') || isAnyoneEditableFinal('4')) && isExistUserAccessMenu('474') && isAnyoneEditabelStu() && !editFlag" mat-button
                             class="btn-success-green btn-spacer" (click)="enableEdit();$event.stopPropagation()"
                             [disabled]="disabledApiButton">Update</button>
                         <button *ngIf="editFlag" mat-button class="btn-success-green"
