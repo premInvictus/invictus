@@ -112,7 +112,7 @@ export class MarkAttendanceComponent implements OnInit {
 		this.firstForm.patchValue({
 			'syl_class_id': '',
 			'syl_section_id': '',
-			'syl_event':''
+			'syl_event': ''
 		});
 		this.attendanceForm.patchValue({
 			'attendance': ''
@@ -278,7 +278,11 @@ export class MarkAttendanceComponent implements OnInit {
 					this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
 						if (result_u && result_u.status === 'ok') {
 							this.selectedUserArr = result_u.data;
-							this.sendPushMessage();
+							if (result_u.data.length > 0) {
+								this.sendPushMessage(result_u.data);
+							} else {
+								this.commonService.showSuccessErrorMessage('Attendance  Notification Disabled', 'error');
+							}
 							this.disableApiCall = false;
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance  Updated Successfully', 'success');
@@ -291,7 +295,11 @@ export class MarkAttendanceComponent implements OnInit {
 					this.examService.insertAttendance(this.finalArray).subscribe((result_i: any) => {
 						if (result_i && result_i.status === 'ok') {
 							this.selectedUserArr = result_i.data;
-							this.sendPushMessage();
+							if (result_i.data.length > 0) {
+								this.sendPushMessage(result_i.data);
+							} else {
+								this.commonService.showSuccessErrorMessage('Attendance  Notification Disabled', 'error');
+							}
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance Marked Successfully', 'success');
 							this.disableApiCall = false;
@@ -308,116 +316,100 @@ export class MarkAttendanceComponent implements OnInit {
 
 	}
 
-	sendPushMessage() {
+	sendPushMessage(data) {
 		var validationFlag = true;
 		const devices: any[] = [];
 		if (validationFlag) {
-			console.log("user asasdada >>>>>>", this.selectedUserArr);
+			console.log("user details >>>>>>", this.selectedUserArr);
 			let messageBody = "";
 			let msgToArr = [];
 			let userJson: any = {}
 			let inputJson: any = {};
 
-			//PUSH NOTIFICATION
-				for (var i = 0; i < this.selectedUserArr.length; i++) {
-					if (this.selectedUserArr[i].user_details['device_id']) {
-						devices.push(this.selectedUserArr[i].user_details['device_id']);
-					}
-					userJson = {
-						"login_id": this.selectedUserArr[i].user_details['au_login_id'],
-						"au_full_name": this.selectedUserArr[i].user_details['au_full_name'],
-						"class_id": this.selectedUserArr[i].user_details['class_id'],
-						"class_name": this.selectedUserArr[i].user_details['class_name'],
-						"sec_id": this.selectedUserArr[i].user_details['sec_id'],
-						"sec_name": this.selectedUserArr[i].user_details['sec_name'],
-						"email": this.selectedUserArr[i].user_details['au_email'],
-						"mobile": this.selectedUserArr[i].user_details['au_mobile'],
-						"role_id": this.selectedUserArr[i].user_details['au_role_id'],
-						"msg_status": [
-							{ "status_name": "sent" },
-							{ "status_name": "unread" }],
-						"msg_sent_date_time": ""
-					}
-					msgToArr.push(userJson);
-					messageBody = this.selectedUserArr[i].push_message;
+			//DATA FOR PUSH NOTIFICATION
+			for (var i = 0; i < this.selectedUserArr.length; i++) {
+				if (this.selectedUserArr[i].user_details['device_id']) {
+					devices.push(this.selectedUserArr[i].user_details['device_id']);
 				}
-				
-				inputJson = {
-					"msg_from": this.currentUser.login_id,
-					"msg_to": msgToArr,
-					"msg_type": 'notification',
-					"msg_template_id": '1',
-					"msg_receivers": 'Student',
-					"notification_type": {
-						"type": "push",
-						"module": "attendance"
-					},
-					"msg_subject": "Attendance Alert",
-					"msg_description": this.commonService.htmlToText(messageBody),
-					"msg_attachment": "",
-					"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
-					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
-					"msg_thread": [],
-					"user_type": 'Student',
-					"message_title": "Attendance",
-					"message_content": this.commonService.htmlToText(messageBody),
-					"message_type": {
-						"module": "attendance",
-						"type": "push",
-					},
-					"message_to": devices,
-					"message_image":  '',
+				userJson = {
+					"login_id": this.selectedUserArr[i].user_details['au_login_id'],
+					"au_full_name": this.selectedUserArr[i].user_details['au_full_name'],
+					"class_id": this.selectedUserArr[i].user_details['class_id'],
+					"class_name": this.selectedUserArr[i].user_details['class_name'],
+					"sec_id": this.selectedUserArr[i].user_details['sec_id'],
+					"sec_name": this.selectedUserArr[i].user_details['sec_name'],
+					"email": this.selectedUserArr[i].user_details['au_email'],
+					"mobile": this.selectedUserArr[i].user_details['au_mobile'],
+					"role_id": this.selectedUserArr[i].user_details['au_role_id'],
+					"msg_status": [
+						{ "status_name": "sent" },
+						{ "status_name": "unread" }],
+					"msg_sent_date_time": ""
 				}
-			
-			console.log("sendPushMessage >>>>>>",inputJson);
-			this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.commonService.showSuccessErrorMessage('Message has been sent Successfully', 'success');					
-					this.resetForm();
-				} else {
-					this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
-				}
-			});
+				msgToArr.push(userJson);
+				messageBody = this.selectedUserArr[i].push_message;
+			}
 
-			//SMS NOTIFICATION 
+			inputJson = {
+				"msg_from": this.currentUser.login_id,
+				"msg_to": msgToArr,
+				"msg_type": 'notification',
+				"msg_template_id": '1',
+				"msg_receivers": 'Student',
+				"notification_type": {
+					"type": "push",
+					"module": "attendance"
+				},
+				"msg_subject": "Attendance Alert",
+				"msg_description": this.commonService.htmlToText(messageBody),
+				"msg_attachment": "",
+				"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
+				"msg_thread": [],
+				"user_type": 'Student',
+				"message_title": "Attendance",
+				"message_content": this.commonService.htmlToText(messageBody),
+				"message_type": {
+					"module": "attendance",
+					"type": "push",
+				},
+				"message_to": devices,
+				"message_image": '',
+			}
 
-			// if (this.editMode) {
-			// 	inputJson['msg_id'] = this.formData['msg_id'];
-			// 	this.commonAPIService.updateMessage(inputJson).subscribe((result: any) => {
-			// 		if (result) {
-			// 			this.disabledApiButton = false;
-			// 			this.commonAPIService.showSuccessErrorMessage('Message has been updated Successfully', 'success');
-			// 			this.back();
-			// 			this.resetForm();
-			// 		} else {
-			// 			this.disabledApiButton = false;
-			// 			this.commonAPIService.showSuccessErrorMessage('Error While Updating Message', 'error');
-			// 		}
-			// 	});
-			// } else {
+			console.log("sendPushMessage >>>>>>", inputJson);
 
-			// 	if (this.messageForm.value.messageType === 'S') {
-			// 		var consumeMessage = this.msgMultipleCount * (this.selectedUserArr.length);
 
-			// 		inputJson['delTitle'] = "Information";
-			// 		inputJson['delMessage'] = "This will consume " + consumeMessage + " SMS" + "<br/> Would you like to broadcast this message as shown";
-			// 		this.deleteModal.openModal(inputJson);
-			// 	} else {
-				
-			// 		console.log(this.messageForm.value);
-			// 		this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
-			// 			if (result) {
-			// 				this.disabledApiButton = false;
-			// 				this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
-			// 				this.back();
-			// 				this.resetForm();
-			// 			} else {
-			// 				this.disabledApiButton = false;
-			// 				this.commonAPIService.showSuccessErrorMessage('Error While Sending Message', 'error');
-			// 			}
-			// 		});
-			// 	}
-			// }
+			//PROCESS PUSH Notification
+			this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification Enabled', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
+			// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+
+			//PROCESS SMS NOTIFICATION 
+			this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification Enabled', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
+			// inputJson.msg_type = 'S';
+			// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 		}
+	}
+
+	sendPushNotification(inputJson) {
+		this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.commonService.showSuccessErrorMessage('All Students Notified', 'success');
+				this.resetForm();
+			} else {
+				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
+			}
+		});
+	}
+
+	sendSMS(inputJson) {
+		this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.commonService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
+				this.resetForm();
+			} else {
+				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
+			}
+		});
 	}
 }
