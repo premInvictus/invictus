@@ -399,12 +399,12 @@ export class MarkAttendanceComponent implements OnInit {
 		
 							//PROCESS PUSH Notification
 							this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
-							// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+							if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
 				
 							//PROCESS SMS NOTIFICATION 
 							this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
-							// inputJson.msg_type = 'S';
-							// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+							inputJson.msg_type = 'S';
+							if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 		
 						}
 					}
@@ -413,12 +413,12 @@ export class MarkAttendanceComponent implements OnInit {
 
 				//PROCESS PUSH Notification
 				this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
-				// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+				if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
 	
 				//PROCESS SMS NOTIFICATION 
 				this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
-				// inputJson.msg_type = 'S';
-				// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+				inputJson.msg_type = 'S';
+				if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 
 			}
 		}
