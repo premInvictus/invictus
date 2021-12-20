@@ -4,6 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService, ExamService, 
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class MarkAttendanceComponent implements OnInit {
 	];
 	requiredAll = true;
 	selectedUserArr: any;
+	scheduleMessageData: any[] = [];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -378,23 +380,72 @@ export class MarkAttendanceComponent implements OnInit {
 			}
 
 			console.log("sendPushMessage >>>>>>", inputJson);
+			if(this.selectedUserArr[0].frequency == "once a day"){
+				var inputJsonFor = {};
+				inputJsonFor['msg_type'] = 'notification';
+				inputJsonFor['from_date'] = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+				inputJsonFor['to_date'] = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+				this.humanResourceService.getMessage(inputJsonFor).subscribe((result: any) => {
+					if (result && result.data && result.data[0]) {
+						const tempResult = result.data;
+						tempResult.forEach(element => {
+							if(!(element.msg_to.length == 0 || element.msg_from == '')){
+								this.scheduleMessageData.push(element);
+							}
+						});
+						console.log(this.scheduleMessageData);
+						
+						if(this.scheduleMessageData.length == 0){
+		
+							//PROCESS PUSH Notification
+							this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
+							// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+				
+							//PROCESS SMS NOTIFICATION 
+							this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
+							// inputJson.msg_type = 'S';
+							// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+		
+						}
+					}
+				});
+			}else{
 
+				//PROCESS PUSH Notification
+				this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
+				// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+	
+				//PROCESS SMS NOTIFICATION 
+				this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
+				// inputJson.msg_type = 'S';
+				// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 
-			//PROCESS PUSH Notification
-			this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification Enabled', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
-			if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
-
-			//PROCESS SMS NOTIFICATION 
-			this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification Enabled', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
-			inputJson.msg_type = 'S';
-			if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+			}
 		}
+	}
+
+
+	getTodayAllPushNotifications(){
+		var inputJson = {};
+		inputJson['msg_type'] = 'notification';
+		inputJson['from_date'] = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+		inputJson['to_date'] = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+		this.humanResourceService.getMessage(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				const tempresult = result.data;
+				tempresult.forEach(element => {
+					if(!(element.msg_to.length == 0 || element.msg_from == '')){
+						this.scheduleMessageData.push(element);
+					}
+				});
+			}
+		});
 	}
 
 	sendPushNotification(inputJson) {
 		this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
 			if (result) {
-				this.commonService.showSuccessErrorMessage('All Students Notified', 'success');
+				this.commonService.showSuccessErrorMessage('Push Notification sent to all absent students', 'success');
 				this.resetForm();
 			} else {
 				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
@@ -405,7 +456,7 @@ export class MarkAttendanceComponent implements OnInit {
 	sendSMS(inputJson) {
 		this.humanResourceService.insertMessage(inputJson).subscribe((result: any) => {
 			if (result) {
-				this.commonService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
+				this.commonService.showSuccessErrorMessage('SMS sent to all absent students', 'success');
 				this.resetForm();
 			} else {
 				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
