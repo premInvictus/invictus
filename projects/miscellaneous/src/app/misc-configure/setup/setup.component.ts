@@ -36,6 +36,7 @@ export class SetupComponent implements OnInit {
     checkedArray: any = [];
     bankArr: any[] = [];
     notifConfigArray: any[] = [];
+    smsNotificationConfigArray: any[] = [];
     configValue: any;
     disabledApiButton = false;
     currentUser: any;
@@ -48,6 +49,7 @@ export class SetupComponent implements OnInit {
     departmentArray: any[] = [];
     curl_call_urlArray: any[] = [];
     idcardForm: FormGroup;
+    notificationForm: FormGroup;
     pageArray: any[] = [];
     sizeArray: any[] = [{ id: '1', name: 'Extra Large' },
     { id: '2', name: 'Large' },
@@ -143,6 +145,7 @@ export class SetupComponent implements OnInit {
     l_header: any;
     l_header2: any;
     ps_demo_blah: any;
+    notificationSettings: any[];
 
 
     constructor(private fbuild: FormBuilder,
@@ -459,6 +462,8 @@ export class SetupComponent implements OnInit {
                 return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'school_push_notif') {
                 this.notifConfigArray = JSON.parse(element.gs_value);
+            } else if (element.gs_alias === 'school_sms_notification') {
+                this.smsNotificationConfigArray = JSON.parse(element.gs_value);
             } else if (element.gs_alias === 'curl_call_url') {
                 this.curl_call_urlArray = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
                 const jsontemp = [];
@@ -1184,6 +1189,11 @@ export class SetupComponent implements OnInit {
                         }
                     }
 
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.notification_frequency) {
+                        this.notificationSettings = JSON.parse(this.settingForm.value.notification_frequency);
+                        console.log("notification settings >>>", this.notificationSettings);
+                    }
+
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.employee_salary_slip) {
                         const payJson: any = JSON.parse(this.settingForm.value.employee_salary_slip);
                         if (Object.keys(payJson).length > 0) {
@@ -1309,6 +1319,20 @@ export class SetupComponent implements OnInit {
                         }
 
                     }
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.notification_frequency) {
+                        let notificationFrequency: any[] = [];
+                        notificationFrequency = JSON.parse(this.settingForm.value.notification_frequency);
+                        if (notificationFrequency && notificationFrequency.length > 0) {
+                            for (const item of this.notificationSettings) {
+                                for (const titem of notificationFrequency) {
+                                    if (item.option_name.toLowerCase() === titem.option_name.toLowerCase()) {
+                                       console.log("item >>> ns", item.option_name)
+                                    }
+                                }
+                            }
+                            console.log(this.checkedArray);
+                        }
+                    }
                     console.log(this.settingForm);
                 }
                 this.formFlag = true;
@@ -1366,6 +1390,9 @@ export class SetupComponent implements OnInit {
             tds: false,
             gratuity: false,
             updateSalaryStructureToEmployee: ''
+        });
+        this.notificationForm = this.fbuild.group({
+            ns_notification_frequency: ''
         });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
@@ -1560,6 +1587,9 @@ export class SetupComponent implements OnInit {
         }
         if (this.settingForm.value && this.settingForm.value.admission_process_cutoff) {
             this.settingForm.value.admission_process_cutoff = JSON.stringify(this.settingForm.value.admission_process_cutoff);
+        }
+        if (this.settingForm.value && this.settingForm.value.school_sms_notification) {
+            this.settingForm.value.school_sms_notification = JSON.stringify(this.smsNotificationConfigArray);
         }
         if (this.settingForm.value && this.settingForm.value.school_push_notif) {
             this.settingForm.value.school_push_notif = JSON.stringify(this.notifConfigArray);
@@ -1862,6 +1892,29 @@ export class SetupComponent implements OnInit {
                 }
 
                 this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
+            }
+        }
+        if(this.settingForm.value && this.settingForm.value.notification_frequency){
+            console.log("noti f >>>>>>", this.settingForm.value.notification_frequency);
+            console.log("noti form >>>>>", this.notificationForm);
+            
+            if(this.notificationSettings.length > 0){
+                const finalNotificationArray : any[] = [];
+                this.notificationSettings.forEach((element:any)=>{
+                    if(this.notificationForm.value.ns_notification_frequency == element.option_name){
+                        finalNotificationArray.push({
+                            option_name : element.option_name,
+                            status: true
+                        })
+                    }else{
+                        finalNotificationArray.push({
+                            option_name : element.option_name,
+                            status: false
+                        })
+                    }
+                })
+
+                this.settingForm.value.notification_frequency = JSON.stringify(finalNotificationArray);
             }
         }
         if (this.showClosingSession) {
