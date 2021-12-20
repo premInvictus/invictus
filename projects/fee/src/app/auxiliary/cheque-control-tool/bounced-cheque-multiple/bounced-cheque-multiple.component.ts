@@ -107,7 +107,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     return new Observable((observer: Observer<string>) => {
       // create an image object
       let img = new Image();
-      img.crossOrigin = 'Anonymous';
+      img.crossOrigin = 'anonymous';
       img.src = url;
       if (!img.complete) {
         // This will call another method that will create image from url
@@ -174,6 +174,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     }
     this.feeService.addMultipleCheckControlTool(finalArray).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.commonAPIService.showSuccessErrorMessage('Successful', 'success');
 
         if (event) {
           this.CHEQUE_ELEMENT_DATA = [];
@@ -274,6 +275,20 @@ export class BouncedChequeMultipleComponent implements OnInit {
     }
   }
 
+  toDataURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        callback(reader.result);
+      }
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  }
+
   downloadPdf() {
     
      var dated = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
@@ -301,7 +316,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
           2: {cellWidth: 18},
           // etc
         },
-        headerStyles: {
+        headStyles: {
           // minCellWidth: 23,
           fontStyle: 'bold',
           fillColor: '#ffffff',
@@ -326,14 +341,27 @@ export class BouncedChequeMultipleComponent implements OnInit {
           if ( data.cell.section === 'body') {
              var td = data.cell.raw;
              // Assuming the td cells have an img element with a data url set (<td><img src="data:image/jpeg;base64,/9j/4AAQ..."></td>)
-             
+             var image = new Image();
              if(td.getElementsByTagName('img').length >0) {
               let img = td.getElementsByTagName('img')[0];
+              image.src = img;
               let dim = data.cell.height - data.cell.padding('vertical');
               
               var textPos = data.cell;
+              // this.getBase64Image(image);
+              console.log("canvas image >>>>>", img);
               
-              doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);
+              var canvas = document.createElement("canvas");
+              canvas.width = img.width;
+              canvas.height = img.height;
+              var ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0);
+              var dataURL = canvas.toDataURL("image/png");
+              // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+           
+              console.log("image >>>>>>>>>>>>>>>", img, img.split('.').pop().toUpperCase(), "image >>>>>>", image);
+              
+              doc.addImage(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""), img.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);              
              }
           }
         }
@@ -459,6 +487,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       // });
 
       
+      this.commonAPIService.showSuccessErrorMessage('PDF Generated', 'success');
       doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
 
       this.dialogRef.close({ status: '1' });
