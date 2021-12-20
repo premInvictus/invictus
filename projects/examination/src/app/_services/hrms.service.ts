@@ -21,4 +21,10 @@ export class HumanResourceService {
 		return this.http.post(environment.apiHRUrl + '/communication/insert', value);
 	}
 
+
+	getMessage(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
+	}
+
 }
