@@ -1,0 +1,80 @@
+<div class="row">
+  <div class="col-12">
+    <div style="display: inline-flex">
+      <label class="file-input__label" for="file-input">
+        <input
+          type="file"
+          id="file-input"
+          class="file-input__input"
+          (change)="onFileChange($event)"
+          multiple="false"
+        />
+        <i class="fas fa-upload upload-icon"></i> &nbsp;
+        <span>Upload File</span>
+      </label>
+    </div>
+  </div>
+</div>
+<form [formGroup]="whatsappDynamicForm">
+  <div class="row">
+    <div class="col-3">
+      <div class="manage-message" id="headersDiv">
+        <ul>
+          <li
+            *ngFor="let items of headers"
+            #headers
+            (click)="composeMessage(items)"
+          >
+            {{ items }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="manage-message">
+        <textarea
+          name="message"
+          id="message"
+          value=""
+          formControlName="text_message"
+          #d_message
+        >
+        </textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <button mat-raised-button class="submit-button" (click)="showPreview()">
+        Message Preview *
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="row">
+  <div class="col-12">
+    <h4 class="title">Number/Message Preview*</h4>
+  </div>
+
+  <div class="col-12">
+    <mat-card class="mat-elevation-z2">
+      <table>
+        <thead>
+          <th *ngFor="let head of tableHead">{{ head }}</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData; let i = index">
+            <td>
+              {{ item.mobile_no }}
+            </td>
+            <td>{{ item.message }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card>
+  </div>
+  <div class="col-12">
+    <button mat-raised-button class="submit-button" (click)="sendMessage()">
+      Submit
+    </button>
+  </div>
+</div>
