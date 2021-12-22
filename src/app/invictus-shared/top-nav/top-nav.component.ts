@@ -73,7 +73,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	gSettingsArr: any;
 	gs_id: any;
 	gs_value: any;
-	restrictUserControls: any;
+	restrictUserControls: any = 0;
+	changeCredentialsStatus: boolean = false;
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
 		private userAccessMenuService: UserAccessMenuService,
@@ -137,6 +138,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (this.currentUser.full_name) {
 			this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
 			this.userrole = this.currentUser.role_id;
+			console.log("05 1517>>", this.userrole);
+
 		}
 		this.getSchool();
 		this.checkUpdateProfile();
@@ -190,6 +193,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.getPushNotification();
 			}
 		});
+
+		this.showChangeCredentials()
 	}
 
 	getGlobalSettings() {
@@ -199,6 +204,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.gSettingsArr.forEach(element => {
 					if (element.gs_alias === "restrict_user_controls") {
 						this.restrictUserControls = element.gs_value
+						console.log("gs _value	>>>>>>", this.restrictUserControls);
+
 					}
 				});
 			}
@@ -981,5 +988,44 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		}
 		return encoded;
+	}
+
+	showChangeCredentials() {
+		console.log('THE userroel is >>', this.userrole);
+		/**
+		 * if the userrole is admin === 1 then show the chnge cred by default
+		 * 
+		 * if the userrole is somethings other than admin check condition to show the Chng cred. 
+		 * also check for the restrictUserControls
+		 */
+
+		console.log('>>', typeof (this.restrictUserControls));
+		console.log('>>>', this.restrictUserControls);
+
+
+		if (this.userrole === '2') {
+			this.changeCredentialsStatus = true
+			console.log('2 >>', this.changeCredentialsStatus);
+		} else if (this.userrole === '3') {
+			if (this.restrictUserControls == '0') this.changeCredentialsStatus = true
+		} else if (this.userrole === '4') {
+			if (this.restrictUserControls == '0') this.changeCredentialsStatus = true
+		}
+
+
+		// if (this.userrole === '2') {
+		// 	this.changeCredentialsStatus = true
+		// 	console.log('2 >>', this.changeCredentialsStatus);
+
+		// } else if (this.userrole === '3' && this.restrictUserControls != '1') {
+		// 	console.log('inside 3 >>>', this.changeCredentialsStatus);
+
+		// 	this.changeCredentialsStatus = true
+		// } else if (this.userrole === '4' && this.restrictUserControls != '1') {
+
+		// 	console.log(' inside 4 >>>', this.changeCredentialsStatus);
+		// 	this.changeCredentialsStatus = true
+		// }
+
 	}
 }
