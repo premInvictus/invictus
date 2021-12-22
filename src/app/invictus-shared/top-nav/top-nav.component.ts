@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
 import { SisService } from 'projects/fee/src/app/_services';
 import { NotificationService } from 'projects/axiom/src/app/_services/index';
-import { CommonAPIService,UserAccessMenuService, BranchChangeService } from '../../_services/index';
+import { CommonAPIService, UserAccessMenuService, BranchChangeService } from '../../_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
@@ -38,7 +38,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	upperMenu: any;
 	getUserDetail: any[] = [];
 	usernane: any = '';
-	userrole:any = '';
+	userrole: any = '';
 	schoolinfoArray: any;
 	image: any;
 	showNotification = false;
@@ -64,15 +64,19 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _mobileQueryListener: () => void;
 	innerHeight: any;
 	resultArray: any[] = [];
-	schoolGroupData:any[]=[];
-	model:any = {};
+	schoolGroupData: any[] = [];
+	model: any = {};
 	webDeviceToken: any = {};
 	userSaveData: any;
 	returnUrl: string;
-	helpDeskUrl:any;
+	helpDeskUrl: any;
+	gSettingsArr: any;
+	gs_id: any;
+	gs_value: any;
+	restrictUserControls: any;
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
-		private userAccessMenuService:UserAccessMenuService,
+		private userAccessMenuService: UserAccessMenuService,
 		private angularFireMessaging: AngularFireMessaging,
 		private sisService: SisService,
 		private router: Router,
@@ -81,8 +85,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private userTypeService: UserTypeService,
 		private notif: NotificationService,
 		private loader: LoaderService,
-		private commonAPIService: CommonAPIService, private _cookieService: CookieService, private branchChangeService:BranchChangeService,
-		private route: ActivatedRoute, private  authenticationService:AuthenticationService) {
+		private commonAPIService: CommonAPIService, private _cookieService: CookieService, private branchChangeService: BranchChangeService,
+		private route: ActivatedRoute, private authenticationService: AuthenticationService) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -99,12 +103,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		elementTwo.classList.toggle('custom-sidenav-content');
 	}
 	ngOnInit() {
+		this.getGlobalSettings()
 		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		console.log('this.currentUser', this.currentUser);
 		this.session = JSON.parse(localStorage.getItem('session'));
-		
-		
+
+
 		this.getSession();
 		this.getProjectList();
 		const wrapperMenu = document.querySelector('.wrapper-menu');
@@ -187,6 +191,20 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 	}
+
+	getGlobalSettings() {
+		this.sisService.getGlobalSetting({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.gSettingsArr = res.data
+				this.gSettingsArr.forEach(element => {
+					if (element.gs_alias === "restrict_user_controls") {
+						this.restrictUserControls = element.gs_value
+					}
+				});
+			}
+		})
+	}
+
 	checkUpdateProfile() {
 		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
 			this.updateProfileFlag = true;
@@ -275,7 +293,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		};
 		this.sisService.saveUserLastState({ user_default_data: JSON.stringify(saveStateJSON) }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				
+
 			}
 		});
 	}
@@ -284,11 +302,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			if (result.status === 'ok') {
 				this.schoolInfo = result.data[0];
 				console.log(this.schoolInfo);
-				console.log('helpdeskurl',environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile)
-				if(this.currentUser.Prefix == 'invictus') {
+				console.log('helpdeskurl', environment.helpDeskUrl + "?e=" + this.currentUser.email + "&t=654321&fname=" + this.currentUser.full_name + "&sname=" + this.schoolInfo.school_name + "&contact=" + this.currentUser.mobile)
+				if (this.currentUser.Prefix == 'invictus') {
 					this.helpDeskUrl = environment.helpDeskAgentUrl;
 				} else {
-					this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.encode(this.currentUser.email)+"&t="+this.encode('654321')+"&fname="+this.encode(this.currentUser.full_name)+"&sname="+this.encode(this.schoolInfo.school_name)+"&contact="+this.currentUser.mobile;
+					this.helpDeskUrl = environment.helpDeskUrl + "?e=" + this.encode(this.currentUser.email) + "&t=" + this.encode('654321') + "&fname=" + this.encode(this.currentUser.full_name) + "&sname=" + this.encode(this.schoolInfo.school_name) + "&contact=" + this.currentUser.mobile;
 				}
 				this.getGroupedSchool();
 			}
@@ -297,10 +315,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	viewProfile() {
 		if (Number(this.currentUser.role_id) === 4 || Number(this.currentUser.role_id) === 3) {
 			// this.router.navigateByUrl('/student/view-profile-student')
-			console.log("i am here", typeof(this.currentUser.role_id), this.currentUser.role_id == 4);
+			console.log("i am here", typeof (this.currentUser.role_id), this.currentUser.role_id == 4);
 		} else if (Number(this.currentUser.role_id) === 2) {
-			
-			
+
+
 			this.router.navigateByUrl('/admin/view_profile')
 		} else {
 			console.log('only student can view profile');
@@ -479,10 +497,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 							if (result.status === 'ok') {
 								this.deleteToken();
 								if (JSON.parse(localStorage.getItem('Prefix'))) {
-								var prefix1 = (JSON.parse(localStorage.getItem('Prefix')).pre);
-								localStorage.clear();
-								localStorage.setItem('Prefix', JSON.stringify({ pre: prefix1 }));
-								this.commonAPIService.setUserPrefix(prefix1);
+									var prefix1 = (JSON.parse(localStorage.getItem('Prefix')).pre);
+									localStorage.clear();
+									localStorage.setItem('Prefix', JSON.stringify({ pre: prefix1 }));
+									this.commonAPIService.setUserPrefix(prefix1);
 								}
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
@@ -494,7 +512,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 								const xhr = new XMLHttpRequest();
 								xhr.open(method, url, true);
 								xhr.send(null);
-								xhr.onreadystatechange =  () => {
+								xhr.onreadystatechange = () => {
 									if (xhr.readyState) {
 										prefix = xhr.getResponseHeader('prefix');
 										if (prefix) {
@@ -538,7 +556,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 
 	}
-	getTruncate(text){
+	getTruncate(text) {
 		return new TruncatetextPipe().transform(text, 60);
 	}
 	markRead(item) {
@@ -662,26 +680,26 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	getGroupedSchool() {
 		console.log('this.schoolInfo', this.schoolInfo)
 		this.schoolGroupData = [];
-		this.commonAPIService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+		this.commonAPIService.getAllSchoolGroups({ si_group: this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix }).subscribe((data: any) => {
 			if (data && data.status == 'ok') {
 				//this.schoolGroupData = data.data;
-				
+
 				console.log('this.schoolGroupData--', data.data);
-				this.commonAPIService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+				this.commonAPIService.getMappedSchoolWithUser({ prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id }).subscribe((result: any) => {
 					if (result && result.data && result.data.length > 0) {
-						
+
 						var userSchoolMappedData = [];
-						console.log('result.data--', result.data	)
-						for (var j=0; j< result.data.length; j++) {
+						console.log('result.data--', result.data)
+						for (var j = 0; j < result.data.length; j++) {
 
 
 							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
 								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
 							}
 						}
-						this.schoolGroupData  = [];
+						this.schoolGroupData = [];
 						console.log('userSchoolMappedData', userSchoolMappedData)
-						for (var i=0; i<data.data.length;i++) {
+						for (var i = 0; i < data.data.length; i++) {
 							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
 								this.schoolGroupData.push(data.data[i]);
 							}
@@ -694,137 +712,137 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	switchToSchool(sPrefix) {
-		console.log('sPrefix,',sPrefix, this.schoolInfo.school_prefix);
+		console.log('sPrefix,', sPrefix, this.schoolInfo.school_prefix);
 		if (this.schoolInfo.school_prefix !== sPrefix) {
-		let inputJson = {
-			login_id:this.currentUser.login_id,
-			group_name: this.schoolGroupData && this.schoolGroupData[0] ? this.schoolGroupData[0]['si_group']:'',
-			switchprefix:sPrefix
-		};
-		this.commonAPIService.getMappedSchoolWithUser(inputJson).subscribe((result:any)=> {
-			console.log('mapped school with ser', result);
-			if(result && result.status == 'ok' && result.data && result.data.length > 0) {
-				this.model.username = result.data[0]['au_username'];
-				this.model.password = result.data[0]['au_password'];
-				this.model.rememberme = 1;
-				
-				this._cookieService.put('username', this.model.username);
-				this._cookieService.put('password', this.model.password);
-				this._cookieService.put('remember', this.model.rememberme);
-				if (localStorage.getItem("web-token")) {
-				this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
-				}
+			let inputJson = {
+				login_id: this.currentUser.login_id,
+				group_name: this.schoolGroupData && this.schoolGroupData[0] ? this.schoolGroupData[0]['si_group'] : '',
+				switchprefix: sPrefix
+			};
+			this.commonAPIService.getMappedSchoolWithUser(inputJson).subscribe((result: any) => {
+				console.log('mapped school with ser', result);
+				if (result && result.status == 'ok' && result.data && result.data.length > 0) {
+					this.model.username = result.data[0]['au_username'];
+					this.model.password = result.data[0]['au_password'];
+					this.model.rememberme = 1;
 
-				this.commonAPIService.setUserPrefix(result.data[0]['au_si_prefix']);
-				this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','branch-change', 1)
-				.subscribe(
-					(result: any) => {
-						if (result.status === 'ok' && result.data) {
-							this.commonAPIService.stopLoading();
-							const user = result.data;
-							if (result.data.userSaveStateData) {
-								this.userSaveData = JSON.parse(result.data.userSaveStateData);
-								console.log('this.userSaveData 657',result.data)
-							}
-							const tempJson = {
-								CID: user.clientKey,
-								AN: user.token,
-								UR: user.role_id,
-								LN: user.login_id,
-								PF: user.Prefix
-							};
-							// user.Prefix = this.model.username.split('-')[0];
-							// user.username = this.model.username;
-							if (user) {
-								localStorage.setItem('currentUser', JSON.stringify(user));
-								this._cookieService.put('userData', JSON.stringify(tempJson));
-							}
-							if (this._cookieService.get('userData')) {
-								this.commonAPIService.getSession().subscribe((result3: any) => {
-									if (result3 && result3.status === 'ok') {
-										this.sessionArray = result3.data;
-										this.commonAPIService.getSchool().subscribe((result2: any) => {
-											if (result2.status === 'ok') {
-												this.schoolInfo = result2.data[0];
-												if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
-													Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
-													const currentSession =
-														(Number(this.currentDate.getFullYear()) + '-' + Number(this.currentDate.getFullYear() + 1)).toString();
-													const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
-													if (findex !== -1) {
-														const sessionParam: any = {};
-														sessionParam.ses_id = this.sessionArray[findex].ses_id;
-														localStorage.setItem('session', JSON.stringify(sessionParam));
-													}
-												} else {
-													const currentSession =
-														(Number(this.currentDate.getFullYear() - 1) + '-' + Number(this.currentDate.getFullYear())).toString();
-													const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
-													if (findex !== -1) {
-														const sessionParam: any = {};
-														sessionParam.ses_id = this.sessionArray[findex].ses_id;
-														localStorage.setItem('session', JSON.stringify(sessionParam));
-													}
-												}
-												let returnUrl: any;
-												console.log('this.userSaveData', this.userSaveData);
-												if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
-													localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
-													returnUrl = '/axiom';
-												} else {
-													returnUrl = this.userSaveData.pro_url;
-													localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
-												}
-												// this.goToProject(this.userSaveData.pro_url,this.userSaveData.pro_status,this.userSaveData.pro_id);
-												this.getGroupedSchool();
-												this.getProjectList();
+					this._cookieService.put('username', this.model.username);
+					this._cookieService.put('password', this.model.password);
+					this._cookieService.put('remember', this.model.rememberme);
+					if (localStorage.getItem("web-token")) {
+						this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+					}
 
-												if (this.userSaveData && this.userSaveData.ses_id) {
-													const sessionParam: any = {};
-													sessionParam.ses_id = this.userSaveData.ses_id;
-													localStorage.setItem('session', JSON.stringify(sessionParam));
-												}
-												if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
-													this.returnUrl = '/admin';
-												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
-													this.returnUrl = returnUrl + '/school';
-												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
-													this.returnUrl = '/teacher';
-												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
-													this.returnUrl = '/student';
-												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
-													this.returnUrl = returnUrl + '/parent';
-												}
-												this.setMappedSession(this.userSaveData.ses_id);
-												this.router.navigate([this.returnUrl]);
-												this.branchChangeService.branchSwitchSubject.next(true);
+					this.commonAPIService.setUserPrefix(result.data[0]['au_si_prefix']);
+					this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', 'branch-change', 1)
+						.subscribe(
+							(result: any) => {
+								if (result.status === 'ok' && result.data) {
+									this.commonAPIService.stopLoading();
+									const user = result.data;
+									if (result.data.userSaveStateData) {
+										this.userSaveData = JSON.parse(result.data.userSaveStateData);
+										console.log('this.userSaveData 657', result.data)
+									}
+									const tempJson = {
+										CID: user.clientKey,
+										AN: user.token,
+										UR: user.role_id,
+										LN: user.login_id,
+										PF: user.Prefix
+									};
+									// user.Prefix = this.model.username.split('-')[0];
+									// user.username = this.model.username;
+									if (user) {
+										localStorage.setItem('currentUser', JSON.stringify(user));
+										this._cookieService.put('userData', JSON.stringify(tempJson));
+									}
+									if (this._cookieService.get('userData')) {
+										this.commonAPIService.getSession().subscribe((result3: any) => {
+											if (result3 && result3.status === 'ok') {
+												this.sessionArray = result3.data;
+												this.commonAPIService.getSchool().subscribe((result2: any) => {
+													if (result2.status === 'ok') {
+														this.schoolInfo = result2.data[0];
+														if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
+															Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
+															const currentSession =
+																(Number(this.currentDate.getFullYear()) + '-' + Number(this.currentDate.getFullYear() + 1)).toString();
+															const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+															if (findex !== -1) {
+																const sessionParam: any = {};
+																sessionParam.ses_id = this.sessionArray[findex].ses_id;
+																localStorage.setItem('session', JSON.stringify(sessionParam));
+															}
+														} else {
+															const currentSession =
+																(Number(this.currentDate.getFullYear() - 1) + '-' + Number(this.currentDate.getFullYear())).toString();
+															const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+															if (findex !== -1) {
+																const sessionParam: any = {};
+																sessionParam.ses_id = this.sessionArray[findex].ses_id;
+																localStorage.setItem('session', JSON.stringify(sessionParam));
+															}
+														}
+														let returnUrl: any;
+														console.log('this.userSaveData', this.userSaveData);
+														if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
+															localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
+															returnUrl = '/axiom';
+														} else {
+															returnUrl = this.userSaveData.pro_url;
+															localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
+														}
+														// this.goToProject(this.userSaveData.pro_url,this.userSaveData.pro_status,this.userSaveData.pro_id);
+														this.getGroupedSchool();
+														this.getProjectList();
+
+														if (this.userSaveData && this.userSaveData.ses_id) {
+															const sessionParam: any = {};
+															sessionParam.ses_id = this.userSaveData.ses_id;
+															localStorage.setItem('session', JSON.stringify(sessionParam));
+														}
+														if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
+															this.returnUrl = '/admin';
+														} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
+															this.returnUrl = returnUrl + '/school';
+														} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
+															this.returnUrl = '/teacher';
+														} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
+															this.returnUrl = '/student';
+														} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
+															this.returnUrl = returnUrl + '/parent';
+														}
+														this.setMappedSession(this.userSaveData.ses_id);
+														this.router.navigate([this.returnUrl]);
+														this.branchChangeService.branchSwitchSubject.next(true);
+													}
+												});
 											}
 										});
 									}
-								});
-							}
-						} else {
-							this.commonAPIService.stopLoading();
-							if (result.status === 'error' && result.data === 'token not matched') {
-								this.notif.showSuccessErrorMessage('Token Expired, Please enter a valid username and password', 'error');
-							} else {
+								} else {
+									this.commonAPIService.stopLoading();
+									if (result.status === 'error' && result.data === 'token not matched') {
+										this.notif.showSuccessErrorMessage('Token Expired, Please enter a valid username and password', 'error');
+									} else {
+										this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
+									}
+
+									this.router.navigate(['/login']);
+								}
+							},
+							error => {
 								this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
-							}
+							});
 
-							this.router.navigate(['/login']);
-						}
-					},
-					error => {
-						this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
-					});
+				} else {
+					this.notif.showSuccessErrorMessage("You don't have permission to access this school", 'error');
+				}
+			});
+		}
 
-			} else {
-				this.notif.showSuccessErrorMessage("You don't have permission to access this school", 'error');
-			}
-		});
-	}
-			
-				
+
 	}
 
 	getUserAccessMenu() {
@@ -836,39 +854,39 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = '1';
-				this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-				(result: any) =>  {
-						if (result.status === 'ok') {
-							this.userAccessMenuService.setUserAccessMenu(result.data);
-							this.userAccessMenuArray = result.data;
-							const morStatusEnabledArray: any[] = [];
-							for (const item of this.userAccessMenuArray) {
-								if (item.mor_status === '1') {
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						const morStatusEnabledArray: any[] = [];
+						for (const item of this.userAccessMenuArray) {
+							if (item.mor_status === '1') {
 								morStatusEnabledArray.push(item);
-								}
-							}
-							for (const level0 of morStatusEnabledArray) {
-								let menu: any = {};
-								if (level0.mod_level === '0') {
-									menu = level0;
-									menu.submenu = [];
-									for (const level1 of morStatusEnabledArray) {
-										if (level1.mod_parent_id === level0.mod_id) {
-											menu.submenu.push(level1);
-										}
-									}
-									this.menuSubmenuArray.push(menu);
-								}
 							}
 						}
-					});
-			} else if (Number(this.currentUser.role_id) === 2) {
+						for (const level0 of morStatusEnabledArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of morStatusEnabledArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
+								}
+								this.menuSubmenuArray.push(menu);
+							}
+						}
+					}
+				});
+		} else if (Number(this.currentUser.role_id) === 2) {
 			const param: any = {};
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = '1';
 			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-			(result: any) =>  {
+				(result: any) => {
 					if (result.status === 'ok') {
 						this.userAccessMenuService.setUserAccessMenu(result.data);
 						this.userAccessMenuArray = result.data;
@@ -885,7 +903,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 								this.menuSubmenuArray.push(menu);
 							}
 						}
-						}
+					}
 				}
 			);
 		} else if (Number(this.currentUser.role_id) === 3) {
@@ -893,75 +911,75 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = '1';
-		this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-		(result: any) =>  {
-				if (result.status === 'ok') {
-					this.userAccessMenuService.setUserAccessMenu(result.data);
-					this.userAccessMenuArray = result.data;
-					for (const level0 of this.userAccessMenuArray) {
-						let menu: any = {};
-						if (level0.mod_level === '0') {
-							menu = level0;
-							menu.submenu = [];
-							for (const level1 of this.userAccessMenuArray) {
-								if (level1.mod_parent_id === level0.mod_id) {
-									menu.submenu.push(level1);
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						for (const level0 of this.userAccessMenuArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of this.userAccessMenuArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
 								}
+								this.menuSubmenuArray.push(menu);
 							}
-							this.menuSubmenuArray.push(menu);
 						}
 					}
-					}
-			}
-		);
-	} else if (Number(this.currentUser.role_id) === 4) {
-		const studentMenuArray: any[] = [];
-		const param: any = {};
-		param.role_id = this.currentUser.role_id;
-	this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-	(result: any) =>  {
-			if (result.status === 'ok') {
-				this.userAccessMenuService.setUserAccessMenu(result.data);
-				this.userAccessMenuArray = result.data;
-				for (const level0 of this.userAccessMenuArray) {
-					const findex = studentMenuArray.findIndex(f => Number(f.menu_mod_id) === Number(level0.menu_mod_id));
-					if (findex === -1) {
-						studentMenuArray.push(level0);
-					}
 				}
-				for (const level0 of studentMenuArray) {
-				let menu: any = {};
-				if (level0.mod_level === '0') {
-					menu = level0;
-					menu.submenu = [];
-					for (const level1 of this.userAccessMenuArray) {
-						if (level1.mod_parent_id === level0.mod_id) {
-							menu.submenu.push(level1);
+			);
+		} else if (Number(this.currentUser.role_id) === 4) {
+			const studentMenuArray: any[] = [];
+			const param: any = {};
+			param.role_id = this.currentUser.role_id;
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						for (const level0 of this.userAccessMenuArray) {
+							const findex = studentMenuArray.findIndex(f => Number(f.menu_mod_id) === Number(level0.menu_mod_id));
+							if (findex === -1) {
+								studentMenuArray.push(level0);
+							}
+						}
+						for (const level0 of studentMenuArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of this.userAccessMenuArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
+								}
+								this.menuSubmenuArray.push(menu);
+							}
 						}
 					}
-					this.menuSubmenuArray.push(menu);
 				}
-			}
-				}
+			);
 		}
-	);
-	}
 	}
 	gotToHelpDesk() {
 		console.log('this.currentUser', this.currentUser);
-		
+
 	}
 
 
-	 encode(str) {
+	encode(str) {
 		var encoded = "";
-		if(str != null){
-			for (var i=0; i<str.length;i++) {
-			  var a = str.charCodeAt(i);
-			  var b = a ^ 51;    // bitwise XOR with any number, e.g. 123
-			  encoded = encoded+String.fromCharCode(b);
+		if (str != null) {
+			for (var i = 0; i < str.length; i++) {
+				var a = str.charCodeAt(i);
+				var b = a ^ 51;    // bitwise XOR with any number, e.g. 123
+				encoded = encoded + String.fromCharCode(b);
 			}
 		}
 		return encoded;
-	  }
+	}
 }

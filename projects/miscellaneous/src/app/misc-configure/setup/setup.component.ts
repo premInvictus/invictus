@@ -3,7 +3,7 @@ import { FormBuilder, FormGroupDirective, FormControl, NgForm, FormGroup } from 
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
-import { SisService} from '../../_services/index';
+import { SisService } from '../../_services/index';
 @Component({
     selector: 'app-setup',
     templateUrl: './setup.component.html',
@@ -128,16 +128,19 @@ export class SetupComponent implements OnInit {
     classterm: any;
     examArray: any[];
     subexamArray: any[];
-    freezUnfreez=1;
-    session_freez:any[] = [];
-    monthArray:any[] = [];
-    session:any;
-    sig_positionArray = ['first','last'];
-    hrattendanceArray = ['biometric','daily manual','manual'];
-    accession_typeArray = ['single','multiple'];
-    total_subject_in_the_class : any = [];
+    freezUnfreez = 1;
+    session_freez: any[] = [];
+    monthArray: any[] = [];
+    session: any;
+    sig_positionArray = ['first', 'last'];
+    hrattendanceArray = ['biometric', 'daily manual', 'manual'];
+    accession_typeArray = ['single', 'multiple'];
+    total_subject_in_the_class: any = [];
     scholastic_subject: any[] = [];
     coscholastic_subject: any[] = [];
+    restrictUserControlArray: any;
+    ruc: string;
+    isUserControlDisabled: boolean = true;
 
 
     constructor(private fbuild: FormBuilder,
@@ -189,6 +192,8 @@ export class SetupComponent implements OnInit {
         }
         this.buildForm();
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log("current user >>>>>", typeof (this.currentUser.role_id));
+        this.currentUser.role_id == '1' ? this.isUserControlDisabled = false : this.isUserControlDisabled = true;
         this.getSession();
         this.getGlobalSettingGroup();
         this.getClass();
@@ -200,23 +205,23 @@ export class SetupComponent implements OnInit {
     getFeeMonths() {
         this.monthArray = [];
         this.erpCommonService.getFeeMonths({}).subscribe((result: any) => {
-          if (result && result.status === 'ok') {
-            this.monthArray = result.data;
-          } else {
-          }
+            if (result && result.status === 'ok') {
+                this.monthArray = result.data;
+            } else {
+            }
         });
     }
-    setSessionFreez(key1,key3){
-        if(this.settingForm.value[key1]){
-            if(key3 == 'freez') {
+    setSessionFreez(key1, key3) {
+        if (this.settingForm.value[key1]) {
+            if (key3 == 'freez') {
                 const findex = this.session_freez.findIndex(e => e == this.settingForm.value[key1]);
-                if(findex == -1) {
+                if (findex == -1) {
                     this.session_freez.push(this.settingForm.value[key1])
                 }
-            } else if(key3 == 'unfreez') {
+            } else if (key3 == 'unfreez') {
                 const findex = this.session_freez.findIndex(e => e == this.settingForm.value[key1]);
-                if(findex != -1) {
-                    this.session_freez.splice(findex,1);
+                if (findex != -1) {
+                    this.session_freez.splice(findex, 1);
                 }
             }
             console.log(this.session_freez);
@@ -254,7 +259,7 @@ export class SetupComponent implements OnInit {
             nextSessionId = this.sessionArray[matchedIndex + 1]['ses_id'];
         }
         console.log('next_ses_id--', matchedIndex)
-        var inputJson = { monthId: ["04","03"], coa_id: [], ses_id: ses_id, moveClosingBalance: true };
+        var inputJson = { monthId: ["04", "03"], coa_id: [], ses_id: ses_id, moveClosingBalance: true };
         this.erpCommonService.getTrialBalance(inputJson).subscribe((data: any) => {
             if (data && data.ledger_data) {
                 var tempAccountData: any = [];
@@ -277,11 +282,11 @@ export class SetupComponent implements OnInit {
                     };
                     tempAccountData.push(fJson);
                 }
-                console.log('tempAccountData--', tempAccountData,ses_id);
+                console.log('tempAccountData--', tempAccountData, ses_id);
                 if (tempAccountData.length > 0) {
                     this.erpCommonService.updateClosingBalance({ bulkData: tempAccountData }).subscribe((data: any) => {
                         // if (data) {
-                            this.commonService.showSuccessErrorMessage('Session Data Moved Successfully', 'success');
+                        this.commonService.showSuccessErrorMessage('Session Data Moved Successfully', 'success');
                         // } else {
                         //     this.commonService.showSuccessErrorMessage('Error While Move Session Data', 'error');
                         // }
@@ -302,38 +307,38 @@ export class SetupComponent implements OnInit {
             var deviation_f = 0;
             for (var i = 0; i < param['debit_data'].length; i++) {
                 debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
-                
+
             }
             for (var i = 0; i < param['credit_data'].length; i++) {
                 credit_total_f = credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
-                
+
                 // if(param['coa_id'] ==1) {
-                    
+
                 //     console.log('credit_total_f', credit_total_f);
                 // }
             }
 
-            if(param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
-                
-                    if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type']=='debit') {
-                        
-                        debit_total_f = debit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
-                
-                    }
-                
+            if (param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
+
+                if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type'] == 'debit') {
+
+                    debit_total_f = debit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
+
+                }
+
             }
-            if(param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
-                
-                    if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type']=='credit') {
-                        credit_total_f = credit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
-                    }
-                
+            if (param['coa_opening_balance_data'] && param['coa_opening_balance_data'].length > 0) {
+
+                if (Number(param['coa_opening_balance_data']['opening_ses_id']) == Number(ses_id) && param['coa_opening_balance_data']['opening_balance_type'] == 'credit') {
+                    credit_total_f = credit_total_f + Number(param['coa_opening_balance_data']['opening_balance']);
+                }
+
                 // console.log('credit_total_f', credit_total_f);
             }
 
 
             deviation_f = debit_total_f - credit_total_f;
-            
+
             return deviation_f;
         }
     }
@@ -426,7 +431,7 @@ export class SetupComponent implements OnInit {
     getGs_value(element) {
         if (element.gs_type == 'json') {
             console.log("i am hete", element.gs_type, element.gs_alias);
-            
+
             if (element.gs_alias === 'library_user_setting') {
                 const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
                 return this.fbuild.array([this.fbuild.group(jsontemp)]);
@@ -454,6 +459,8 @@ export class SetupComponent implements OnInit {
                 return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'school_push_notif') {
                 this.notifConfigArray = JSON.parse(element.gs_value);
+            } else if (element.gs_alias === 'restrict_user_controls') {
+                this.restrictUserControlArray = element.gs_value === '1' ? true : false;
             } else if (element.gs_alias === 'curl_call_url') {
                 this.curl_call_urlArray = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
                 const jsontemp = [];
@@ -479,7 +486,7 @@ export class SetupComponent implements OnInit {
                 const jsontemp = [];
                 temp.forEach(element => {
                     const tempPermission: any[] = [];
-                    const tempReport: any [] = [];
+                    const tempReport: any[] = [];
                     // if (element.permission.length > 0) {
                     //     element.permission.forEach(element1 => {
                     //         tempPermission.push(this.fbuild.group({
@@ -497,7 +504,7 @@ export class SetupComponent implements OnInit {
                                     status: element.status
                                 }));
                             });
-                            
+
                             tempReport.push(this.fbuild.group({
                                 report_name: element1.report_name,
                                 status: element1.status,
@@ -511,13 +518,13 @@ export class SetupComponent implements OnInit {
                         name: element.name,
                         email: element.email,
                         // permission: this.fbuild.array(tempPermission),
-                        report_assigned : this.fbuild.array(tempReport)
+                        report_assigned: this.fbuild.array(tempReport)
                     }));
 
 
                 });
                 console.log("i am form build ", jsontemp);
-                
+
                 return this.fbuild.array(jsontemp);
             } else if (element.gs_alias === 'mis_report_setting_data') {
                 const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
@@ -527,7 +534,7 @@ export class SetupComponent implements OnInit {
                 const jsontemp = [];
                 temp.forEach(element => {
                     const tempPermission: any[] = [];
-                    const tempReport: any [] = [];
+                    const tempReport: any[] = [];
                     // if (element.permission.length > 0) {
                     //     element.permission.forEach(element1 => {
                     //         tempPermission.push(this.fbuild.group({
@@ -545,7 +552,7 @@ export class SetupComponent implements OnInit {
                     //                 status: element.status
                     //             }));
                     //         });
-                            
+
                     //         tempReport.push(this.fbuild.group({
                     //             report_name: element1.report_name,
                     //             status: element1.status,
@@ -555,7 +562,7 @@ export class SetupComponent implements OnInit {
                     // }
 
                     jsontemp.push(this.fbuild.group({
-                     
+
                         name: element.name,
                         mapiacess: element.mapiacess,
                         apiacess: element.apiacess,
@@ -567,15 +574,15 @@ export class SetupComponent implements OnInit {
 
                 });
                 console.log("i am form build ", jsontemp);
-                
+
                 return this.fbuild.array(jsontemp);
-            }  
+            }
             if (element.gs_alias === 'communication_management_detail') {
                 const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
                 const jsontemp = [];
                 temp.forEach(element => {
                     const tempPermission: any[] = [];
-                    const tempReport: any [] = [];
+                    const tempReport: any[] = [];
                     // if (element.permission.length > 0) {
                     //     element.permission.forEach(element1 => {
                     //         tempPermission.push(this.fbuild.group({
@@ -593,7 +600,7 @@ export class SetupComponent implements OnInit {
                     //                 status: element.status
                     //             }));
                     //         });
-                            
+
                     //         tempReport.push(this.fbuild.group({
                     //             report_name: element1.report_name,
                     //             status: element1.status,
@@ -603,7 +610,7 @@ export class SetupComponent implements OnInit {
                     // }
 
                     jsontemp.push(this.fbuild.group({
-                     
+
                         name: element.name,
                         au_login_id: element.au_login_id,
                         au_full_name: element.au_full_name,
@@ -615,14 +622,14 @@ export class SetupComponent implements OnInit {
 
                 });
                 console.log("i am form build ", jsontemp);
-                
+
                 return this.fbuild.array(jsontemp);
-            } 
+            }
         }
         if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez' || element.gs_alias === 'fa_monthwise_freez') {
-            if(element.gs_alias === 'fa_session_freez') {
+            if (element.gs_alias === 'fa_session_freez') {
                 this.session_freez = element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : [];
-                console.log('this.session_freez',this.session_freez);
+                console.log('this.session_freez', this.session_freez);
             }
             return element.gs_value && element.gs_value !== '' ? [element.gs_value.split(',')] : [''];
         } else {
@@ -696,12 +703,12 @@ export class SetupComponent implements OnInit {
         });
     }
 
-    checklowerchild( form) {
+    checklowerchild(form) {
         console.log("i am form", form);
         form.value.permission.forEach(e => {
             e.status = !(form.value.status)
         });
-        
+
     }
     checkStudentIdCardData(data) {
         this.headerforecolor = data.ps_header_fore_color;
@@ -1029,7 +1036,7 @@ export class SetupComponent implements OnInit {
         this.sisService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid() }).subscribe((result: any) => {
             if (result && result.status === 'ok') {
                 this.examArray = result.data;
-                console.log("Exam array",this.examArray);
+                console.log("Exam array", this.examArray);
             } else {
                 // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
@@ -1075,7 +1082,7 @@ export class SetupComponent implements OnInit {
                     this.settingForm = this.fbuild.group(temp);
                     console.log('this.settingForm', this.settingForm)
                     if (this.currentGsetup === 'financial accounting') {
-                        console.log('this.session.ses_id ********************',this.session.ses_id,this.settingForm.value.fa_session_freez);
+                        console.log('this.session.ses_id ********************', this.session.ses_id, this.settingForm.value.fa_session_freez);
                         this.settingForm.controls.fa_session_freez.setValue(this.session.ses_id);
                         this.checkFreez(this.session.ses_id);
                     }
@@ -1339,7 +1346,7 @@ export class SetupComponent implements OnInit {
             eme_subexam_id: ''
         });
         this.bestOfForm = this.fbuild.group({
-            bo_status : 1,
+            bo_status: 1,
             bo_class_id: '',
             bo_no_of_subjects: 0
         });
@@ -1543,6 +1550,9 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.school_push_notif) {
             this.settingForm.value.school_push_notif = JSON.stringify(this.notifConfigArray);
         }
+        if (this.settingForm.value && this.settingForm.value.restrict_user_controls) {
+            this.settingForm.value.restrict_user_controls = this.ruc;
+        }
         if (this.settingForm.value && this.settingForm.value.curl_call_url) {
             this.settingForm.value.curl_call_url = JSON.stringify(this.settingForm.value.curl_call_url);
         }
@@ -1573,8 +1583,8 @@ export class SetupComponent implements OnInit {
         //     this.settingForm.value.gradecard_report_settings_app = JSON.stringify(this.GRADE_CARD_SETTINS);
         //     this.paramform.reset();
         // }
-        if(this.GRADE_CARD_SETTINS.length > 0) {
-            console.log('this.GRADE_CARD_SETTINS---',this.GRADE_CARD_SETTINS);
+        if (this.GRADE_CARD_SETTINS.length > 0) {
+            console.log('this.GRADE_CARD_SETTINS---', this.GRADE_CARD_SETTINS);
             this.settingForm.value.gradecard_report_settings_app = JSON.stringify(this.GRADE_CARD_SETTINS);
             this.paramform.reset();
         }
@@ -1861,7 +1871,7 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
             this.settingForm.value.fa_session_freez = this.session_freez.join(',');
-            this.settingForm.value.fa_monthwise_freez = this.settingForm.value.fa_monthwise_freez ? this.settingForm.value.fa_monthwise_freez.join(','):'';
+            this.settingForm.value.fa_monthwise_freez = this.settingForm.value.fa_monthwise_freez ? this.settingForm.value.fa_monthwise_freez.join(',') : '';
         }
         if (this.currentGsetup === 'examination') {
             if (this.gradecardsignatureForm.length > 0) {
@@ -1883,22 +1893,22 @@ export class SetupComponent implements OnInit {
 
             })
         }
-        if(this.BEST_OF_SETTINGS.length > 0) {
-            console.log('this.BEST_OF_SETTINGS---',this.BEST_OF_SETTINGS);
-            this.settingForm.value.gradecard_best_of_calculation = this.bestOfStatus? JSON.stringify(this.BEST_OF_SETTINGS): 0;
+        if (this.BEST_OF_SETTINGS.length > 0) {
+            console.log('this.BEST_OF_SETTINGS---', this.BEST_OF_SETTINGS);
+            this.settingForm.value.gradecard_best_of_calculation = this.bestOfStatus ? JSON.stringify(this.BEST_OF_SETTINGS) : 0;
             this.bestOfForm.reset();
         }
 
         console.log(this.settingForm.value, this.currentGsetup);
-        if(this.settingForm.value && this.settingForm.value.reset_physical_verification != ''){
-            console.log('reset_physical_verification----------------',this.settingForm.value.reset_physical_verification);
-            this.erpCommonService.resetReservoirVerification({ses_id:this.settingForm.value.reset_physical_verification,status:'pending'}).subscribe((result:any) => {
-                if(result && result.status == 'ok'){
+        if (this.settingForm.value && this.settingForm.value.reset_physical_verification != '') {
+            console.log('reset_physical_verification----------------', this.settingForm.value.reset_physical_verification);
+            this.erpCommonService.resetReservoirVerification({ ses_id: this.settingForm.value.reset_physical_verification, status: 'pending' }).subscribe((result: any) => {
+                if (result && result.status == 'ok') {
                     this.commonService.showSuccessErrorMessage(result.message, 'success');
                 }
             })
         }
-        
+
         this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
             if (result && result.status === 'ok') {
                 this.disabledApiButton = false;
@@ -2422,11 +2432,11 @@ export class SetupComponent implements OnInit {
         console.log('fitem1', this.gradecardsignatureForm[fi]);
         this.gradecardsignatureForm[fi]['value']['signature'] = '';
     }
-    checkFreez(value){
+    checkFreez(value) {
         console.log(value);
-        console.log('fa_session_freez',this.session_freez);
+        console.log('fa_session_freez', this.session_freez);
         const findex = this.session_freez.findIndex(e => e == value);
-        if(findex == -1) {
+        if (findex == -1) {
             this.freezUnfreez = 1;
         } else {
             this.freezUnfreez = 2;
@@ -2451,7 +2461,7 @@ export class SetupComponent implements OnInit {
         };
         reader.readAsDataURL(file);
     }
-    getSubjectsOfAClass($event){
+    getSubjectsOfAClass($event) {
         if ($event.value) {
             setTimeout(() => {
                 this.classNamegr = $event.source._elementRef.nativeElement.outerText;
@@ -2466,11 +2476,11 @@ export class SetupComponent implements OnInit {
         //         this.total_subject_in_the_class.push(element);
         //     }
         // });
-        this.total_subject_in_the_class= this.scholastic_subject;
+        this.total_subject_in_the_class = this.scholastic_subject;
         console.log("total subject", this.total_subject_in_the_class);
         // this.total_subject_in_the_class = this.subjectArray;
     }
-    
+
     addBestOf() {
         if (this.bestOfForm.value.bo_class_id && this.bestOfForm.value.bo_no_of_subjects) {
             const findex = this.BEST_OF_SETTINGS.findIndex(f => Number(f.class_id) === Number(this.bestOfForm.value.bo_class_id)
@@ -2496,71 +2506,81 @@ export class SetupComponent implements OnInit {
 
     deleteBest(index) {
         this.BEST_OF_SETTINGS.splice(index, 1);
-        console.log("BEST_OF_SETTINGS",this.BEST_OF_SETTINGS);
+        console.log("BEST_OF_SETTINGS", this.BEST_OF_SETTINGS);
     }
-    switchBestOff(value){
+    switchBestOff(value) {
         console.log(value);
         // alert(value.checked);
         this.bestOfStatus = value.checked;
         this.bestOfForm.reset();
     }
 
-  getSubjectsByClass(value) {
-    this.subjectArray = [];
-    this.paramform.patchValue({
-      eme_sub_id: ''
-    });
-    this.sisService.getSubjectsByClass({ class_id: value }).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.subSubjectArray = result.data;
-        const temp = result.data;
-        if (temp.length > 0) {
-            this.scholastic_subject = [];
-            this.coscholastic_subject = [];
-          temp.forEach(element => {
-            // if (element.sub_parent_id && element.sub_parent_id === '0') {
-            //   const childSub: any[] = [];
-            //   for (const item of temp) {
-            //     if (element.sub_id === item.sub_parent_id) {
-            //       childSub.push(item);
-            //     }
-            //   }
-            //   element.childSub = childSub;
-            //   this.subjectArray.push(element);
-            // }
-            if (element.sub_type === '1' || element.sub_type === '3') {
-              if (element.sub_parent_id && element.sub_parent_id === '0') {
-                var childSub: any[] = [];
-                for (const item of temp) {
-                  if (element.sub_id === item.sub_parent_id) {
-                    childSub.push(item);
-                  }
+    getSubjectsByClass(value) {
+        this.subjectArray = [];
+        this.paramform.patchValue({
+            eme_sub_id: ''
+        });
+        this.sisService.getSubjectsByClass({ class_id: value }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+                this.subSubjectArray = result.data;
+                const temp = result.data;
+                if (temp.length > 0) {
+                    this.scholastic_subject = [];
+                    this.coscholastic_subject = [];
+                    temp.forEach(element => {
+                        // if (element.sub_parent_id && element.sub_parent_id === '0') {
+                        //   const childSub: any[] = [];
+                        //   for (const item of temp) {
+                        //     if (element.sub_id === item.sub_parent_id) {
+                        //       childSub.push(item);
+                        //     }
+                        //   }
+                        //   element.childSub = childSub;
+                        //   this.subjectArray.push(element);
+                        // }
+                        if (element.sub_type === '1' || element.sub_type === '3') {
+                            if (element.sub_parent_id && element.sub_parent_id === '0') {
+                                var childSub: any[] = [];
+                                for (const item of temp) {
+                                    if (element.sub_id === item.sub_parent_id) {
+                                        childSub.push(item);
+                                    }
+                                }
+                                element.childSub = childSub;
+                                this.scholastic_subject.push(element);
+                            }
+                        } else if (element.sub_type === '2' || element.sub_type === '4') {
+                            if (element.sub_parent_id && element.sub_parent_id === '0') {
+                                var childSub: any[] = [];
+                                for (const item of temp) {
+                                    if (element.sub_id === item.sub_parent_id) {
+                                        childSub.push(item);
+                                    }
+                                }
+                                element.childSub = childSub;
+                                this.coscholastic_subject.push(element);
+                            }
+                        }
+                    });
                 }
-                element.childSub = childSub;
-                this.scholastic_subject.push(element);
-              }
-            } else if (element.sub_type === '2' || element.sub_type === '4') {
-              if (element.sub_parent_id && element.sub_parent_id === '0') {
-                var childSub: any[] = [];
-                for (const item of temp) {
-                  if (element.sub_id === item.sub_parent_id) {
-                    childSub.push(item);
-                  }
-                }
-                element.childSub = childSub;
-                this.coscholastic_subject.push(element);
-              }
-            }
-          });
-        }
 
-        for (var i = 0; i < this.scholastic_subject.length; i++) {
-          this.subjectArray.push(this.scholastic_subject[i]);
+                for (var i = 0; i < this.scholastic_subject.length; i++) {
+                    this.subjectArray.push(this.scholastic_subject[i]);
+                }
+                for (var i = 0; i < this.coscholastic_subject.length; i++) {
+                    this.subjectArray.push(this.coscholastic_subject[i]);
+                }
+            }
+        });
+    }
+
+    getToggleValue(event: any) {
+        console.log('THE EVENT IS:', event.checked);
+
+        if (event.checked === true) {
+            this.ruc = '1'
+        } else {
+            this.ruc = '0'
         }
-        for (var i = 0; i < this.coscholastic_subject.length; i++) {
-          this.subjectArray.push(this.coscholastic_subject[i]);
-        }
-      }
-    });
-  }
+    }
 }

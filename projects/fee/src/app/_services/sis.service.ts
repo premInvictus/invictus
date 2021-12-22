@@ -597,7 +597,7 @@ export class SisService {
 	}
 	getStudentsPromotionTool(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl +'/students/getAllStudents', value);
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
 	}
 	promoteStudents(value) {
 		this.service.startLoading();
@@ -1023,5 +1023,10 @@ export class SisService {
 	getConcessionPerUser(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/feeAccount/getConcessionPerUser', value);
+	}
+
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
 }
