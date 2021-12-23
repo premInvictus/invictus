@@ -380,7 +380,11 @@ export class MarksEntryComponent implements OnInit {
     const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
     if (ind !== -1) {
       const temp = this.exam_grade_type_arr.find(e => e.egs_grade_value === this.marksInputArray[ind].mark);
-      return temp.egs_grade_name;
+      if(temp){
+        return temp.egs_grade_name;
+      }else{
+        return '';
+      }
     } else {
       return '';
     }

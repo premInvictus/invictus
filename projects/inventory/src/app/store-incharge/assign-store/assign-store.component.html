@@ -1,3 +1,4 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading> -->
 <ng-container *ngIf="showDefaultData">
   <form [formGroup]="existForm" novalidate>
     <div class="row">
@@ -76,7 +77,7 @@
         </mat-form-field>
       </div>
       <div class="col-1" style="padding:12px">
-        <button mat-raised-button class="btn-success-green" (click)="getItemList()">Submit</button>
+        <button mat-raised-button class="btn-success-green" (click)="getItemList()">Search</button>
       </div>
       <div class="col-7">
       </div>
@@ -128,7 +129,6 @@
     </div>
   </div>
   <br>
-  
   <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag" id="excel-table">
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
@@ -157,8 +157,10 @@
     <ng-container matColumnDef="item_selling_price">
       <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Selling Price </th>
       <td mat-cell class="cell-left" *matCellDef="let element;">
-        <form [formGroup]="formGroupArray[element.position].formGroup">
-          <input matInput type="text" class="remark-text" placeholder="Enter Price"
+        <form [formGroup]="formGroupArray[element.position-1].formGroup">
+          <input matInput *ngIf="edit" type="text" class="remark-text" placeholder="Enter Price"
+            formControlName="item_selling_price" value="{{element.item_selling_price}}">
+            <input matInput *ngIf="!edit" type="text" class="remark-text" placeholder="Enter Price" readonly
             formControlName="item_selling_price" value="{{element.item_selling_price}}">
         </form>         
       </td>
@@ -191,10 +193,11 @@
       </tr>
     </tbody>
   </table>
+  <mat-paginator [pageSize]="pageLength" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true" ></mat-paginator>
   <!-- <mat-paginator *ngIf="ELEMENT_DATA.length > 0" #paginator [length]="pageLength" [pageSize]="pageSize"
     [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator> -->
-    <mat-paginator [length]="pageLength" [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    <!-- <mat-paginator [length]="pageLength" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"></mat-paginator> -->
   <!-- <table class="custom-table">
     <thead>
       <tr class="custom-tr">
@@ -227,7 +230,7 @@
     <div class="col-12 text-center">
       <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="!showDefaultData"
         (click)="finalSubmit();">Submit</button>
-      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData"
+      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData && edit"
         (click)="finalUpdate();">Update</button>
       <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
     </div>

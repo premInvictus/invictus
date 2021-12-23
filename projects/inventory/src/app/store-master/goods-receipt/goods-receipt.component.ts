@@ -96,30 +96,99 @@ export class GoodsReceiptComponent implements OnInit {
     });
   }
   actionList(pm_id, action) {
-    if (action === 'approved') {
-      this.submitParam.pm_id = pm_id;
-      this.receiptModal.openModal(this.submitParam);
+    const sindex = this.orderArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
+    let update_data : any[] = [];
+    if (sindex !== -1) {
+      if (action === 'edit') {
+        console.log('orders ', this.orderArray[sindex]);
+        
+        this.setArray.push(this.orderArray[sindex]);
+        this.inventory.setrequisitionArray(this.setArray);
+        this.router.navigate(['../generate-receipt'], { relativeTo: this.route });
+      } else if (action === 'view') {        
+        this.submitParam.pm_id = pm_id;
+        this.receiptModal.openModal(this.submitParam);
+      } else if (action === 'delete'){        
+        this.orderArray[sindex].pm_status = 'deleted';
+        update_data.push(this.orderArray[sindex]);
+        console.log('deleteingnngngng', update_data);        
+        this.inventory.updateRequistionMaster(update_data).subscribe((result: any) => {
+          console.log(result);
+          if(result.ok){
+            this.getAllOrderMaster();
+            this.commonService.showSuccessErrorMessage('Receipt Deleted Successfully', 'success');
+          }else{
+            this.commonService.showSuccessErrorMessage('Receipt couldn\'t be deleted', 'error');
+          }
+        });
+      }
     }
   }
   printReceipt(pm_id) {
     const sindex = this.orderArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
-    if (sindex !== -1) {
-      let receiptArray: any = {};
-      receiptArray['receipt_no'] = this.orderArray[sindex].pm_id;
-      receiptArray['date'] =this.commonService.dateConvertion(this.orderArray[sindex].pm_updated.update_date,'dd-MMM-y');
-      receiptArray['vendor_name'] = this.orderArray[sindex].pm_vendor.ven_name;
-      receiptArray['po_no'] = this.orderArray[sindex].pm_details.purchase_order_id;
-      receiptArray['invoice_no'] = this.orderArray[sindex].pm_details.invoice_no;
-      receiptArray['school_name'] = this.schoolInfo.school_name;
-      receiptArray['school_logo'] = this.schoolInfo.school_logo;
-      receiptArray['school_address'] = this.schoolInfo.school_address;
-      this.inventory.generatePdfOfReceipt(receiptArray).subscribe((result: any) => {
-        if (result && result.status == 'ok') {
-          this.commonService.showSuccessErrorMessage(result.message, 'success');
-          const length = result.data.fileUrl.split('/').length;
-          saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
-        }
-      });
+    let update_data : any[] = [];
+    if (sindex !== -1) {  
+      console.log("pm id ", this.orderArray[sindex]);
+
+        let tempDate = this.orderArray[sindex].pm_created.created_date.split(",")[0].split(" ");
+        let prepDate = tempDate[1]+"-"+tempDate[0]+"-"+tempDate[2];
+        const JSON = {
+          "bill_id": this.orderArray[sindex].pm_id,
+          "bill_type": "Goods Receipt Note",
+          "bill_date": prepDate,
+          "remarks": this.orderArray[sindex].pm_intended_use,
+          "bill_created_by": this.orderArray[sindex].pm_created.created_by_name,
+          "bill_details": this.orderArray[sindex].pm_item_details,
+          "school_name": this.schoolInfo.school_name,
+          "school_logo": this.schoolInfo.school_logo,
+          "school_address": this.schoolInfo.school_address,
+          "school_phone": this.schoolInfo.school_phone,
+          "school_city":  this.schoolInfo.school_city,
+          "school_state":  this.schoolInfo.school_state,
+          "school_afflication_no":  this.schoolInfo.school_afflication_no,
+          "school_website":  this.schoolInfo.school_website,
+          "name": "",
+          "vendor_name": this.orderArray[sindex].pm_vendor.ven_name,
+          "vendor_phone": this.orderArray[sindex].pm_vendor.ven_phone,
+          "po_no": this.orderArray[sindex].pm_details.purchase_order_id,
+          "invoice_no": this.orderArray[sindex].pm_details.invoice_no,
+          "grand_total": this.orderArray[sindex].pm_details.po_total,
+      };
+        this.inventory.printGoodsReceipt(JSON).subscribe((print_result: any) => {
+          if (print_result) {      
+            this.orderArray[sindex].pm_status = 'approved';
+            update_data.push(this.orderArray[sindex]);
+            console.log('deleteingnngngng', update_data);  
+            this.inventory.updateRequistionMaster(update_data).subscribe((result: any) => {
+              console.log(result);
+              if(result.ok){
+                this.getAllOrderMaster();
+                this.commonService.showSuccessErrorMessage('Receipt Update Successfully', 'success');
+                saveAs(print_result.data.fileUrl, print_result.data.fileName);
+                this.commonService.showSuccessErrorMessage('Receipt Print Successful', 'success');
+              }else{
+                this.commonService.showSuccessErrorMessage('Receipt couldn\'t be updated', 'error');
+              }
+            });
+          }
+        });
+      
+      // let receiptArray: any = {};
+      // receiptArray['receipt_no'] = this.orderArray[sindex].pm_id;
+      // receiptArray['date'] =this.commonService.dateConvertion(this.orderArray[sindex].pm_updated.update_date,'dd-MMM-y');
+      // receiptArray['vendor_name'] = this.orderArray[sindex].pm_vendor.ven_name;
+      // receiptArray['po_no'] = this.orderArray[sindex].pm_details.purchase_order_id;
+      // receiptArray['invoice_no'] = this.orderArray[sindex].pm_details.invoice_no;
+      // receiptArray['school_name'] = this.schoolInfo.school_name;
+      // receiptArray['school_logo'] = this.schoolInfo.school_logo;
+      // receiptArray['school_address'] = this.schoolInfo.school_address;
+      // this.inventory.generatePdfOfReceipt(receiptArray).subscribe((result: any) => {
+      //   if (result && result.status == 'ok') {
+      //     this.commonService.showSuccessErrorMessage(result.message, 'success');
+      //     const length = result.data.fileUrl.split('/').length;
+      //     saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+      //   }
+      // });
     }
   }
   applyFilter(filterValue: string) {

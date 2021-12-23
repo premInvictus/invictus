@@ -3,7 +3,10 @@
       style="position:relative">
       <img [src]="idCardConfig.ps_watermark_image ? 
          idCardConfig.ps_watermark_image: ''" class="watermark-image2">
-      <table cellpadding="0" cellspacing="0" width="100%">
+
+      <div [innerHTML]="header_landscape | safeHtml"></div>
+
+      <!-- <table cellpadding="0" cellspacing="0" width="100%">
          <tbody>
             <tr [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
                <td style="font-size:9px;font-weight:bold;" align="center"><img [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
@@ -18,7 +21,7 @@
                </td>
             </tr>
          </tbody>
-      </table>
+      </table> -->
       <table width="100%" cellspacing="0" cellpadding="0" height="140px">
          <tbody>
             <tr>
@@ -116,12 +119,14 @@
             + '&h=40&w=40'" height="40" width="40">
          <div style="width:100%;font-size: 9px !important;">Principal's Sign</div>
       </div>
-      <table cellpadding="5" cellspacing="5" width="100%">
+      <div [innerHTML]="header_portrait | safeHtml"></div>
+      <!-- <table cellpadding="5" cellspacing="5" width="100%">
          <tbody>
             <tr [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
-               <td style="font-size:9px;font-weight:bold;" align="center"><img [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+               <td><img [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
                   : 'https://via.placeholder.com/50'" border="0" alt="" style="float:Left;padding: 2px;"
-                     width="40px"><span style="font-size:13px;font-family:Baskerville-Bold;"><b
+                     width="40px"></td>
+               <td style="font-size:9px;font-weight:bold;" align="center"><span style="font-size:13px;font-family:Baskerville-Bold;"><b
                         style="font-size: 12px;  ">{{schoolInfo.school_name}}
                      </b></span>
                   <br>
@@ -131,7 +136,7 @@
                </td>
             </tr>
          </tbody>
-      </table>
+      </table> -->
       <table width="100%" cellspacing="0" cellpadding="0" height="140px">
          <tbody>
             <tr>

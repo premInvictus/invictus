@@ -112,10 +112,10 @@ console.log("my location", location);
   }
 
   downloadTemplate(updCon) {
-    if(updCon == '4'){
-      this.generatePriceUploadTemplate();
-      this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
-    }else{
+    // if(updCon == '4'){
+    //   this.generatePriceUploadTemplate();
+    //   this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+    // }else{
       if (this.uploadComponent === '') {
         this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to download template', 'error');
       } else {
@@ -131,7 +131,7 @@ console.log("my location", location);
           });
       }
 
-    }
+    // }
   }
 
 }

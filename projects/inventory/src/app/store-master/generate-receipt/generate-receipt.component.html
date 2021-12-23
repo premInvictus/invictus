@@ -154,7 +154,7 @@
                       {{item.item_price}}
                     </td>
                     <td class="custom-td">
-                      {{(item.item_location) | capitalize}}
+                      {{getLocationName(item.item_location)}}
                     </td>
                     <td class="custom-td">
                       <i class="far fa-edit modify-icon" (click)="editList(i)" style="cursor:pointer"

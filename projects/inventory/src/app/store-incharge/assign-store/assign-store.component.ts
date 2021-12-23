@@ -12,7 +12,7 @@ import 'jspdf-autotable';
 import { IndianCurrency } from 'projects/admin-app/src/app/_pipes';
 import * as XLSX from 'xlsx'; 
 import 'jspdf-autotable';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
   selector: 'app-assign-store',
@@ -22,6 +22,7 @@ import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 export class AssignStoreComponent implements OnInit,OnDestroy {
   assignStoreForm: FormGroup;
   existForm: FormGroup;
+	loading = false;
   notFormatedCellArray: any[] = [];
   currentLocationId: any;
   created_date: any;
@@ -52,7 +53,8 @@ export class AssignStoreComponent implements OnInit,OnDestroy {
   ELEMENT_DATA: any[] = [];
   displayedColumns_heading: any = {position:'Sr. No.',item_code:'Item code',item_name:'Item Name', item_quantity:'Item Quantity', item_selling_price:'Selling Price'};
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_selling_price'];
-dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+
 @ViewChild(MatPaginator) paginator: MatPaginator;
   priceForm: FormGroup;
   uploadComponent: string;
@@ -153,7 +155,14 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         }
       }
     });
-    this.getAllAssignMaster();
+    // this.getAllAssignMaster();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+  ngOnChanges(){
+    if(this.loading) this.commonService.startLoading(); else this.commonService.stopLoading();
   }
   ngOnDestroy(){
     this.inventory.setcurrentChildTab('');
@@ -207,7 +216,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   }
 
   getAllAssignMaster() {
-
+    this.loading = true;
     if (this.assignStoreForm.valid) {
       this.tableDataArray = [];
       this.tableDataArrayMain = [];
@@ -242,7 +251,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
             item_code: item.item_code,
             item_name: item.item_name,
             item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-            item_selling_price: ''
+            item_selling_price: this.getSellingPrice(item.item_code)
           });
           this.formGroupArray.push({
             formGroup: this.fbuild.group({
@@ -265,10 +274,12 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           ind++;
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        // this.pageLength = this.ELEMENT_DATA.length;
+        this.paginator.pageIndex = 0;
+        this.pageLength = this.ELEMENT_DATA.length;
         this.dataSource.paginator = this.paginator;
         this.tableDivFlag = true;
         this.tabledataFlag = true;
+        this.loading = false;
       }
       console.log("get all items ", this.dataSource);
     });
@@ -710,7 +721,16 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
   // }
   getItemList() {
+    this.loading = true;
+
     if (this.assignStoreForm.valid) {
+      // this.inventory.setAssignEmp(this.assignStoreForm.value.emp_id);
+
+      // if (this.inventory.getAssignEmp()) {
+      //   this.assignEmpArray = this.inventory.getAssignEmp();
+      //   console.log('this.assignEmpArray >>>>',this.assignEmpArray);
+      // }
+
       this.tableDataArray = [];
       this.tableDataArrayMain = [];
           this.formGroupArray = [];
@@ -727,29 +747,52 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           };
           this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
             if (result && result.status === 'ok') {
+              console.log("item master >>", result.data);              
               this.itemArray = result.data;
+              let ind = 0;
               for (let item of this.itemArray) {
                 this.tableDataArray.push({
                   item_code: item.item_code,
                   item_name: item.item_name,
                   item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-                  item_selling_price: ''
+                  item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                 });
                 this.tableDataArrayMain.push({
                   item_code: item.item_code,
                   item_name: item.item_name,
                   item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
-                  item_selling_price: ''
+                  item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                 });
                 this.formGroupArray.push({
                   formGroup: this.fbuild.group({
                     item_code: item.item_code,
                     item_name: item.item_name,
                     item_quantity: item.item_location[0].item_qty,
-                    item_selling_price: ''
+                    item_selling_price: this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price
                   })
                 });
               }
+
+              for (const item of this.itemArray) {
+                this.ELEMENT_DATA.push({
+                  "position": ind + 1,            
+                  "item_code": item.item_code,
+                  "item_name": item.item_name,
+                  "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
+                  "item_selling_price": this.getSellingPrice(item.item_code) ? this.getSellingPrice(item.item_code) : item.item_selling_price,
+                  "action": { 'item_code': item.item_code, 'status': item.status }
+                });
+                ind++;
+              }
+              this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+              this.pageLength = this.ELEMENT_DATA.length;
+              this.dataSource.paginator = this.paginator;
+              this.tableDivFlag = true;
+              this.tabledataFlag = true;
+              this.loading = false;
+              console.log(">>>>>>>>",this.assignEmpArray);
+              console.log(">>>>>>>>",this.ELEMENT_DATA);
+              
             } else {
               this.commonService.showSuccessErrorMessage('No item added this location', 'error');
             }
@@ -795,18 +838,22 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   finalUpdate() {
     var finalJson: any = {};
     const itemAssign: any[] = [];    
+    
     for (let item of this.formGroupArray) {
       itemAssign.push(item.formGroup.value);
+    // console.log("item update ", item.formGroup.value);
     }
     console.log(itemAssign);
 
     const emp:any[] = [];
+    
     for(let item of this.assignStoreForm.value.emp_id){
       const temp = this.employeeArray.find(e => e.emp_login_id == item);
       if(temp){
         emp.push({emp_id:temp.emp_login_id,emp_name: temp.emp_name,emp_login_id:temp.emp_login_id})
       }
     }
+    
     finalJson = {
       employees: emp,
       item_location: Number(this.assignEmpArray.item_location),
@@ -835,6 +882,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.showDefaultData = false;
   }
   editAssignData(itemArray) {
+    this.loading = true;
     this.tableDataArray = [];
     this.formGroupArray = [];
     this.itemArray = [];
@@ -851,6 +899,7 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.itemArray = result.data;
+        let ind = 0;
         for (let item of this.itemArray) {
           this.tableDataArray.push({
             item_code: item.item_code,
@@ -867,17 +916,38 @@ dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
             })
           });
         }
+
+
+        for (const item of this.itemArray) {
+          this.ELEMENT_DATA.push({
+            "position": ind + 1,            
+            "item_code": item.item_code,
+            "item_name": item.item_name,
+            "item_quantity": item.item_location ? item.item_location[0].item_qty : '0',
+            "item_selling_price": this.getSellingPrice(item.item_code),
+            "action": { 'item_code': item.item_code, 'status': item.status }
+          });
+          ind++;
+        }
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.pageLength = this.ELEMENT_DATA.length;
+        this.dataSource.paginator = this.paginator;
+        this.tableDivFlag = true;
+        this.tabledataFlag = true;
+        this.loading = false;
       } else {
         this.commonService.showSuccessErrorMessage('No item added this location', 'error');
       }
     });
   }
   getSellingPrice(item_code) {
-    const findex = this.assignEmpArray.item_assign.findIndex(f => Number(f.item_code) === Number(item_code));
-    if (findex !== -1) {
-      return this.assignEmpArray.item_assign[findex].item_selling_price
-    } else {
-      return '';
+    if(this.assignEmpArray.item_assign && this.assignEmpArray){
+      const findex = this.assignEmpArray.item_assign.findIndex(f => Number(f.item_code) === Number(item_code));
+      if (findex !== -1) {
+        return this.assignEmpArray.item_assign[findex].item_selling_price
+      } else {
+        return '';
+      }
     }
   }
   addBundle(value=null){

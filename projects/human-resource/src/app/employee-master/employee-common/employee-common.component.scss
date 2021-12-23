@@ -78,6 +78,23 @@
     color: #fff;
 }
 
+.functional-button-five {
+    z-index: 11111;
+    position: fixed;
+    top: 290px;
+    right: 20px;
+}
+
+.functional-button-five button {
+    background-color: #f8992b;
+    color: #fff;
+}
+
+.functional-button-five button:hover {
+    background-color: #90f012;
+    color: #fff;
+}
+
 .fa-user-edit {
     font-size: 18px;
 }

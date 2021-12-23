@@ -952,13 +952,16 @@ export class RemarksReportComponent implements OnInit {
 		this.columnDefinitions = [];
 		this.tableFlag = false;
 	}
-  setProcessArray(){
-		this.enrollMentTypeArray = [];
-		if(this.studentDetailReportForm.value.reviewReport === '3'){
-			this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
-			this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
-		}
-	}
+	setProcessArray(){
+		  this.enrollMentTypeArray = [];
+		  if(this.studentDetailReportForm.value.reviewReport === '3'){
+			  this.enrollMentTypeArray.push({au_process_type: '1', au_process_name: 'Enquiry'});
+			  this.enrollMentTypeArray.push({au_process_type: '2', au_process_name: 'Registration'});
+		  }else if(this.studentDetailReportForm.value.reviewReport === '2'){
+			this.enrollMentTypeArray.push({au_process_type: '3', au_process_name: 'Provisional Adminssion'});
+			this.enrollMentTypeArray.push({au_process_type: '4', au_process_name: 'Admission'});
+		  }
+	  }
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
 		if (value && value !== '-') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
@@ -986,12 +989,25 @@ export class RemarksReportComponent implements OnInit {
 			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'yyyy-MM-dd');
 			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
 		}
-    inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
-    inputJson['era_type'] = 'followup';
-    inputJson['au_status'] = 1;
+		inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
+		inputJson['era_type'] = 'followup';
+		inputJson['au_status'] = 1;
 		const validateFlag = this.checkValidation();
-		if (validateFlag) {
+		if (validateFlag && this.studentDetailReportForm.value.reviewReport === '3') {
 			this.sisService.getRemarks(inputJson).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.reportProcessWiseData = result.data;
+					this.prepareDataSource(inputJson['au_process_type']);
+					this.tableFlag = true;
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+					this.resetGrid();
+					this.tableFlag = true;
+				}
+			});
+		}else if (validateFlag && this.studentDetailReportForm.value.reviewReport === '2'){
+			inputJson['era_type'] = 'general';
+			this.sisService.getGeneralRemarks(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.reportProcessWiseData = result.data;
 					this.prepareDataSource(inputJson['au_process_type']);

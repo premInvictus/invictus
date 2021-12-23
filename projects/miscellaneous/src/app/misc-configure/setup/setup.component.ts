@@ -36,6 +36,7 @@ export class SetupComponent implements OnInit {
     checkedArray: any = [];
     bankArr: any[] = [];
     notifConfigArray: any[] = [];
+    smsNotificationConfigArray: any[] = [];
     configValue: any;
     disabledApiButton = false;
     currentUser: any;
@@ -48,6 +49,7 @@ export class SetupComponent implements OnInit {
     departmentArray: any[] = [];
     curl_call_urlArray: any[] = [];
     idcardForm: FormGroup;
+    notificationForm: FormGroup;
     pageArray: any[] = [];
     sizeArray: any[] = [{ id: '1', name: 'Extra Large' },
     { id: '2', name: 'Large' },
@@ -116,6 +118,8 @@ export class SetupComponent implements OnInit {
     showSchoolImage2 = false;
     showWaterImage2 = false;
     waterMarkImage2: any = '';
+    header: any = '';
+    header2: any = '';
     ckeConfig: any = {};
     processForms: any[] = [];
     paymentFormArray: any[] = [];
@@ -141,6 +145,10 @@ export class SetupComponent implements OnInit {
     restrictUserControlArray: any;
     ruc: string;
     isUserControlDisabled: boolean = true;
+    l_header: any;
+    l_header2: any;
+    ps_demo_blah: any;
+    notificationSettings: any[];
 
 
     constructor(private fbuild: FormBuilder,
@@ -461,6 +469,8 @@ export class SetupComponent implements OnInit {
                 this.notifConfigArray = JSON.parse(element.gs_value);
             } else if (element.gs_alias === 'restrict_user_controls') {
                 this.restrictUserControlArray = element.gs_value === '1' ? true : false;
+            } else if (element.gs_alias === 'school_sms_notification') {
+                this.smsNotificationConfigArray = JSON.parse(element.gs_value);
             } else if (element.gs_alias === 'curl_call_url') {
                 this.curl_call_urlArray = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
                 const jsontemp = [];
@@ -648,6 +658,8 @@ export class SetupComponent implements OnInit {
         this.schoolLogo2 = data.ps_school_logo;
         this.templateImage2 = data.ps_template_image;
         this.waterMarkImage2 = data.ps_watermark_image;
+        this.header2 = data.ps_header ? data.ps_header : '';
+        this.l_header2 = data.ps_l_header ? data.ps_l_header : '';
         if (this.templateImage2) {
             this.showTempImage2 = true;
         }
@@ -722,6 +734,8 @@ export class SetupComponent implements OnInit {
         this.schoolLogo = data.ps_school_logo;
         this.templateImage = data.ps_template_image;
         this.waterMarkImage = data.ps_watermark_image;
+        this.header = data.ps_header ? data.ps_header : '';
+        this.l_header = data.ps_l_header ? data.ps_l_header : '';
         if (this.templateImage) {
             this.showTempImage = true;
         }
@@ -774,6 +788,8 @@ export class SetupComponent implements OnInit {
             ps_auth_sign_text: data.ps_auth_sign_text === '1' ? true : false,
             ps_show_stu_addr: data.ps_show_stu_addr === '1' ? true : false,
             ps_hide_stu_bg: data.ps_hide_stu_bg === '1' ? true : false,
+            ps_header: data.ps_header ? data.ps_header : '',
+            ps_l_header: data.ps_l_header ? data.ps_l_header : ''
         });
     }
     assignEmailSmsFormats() {
@@ -863,6 +879,11 @@ export class SetupComponent implements OnInit {
                 ]
             }
         ];
+    }
+    heyTest() {
+        console.log("idcardForm >>>>>", this.idcardForm);
+        console.log("idcardForm2 >>>>>", this.idcardForm2);
+
     }
     getClassTerm() {
         this.termsArray = [];
@@ -1175,6 +1196,11 @@ export class SetupComponent implements OnInit {
                         }
                     }
 
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.notification_frequency) {
+                        this.notificationSettings = JSON.parse(this.settingForm.value.notification_frequency);
+                        console.log("notification settings >>>", this.notificationSettings);
+                    }
+
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.employee_salary_slip) {
                         const payJson: any = JSON.parse(this.settingForm.value.employee_salary_slip);
                         if (Object.keys(payJson).length > 0) {
@@ -1300,6 +1326,20 @@ export class SetupComponent implements OnInit {
                         }
 
                     }
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.notification_frequency) {
+                        let notificationFrequency: any[] = [];
+                        notificationFrequency = JSON.parse(this.settingForm.value.notification_frequency);
+                        if (notificationFrequency && notificationFrequency.length > 0) {
+                            for (const item of this.notificationSettings) {
+                                for (const titem of notificationFrequency) {
+                                    if (item.option_name.toLowerCase() === titem.option_name.toLowerCase()) {
+                                        console.log("item >>> ns", item.option_name)
+                                    }
+                                }
+                            }
+                            console.log(this.checkedArray);
+                        }
+                    }
                     console.log(this.settingForm);
                 }
                 this.formFlag = true;
@@ -1358,6 +1398,9 @@ export class SetupComponent implements OnInit {
             gratuity: false,
             updateSalaryStructureToEmployee: ''
         });
+        this.notificationForm = this.fbuild.group({
+            ns_notification_frequency: ''
+        });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
             ps_card_layout: '',
@@ -1393,7 +1436,10 @@ export class SetupComponent implements OnInit {
             ps_hide_stu_bg: '',
             ps_school_logo: '',
             ps_template_image: '',
-            ps_watermark_image: ''
+            ps_watermark_image: '',
+            ps_header: '',
+            ps_l_header: '',
+            ps_demo_blah: ''
         });
         this.idcardForm2 = this.fbuild.group({
             ps_card_style: '',
@@ -1430,7 +1476,9 @@ export class SetupComponent implements OnInit {
             ps_hide_stu_bg: '',
             ps_school_logo: '',
             ps_template_image: '',
-            ps_watermark_image: ''
+            ps_watermark_image: '',
+            ps_header: '',
+            ps_l_header: ''
         });
         this.printForm = this.fbuild.group({
             'spt_id': '',
@@ -1547,6 +1595,9 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.admission_process_cutoff) {
             this.settingForm.value.admission_process_cutoff = JSON.stringify(this.settingForm.value.admission_process_cutoff);
         }
+        if (this.settingForm.value && this.settingForm.value.school_sms_notification) {
+            this.settingForm.value.school_sms_notification = JSON.stringify(this.smsNotificationConfigArray);
+        }
         if (this.settingForm.value && this.settingForm.value.school_push_notif) {
             this.settingForm.value.school_push_notif = JSON.stringify(this.notifConfigArray);
         }
@@ -1597,7 +1648,7 @@ export class SetupComponent implements OnInit {
             if (this.idCardSettings.length > 0) {
                 const findex = this.idCardSettings.findIndex(f => f.type === 'student');
                 if (findex !== -1) {
-                    console.log(this.idcardForm);
+                    console.log("inserting data", this.idcardForm);
                     if (this.idcardForm.value.ps_border) {
                         this.idcardForm.value.ps_border = '1';
                     } else {
@@ -1692,7 +1743,13 @@ export class SetupComponent implements OnInit {
                     this.idcardForm.value.ps_school_logo = this.schoolLogo;
                     this.idcardForm.value.ps_template_image = this.templateImage;
                     this.idcardForm.value.ps_watermark_image = this.waterMarkImage;
+                    // this.idcardForm.value.ps_header = this.header;
+                    // this.idcardForm.value.ps_l_header = this.l_header;
+                    console.log("ID card update ", this.idcardForm.value);
+
                     this.idCardSettings[findex].details = this.idcardForm.value;
+                    console.log("id card settings >>>>>>", this.idCardSettings);
+
                 }
                 const findex2 = this.idCardSettings.findIndex(f => f.type === 'employee');
                 if (findex2 !== -1) {
@@ -1790,6 +1847,8 @@ export class SetupComponent implements OnInit {
                     this.idcardForm2.value.ps_school_logo = this.schoolLogo2;
                     this.idcardForm2.value.ps_template_image = this.templateImage2;
                     this.idcardForm2.value.ps_watermark_image = this.waterMarkImage2;
+                    this.idcardForm2.value.ps_header = this.header2;
+                    this.idcardForm2.value.ps_l_header = this.l_header2;
                     this.idCardSettings[findex2].details = this.idcardForm2.value;
 
                 }
@@ -1843,6 +1902,29 @@ export class SetupComponent implements OnInit {
                 }
 
                 this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
+            }
+        }
+        if (this.settingForm.value && this.settingForm.value.notification_frequency) {
+            console.log("noti f >>>>>>", this.settingForm.value.notification_frequency);
+            console.log("noti form >>>>>", this.notificationForm);
+
+            if (this.notificationSettings.length > 0) {
+                const finalNotificationArray: any[] = [];
+                this.notificationSettings.forEach((element: any) => {
+                    if (this.notificationForm.value.ns_notification_frequency == element.option_name) {
+                        finalNotificationArray.push({
+                            option_name: element.option_name,
+                            status: true
+                        })
+                    } else {
+                        finalNotificationArray.push({
+                            option_name: element.option_name,
+                            status: false
+                        })
+                    }
+                })
+
+                this.settingForm.value.notification_frequency = JSON.stringify(finalNotificationArray);
             }
         }
         if (this.showClosingSession) {

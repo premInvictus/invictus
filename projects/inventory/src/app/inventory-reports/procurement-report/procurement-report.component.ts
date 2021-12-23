@@ -72,6 +72,7 @@ export class ProcurementReportComponent implements OnInit {
   currentUser: any;
   session: any;
   schoolInfo: any;
+  isLoading: boolean = false;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -122,7 +123,7 @@ export class ProcurementReportComponent implements OnInit {
   itemData2: any;
   showFilter = false;
   today = new Date();
-  objectFilter: any ={};
+  objectFilter: any = {};
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
     private erpCommonService: ErpCommonService,) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -157,7 +158,7 @@ export class ProcurementReportComponent implements OnInit {
   }
   changeReportType() {
     console.log("i am here--------", this.reportFilterForm.value);
-
+    this.isLoading = true;
     this.reportType = this.reportFilterForm.value.report_type;
     this.dataArr = [];
     this.totalRow = {};
@@ -168,17 +169,17 @@ export class ProcurementReportComponent implements OnInit {
     if (this.reportType == 'consolidate') {
       this.getReport();
       this.showFilter = false;
-    } else if( this.reportType == 'detailed') {
+    } else if (this.reportType == 'detailed') {
       this.showFilter = true;
       this.getDetailedReport();
     }
   }
   changeStatus(event) {
     console.log("-----------------", event);
-    
+    // this.isLoading = true;
     if (event.value == 'consolidate') {
       this.showFilter = false;
-    } else if( event.value == 'detailed') {
+    } else if (event.value == 'detailed') {
       this.showFilter = true;
     }
   }
@@ -452,8 +453,11 @@ export class ProcurementReportComponent implements OnInit {
         width: 40
       }
     ];
-    this.inventory.getOrderMasterFilter({ 'pm_type': "GR","from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
-    "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd') }).subscribe((result: any) => {
+    this.inventory.getOrderMasterFilter({
+      'pm_type': "GR", "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'yyyy-MM-dd'),
+      "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd')
+    }).subscribe((result: any) => {
+      this.isLoading = false;
       if (result) {
         repoArray = result;
         let ind = 0;
@@ -461,10 +465,12 @@ export class ProcurementReportComponent implements OnInit {
           for (let check of item.pm_item_details) {
             let data_pic: any = {};
             let deptObj: any = {}
-            for (let data_i of this.itemData2) {
-              if (data_i.location_id == check.item_location) {
-                data_pic = data_i;
-                break
+            if (this.itemData2) {
+              for (let data_i of this.itemData2) {
+                if (data_i.location_id == check.item_location) {
+                  data_pic = data_i;
+                  break
+                }
               }
             }
             for (let data_i of this.itemData) {
@@ -493,7 +499,7 @@ export class ProcurementReportComponent implements OnInit {
             obj['email'] = item.pm_vendor ? item.pm_vendor.ven_email : '-';
             let isAvailable = true;
             console.log("i am here-----------", this.objectFilter);
-            
+
             if (Object.keys(this.objectFilter).length > 0) {
               if (this.objectFilter.created_by && item.pm_created) {
                 if (!this.objectFilter.created_by.includes(item.pm_created.created_by_name) && !this.objectFilter.created_by.includes(item.pm_created.created_by_name)) {

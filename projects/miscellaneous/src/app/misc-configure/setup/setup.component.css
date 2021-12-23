@@ -89,3 +89,9 @@ button.btn-neutral.btn-upl.mat-raised-button {
     top: -10px;
     border-radius: 50%;
 }
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+.mt-minus-20{
+  margin-top: -20px;
+}

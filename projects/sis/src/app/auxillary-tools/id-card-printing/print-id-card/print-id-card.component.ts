@@ -96,6 +96,8 @@ export class PrintIdCardComponent implements OnInit {
 			+ ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.getSchool();
 		this.getBloodGroup();
+		console.log("idCardConfig", this.idCardConfig);
+		
 		if (Number(this.idCardConfig.ps_missing_student) === 1 && this.studentProfileImage === 'https://via.placeholder.com/75') {
 			this.dontPrintStatus = true;
 		} else {

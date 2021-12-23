@@ -130,7 +130,7 @@ export class FeeLedgerComponent implements OnInit {
 		44: 'AR',
 
 	};
-
+	isLoading = true;
 	spans = [];
 	showMore = false;
 	currentShowMoreId = '';
@@ -1074,6 +1074,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.FEE_LEDGER_ELEMENT = [];
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				let pos = 1;
+				var carry_balance = 0;
 				this.footerRecord = {
 					feeduetotal: 0,
 					concessiontotal: 0,
@@ -1136,7 +1137,7 @@ export class FeeLedgerComponent implements OnInit {
 						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
 						colorCode: item.color_code ? item.color_code : '',
 						// bank: item.tb_name ? item.tb_name : '-',
-						netpayableamount: item.flgr_particulars === 'Ad-Hoc Payment' ? '0' : (item.net_payable_amount ? item.net_payable_amount : '0'),
+						netpayableamount: (item.flgr_particulars === 'Ad-Hoc Payment' || item.ftr_status === '7') ? '0' : (item.net_payable_amount ? item.net_payable_amount : '0'),
 						eachActionFlag: tempactionFlag,
 						action: item,
 						flgr_payment_mode: item.flgr_payment_mode ? item.flgr_payment_mode : ''
@@ -1158,18 +1159,29 @@ export class FeeLedgerComponent implements OnInit {
 						this.footerRecord.feeduetotal += Number(element.amount);
 						this.footerRecord.concessiontotal += Number(element.concession);
 						this.footerRecord.adjustmenttotal += Number(element.adjustment);
-						this.footerRecord.netpayabletotal += Number(element.netpayableamount);
+						if(item.ftr_status !== "7") {
+							this.footerRecord.netpayabletotal += Number(element.netpayableamount);
+						}
+						
 						this.footerRecord.finetotal += Number(element.fine);
-						this.footerRecord.balancetotal += Number(element.balance);
+						this.footerRecord.balancetotal += Number(element.balance);//added this by amit
 					}
 
 
 
 
-					if (item.ftr_status !== "2" && item.ftr_status !== "6") {
+					if (item.ftr_status !== "2" && item.ftr_status !== "6" && item.ftr_status !== "7") {
 						this.footerRecord.receipttotal += Number(element.reciept);
+						//this.footerRecord.balancetotal += Number(element.balance);///comment by amit
 					}
 
+					// console.log("p >>>>>>>",element.particular);					
+					// if(element.particular == "Opening Balance"){
+					// 	carry_balance = Number(element.balance) ;
+					// 	console.log("cb >>>>>>>",carry_balance);
+					// }
+
+					// this.footerRecord.balancetotal = (this.footerRecord.netpayabletotal - this.footerRecord.receipttotal) + carry_balance;
 
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
@@ -1177,6 +1189,7 @@ export class FeeLedgerComponent implements OnInit {
 
 					//console.log(this.FEE_LEDGER_ELEMENT);
 				}
+				this.isLoading = false;
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				//this.feeRenderId = '';
 				console.log('this.FEE_LEDGER_ELEMENT', this.FEE_LEDGER_ELEMENT);

@@ -271,7 +271,16 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			} },
 
-			{ id: 'au_house', name: 'House', field: 'au_house', sortable: true, filterable: true, minWidth: 200 },
+			{ id: 'au_house', name: 'House', field: 'au_house', sortable: true, filterable: true, minWidth: 200,
+			grouping: {
+				getter: 'au_house',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			}  },
 			
 			{ id: 'active_parent', name: 'Active Parent', field: 'active_parent', sortable: true, filterable: true, minWidth: 100 },
 			{ id: 'father_name', name: 'Father Name', field: 'father_name', sortable: true, filterable: true, minWidth: 100 },

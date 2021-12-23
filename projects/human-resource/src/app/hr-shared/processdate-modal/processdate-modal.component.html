@@ -23,21 +23,36 @@
           <button mat-raised-button class="btn-success" (click)="enableDate()">Yes</button>&nbsp;
           <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
         </div>
-      <div *ngIf="dateFlag" class="text-center">
-        <p [innerHTML]="processMessage"></p>
-        <form [formGroup]="dateForm">
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-label>Enter Leave Date</mat-label>
-            <input formControlName="processDate" [max]="maxdate"
-            matInput [matDatepicker]="picker" placeholder="Enter Process Date"
-              required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </form>
-        <button mat-raised-button class="btn-success" (click)="process()">Submit</button>&nbsp;
-        <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
-      </div>
+        <div *ngIf="dateFlag && processAction !== 'activate'" class="text-center">
+          <p [innerHTML]="processMessage"></p>
+          <form [formGroup]="dateForm">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Enter Leave Date</mat-label>
+              <input formControlName="processDate" [max]="maxdate"
+              matInput [matDatepicker]="picker" placeholder="Enter Process Date"
+                required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </form>
+          <button mat-raised-button class="btn-success" (click)="process()">Submit</button>&nbsp;
+          <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
+        </div>
+        <div *ngIf="dateFlag && processAction === 'activate'" class="text-center">
+          <p [innerHTML]="processMessage"></p>
+          <form [formGroup]="dateForm">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Enter Date of Activation</mat-label>
+              <input formControlName="processDate"
+              matInput [matDatepicker]="picker" placeholder="Enter Process Date"
+                required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </form>
+          <button mat-raised-button class="btn-success" (click)="process()">Submit</button>&nbsp;
+          <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
+        </div>
     </div>
   </div>
 </ng-template>
