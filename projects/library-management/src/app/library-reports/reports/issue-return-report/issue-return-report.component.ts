@@ -921,7 +921,8 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['returned_by'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_by'] && repoArray[Number(index)]['reserv_user_logs']['returned_by']['name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_by']['name']) : '-';
 					obj['due_by'] = this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date']) > 0 ? this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date'])+' Days' : '-';
 					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) : '-';
-					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) : '-';
+					let author = Array.isArray(repoArray[Number(index)]['reserv_user_logs']['authors']) ? repoArray[Number(index)]['reserv_user_logs']['authors'][0] : repoArray[Number(index)]['reserv_user_logs']['authors'];
+					obj['author'] = new CapitalizePipe().transform(author) ? new CapitalizePipe().transform(author) : '-';
 					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']) : '-';
 					obj['pages'] = repoArray[Number(index)]['reserv_user_logs']['pages'] ? repoArray[Number(index)]['reserv_user_logs']['pages'] : '-';
 					obj['price'] = repoArray[Number(index)]['reserv_user_logs']['price'] ? repoArray[Number(index)]['reserv_user_logs']['price'] : '-';
