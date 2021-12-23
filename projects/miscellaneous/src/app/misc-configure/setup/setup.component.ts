@@ -192,7 +192,6 @@ export class SetupComponent implements OnInit {
         }
         this.buildForm();
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log("current user role id >>>>>", this.currentUser.role_id);
         // Change the role_id to 1 for admin
         this.currentUser.role_id === '2' ? this.isUserControlDisabled = false : this.isUserControlDisabled = true;
         this.getSession();
@@ -2576,8 +2575,6 @@ export class SetupComponent implements OnInit {
     }
 
     getToggleValue(event: any) {
-        console.log('THE EVENT IS:', event.checked);
-
         if (event.checked === true) {
             this.ruc = '1'
         } else {
