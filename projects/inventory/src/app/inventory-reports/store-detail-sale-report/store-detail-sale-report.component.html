@@ -72,6 +72,14 @@
     </div>
   </div>
 </form>
+
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+</div>
+
 <div *ngIf="rowsChosen.length > 0 && CommonService.isExistUserAccessMenu('804')" style="position: absolute;
   right: 2.1%;
   top: 7%;">

@@ -97,6 +97,7 @@ export class GenerateBillComponent implements OnInit {
       due_date: '',
       issue_date: '',
       return_date: '',
+      bill_remarks: '',
       bundle_id:'',
       created_date:''
     });
@@ -370,6 +371,7 @@ export class GenerateBillComponent implements OnInit {
   previewSaveItem() {
     this.tableReciptArray = [];
     let grandTotal = 0;
+    let remarks = "";
     var filterJson: any = {};
     var finalJson: any = {};
     const itemAssign: any[] = [];
@@ -457,6 +459,7 @@ export class GenerateBillComponent implements OnInit {
       this.tableReciptArray['school_website'] = this.schoolInfo.school_website;
       this.tableReciptArray['name'] = this.userData.au_full_name;
       this.tableReciptArray['mobile'] = this.userData.active_contact;
+      this.tableReciptArray['bill_remarks'] = this.itemSearchForm.value.bill_remarks;
       if (this.userData.au_role_id === 3) {
         this.tableReciptArray['adm_no'] = this.userData.emp_id;
         this.tableReciptArray['class_name'] = '';
@@ -566,6 +569,7 @@ export class GenerateBillComponent implements OnInit {
         buyer_details: this.userData,
         bill_details: itemAssign,
         bill_total: grandTotal,
+        bill_remarks: this.itemSearchForm.value.bill_remarks,
         status:'approved',
         mop:this.payForm.value.pay_id,
         item_location:this.storeinchargeLocation,
@@ -593,6 +597,7 @@ export class GenerateBillComponent implements OnInit {
           billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
           billArray['bill_created_by'] = this.currentUser.full_name;
           billArray['bill_details'] = result.bill_details;
+          billArray['bill_remarks'] = result.bill_remarks;
           billArray['school_name'] = this.schoolInfo.school_name;
           billArray['school_logo'] = this.schoolInfo.school_logo;
           billArray['school_address'] = this.schoolInfo.school_address;
