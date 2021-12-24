@@ -68,6 +68,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	sessionName: any;
 	length: any;
 	currentUser: any;
+	isLoading : boolean = true;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -261,6 +262,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.selection.clear();
 		this.feeService.getInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.isLoading = false;
 				this.invoiceArray = result.data.invoiceData;
 				this.excelArray = result.data.excelData;
 				this.totalRecords = Number(result.data.totalRecords);
@@ -435,6 +437,9 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 		console.log('searchparam',this.searchparam);
 		this.getInvoice(this.searchparam);
+	}
+	resetFilter(){
+		this.getInvoice(this.invoiceSearchForm.value);
 	}
 	searchInvoice() {
 		this.invoiceSearchForm.patchValue({
