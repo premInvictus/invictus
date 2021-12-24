@@ -5,7 +5,7 @@
         <mat-label>Report Type</mat-label>
         <mat-select formControlName="report_type" required>
           <mat-option value="0" disabled>Please Select</mat-option>
-          <mat-option *ngFor="let item of assignListArray" [value]="item.emp_id">
+          <mat-option *ngFor="let item of assignListArray" [value]="item.item_location">
             {{item.location_id.location_hierarchy | titlecase}}</mat-option>
         </mat-select>
       </mat-form-field>
