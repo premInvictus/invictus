@@ -5,7 +5,14 @@
     (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
-<div *ngIf="dataset.length === 0">
+
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+</div>
+<div *ngIf="dataset.length === 0 && !isLoading">
   <div class="text-center">
     <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
