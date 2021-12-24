@@ -563,7 +563,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
               
               let obj: any = {};
               obj['id'] = ind;
-              obj['dept_id'] = data_pic.item_category.name;
+              obj['dept_id'] = data_pic ? data_pic.item_category.name: '-';
               obj['item_code'] = data.item_code + ' - ' + data.item_name;
               obj['srno'] = ind + 1;
               obj['rate'] = data.item_selling_price
