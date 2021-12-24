@@ -647,11 +647,11 @@ export class StoreDetailSaleReportComponent implements OnInit {
           this.totalRow = obj3;
           this.aggregatearray.push(new Aggregators.Sum('bill_total'));
           if (this.dataset.length <= 5) {
-            this.gridHeight = 350;
-          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
             this.gridHeight = 450;
-          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
             this.gridHeight = 550;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 650;
           } else if (this.dataset.length > 20) {
             this.gridHeight = 750;
           }
