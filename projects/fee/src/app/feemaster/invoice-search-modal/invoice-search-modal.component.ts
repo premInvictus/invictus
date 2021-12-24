@@ -109,6 +109,7 @@ export class InvoiceSearchModalComponent implements OnInit {
       from_date: '',
       to_date: '',
       status: '',
+      inv_fee_amount: ''
     });
   }
   closeDialog() {
