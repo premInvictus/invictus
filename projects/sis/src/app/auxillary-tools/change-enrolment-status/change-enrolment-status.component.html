@@ -282,7 +282,7 @@
                             <form [formGroup]="changeEnrolmentStatusForm2" autocomplete="off">
                                 <div class="row">
                                     <div class="col-12 ">
-                                        <div class="row">
+                                        <div class="row p0">
                                             <div class="col-6">
                                                 <mat-form-field class="form-field" appearance="outline">
                                                     <mat-label>Enrollment Type</mat-label>
@@ -298,46 +298,56 @@
                                                     </mat-select>
                                                 </mat-form-field>
                                                 <div class="row" *ngIf="students.length > 0">
-                                                    <div class="col-4">                                                        
+                                                    <div class="col-3  p0 pr10">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Class</mat-label>
-                                                            <mat-select placeholder="Class"  (selectionChange)="filterByClass($event)">
+                                                            <mat-select placeholder="Class"
+                                                                (selectionChange)="filterByClass($event)">
                                                                 <mat-option value="">Please Select
                                                                 </mat-option>
-                                                                <mat-option *ngFor="let item of classArray" [value]="item.class_name">{{item.class_name}}
+                                                                <mat-option *ngFor="let item of classArray"
+                                                                    [value]="item.class_name">{{item.class_name}}
                                                                 </mat-option>
                                                             </mat-select>
-                                                        </mat-form-field>                                                        
+                                                        </mat-form-field>
                                                     </div>
-                                                    <div class="col-4">                                                        
+                                                    <div class="col-3  p0 pr10">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Section</mat-label>
-                                                            <mat-select placeholder="Section"  (selectionChange)="filterBySec($event)">
+                                                            <mat-select placeholder="Section"
+                                                                (selectionChange)="filterBySec($event)">
                                                                 <mat-option value="">Please Select
                                                                 </mat-option>
-                                                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_name">{{item.sec_name}}
+                                                                <mat-option *ngFor="let item of sectionArray"
+                                                                    [value]="item.sec_name">{{item.sec_name}}
                                                                 </mat-option>
                                                             </mat-select>
-                                                        </mat-form-field>                                                        
+                                                        </mat-form-field>
                                                     </div>
-                                                    <div class="col-4">                                                        
+                                                    <div class="col-4  p0 pr10">
                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Admission No.</mat-label>
-                                                            <input class="text-capitalize" matInput
-                                                                            placeholder="Admission No."
-                                                                            (keyup)="searchByAdmissionNo($event)">
-                                                        </mat-form-field>                                                        
+                                                            <mat-label>{{enrolmentPlaceholder}} No.</mat-label>
+                                                            <input class="text-capitalize" matInput id="adm-no-p"
+                                                                placeholder="{{enrolmentPlaceholder}} No."
+                                                                (keyup)="searchByAdmissionNo($event)"
+                                                                >
+
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-2 text-right p0 pr10">
+                                                        <i class="fas fa-search mt-1r fs-30 clr-green on-hover-circle"
+                                                            (click)="searchByFilter()"></i> &nbsp; &nbsp; &nbsp;
+                                                            <i class="fas fa-redo  mt-1r fs-30 clr-green on-hover-circle"  (click)="resetFilter()"></i>
                                                     </div>
                                                 </div>
                                                 <div class="row" *ngIf="students.length > 0">
                                                     <div class="col-12">
-                                                        <mat-checkbox (change)="selectAll($event)"
-                                                            [indeterminate]="selectedMembers.length > 0 && 
+                                                        <mat-checkbox (change)="selectAll($event)" [indeterminate]="selectedMembers.length > 0 && 
                                                             selectedMembers.length < students.length"
                                                             [checked]="selectedMembers.length === students.length">
                                                             <h4 style="position: relative;top:5px"><b>Students</b></h4>
                                                         </mat-checkbox>
-                                                        
+
                                                     </div>
                                                 </div>
                                                 <div class="row" *ngIf="students.length == 0 && 
@@ -349,13 +359,12 @@
                                                 <div class="over-div" *ngIf="students.length > 0">
                                                     <div class="row">
                                                         <div class="col-4" *ngFor="let it of students">
-                                                            <mat-checkbox [value]="it.au_login_id" 
-                                                            [checked]="checkIfExist(it.au_login_id)"
-                                                            (change)="chooseSelectedMembers(it.au_login_id, 
+                                                            <mat-checkbox [value]="it.au_login_id"
+                                                                [checked]="checkIfExist(it.au_login_id)" (change)="chooseSelectedMembers(it.au_login_id, 
                                                                 it.au_admission_no)">
                                                             </mat-checkbox>
-                                                           <b> ({{it.au_admission_no}}) </b>- 
-                                                           {{it.au_full_name}} - <b>Class </b> : {{it.class_name}}
+                                                            <b> ({{it.au_admission_no}}) </b>-
+                                                            {{it.au_full_name}} - <b>Class </b> : {{it.class_name}}
                                                         </div>
                                                     </div>
                                                 </div>
