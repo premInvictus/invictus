@@ -21,16 +21,24 @@
       <div class="col-8">
         <div class="margin-top-10 margin-bottom-10">
           <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
-            filter
+            <i class="fas fa-filter"></i> &nbsp; filter
           </button>
           &nbsp;
           <button class="btn-danger text-uppercase" mat-raised-button (click)="reset()">
-            reset
+            <i class="fas fa-undo-alt"></i> &nbsp; reset
           </button>
         </div>
       </div>
     </div>
   </form>
+  <div class="container" *ngIf="isLoading">
+    <p class="text-center mt-5">
+      <img src="assets/1484.gif" alt="loading">
+    </p>
+    <p class="text-center mb-5">
+      {{loader_status}}
+    </p>
+  </div>
   <div class="row" *ngIf="acumulativeReport.value.report_type == 'detail'">
     <div class="col-12">
       <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
@@ -147,7 +155,7 @@
       </angular-slickgrid>
     </div>    
   </div>
-  <div *ngIf="dataset.length == 0 && EMPLOYEE_ELEMENT.length == 0">
+  <div *ngIf="dataset.length == 0 && EMPLOYEE_ELEMENT.length == 0 && !isLoading">
     <div class="text-center">
       <app-no-data
         [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"

@@ -75,6 +75,7 @@ export class AttendanceReportsComponent implements OnInit {
   schoolInfo: any;
   monthArray: any[] = [];
   notFormatedCellArray: any[] = [];
+  isLoading: boolean = false;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -122,6 +123,7 @@ export class AttendanceReportsComponent implements OnInit {
     44: 'AR',
   };
   currSess:string;
+  loader_status: string;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -177,9 +179,12 @@ export class AttendanceReportsComponent implements OnInit {
 
   }
   getAllEmployee(value) {
+    this.loader_status = "Fetching Employees ";
+    this.isLoading = true;
     this.employeeArray = [];
     if (value) {
       this.commonAPIService.getFilterData(value).subscribe((result: any) => {
+        this.isLoading = false;
         if (result && result.data.length > 0) {
           this.employeeArray = result.data;
           this.getEmployeeAttendance();
@@ -228,6 +233,8 @@ export class AttendanceReportsComponent implements OnInit {
         });
   }
   getEmployeeAttendance() {
+    this.loader_status = "Fetching Employee Attendance";
+    this.isLoading = true;
     this.attendanceArray = [];
     this.employeeAttendanceArray = [];
     this.dataset = [];
@@ -238,6 +245,7 @@ export class AttendanceReportsComponent implements OnInit {
     inputJson.datefrom = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-1';
     inputJson.dateto = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + no_of_days;
     inputJson.sunday = 0;
+    this.loader_status = "Computing Holidays";
     this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
       if (res) {
         this.holidayArray = res.data ? res.data : [];
@@ -296,6 +304,7 @@ export class AttendanceReportsComponent implements OnInit {
           },
           
       }];
+      this.loader_status = "Computing Attendance";
         this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.attendanceArray = res.data;
@@ -333,6 +342,7 @@ export class AttendanceReportsComponent implements OnInit {
   }
 
   getAttendanceReport(value: any) {
+    this.loader_status = "Computing Attendance Report";
     this.dataArr = [];
     this.totalRow = {};
     this.columnDefinitions = [];
