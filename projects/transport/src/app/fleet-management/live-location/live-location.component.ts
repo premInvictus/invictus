@@ -18,10 +18,10 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   // zoom = 7;
 
   markers = [];
-  mapvalue:any = {}
+  mapvalue: any = {}
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
-  displayedColumns: string[] = ['bus_number', 'registration_no', 'driver_name', 'time','location'];
+  displayedColumns: string[] = ['bus_number', 'registration_no', 'driver_name', 'time', 'location'];
   dataSource = new MatTableDataSource<Element>();
   groupdataSource: any[] = [];
   bus_arr: any = [];
@@ -42,9 +42,10 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   multipleFileArray: any[] = [];
   counter: any = 0;
   currentImage: any;
-
+  isLoading: boolean = true;
   location_arr: any = [];
-  refreshIntervalId:any;
+  refreshIntervalId: any;
+  loader_status: string;
 
   constructor(
     private fbuild: FormBuilder,
@@ -60,7 +61,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     this.getAllTransportVehicle();
     this.buildForm();
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     clearInterval(this.refreshIntervalId);
   }
   addCheckList(item) {
@@ -98,6 +99,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     });
   }
   async getAllTransportVehicle() {
+    this.loader_status = "Fetching all Vehicle";
     this.bus_arr = [];
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -105,11 +107,13 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
       const param: any = {};
       param.trip_status = 'start';
       param.date = new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd');
+      this.loader_status = "Fetching all Trips";
       await this.transportService.getAllStartStopTrip(param).toPromise().then((result: any) => {
         if (result && result.length > 0) {
           this.startstoptrip_arr = result;
         }
       });
+      this.loader_status = "Fetching all Vehicle";
       await this.transportService.getAllTransportVehicle({ status: '1' }).toPromise().then((result: any) => {
         if (result && result.length > 0) {
           this.bus_arr = result;
@@ -120,6 +124,9 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
         this.refreshIntervalId = setInterval(() => {
           this.getLastPositionData();
         }, 30000);
+      }else{
+        this.isLoading = false;
+        this.tableDivFlag = false;
       }
     }
 
@@ -128,50 +135,55 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   async getLastPositionData() {
     let param: any = {};
     param.vehicleid = 'All';
+    this.loader_status = "Fetching Vehicle Location";
     await this.transportService.getLastPositionData(param).toPromise().then((result: any) => {
+      this.isLoading = false;
       if (result) {
         this.location_arr = result;
-      }
-    });
-    this.ELEMENT_DATA = [];
-    this.bus_arr.forEach((item, index) => {
-      const startstopdet = this.startstoptrip_arr.find(e => e.tv_id == item.tv_id);
-      const buslocationdet = this.location_arr.find(e => e.vehicle == item.registration_no)
-      let driver_name = item.driver && item.driver.user_det ? item.driver.user_det.au_full_name : '';
-      const tempelement: any = {};
-      tempelement.position = index + 1;
-      tempelement.tv_id = item.tv_id;
-      tempelement.route_id = '';
-      tempelement.route_name = '';
-      tempelement.bus_number = item.bus_number;
-      tempelement.registration_no = item.registration_no;
-      tempelement.driver_name = driver_name;
-      tempelement.location = buslocationdet ? buslocationdet.location : '';
-      tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '';
-      tempelement.action = tempelement;
-      this.ELEMENT_DATA.push(tempelement);
-      if(buslocationdet){
-        this.markers.push(
-          {
-            lat: buslocationdet.latitude,
-            lng: buslocationdet.longitude,
-            label: buslocationdet.location
+        console.log("bus array >>>>", this.bus_arr);
+        
+        this.ELEMENT_DATA = [];
+        this.bus_arr.forEach((item, index) => {
+          const startstopdet = this.startstoptrip_arr.find(e => e.tv_id == item.tv_id);
+          const buslocationdet = this.location_arr.find(e => e.vehicle == item.registration_no)
+          let driver_name = item.driver && item.driver.user_det ? item.driver.user_det.au_full_name : '';
+          const tempelement: any = {};
+          tempelement.position = index + 1;
+          tempelement.tv_id = item.tv_id;
+          tempelement.route_id = '';
+          tempelement.route_name = '';
+          tempelement.bus_number = item.bus_number;
+          tempelement.registration_no = item.registration_no;
+          tempelement.driver_name = driver_name;
+          tempelement.location = buslocationdet ? buslocationdet.location : '';
+          tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '';
+          tempelement.action = tempelement;
+          this.ELEMENT_DATA.push(tempelement);
+          if (buslocationdet) {
+            this.markers.push(
+              {
+                lat: buslocationdet.latitude,
+                lng: buslocationdet.longitude,
+                label: buslocationdet.location,
+                vehicle: buslocationdet.vehicle
+              }
+            )
           }
-        )
+    
+        });
+        if (this.markers.length > 0) {
+          this.mapvalue.lat = this.markers[0].lat;
+          this.mapvalue.long = this.markers[0].lng;
+          this.mapvalue.zoom = 12;
+          this.mapvalue.vehicle = this.markers[0].vehicle;
+          this.mapvalue.markers = this.markers
+        }
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        console.log('this.groupdataSource', this.dataSource)
+        console.log('this.markers', this.markers)
+        this.tableDivFlag = true;
       }
-      
     });
-    if(this.markers.length > 0){
-      this.mapvalue.lat = this.markers[0].lat;
-      this.mapvalue.long =this.markers[0].lng;
-      this.mapvalue.zoom = 7;
-      this.mapvalue.markers = this.markers
-    }
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    console.log('this.groupdataSource', this.dataSource)
-    console.log('this.markers', this.markers)
-    this.tableDivFlag = true;
-
   }
 
 }

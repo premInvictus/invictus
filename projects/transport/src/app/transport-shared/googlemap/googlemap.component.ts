@@ -11,8 +11,11 @@ export class GooglemapComponent implements OnInit {
   lat: number;
   long: number;
   zoom = 7;
+  bus_no = "";
 
   markers = [];
+  color: string;
+  letters: any;
   // markers= [
   //   {
   // 	  lat: 51.673858,
@@ -35,13 +38,22 @@ export class GooglemapComponent implements OnInit {
   // ]
   constructor() { }
 
+  getRandomColor() {
+    this.color = '#'; // <-----------
+    for (var i = 0; i < 6; i++) {
+        this.color += this.letters[Math.floor(Math.random() * 16)];
+    }
+}
+
   ngOnInit() {
-    // console.log('value', this.value);
+    console.log('value >>>>>>>>>>>>>>>>>>>>>>>>..', this.value);
     // console.log('float lat value', parseFloat(this.value.lat).toFixed(6));
     // console.log('Number lat value', Number(this.value.lat));
     this.lat = Number(this.value.lat);
     this.long = Number(this.value.long);
-    this.markers = this.value.markers
+    this.zoom = Number(this.value.zoom);
+    this.markers = this.value.markers;
+    // this.getRandomColor();
   }
 
 }
