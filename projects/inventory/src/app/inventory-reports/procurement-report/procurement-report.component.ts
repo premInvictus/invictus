@@ -556,39 +556,43 @@ export class ProcurementReportComponent implements OnInit {
   }
 
   groupByPaymentMode() {
-    this.dataviewObj.setGrouping({
-      getter: 'receipt_date',
-      formatter: (g) => {
-        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-      },
-      comparer: (a, b) => {
-        // (optional) comparer is helpful to sort the grouped data
-        // code below will sort the grouped value in ascending order
-
-        return Sorters.date(a, b, SortDirectionNumber.desc);
-      },
-      aggregators: this.aggregatearray,
-      aggregateCollapsed: true,
-      collapsed: false,
-    });
-    this.draggableGroupingPlugin.setDroppedGroups('receipt_date');
+    if(this.dataviewObj){
+      this.dataviewObj.setGrouping({
+        getter: 'receipt_date',
+        formatter: (g) => {
+          return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+        },
+        comparer: (a, b) => {
+          // (optional) comparer is helpful to sort the grouped data
+          // code below will sort the grouped value in ascending order
+  
+          return Sorters.date(a, b, SortDirectionNumber.desc);
+        },
+        aggregators: this.aggregatearray,
+        aggregateCollapsed: true,
+        collapsed: false,
+      });
+      this.draggableGroupingPlugin.setDroppedGroups('receipt_date');
+    }
   }
   groupByBankName() {
-    this.dataviewObj.setGrouping({
-      getter: 'receipt_no',
-      formatter: (g) => {
-        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-      },
-      comparer: (a, b) => {
-        // (optional) comparer is helpful to sort the grouped data
-        // code below will sort the grouped value in ascending order
-        return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
-      },
-      aggregators: this.aggregatearray,
-      aggregateCollapsed: true,
-      collapsed: false,
-    });
-    this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
+    if (this.dataviewObj) {
+      this.dataviewObj.setGrouping({
+        getter: 'receipt_no',
+        formatter: (g) => {
+          return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+        },
+        comparer: (a, b) => {
+          // (optional) comparer is helpful to sort the grouped data
+          // code below will sort the grouped value in ascending order
+          return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+        },
+        aggregators: this.aggregatearray,
+        aggregateCollapsed: true,
+        collapsed: false,
+      });
+      this.draggableGroupingPlugin.setDroppedGroups('receipt_no');
+    }
   }
 
   getReport() {
