@@ -201,6 +201,7 @@ export class AttendanceReportsComponent implements OnInit {
 				from_attendance: true,
 				year: this.currSess
 			};
+      this.loader_status = "Fetching Employees";
       this.commonAPIService.getAllEmployee(param).subscribe((result: any) => {
         if (result && result.length > 0) {
           this.employeeArray = result;
@@ -248,6 +249,7 @@ export class AttendanceReportsComponent implements OnInit {
     this.loader_status = "Computing Holidays";
     this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
       if (res) {
+        this.loader_status = "Holidays Computed";
         this.holidayArray = res.data ? res.data : [];
         const dateArray: any[] = [];
         var date;
@@ -307,6 +309,7 @@ export class AttendanceReportsComponent implements OnInit {
       this.loader_status = "Computing Attendance";
         this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
           if (res && res.status === 'ok') {
+            this.isLoading = false;
             this.attendanceArray = res.data;
             this.getAttendanceReport('');
           } else {
@@ -552,6 +555,7 @@ export class AttendanceReportsComponent implements OnInit {
       }
       this.tableFlag = true;
       this.nodataFlag = false;
+      this.isLoading = false;
     } else {
       this.nodataFlag = true;
       this.tableFlag = true;
