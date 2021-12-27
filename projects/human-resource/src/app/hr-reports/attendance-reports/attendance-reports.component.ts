@@ -179,6 +179,7 @@ export class AttendanceReportsComponent implements OnInit {
 
   }
   getAllEmployee(value) {
+    this.dataset = [];
     this.loader_status = "Fetching Employees ";
     this.isLoading = true;
     this.employeeArray = [];
