@@ -155,8 +155,8 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
           tempelement.bus_number = item.bus_number;
           tempelement.registration_no = item.registration_no;
           tempelement.driver_name = driver_name;
-          tempelement.location = buslocationdet ? buslocationdet.location : '-';
-          tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '-';
+          tempelement.location = buslocationdet ? buslocationdet.location : '';
+          tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '';
           tempelement.action = tempelement;
           this.ELEMENT_DATA.push(tempelement);
           if (buslocationdet) {
