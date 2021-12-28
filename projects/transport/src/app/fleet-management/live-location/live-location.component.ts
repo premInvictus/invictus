@@ -146,7 +146,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
         this.bus_arr.forEach((item, index) => {
           const startstopdet = this.startstoptrip_arr.find(e => e.tv_id == item.tv_id);
           const buslocationdet = this.location_arr.find(e => e.vehicle == item.registration_no)
-          let driver_name = item.driver && item.driver.user_det ? item.driver.user_det.au_full_name : '';
+          let driver_name = item.driver && item.driver.user_det ? item.driver.user_det.au_full_name : '-';
           const tempelement: any = {};
           tempelement.position = index + 1;
           tempelement.tv_id = item.tv_id;
@@ -155,8 +155,8 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
           tempelement.bus_number = item.bus_number;
           tempelement.registration_no = item.registration_no;
           tempelement.driver_name = driver_name;
-          tempelement.location = buslocationdet ? buslocationdet.location : '';
-          tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '';
+          tempelement.location = buslocationdet ? buslocationdet.location : '-';
+          tempelement.time = buslocationdet ? buslocationdet.gpsupdatedtime : '-';
           tempelement.action = tempelement;
           this.ELEMENT_DATA.push(tempelement);
           if (buslocationdet) {
@@ -165,16 +165,24 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
                 lat: buslocationdet.latitude,
                 lng: buslocationdet.longitude,
                 label: buslocationdet.location,
-                vehicle: buslocationdet.vehicle
+                vehicle: buslocationdet.vehicle,
               }
             )
           }
     
         });
+        // this.markers.push(
+        //   {
+        //     lat: "23.295048753529088",
+        //     lng: "85.32076792616921",
+        //     label: "Don Bosco School",
+        //     vehicle: "JH 01 ER 7752",
+        //   }
+        // );
         if (this.markers.length > 0) {
           this.mapvalue.lat = this.markers[0].lat;
           this.mapvalue.long = this.markers[0].lng;
-          this.mapvalue.zoom = 12;
+          this.mapvalue.zoom = 6;
           this.mapvalue.vehicle = this.markers[0].vehicle;
           this.mapvalue.markers = this.markers
         }

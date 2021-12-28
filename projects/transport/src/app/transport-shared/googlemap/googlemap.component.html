@@ -1,6 +1,6 @@
-<agm-map [latitude]='lat' [longitude]='long' [zoom]='zoom'>
+<agm-map [latitude]='lat' [longitude]='long' [zoom]='zoom' [scrollwheel]="false">
   <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng" 
-  [label]="{color: 'yellow', text: marker.vehicle}"
+  [label]="{color: 'white', fontSize: '20px', text: marker.vehicle}"
   >
     <agm-info-window>
       {{ marker.label }}

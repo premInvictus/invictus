@@ -18,20 +18,20 @@ export class GooglemapComponent implements OnInit {
   letters: any;
   // markers= [
   //   {
-  // 	  lat: 51.673858,
-  // 	  lng: 7.815982,
+  // 	  lat: 28.643905,
+  // 	  lng: 77.815982,
   // 	  label: 'A',
   // 	  draggable: true
   //   },
   //   {
-  // 	  lat: 51.373858,
-  // 	  lng: 7.215982,
+  // 	  lat: 28.373858,
+  // 	  lng: 77.215982,
   // 	  label: 'B',
   // 	  draggable: false
   //   },
   //   {
-  // 	  lat: 51.723858,
-  // 	  lng: 7.895982,
+  // 	  lat: 28.723858,
+  // 	  lng: 77.895982,
   // 	  label: 'C',
   // 	  draggable: true
   //   }
@@ -39,7 +39,7 @@ export class GooglemapComponent implements OnInit {
   constructor() { }
 
   getRandomColor() {
-    this.color = '#'; // <-----------
+    this.color = '#'; 
     for (var i = 0; i < 6; i++) {
         this.color += this.letters[Math.floor(Math.random() * 16)];
     }
