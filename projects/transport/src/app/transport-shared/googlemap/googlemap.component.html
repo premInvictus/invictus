@@ -3,8 +3,8 @@
   [label]="{color: 'white', fontSize: '20px', text: marker.bus_number}"
   >
   <!-- [color]="event.hovered ? 'blue' : 'red'" -->
-    <agm-info-window>
-      {{ marker.vehicle}} <br>
+    <agm-info-window class="agm-info text-center">
+      <strong>{{ marker.vehicle}}</strong> <br>
       {{ marker.label }}
     </agm-info-window>
   </agm-marker>
