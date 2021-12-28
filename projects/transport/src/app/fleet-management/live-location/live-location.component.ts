@@ -141,11 +141,14 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
       if (result) {
         this.location_arr = result;
         console.log("bus array >>>>", this.bus_arr);
+        console.log("location_arr array >>>>", this.location_arr);
         
         this.ELEMENT_DATA = [];
         this.bus_arr.forEach((item, index) => {
           const startstopdet = this.startstoptrip_arr.find(e => e.tv_id == item.tv_id);
-          const buslocationdet = this.location_arr.find(e => e.vehicle == item.registration_no)
+          const buslocationdet = this.location_arr.find(e => e.vehicle == item.registration_no);
+          console.log("bus location det >>>>>>>", buslocationdet);
+          
           let driver_name = item.driver && item.driver.user_det ? item.driver.user_det.au_full_name : '-';
           const tempelement: any = {};
           tempelement.position = index + 1;
@@ -166,6 +169,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
                 lng: buslocationdet.longitude,
                 label: buslocationdet.location,
                 vehicle: buslocationdet.vehicle,
+                bus_number: item.bus_number,
               }
             )
           }

@@ -1,8 +1,10 @@
 <agm-map [latitude]='lat' [longitude]='long' [zoom]='zoom' [scrollwheel]="false">
   <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng" 
-  [label]="{color: 'white', fontSize: '20px', text: marker.vehicle}"
+  [label]="{color: 'white', fontSize: '20px', text: marker.bus_number}"
   >
+  <!-- [color]="event.hovered ? 'blue' : 'red'" -->
     <agm-info-window>
+      {{ marker.bus_number}} <br>
       {{ marker.label }}
     </agm-info-window>
   </agm-marker>
