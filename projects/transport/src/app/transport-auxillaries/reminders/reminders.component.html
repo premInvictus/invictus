@@ -1,3 +1,32 @@
-<p>
-  reminders works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6 remove-col-padding-left margin-top-15">
+          <span class="font-size-24">Reminders</span>
+        </div>
+        <div class="col-6 remove-col-padding-right text-right">
+          <button mat-button class="btn-success-purple text-capitalize" (click)="openDialog('add')"><i class="fas fa-plus-circle size-20"></i> &nbsp; Add</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Progress Loader -->
+<div class="row"  *ngIf="isLoading">
+  <div class="col-12">
+    <mat-card>
+      <div class="container">
+        <p class="text-center mt-5">
+          <img src="assets/1484.gif" alt="loading">
+        </p>
+        <p class="text-center mb-5">
+          {{loader_status}}
+        </p>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<!-- Progress Loader End -->
+
