@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./mark-attendance.component.css']
 })
 export class MarkAttendanceComponent implements OnInit {
+	@ViewChild('deleteModal') deleteModal;
 	submitFlag = false;
 	defaultFlag = false;
 	finalDivFlag = true;
@@ -281,6 +282,10 @@ export class MarkAttendanceComponent implements OnInit {
 						if (result_u && result_u.status === 'ok') {
 							this.selectedUserArr = result_u.data;
 							if (result_u.data.length > 0) {
+								// let message: any = {};
+								// message['delTitle'] = "Information";
+								// message['delMessage'] = "This will consume  SMS" + "<br/> Would you like to broadcast this message as shown";
+								// this.deleteModal.openModal(message);
 								this.sendPushMessage(result_u.data);
 							} else {
 								this.commonService.showSuccessErrorMessage('Attendance  Notification Disabled', 'error');
@@ -318,6 +323,10 @@ export class MarkAttendanceComponent implements OnInit {
 
 	}
 
+	confirmNotification(e){
+
+	}
+	
 	sendPushMessage(data) {
 		var validationFlag = true;
 		const devices: any[] = [];
@@ -399,12 +408,12 @@ export class MarkAttendanceComponent implements OnInit {
 		
 							//PROCESS PUSH Notification
 							this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
-							if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+							// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
 				
 							//PROCESS SMS NOTIFICATION 
 							this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
-							inputJson.msg_type = 'S';
-							if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+							// inputJson.msg_type = 'S';
+							// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 		
 						}
 					}
@@ -413,12 +422,12 @@ export class MarkAttendanceComponent implements OnInit {
 
 				//PROCESS PUSH Notification
 				this.selectedUserArr[0].push_status ? this.commonService.showSuccessErrorMessage('Push  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('Push  Notification Disabled', 'error');
-				if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
+				// if(this.selectedUserArr[0].push_status) this.sendPushNotification(inputJson);
 	
 				//PROCESS SMS NOTIFICATION 
 				this.selectedUserArr[0].sms_status ? this.commonService.showSuccessErrorMessage('SMS  Notification sent to all absent students', 'success') : this.commonService.showSuccessErrorMessage('SMS  Notification Disabled', 'error');
-				inputJson.msg_type = 'S';
-				if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
+				// inputJson.msg_type = 'S';
+				// if(this.selectedUserArr[0].sms_status) this.sendSMS(inputJson);
 
 			}
 		}
@@ -462,5 +471,8 @@ export class MarkAttendanceComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
 			}
 		});
+	}
+	cancelNotification(){
+
 	}
 }

@@ -776,7 +776,6 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			if (result.status === 'ok') {
 				this.lastRecordId = result.data[0].au_login_id;
 				localStorage.setItem('currentStudent',result.data[0].au_class_id);
-				console.log("studentClass > new student", localStorage.getItem('currentStudent'));
 				this.commonAPIService.studentData.next(
 					{
 						last_record: admno, au_login_id: result.data[0].au_login_id, editable_status: result.data[0].editable_status

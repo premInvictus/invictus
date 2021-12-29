@@ -188,4 +188,8 @@ export class TransportService {
 		// this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getLastPositionData',value);
 	}
+	getLiveLocationData(value) {
+		// this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getLiveLocationData',value);
+	}
 }

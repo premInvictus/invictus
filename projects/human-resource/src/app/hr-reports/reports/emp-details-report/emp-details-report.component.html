@@ -13,6 +13,12 @@
     </div>
   </div>
 </form>
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+</div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"

@@ -248,7 +248,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		}
 	}
-	applyFilter(event) { }
+	
+	applyFilter(event) {
+		console.log("keyup",event);
+		console.log(this.configDataSource);
+		
+		this.configDataSource.filter = event.trim().toLowerCase();
+	}
+
 	deleteCancel() { }
 	deleteEntry(deletedData, serviceName, next) {
 		this.feeService[serviceName](deletedData).subscribe((result: any) => {

@@ -60,6 +60,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getAllTransportVehicle();
     this.buildForm();
+    this.getLiveLocationData();
   }
   ngOnDestroy() {
     clearInterval(this.refreshIntervalId);
@@ -130,6 +131,16 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
       }
     }
 
+  }
+
+  async getLiveLocationData(){
+    await this.transportService.getLiveLocationData({}).toPromise().then((result: any) => {
+      this.isLoading = false;
+      if(result){
+        console.log("live location data fetched", result);
+        
+      }
+    });
   }
 
   async getLastPositionData() {

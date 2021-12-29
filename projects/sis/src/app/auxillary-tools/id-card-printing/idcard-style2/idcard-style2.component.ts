@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { CommonAPIService, SisService } from '../../../_services/index';
 
 @Component({
 	selector: 'app-idcard-style2',
 	templateUrl: './idcard-style2.component.html',
-	styleUrls: ['./idcard-style2.component.scss']
+	styleUrls: ['./idcard-style2.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 })
 export class IdcardStyle2Component implements OnInit, OnChanges {
 
@@ -50,9 +51,15 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 	ngOnInit() {
 		this.getSchool();
 		this.header_portrait = (this.idCardConfig.ps_header);
+		// Replace variables
+		this.header_portrait.replace(/{{school_logo}}/g,this.idCardConfig.ps_school_logo);
+		this.header_portrait.replace("{{schoolInfo.school_name}}",this.schoolInfo.school_name);
+		this.header_portrait.replace("{{schoolInfo.school_phone}}", this.schoolInfo.school_phone);
+
 		this.header_landscape = (this.idCardConfig.ps_l_header);
-		console.log(">>>", this.idCardConfig.ps_header);	
-		console.log(">>>", this.idCardConfig);		
+		console.log(">>>", this.idCardConfig.ps_header);
+		console.log(">>>", typeof(this.idCardConfig.ps_header));	
+		console.log(">>>", this.header_portrait);		
 	}
 	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
