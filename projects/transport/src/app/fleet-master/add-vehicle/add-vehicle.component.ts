@@ -97,7 +97,7 @@ export class AddVehicleComponent implements OnInit {
 			this.bookForm.patchValue({
 				tv_id: this.data.data.tv_id,
 				bus_number: this.data.data.bus_number,
-				bus_details: this.data.data.bus_number,
+				bus_details: this.data.data.bus_details,
 				registration_no: this.data.data.registration_no,
 				registration_valid_upto: this.data.data.registration_valid_upto,
 				permit_valid_upto: this.data.data.permit_valid_upto,

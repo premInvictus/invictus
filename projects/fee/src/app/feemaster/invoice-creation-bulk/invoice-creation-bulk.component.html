@@ -208,10 +208,12 @@
                            (click)="openDeleteDialog(fetchInvId())">Delete</button>
                         <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button> -->
-                           <button mat-raised-button class="btn-filter-grey  btn-spacer" (click)="openSearchDialog({})">Filter
+                        <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 reset-btn "
+                        (click)="resetFilter()" [hidden]="(searchparam.length > 0)"><i class="fas fa-redo-alt"></i> &nbsp; Reset Filter</button>
+                           <button mat-raised-button class="btn-filter-grey  btn-spacer" (click)="openSearchDialog({})"><i class="fas fa-search"></i> Filter
                               Search</button>
                         <button *ngIf="ELEMENT_DATA.length > 0" mat-raised-button
-                           class=" btn-print-invoice btn-spacer" (click)="printInvoice()">Print</button>
+                           class=" btn-print-invoice btn-spacer" (click)="printInvoice()"><i class="fas fa-print"></i> Print</button>
                         <div class="inline-flex btn-spacer" *ngIf="ELEMENT_DATA.length > 0">
                            <div>
                               <img style="cursor: pointer; height: 33px !important" src="/assets/images/xml.svg"
@@ -306,9 +308,15 @@
                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                            </tr>
                         </table>
-                        <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
+                        <div *ngIf="(ELEMENT_DATA.length == 0 && !isLoading)" class="no-records">
                            No records found
                         </div>
+                        <div class="container" *ngIf="isLoading">
+                           <p class="text-center mt-5 mb-5">
+                             <img src="assets/1484.gif" alt="loading">
+                             <!-- Loading..... -->
+                           </p>
+                         </div>
                      </div>
                   </div>
                   <mat-paginator #paginator [pageSize]="invoicepagesize" [pageSizeOptions]="invoicepagesizeoptions"

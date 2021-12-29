@@ -58,6 +58,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
 	sessionName: any;
   sessionArray: any[] = [];
   length:any;
+  isLoading : boolean = false;
+  loader_status = "";
   alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -162,6 +164,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
   }
   getReport(){
     if(this.acumulativeReport.value.report_type && this.acumulativeReport.value.month_id) {
+      this.loader_status = "Loading Start";
+      this.isLoading = true;
       this.getShiftAttendanceReport();
     }
   }
@@ -268,6 +272,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     inputJson1.datefrom = currSess + '-' + this.acumulativeReport.value.month_id + '-1';
     inputJson1.dateto = currSess + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
     inputJson1.sunday = 0;
+    this.loader_status = "Computing Holidays";
     await this.smartService.getHolidayOnly(inputJson1).toPromise().then((res: any) => {
       if (res) {
         this.holidayArray = res.data ? res.data : [];
@@ -301,6 +306,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
         this.displayedEmployeeColumns.push('total_present');
       }
     });
+    this.loader_status = "Computing Employee Leave";
     await this.commonAPIService.getAllEmployeeLeaveData().toPromise().then((result: any) => {
       if(result) {
         this.allemployeeleavearr = result;
@@ -308,6 +314,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     });
     console.log('dateArray',this.dateArray);
     this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+    this.loader_status = "Fetching Employees ";
 		this.commonAPIService[serviceName](inputJson).subscribe((result1: any) => {
       if(serviceName == 'getFilterData') {
         result1 = result1.data;
@@ -317,8 +324,10 @@ export class ShiftAttendanceReportComponent implements OnInit {
           month_id: this.acumulativeReport.value.month_id,
           ses_id:this.session.ses_id,
         };
+        this.loader_status = "Computing Attendance";
         this.commonAPIService.getShiftAttendanceAll(inputJson).subscribe((result: any) => {
           if (result) {
+            this.isLoading = false;
             this.emp_shift_arr = result;
             let pos = 0;
             result1.forEach(employeeData => {
@@ -799,10 +808,12 @@ export class ShiftAttendanceReportComponent implements OnInit {
   openSearchDialog = (data) => { this.searchModal.openModal(data); }
   searchOk($event) {
     this.filterdata = $event;
+    this.isLoading = true;
     this.getShiftAttendanceReport();
   }
   reset(){
     this.filterdata = null;
+    this.isLoading = true;
     this.getShiftAttendanceReport();
   }
 

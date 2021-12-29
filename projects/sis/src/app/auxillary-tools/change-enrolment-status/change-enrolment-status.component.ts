@@ -27,7 +27,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	disableApiCall = false;
 	showCancelDate = false;
 	enrolmentPlaceholder = 'Enrolment';
-	event_au_process_type ;
+	event_au_process_type;
 	enrollMentTypeArray: any[] = [{
 		au_process_type: '1', au_process_name: 'Enquiry'
 	},
@@ -56,8 +56,10 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	selectedMembers: any[] = [];
 	selectedMembersEnrolls: any[] = [];
 	filteredStudents: any[];
+	admNos: any;
+	hybridSearch: any;
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService, 
+		private notif: CommonAPIService, private sisService: SisService,
 		private SmartService: SmartService,
 		private processType: ProcesstypeService,
 		private router: Router,
@@ -170,28 +172,28 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		}
 	}
 
-	getSectionAll(){
+	getSectionAll() {
 		this.sisService.getSectionAll().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				result.data.forEach(element => {
-					if(element.sec_name != "" && element.sec_name != " "){
+					if (element.sec_name != "" && element.sec_name != " ") {
 						this.sectionArray.push(element);
-					}					
+					}
 				});
-				console.log("all the sections : ",this.sectionArray);
+				console.log("all the sections : ", this.sectionArray);
 			}
 		});
 	}
 
-	isAMatch(element, index, array){
-		return 
+	isAMatch(element, index, array) {
+		return
 	}
 
-	filterByClass(event){
+	filterByClass(event) {
 		let filterData = [];
-		console.log("class search : ",event.value );
-		console.log("Students  : ", this.students );
-		if(event.value != "" && event.value != " "){
+		console.log("class search : ", event.value);
+		console.log("Students  : ", this.students);
+		if (event.value != "" && event.value != " ") {
 			this.students.forEach(element => {
 				// if(element.au_admission_no == (event.target.value)){
 				// 	filterData = element;
@@ -199,11 +201,11 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				filterData = this.students.filter(item => item.class_name == event.value);
 			});
 			this.filteredStudents = filterData;
-			if(filterData.length > 0){
+			if (filterData.length > 0) {
 				this.students = filterData;
 			}
 			// this.students = filterData;
-		}else{
+		} else {
 			this.sisService.getStudentsDataPerProcessType({
 				process_type_from: this.event_au_process_type
 			}).subscribe((res: any) => {
@@ -223,11 +225,11 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	}
 
-	filterBySec(event){
+	filterBySec(event) {
 		let filterData = [];
-		console.log("section search : ",event.value );
-		console.log("Students  : ", this.students );
-		if(event.value != "" && event.value != " "){
+		console.log("section search : ", event.value);
+		console.log("Students  : ", this.students);
+		if (event.value != "" && event.value != " ") {
 			this.students.forEach(element => {
 				// if(element.au_admission_no == (event.target.value)){
 				// 	filterData = element;
@@ -235,11 +237,11 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				filterData = this.students.filter(item => item.sec_name == event.value);
 			});
 			this.filteredStudents = filterData;
-			if(filterData.length > 0){
+			if (filterData.length > 0) {
 				this.students = filterData;
 			}
 			// this.students = filterData;
-		}else{
+		} else {
 			this.sisService.getStudentsDataPerProcessType({
 				process_type_from: this.event_au_process_type
 			}).subscribe((res: any) => {
@@ -259,23 +261,23 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	}
 
-	searchByAdmissionNo(event){
+	searchByAdmissionNo(event) {
 		let filterData = [];
-		console.log("admission search : ",event.target.value );
-		console.log("Students  : ", this.students );
-		if(event.target.value != "" && event.target.value != " "){
-			this.students.forEach(element => {
-				// if(element.au_admission_no == (event.target.value)){
-				// 	filterData = element;
-				// }
-				filterData = this.students.filter(item => item.au_admission_no.includes( event.target.value ));
-			});
-			this.filteredStudents = filterData;
-			if(filterData.length > 0){
-				this.students = filterData;
-			}
-			// this.students = filterData;
-		}else{
+		console.log("admission search : ", event.target.value);
+		console.log("Students  : ", this.students);
+		if (event.target.value != "" && event.target.value != " ") {
+			this.admNos = event.target.value;
+			// this.students.forEach(element => {
+			// 	// if(element.au_admission_no == (event.target.value)){
+			// 	// 	filterData = element;
+			// 	// }
+			// 	filterData = this.students.filter(item => item.au_admission_no.includes( event.target.value ));
+			// });
+			// this.filteredStudents = filterData;
+			// if(filterData.length > 0){
+			// 	this.students = filterData;
+			// }
+		} else {
 			this.sisService.getStudentsDataPerProcessType({
 				process_type_from: this.event_au_process_type
 			}).subscribe((res: any) => {
@@ -376,6 +378,85 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			}
 		}
 
+	}
+
+	resetFilter() {
+		this.sisService.getStudentsDataPerProcessType({
+			process_type_from: this.event_au_process_type
+		}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.selectedMembers = [];
+				this.selectedMembersEnrolls = [];
+				this.students = [];
+				this.students = res.data;
+			} else {
+				this.selectedMembers = [];
+				this.selectedMembersEnrolls = [];
+				this.students = [];
+			}
+		});
+	}
+
+	searchByFilter() {
+		let filterData = [];
+		console.log("hey >>>", this.admNos);
+
+		// this.sisService.getStudentsDataPerProcessType({
+		// 	process_type_from: this.event_au_process_type
+		// }).subscribe((res: any) => {
+		// 	if (res && res.status === 'ok') {
+		// 		this.selectedMembers = [];
+		// 		this.selectedMembersEnrolls = [];
+		// 		this.students = [];
+		// 		this.students = res.data;
+		// 	} else {
+		// 		this.selectedMembers = [];
+		// 		this.selectedMembersEnrolls = [];
+		// 		this.students = [];
+		// 	}
+		// });
+		if (this.admNos != "" && this.admNos != " ") {
+			this.hybridSearch = this.admNos.split(",");
+			this.students.forEach(element => {
+				// if(element.au_admission_no == (event.target.value)){
+				// 	filterData = element;
+				// }
+				console.log("hybrid search", this.hybridSearch);
+
+				this.hybridSearch.forEach(element_l => {
+					console.log("element", element_l);
+
+					if (element.au_admission_no == element_l) {
+						filterData.push(element)
+						console.log("match >>>>", filterData);
+						console.log("match >>>>", this.students);
+					}
+					// filterData = (this.students.filter(item => item.au_admission_no.includes( element_l )));
+				});
+			});
+			console.log("fd", filterData);
+
+			this.filteredStudents = filterData;
+			if (filterData.length > 0) {
+				this.students = filterData;
+			}
+			// this.students = filterData;
+		} else {
+			this.sisService.getStudentsDataPerProcessType({
+				process_type_from: this.event_au_process_type
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+					this.students = res.data;
+				} else {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+				}
+			});
+		}
 	}
 
 	checkForCancelDate(event, value) {

@@ -72,6 +72,14 @@
     </div>
   </div>
 </form>
+
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5 mb-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+</div>
+
 <div *ngIf="rowsChosen.length > 0 && CommonService.isExistUserAccessMenu('804')" style="position: absolute;
   right: 2.1%;
   top: 7%;">
@@ -96,7 +104,7 @@
   </div>
   <br>
 </div>
-<div *ngIf="!tableFlag && dataset.length === 0">
+<div *ngIf="!tableFlag && dataset.length === 0 && !isLoading">
   <div class="text-center">
     <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"

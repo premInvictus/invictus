@@ -90,10 +90,11 @@ export class AdmissionSetupComponent implements OnInit {
 		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
 				this.disableApiCall = false;
+				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 			} else {
+				this.common.showSuccessErrorMessage('Form settings not changed', ' error');
 				this.disableApiCall = false;
 			}
 		});

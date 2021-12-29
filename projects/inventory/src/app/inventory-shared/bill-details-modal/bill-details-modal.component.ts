@@ -43,6 +43,7 @@ export class BillDetailsModalComponent implements OnInit {
     this.tableReciptArray['bill_total'] = new IndianCurrency().transform(data.bill_total);
     this.tableReciptArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(data.bill_total));
     this.tableReciptArray['bill_details'] = data.bill_details;
+    this.tableReciptArray['bill_remarks'] = data.bill_remarks;
     this.tableReciptArray['name'] = data.name;
     this.tableReciptArray['mobile'] = data.contact;
     this.tableReciptArray['adm_no'] = data.emp_id ? data.emp_id.split('-')[1] : '';
@@ -71,6 +72,7 @@ export class BillDetailsModalComponent implements OnInit {
     billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(this.data.action.bill_total));
     billArray['bill_created_by'] = this.data.action.created_by;
     billArray['bill_details'] = this.data.action.bill_details;
+    billArray['bill_remarks'] = this.data.action.bill_remarks;
     billArray['school_name'] = this.schoolInfo.school_name;
     billArray['school_logo'] = this.schoolInfo.school_logo;
     billArray['school_address'] = this.schoolInfo.school_address;

@@ -81,6 +81,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
   itemData: any[] = [];
   schoolInfo: any;
   objectFilter: any = {};
+  isLoading: boolean = false;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -223,7 +224,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
   
   changeReportType() {
     console.log("i am here", this.objectFilter);
-    
+    this.isLoading = true;
     if (this.reportFilterForm.valid) {
       this.dataArr = [];
       this.totalRow = {};
@@ -535,6 +536,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
         "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'yyyy-MM-dd')
       }
       this.inventory.storeCollection(inputJson).subscribe((result: any) => {
+        this.isLoading = false;
         if (result) {
           repoArray = result;
           let ind = 0;
@@ -561,7 +563,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
               
               let obj: any = {};
               obj['id'] = ind;
-              obj['dept_id'] = data_pic.item_category.name;
+              obj['dept_id'] = data_pic ? data_pic.item_category.name: '-';
               obj['item_code'] = data.item_code + ' - ' + data.item_name;
               obj['srno'] = ind + 1;
               obj['rate'] = data.item_selling_price
@@ -591,6 +593,7 @@ export class StoreDetailSaleReportComponent implements OnInit {
               obj['bill_total'] = new TitleCasePipe().transform(item.status) == 'Canceled'?  -data.total_price:data.total_price ;
               obj['au_role_id'] = item.buyer_details.au_role_id;
               obj['bill_details'] = item.bill_details;
+              obj['bill_remarks'] = item.bill_remarks;
               obj['created_by'] = data_imp.emp_name;
               let isAvailable = true;
               if(Object.keys(this.objectFilter).length > 0) {
@@ -644,11 +647,11 @@ export class StoreDetailSaleReportComponent implements OnInit {
           this.totalRow = obj3;
           this.aggregatearray.push(new Aggregators.Sum('bill_total'));
           if (this.dataset.length <= 5) {
-            this.gridHeight = 350;
-          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
             this.gridHeight = 450;
-          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
             this.gridHeight = 550;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 650;
           } else if (this.dataset.length > 20) {
             this.gridHeight = 750;
           }

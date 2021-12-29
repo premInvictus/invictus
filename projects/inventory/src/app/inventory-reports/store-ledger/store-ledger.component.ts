@@ -70,6 +70,7 @@ export class StoreLedgerComponent implements OnInit {
   session: any;
   schoolInfo: any;
   itemDetailsArray: any[] = [];
+  isLoading = true;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -435,6 +436,7 @@ export class StoreLedgerComponent implements OnInit {
         }
         this.tableFlag = true;
         this.nodataFlag = false;
+        this.isLoading = false;
         setTimeout(() => this.groupByItemName(), 2);
       } else {
         this.nodataFlag = true;

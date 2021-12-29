@@ -14,7 +14,7 @@
                 <div class="book-cover-img-2">
                   <div class="text-center">
                     <label for="file-input">
-                      <img [src]="au_profileimage ? au_profileimage : '/assets/images/book_placeholder.png'" style="width: 160px;
+                      <img [src]="au_profileimage ? au_profileimage : '/assets/images/book_placeholder.png'" style="width: 100%;
                       height: 230px;
                       border-radius: 5px;
                       opacity: 1;">
@@ -125,11 +125,11 @@
           <div class="row text-center">
             <div class="col-12">
               <button *ngIf="data.action == 'add'" mat-raised-button class="btn-success-green"
-                (click)="submit()">Submit</button>
+                (click)="submit()"><i class="fas fa-save size-20"></i> &nbsp; Submit</button>
               <button *ngIf="data.action == 'edit'" mat-raised-button class="btn-success-green"
-                (click)="submit()">Update</button>
+                (click)="submit()"><i class="fas fa-save size-20"></i> &nbsp; Update</button>
               <button mat-raised-button class="btn-reset btn-spacer" (click)="close()">
-                Cancel
+                <i class="fas fa-ban size-20"></i> &nbsp; Cancel
               </button>
             </div>
           </div>

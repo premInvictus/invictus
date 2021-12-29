@@ -53,21 +53,29 @@ export class VehicleProfileComponent implements OnInit {
         if(buslocationdet){
           this.mapvalue = {};
           const markers = [];
+          console.log("bus loc det >>>>>>>>", buslocationdet);
+          
           markers.push(
             {
               lat: buslocationdet.latitude,
               lng: buslocationdet.longitude,
-              label: buslocationdet.location
+              label: buslocationdet.location,
+              vehicle: buslocationdet.vehicle,
+              zoom: 19
             }
           );
-          if(markers.length > 0){
-            this.mapvalue.lat = markers[0].lat;
-            this.mapvalue.long =markers[0].lng;
-            this.mapvalue.markers = markers
-          }
+          console.log("markers loc det >>>>>>>>", markers);
+          
+        if (markers.length > 0) {
+          this.mapvalue.lat = markers[0].lat;
+          this.mapvalue.long = markers[0].lng;
+          this.mapvalue.zoom = 19;
+          this.mapvalue.vehicle = markers[0].vehicle;
+          this.mapvalue.markers = markers
+        }
         }
       }
-      console.log('this.mapvalue',this.mapvalue);
+      console.log('this.mapvalue >>>>>>>',this.mapvalue);
       this.vehicleDetailsFlag = true;
     });
   }

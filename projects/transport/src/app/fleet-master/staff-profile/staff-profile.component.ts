@@ -62,8 +62,8 @@ export class StaffProfileComponent implements OnInit {
         temp.forEach(element => {
           const tempelement:any = {};
           tempelement.au_profileimage=element.users_det ? element.users_det.au_profileimage : '';
-          tempelement.au_full_name=element.users_det ? element.users_det.au_full_name : '';
-          tempelement.au_mobile=element.users_det ? element.users_det.au_mobile : '';
+          tempelement.au_full_name=element.users_det ? (element.users_det.au_full_name ? element.users_det.au_full_name : 'NA') : '-';
+          tempelement.au_mobile=element.users_det ? ((element.users_det.au_mobile && element.users_det.au_mobile != "undefined")  ? element.users_det.au_mobile : 'NA') : '';
           tempelement.au_email=element.users_det ? element.users_det.au_email : '';
           tempelement.au_dob=element.users_det ? element.users_det.au_dob : '';
 

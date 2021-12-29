@@ -52,12 +52,12 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
           <td mat-cell class="cell-left" *matCellDef="let element;">
-            <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status !=='approved'"
-              (click)="actionList(element.action.pm_id ,'receipt')" style="cursor:pointer" title="Edit"></i>&nbsp;
-            <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status !=='approved'"
+            <i class="fa fa-print modify-icon"
+              (click)="actionList(element.action.pm_id ,'receipt')" style="cursor:pointer" title="Print"></i>&nbsp;
+            <i class="far fa-edit modify-icon"
               (click)="actionList(element.action.pm_id ,'edit')" style="cursor:pointer" title="Edit"></i>&nbsp;
             <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-              *ngIf="element.action.pm_status !=='approved'" (click)="actionList(element.action.pm_id ,'delete')"
+              (click)="actionList(element.action.pm_id ,'delete')"
               style="cursor:pointer" title="Delete"></i>
           </td>
         </ng-container>
