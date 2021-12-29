@@ -25,14 +25,12 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
               <mat-label>Term</mat-label>
-              <mat-select placeholder="Term" formControlName="eme_term_id"
-                (selectionChange)="getExamDetails();resetTableDiv();" required>
+              <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="getExamDetails();resetTableDiv();" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-              *ngIf="paramform.value.eme_term_id != 'comulative'">
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
               <mat-label>Exam</mat-label>
               <mat-select placeholder="Exam" formControlName="eme_exam_id"
                 (selectionChange)="resetTableDiv();getSubExam()">
@@ -41,17 +39,15 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-              *ngIf="paramform.value.eme_term_id != 'comulative'">
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
               <mat-label>Sub-Exam</mat-label>
-              <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple>
+              <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple
+                >
                 <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">
                   {{item.sexam_name | titlecase}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-raised-button class="btn-primary-100"
-              style="margin-top: 10px; width: 100px !important;margin-left: 15px;"
-              (click)="displayData()">Submit</button>
+            <button mat-raised-button class="btn-primary-100" style="margin-top: 10px; width: 100px !important;margin-left: 15px;" (click)="displayData()">Submit</button>
           </div>
         </div>
         <div class="row">
@@ -82,11 +78,11 @@
               <button mat-button class="btn-success-blue btn-spacer text-capitalize"
                 (click)="printGradecard()">Print</button>
               <button mat-button class="btn-success-blue btn-spacer text-capitalize"
-                (click)="openPrintSetupDialog()">Print Setting</button>
+              (click)="openPrintSetupDialog()">Print Setting</button>
             </div>
             <div class="col-6 text-right" *ngIf="selection.selected.length == 0">
               <button mat-button class="btn-success-blue btn-spacer text-capitalize"
-                (click)="openPrintSetupDialog()">Print Setting</button>
+              (click)="openPrintSetupDialog()">Print Setting</button>
             </div>
           </div>
           <div class="row remove-top-margin">
@@ -170,18 +166,16 @@
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef> Action </th>
                   <td mat-cell *matCellDef="let element">
-                    <span *ngIf="element.action.egl_lock_status === '1'">
-                      <i class="fas fa-lock icon-purple  cursor-pointer"
+                    <span *ngIf="element.action.egl_lock_status === '1'"><i class="fas fa-lock icon-purple"
                         (click)="openUnlockModal(element.action, '0')"></i><span
                         class="ver-line-divider margin-left-15"></span></span>
-                    <span *ngIf="element.action.egl_lock_status === '0'">
-                      <i class="fas fa-lock-open icon-purple  cursor-pointer"
+                    <span *ngIf="element.action.egl_lock_status === '0'"><i class="fas fa-lock-open icon-purple"
                         (click)="openLockModal(element.action, '0')"></i><span
                         class="ver-line-divider margin-left-15"></span></span>
-                    <span *ngIf="element.action.egl_lock_status === '0'">
-                      <i class="fas fa-print icon-skyblue  cursor-pointer" (click)="printGradecard(element.action)"></i>
+                    <span *ngIf="element.action.egl_lock_status === '0'"> <i class="fas fa-print icon-skyblue"
+                        (click)="printGradecard(element.action)"></i>
                       <span class="margin-left-15 ver-line-divider"></span></span>
-                    <i class="fas fa-eye icon-green cursor-pointer" (click)="openDialog(element.action)"></i>
+                    <i class="fas fa-eye icon-green" (click)="openDialog(element.action)"></i>
                   </td>
                 </ng-container>
 

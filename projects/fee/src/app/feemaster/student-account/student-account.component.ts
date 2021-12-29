@@ -1058,9 +1058,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.feeService.getStoppagesPerRoute({ tr_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				result.data.forEach(element => {
-					// if(element.tr_status === "1"){
+					if(element.tr_status === "1"){
 						this.stoppageArray.push(element);
-					// }
+					}
 				});
 				// this.stoppageArray = result.data;
 				console.log("stopageArray >>>>>", this.stoppageArray);

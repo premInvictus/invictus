@@ -8,7 +8,6 @@ import html2canvas from 'html2canvas';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { forEach } from '@angular/router/src/utils/collection';
-import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-view-gradecard-dialog',
@@ -204,14 +203,6 @@ export class ViewGradecardDialogComponent implements OnInit {
     // })
     this.examService.printGradecard(param).subscribe(
       (response : any) => {
-        // if (response.type === HttpEventType.DownloadProgress) {
-        //   console.log("download progress");
-        // }
-        // if (response.type === HttpEventType.Response) {
-        //     console.log("donwload completed");
-        // }
-        // console.log("response >>>>", response);
-        
           this.showLoadingFlag = true;
            if (response && response.status === 'ok') {
                 this.printData = response.data;
@@ -978,9 +969,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
         this.examArray.forEach(element => {
           if (element.eac_type === '1') {
-            if(this.sexamArray[element.eac_category]){
-              this.sexamArray[element.eac_category].push(element);
-            }
+            this.sexamArray[element.eac_category].push(element);
             if (element.exam_bifurcate.bifurcated_marks) {
               this.exambifurcateCount += 1;
             }

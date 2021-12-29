@@ -11,13 +11,7 @@
                 <span>{{tab.label}}</span>
               </div>
             </ng-template>
-            <app-dynamic-content-theme-two *ngIf="studentdetails" 
-                [type]="tab.component" 
-                [studentdetails]="studentdetails" 
-                [belongToForm]="formname" 
-                [config]="config" 
-                [currentStudentDataId]="currentStudentDataId" 
-                [configSetting]="settingsArray"></app-dynamic-content-theme-two>
+            <app-dynamic-content-theme-two *ngIf="studentdetails" [type]="tab.component" [studentdetails]="studentdetails" [belongToForm]="formname" [config]="config" [currentStudentDataId]="currentStudentDataId" [configSetting]="settingsArray"></app-dynamic-content-theme-two>
           </mat-tab>
         </ng-container>
         </mat-tab-group>

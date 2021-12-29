@@ -55,7 +55,6 @@ export class EmpDetailsReportComponent implements OnInit {
   sessionName: any;
   gridHeight: any;
   nodataFlag = false;
-  isLoading: boolean = true;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -525,7 +524,6 @@ export class EmpDetailsReportComponent implements OnInit {
 
     // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
     this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
-      this.isLoading = false;
       if (result && result.data.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         repoArray = result.data;
