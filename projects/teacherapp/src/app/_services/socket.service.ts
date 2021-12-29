@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from '../_models/message';
 import { Event } from '../_models/event';
-import * as socketIo from 'socket.io-client';
+import { io, Socket } from "socket.io-client";
 import { environment } from '../../../../../src/environments/environment';
 import { Subject } from 'rxjs';
 const SERVER_URL = environment.socketUrl;
 
 @Injectable()
 export class SocketService {
-	private socket;
+	private socket: Socket;
 
 	userTestInformation = new Subject();
 	constructor() { }
 
 	public initSocket(): void {
-		this.socket = socketIo(SERVER_URL);
+		this.socket = io(SERVER_URL);
 	}
 
 	public send(message: Message): void {

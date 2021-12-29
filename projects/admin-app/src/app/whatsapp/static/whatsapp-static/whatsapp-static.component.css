@@ -1,0 +1,86 @@
+.manage-label {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.manage-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  height: 200px;
+  border: 3px solid #b4b4b06e;
+  background-color: white;
+  overflow: auto;
+}
+
+textarea {
+  border-radius: 8px;
+  outline: none;
+  padding: 10px;
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  resize: none;
+}
+
+mat-form-field {
+  width: 100%;
+  height: 100%;
+}
+
+.btn {
+  cursor: pointer;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 4px;
+  float: right;
+}
+
+.btn + .btn {
+  margin-right: 10px;
+}
+.submit-btn {
+  background-color: #9c3;
+}
+.reset-btn {
+  background-color: #ff0000;
+}
+
+.file-input__input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.file-input__label {
+  cursor: pointer;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 8px;
+  background-color: #9c3;
+  color: #fff;
+}
+
+.file-input__label i {
+  height: 16px;
+  margin-right: 4px;
+}
+
+.count-label {
+  background-color: #e5e3e3;
+  width: fit-content;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  mat-card mat-card-content form .msg {
+    margin-top: 10px;
+  }
+}

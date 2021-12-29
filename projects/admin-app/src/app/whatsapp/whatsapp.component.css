@@ -1,0 +1,10 @@
+.qr {
+  height: 204px;
+  width: 204px;
+  margin: 0 auto;
+}
+
+#placeholder {
+  height: fit-content;
+  width: fit-content;
+}
