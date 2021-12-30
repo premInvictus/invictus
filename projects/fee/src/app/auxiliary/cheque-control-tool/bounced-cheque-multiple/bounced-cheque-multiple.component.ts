@@ -16,6 +16,7 @@ import { Observable, Observer } from 'rxjs';
   styleUrls: ['./bounced-cheque-multiple.component.css']
 })
 export class BouncedChequeMultipleComponent implements OnInit {
+  [x: string]: any;
   studentDetails: any = {};
   finalArray: any[] = [];
   defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
@@ -211,7 +212,21 @@ export class BouncedChequeMultipleComponent implements OnInit {
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
+            
             this.schoolInfo = result.data[0];
+            this.noCORSImage = this.schoolInfo.school_logo.split('/');
+            for(var i=0; i<this.noCORSImage.length;i++){
+              if(i==2){
+                // let temp = this.noCORSImage[i];
+                // this.noCORSImage[i] = this.noCORSImage[i+1];
+                // this.noCORSImage[i+1] = temp;
+                let popData = this.noCORSImage[i+1] +"."+ this.noCORSImage[i];
+                this.noCORSImage[i] = popData;
+                this.noCORSImage.splice(i+1,1);
+              }
+            }
+            console.log("school info >>>>", this.noCORSImage.join('/'));
+            this.noCORSImage = this.noCORSImage.join('/');
             this.getSchoolSetting();
           }
         });
@@ -222,7 +237,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       if (result && result.status === 'ok') {
     		this.schoolSetting = result.data;
         let header = this.schoolSetting[0].gs_value.replace('\\','');
-        header = header.replace('{{si_school_logo}}', '<img width="100" height="100" src="'+this.schoolInfo.school_logo+'"/>');
+        header = header.replace('{{si_school_logo}}', '<img width="100" height="100" src="'+this.noCORSImage+'"/>');
         header = header.replace('{{si_school_name}}', this.schoolInfo.school_name);
         header = header.replace('{{si_school_address}}', this.schoolInfo.school_address);
         header = header.replace('{{si_school_pin}}', this.schoolInfo.school_pincode);
@@ -344,24 +359,26 @@ export class BouncedChequeMultipleComponent implements OnInit {
              var image = new Image();
              if(td.getElementsByTagName('img').length >0) {
               let img = td.getElementsByTagName('img')[0];
-              image.src = img;
+              // image.src = img;
+              img.crossOrigin = 'anonymous';
               let dim = data.cell.height - data.cell.padding('vertical');
               
               var textPos = data.cell;
-              // this.getBase64Image(image);
-              console.log("canvas image >>>>>", img);
+              // // this.getBase64Image(image);
+              // console.log("canvas image >>>>>", img);
               
-              var canvas = document.createElement("canvas");
-              canvas.width = img.width;
-              canvas.height = img.height;
-              var ctx = canvas.getContext("2d");
-              ctx.drawImage(img, 0, 0);
-              var dataURL = canvas.toDataURL("image/png");
+              // var canvas = document.createElement("canvas");
+              // canvas.width = img.width;
+              // canvas.height = img.height;
+              // var ctx = canvas.getContext("2d");
+              // ctx.drawImage(img, 0, 0);
+              // var dataURL = canvas.toDataURL("image/png");
               // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
            
-              console.log("image >>>>>>>>>>>>>>>", img, img.split('.').pop().toUpperCase(), "image >>>>>>", image);
+              // console.log("image >>>>>>>>>>>>>>>", img, img.split('.').pop().toUpperCase(), "image >>>>>>", image, "data url >>>>", dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+              console.log("image >>>>", img);
               
-              doc.addImage(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""), img.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);              
+              doc.addImage(img, img.src.split('.').pop().toUpperCase(), textPos.x,  textPos.y, 18, 18);              
              }
           }
         }
@@ -380,7 +397,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
             doc.setFont('Roboto');
           },
           
-          headerStyles: {
+          headStyles: {
             fontStyle: 'bold',
             fillColor: '#ffffff',
             textColor: 'black',
@@ -409,7 +426,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
         //   data.cell.raw.innerHTML = ('<b>'+splittect[0]+'</b>:'+splittect[1]);
         //   // data.cell.text = '\033[31;1;4mHello\033[0m';
 				// },
-        headerStyles: {
+        headStyles: {
           fillColor: '#ffffff',
           textColor: 'black',
           fontSize: 9,
@@ -420,7 +437,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
 
       doc.autoTable({
         html: '#cheque_control_list1',
-        headerStyles: {
+        headStyles: {
           fontStyle: 'normal',
           fillColor: '#ffffff',
           textColor: 'black',
@@ -459,7 +476,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
           { content: 'Deposited By  ', styles: { halign: 'left', fillColor: '#ffffff' } }
         ]],
         startY: doc.previousAutoTable.finalY + 1 ,
-        headerStyles: {
+        headStyles: {
           fontStyle: 'italic',
           fillColor: '#ffffff',
           textColor: 'black',
@@ -475,7 +492,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
       // 	didDrawPage: function (data) {
       // 		doc.setFont('Roboto');
       // 	},
-      // 	headerStyles: {
+      // 	headStyles: {
       // 		fontStyle: 'bold',
       // 		fillColor: '#ffffff',
       // 		textColor: 'black',
