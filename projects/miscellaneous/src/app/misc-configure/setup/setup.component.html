@@ -2868,15 +2868,18 @@
 
                               <!-- <div class="row" *ngIf="control.gs_alias === 'notification_frequency'">
                                 <div class="col-7"> -->
-                                  <ng-container *ngIf="control.gs_alias == 'notification_frequency'">
-                                    <div class="row mt-minus-20">
-                                      <div class="col-3"></div>
-                                      <div class="col-9">
-                                        <form [formGroup]="notificationForm">
-                                          <mat-radio-group aria-label="Select an option" formControlName="ns_notification_frequency">
-                                            <mat-radio-button *ngFor="let item of notificationSettings" [value]="item.option_name" [checked]="item.status">{{item.option_name | capitalize}}</mat-radio-button>
-                                          </mat-radio-group>
-                                          <!-- <div class="row">
+                              <ng-container *ngIf="control.gs_alias == 'notification_frequency'">
+                                <div class="row mt-minus-20">
+                                  <div class="col-3"></div>
+                                  <div class="col-9">
+                                    <form [formGroup]="notificationForm">
+                                      <mat-radio-group aria-label="Select an option"
+                                        formControlName="ns_notification_frequency">
+                                        <mat-radio-button *ngFor="let item of notificationSettings"
+                                          [value]="item.option_name" [checked]="item.status">{{item.option_name |
+                                          capitalize}}</mat-radio-button>
+                                      </mat-radio-group>
+                                      <!-- <div class="row">
                                             <div class="col-4">
                                               <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Notification Frequency</mat-label>
@@ -2890,11 +2893,11 @@
                                               </mat-form-field>
                                             </div>
                                           </div> -->
-                                        </form>
-                                      </div>
-                                    </div>
-                                  </ng-container>
-                                <!-- </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </ng-container>
+                              <!-- </div>
                               </div> -->
 
                             </ng-container>
@@ -2916,3 +2919,4 @@
       </div>
     </div>
   </div>
+</div>
