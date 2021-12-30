@@ -9,6 +9,7 @@ export const environment = {
 	apiHRUrl: 'http://uat-api-hrms.invictusprojects.in',
 	apiInvUrl: 'http://uat-api-inventory.invictusprojects.in',
 	 apiFaUrl: 'http://dev-api-fa.invictusprojects.in',
+	 apiWhatsappBackendURl: "http://localhost:8008",
 	logoutUrl: 'http://uatlogin.invictusprojects.in',
 	socketUrl: 'http://13.127.2.18:8081',
 	googleMapsKey: '',

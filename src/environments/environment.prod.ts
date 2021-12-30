@@ -10,6 +10,7 @@ export const environment = {
 	apiInvUrl: 'https://apiinventory.invictusdigisoft.com',
 	apiFaUrl: 'https://apifa.invictusdigisoft.com',
 	apiTransportUrl: 'https://apitransport.invictusdigisoft.com',
+	apiWhatsappBackendURl: "https://apiwhatsapp.invictusdigisoft.com",
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
