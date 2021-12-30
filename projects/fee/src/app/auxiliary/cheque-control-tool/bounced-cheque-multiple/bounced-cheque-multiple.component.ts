@@ -244,6 +244,8 @@ export class BouncedChequeMultipleComponent implements OnInit {
         header = header.replace('{{si_school_address}}', this.schoolInfo.school_address);
         header = header.replace('{{si_school_city}}', this.schoolInfo.school_city);
         header = header.replace('{{si_school_state}}', this.schoolInfo.school_state);
+        header = header.replace('{{si_school_website}}', this.schoolInfo.school_website);
+        header = header.replace('{{si_school_afflication_no}}', this.schoolInfo.school_afflication_no);
         header = header.replace('<table ', '<table id="header_tab"');
        
         
