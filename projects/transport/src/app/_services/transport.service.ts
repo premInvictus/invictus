@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
@@ -191,5 +191,13 @@ export class TransportService {
 	getLiveLocationData(value) {
 		// this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getLiveLocationData', value);
+	}
+	getGoogleMapsAPIKey(value) {
+		// this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getGoogleMapsAPIKey', value);
+	}
+	reverseGeoCoding(value,key){
+		let params = new HttpParams().set("latlng",value).set("key", key); //Create new HttpParams
+		return this.http.get(environment.reverseGeoCoding, {params: params});
 	}
 }

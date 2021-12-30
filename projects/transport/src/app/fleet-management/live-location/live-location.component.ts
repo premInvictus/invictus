@@ -6,6 +6,7 @@ import { Element } from './element.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { element } from '@angular/core/src/render3/instructions';
 import { DatePipe } from '@angular/common';
+import { result } from 'node_modules_old/@types/lodash';
 
 @Component({
   selector: 'app-live-location',
@@ -128,7 +129,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
             this.refreshIntervalId = setInterval(() => {
               // this.getLastPositionData();
               this.getLiveLocationData();
-            }, 5000);
+            }, 15000);
           } else {
             this.isLoading = false;
             this.tableDivFlag = false;
@@ -162,9 +163,20 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   prepareLiveLocationTable(){
     this.ELEMENT_DATA_NEW = [];
     this.allDevicesLiveLocation.forEach((element,index) => {
-
+      let locationName = "";
       this.bus_arr.forEach((item, indexer) => {
         if(element.deviceUniqueId == item.device_no){
+          this.transportService.getGoogleMapsAPIKey({}).subscribe((res : any)=>{
+            console.log("google maps >>>>>", res);
+            const mapKey = res[0].gs_value;
+            this.transportService.reverseGeoCoding(
+              element.latitude+ "," + element.longitude, mapKey
+            ).subscribe((result: any)=> {
+              locationName = result.results ? result.results.formatted_address : '';
+              console.log("rev geo code >>>>", result);            
+            });
+          });
+
           const tempElement: any = {};
           tempElement.position = index + 1;
           tempElement.companyName = element.companyName;
@@ -174,6 +186,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
           tempElement.latitude = element.latitude;
           tempElement.longitude = element.longitude;
           tempElement.lastLocation = element.latitude+ "," + element.longitude;
+          tempElement.lastLocationName = locationName;
           tempElement.bus_number = item.bus_number;
           tempElement.registration_no = item.registration_no;
           tempElement.ignition = element.attributes.ignition;
