@@ -33,7 +33,7 @@ tr.mat-row {
     line-height: 32px !important;
 }
 
-.btn-edit-inv{
+.btn-edit-inv {
     background: #6c757d;
     color: #fff;
     text-transform: uppercase;
@@ -42,13 +42,16 @@ tr.mat-row {
     font-size: 13px;
     line-height: 32px !important;
 }
-.present-color{
-    color:#207a04;
+.present-color {
+    color: #207a04;
 }
-.absent-color{
+.absent-color {
     color: #ff5a5a;
 }
 .mat-checkbox-disabled {
     // background-color: #757a8461 !important;
     opacity: 0.5;
+}
+.t-20 {
+    top: 20%;
 }

@@ -44,12 +44,15 @@
   </div>
 </form>
 <div class="container" *ngIf="isLoading">
-  <p class="text-center mt-5 mb-5">
+  <p class="text-center mt-5">
     <img src="assets/1484.gif" alt="loading">
     <!-- Loading..... -->
   </p>
+  <p class="text-center mb-5">
+    {{loader_status}}
+  </p>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0 && !isLoading">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
