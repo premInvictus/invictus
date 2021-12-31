@@ -124,6 +124,7 @@ export class ProcurementReportComponent implements OnInit {
   showFilter = false;
   today = new Date();
   objectFilter: any = {};
+  loader_status: any = "";
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
     private erpCommonService: ErpCommonService,) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
