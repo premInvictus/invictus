@@ -11,14 +11,30 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="tableDivFlag">
+<!-- Progress Loader -->
+<div class="row"  *ngIf="isLoading">
+  <div class="col-12">
+    <mat-card>
+      <div class="container">
+        <p class="text-center mt-5">
+          <img src="assets/1484.gif" alt="loading">
+        </p>
+        <p class="text-center mb-5">
+          {{loader_status}}
+        </p>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<!-- Progress Loader End -->
+<div class="row" *ngIf="tableDivFlag && !isLoading">
   <div class="col-12">
     <mat-card>
        <app-googlemap [value]="mapvalue"></app-googlemap>
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="tableDivFlag">
+<div class="row" *ngIf="tableDivFlag && !isLoading">
   <div class="col-12">
     <mat-card>
       <table mat-table [dataSource]="dataSource" class="table-100 text-center">
@@ -40,7 +56,7 @@
         </ng-container>
         <ng-container matColumnDef="time">
             <th mat-header-cell *matHeaderCellDef> Time </th>
-            <td mat-cell *matCellDef="let element"> {{element.time | date:'h:mm:ss a'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.lastStatusUpdate | date:'h:mm:ss a'}} </td>
           </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
@@ -49,7 +65,7 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="!tableDivFlag">
+<div class="row" *ngIf="!tableDivFlag && !isLoading">
   <div class="col-12 text-center">
     <mat-card>
       <app-no-data
