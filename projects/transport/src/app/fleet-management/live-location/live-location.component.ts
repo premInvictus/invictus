@@ -6,7 +6,6 @@ import { Element } from './element.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { element } from '@angular/core/src/render3/instructions';
 import { DatePipe } from '@angular/common';
-import { result } from 'node_modules_old/@types/lodash';
 
 @Component({
   selector: 'app-live-location',
