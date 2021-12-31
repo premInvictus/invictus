@@ -10,6 +10,7 @@ export const environment = {
 	apiInvUrl: 'http://uat-api-inventory.invictusprojects.in',
 	 apiFaUrl: 'http://dev-api-fa.invictusprojects.in',
 	 apiWhatsappBackendURl: "http://localhost:8008",
+	 reverseGeoCoding: "https://maps.googleapis.com/maps/api/geocode/json",
 	logoutUrl: 'http://uatlogin.invictusprojects.in',
 	socketUrl: 'http://13.127.2.18:8081',
 	googleMapsKey: '',
