@@ -16,6 +16,7 @@ export const environment = {
   helpDeskUrl: "http://support.invictusprojects.in/autologin.php",
   helpDeskAgentUrl: "http://support.invictusprojects.in/scp/login.php",
   payuApi: "https://test.payu.in/_payment",
+  reverseGeoCoding: "https://maps.googleapis.com/maps/api/geocode/json",
   googleMapsKey: "",
   testInitiateCode: "T100",
   testStartCode: "T101",
