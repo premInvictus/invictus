@@ -3,12 +3,13 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
 import { GradecardPagesetupComponent } from '../gradecard-pagesetup/gradecard-pagesetup.component';
 import { TitleCasePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
+import { APPLICATION_MODULE_PROVIDERS } from '@angular/core/src/application_module';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./gradecard-printing.component.css']
 })
 export class GradecardPrintingComponent implements OnInit {
-	hintColor = '#ff0000';
+  hintColor = '#ff0000';
   isExamAvailableMessage = "No Exams Configured for this Session";
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('deleteModalUnlock') deleteModalUnlock;
@@ -25,7 +26,7 @@ export class GradecardPrintingComponent implements OnInit {
   classArray: any[] = [];
   subjectArray: any[] = [];
   sectionArray: any[] = [];
-  termsArray: any[] = []; 
+  termsArray: any[] = [];
   examArray: any[] = [];
   gradeCardMarkArray: any[] = [];
   studentArray: any[] = [];
@@ -46,7 +47,7 @@ export class GradecardPrintingComponent implements OnInit {
     public dialog: MatDialog
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.buildForm();
     this.getClass();
   }
@@ -64,7 +65,7 @@ export class GradecardPrintingComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
-  }  
+  }
   openPrintSetupDialog(item): void {
     const dialogRef = this.dialog.open(GradecardPagesetupComponent, {
       width: '30%',
@@ -76,19 +77,19 @@ export class GradecardPrintingComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
-  openLockModal(data = null,multiple) {
+  openLockModal(data = null, multiple) {
     data.text = 'Lock'
     data.multiple = multiple;
-		this.deleteModal.openModal(data);
+    this.deleteModal.openModal(data);
   }
   openUnlockModal(data = null, multiple) {
     data.text = 'Unlock';
     data.multiple = multiple;
-		this.deleteModalUnlock.openModal(data);
+    this.deleteModalUnlock.openModal(data);
   }
-  printGradecard(item=null) {
+  printGradecard(item = null) {
     const printData: any[] = [];
-    if(item) {
+    if (item) {
       printData.push(item.au_login_id);
     } else {
       this.selection.selected.forEach(e => {
@@ -103,25 +104,25 @@ export class GradecardPrintingComponent implements OnInit {
     param.exam_id = this.paramform.value.eme_exam_id;
     param.se_id = this.paramform.value.eme_subexam_id;
     this.examService.printGradecard(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      if (result && result.status === 'ok') {
         console.log(result.data);
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				const length = result.data.split('/').length;
-				saveAs(result.data, result.data.split('/')[length - 1]);
-				window.open(result.data, '_blank');
-      }else {
+        const length = result.data.split('/').length;
+        saveAs(result.data, result.data.split('/')[length - 1]);
+        window.open(result.data, '_blank');
+      } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     })
 
   }
-	lockGradeCard(item) {
+  lockGradeCard(item) {
     console.log(item);
-		if (item.multiple === '1') {
+    if (item.multiple === '1') {
       this.lockGradeCardMulti();
-		} else {
-			this.lockGradeCardOne(item);
-		}
+    } else {
+      this.lockGradeCardOne(item);
+    }
   }
   lockGradeCardOne(item) {
     console.log(item);
@@ -150,9 +151,9 @@ export class GradecardPrintingComponent implements OnInit {
     console.log(item);
     if (item.multiple === '1') {
       this.unlockGradeCardMulti();
-		} else {
-			this.unlockGradeCardOne(item);
-		}
+    } else {
+      this.unlockGradeCardOne(item);
+    }
   }
   unlockGradeCardOne(item) {
     console.log(item);
@@ -178,7 +179,7 @@ export class GradecardPrintingComponent implements OnInit {
   }
   lockUnlockGradeCard(param) {
     this.examService.lockUnlockGradeCard(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      if (result && result.status === 'ok') {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         this.displayData();
       } else {
@@ -186,7 +187,7 @@ export class GradecardPrintingComponent implements OnInit {
       }
     })
   }
-  /** Whether the number of selected elements matches the total number of rows. */ 
+  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -196,8 +197,8 @@ export class GradecardPrintingComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -212,8 +213,8 @@ export class GradecardPrintingComponent implements OnInit {
       eme_class_id: '',
       eme_sec_id: '',
       eme_term_id: '',
-      eme_exam_id:'',
-      eme_subexam_id:''
+      eme_exam_id: '',
+      eme_subexam_id: ''
     })
   }
 
@@ -233,12 +234,12 @@ export class GradecardPrintingComponent implements OnInit {
       eme_subexam_id: '',
     });
     this.examArray = [];
-    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.getTermid()}).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid() }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
-				if(result.data.length > 0) this.isExamAvailable = true;
+        if (result.data.length > 0) this.isExamAvailable = true;
       } else {
-				this.isExamAvailable = false;
+        this.isExamAvailable = false;
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
@@ -266,12 +267,12 @@ export class GradecardPrintingComponent implements OnInit {
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const temp = result.data;
-        if(temp.length > 0) {
+        if (temp.length > 0) {
           temp.forEach(element => {
-            if(element.sub_parent_id && element.sub_parent_id === '0') {
+            if (element.sub_parent_id && element.sub_parent_id === '0') {
               const childSub: any[] = [];
-              for(const item of temp) {
-                if(element.sub_id === item.sub_parent_id) {
+              for (const item of temp) {
+                if (element.sub_id === item.sub_parent_id) {
                   childSub.push(item);
                 }
               }
@@ -289,23 +290,23 @@ export class GradecardPrintingComponent implements OnInit {
   }
   getClassTerm() {
     this.termsArray = [];
-    this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
+    this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classterm = result.data;
         this.getSubjectsByClass();
         //console.log(result.data);
         result.data.ect_no_of_term.split(',').forEach(element => {
-          this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+          this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
         });
-        this.termsArray.push({id:'comulative', name: 'Cumulative'});
-        this.examService.getExamPerCumulativeExam({class_id: this.paramform.value.eme_class_id}).subscribe((result : any) => {
-          if(result && result.status === 'ok') {
-            this.termsArray.push({id:'percumulative', name: 'Percentage Cumulative'});
+        this.termsArray.push({ id: 'comulative', name: 'Cumulative' });
+        this.examService.getExamPerCumulativeExam({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+            this.termsArray.push({ id: 'percumulative', name: 'Percentage Cumulative' });
           } else {
 
           }
         })
-        console.log('termsArray',this.termsArray);
+        console.log('termsArray', this.termsArray);
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
       }
@@ -318,33 +319,33 @@ export class GradecardPrintingComponent implements OnInit {
     this.tableDivFlag = false;
   }
   getClearedGradeCard(au_login_id) {
-    let gstatus  = '1';
-    for(let i=0; i<this.examArray.length;i++){
-      for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
-        for(let k=0;k<this.subjectArray.length;k++) {
-          if(this.gradeCardMarkArray) {
-            if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
-              if(this.subjectArray[k].childSub.length === 0) {
-                const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+    let gstatus = '1';
+    for (let i = 0; i < this.examArray.length; i++) {
+      for (let j = 0; j < this.examArray[i].exam_sub_exam_max_marks.length; j++) {
+        for (let k = 0; k < this.subjectArray.length; k++) {
+          if (this.gradeCardMarkArray) {
+            if (this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+              if (this.subjectArray[k].childSub.length === 0) {
+                const gindex = this.gradeCardMarkArray.findIndex(e => e.emem_login_id === au_login_id &&
                   e.eme_sub_id === this.subjectArray[k].sub_id &&
                   e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
                   e.eme_exam_id === this.examArray[i].exam_id);
-                if(gindex === -1) {
+                if (gindex === -1) {
                   gstatus = '0';
                   break;
                 }
               } else {
-                for(let l=0; l< this.subjectArray[k].childSub.length; l++) {
-                  const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                for (let l = 0; l < this.subjectArray[k].childSub.length; l++) {
+                  const gindex = this.gradeCardMarkArray.findIndex(e => e.emem_login_id === au_login_id &&
                     e.eme_sub_id === this.subjectArray[k].childSub[l].sub_id &&
                     e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
                     e.eme_exam_id === this.examArray[i].exam_id);
-                  if(gindex === -1) {
+                  if (gindex === -1) {
                     gstatus = '0';
                     break;
                   }
                 }
-                if(gstatus === '0') {
+                if (gstatus === '0') {
                   break;
                 }
               }
@@ -354,15 +355,15 @@ export class GradecardPrintingComponent implements OnInit {
             break;
           }
         }
-        if(gstatus === '0') {
+        if (gstatus === '0') {
           break;
         }
       }
-      if(gstatus === '0') {
+      if (gstatus === '0') {
         break;
       }
     }
-    
+
     /*const sindex = this.studentArray.findIndex(e => e.au_login_id === au_login_id);
     if(sindex !== -1) {
       this.studentArray[sindex].status = gstatus;
@@ -375,9 +376,9 @@ export class GradecardPrintingComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.gradeCardMarkArray = [];
     this.studentArray = [];
-    this.selection.clear();    
+    this.selection.clear();
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id && this.paramform.value.eme_term_id) {
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id,au_process_type:['4','5']}).subscribe((result: any) => {
+      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id, au_process_type: ['4', '5'] }).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
           const param: any = {};
@@ -386,10 +387,10 @@ export class GradecardPrintingComponent implements OnInit {
           param.eme_term_id = this.getTermid();
           param.eme_review_status = '4';
           this.examService.getGradeCardMark(param).subscribe((result: any) => {
-            if(result && result.status === 'ok') {
+            if (result && result.status === 'ok') {
               this.gradeCardMarkArray = result.data;
             }
-            if(this.studentArray.length > 0) {
+            if (this.studentArray.length > 0) {
               this.studentArray.forEach(element => {
                 const temp: any = {};
                 temp.au_admission_no = element.au_admission_no;
@@ -404,7 +405,7 @@ export class GradecardPrintingComponent implements OnInit {
               this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
               this.tableDivFlag = true;
             }
-          }) ;
+          });
         } else {
           this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
         }
@@ -421,9 +422,9 @@ export class GradecardPrintingComponent implements OnInit {
     });
   }
   getTermid() {
-    if(this.paramform.value.eme_term_id == 'comulative') {
+    if (this.paramform.value.eme_term_id == 'comulative') {
       const termIndex = this.termsArray.findIndex(e => e.id === this.paramform.value.eme_term_id);
-      return this.termsArray[termIndex-1].id;
+      return this.termsArray[termIndex - 1].id;
     } else {
       const termIndex = this.termsArray.findIndex(e => e.id === this.paramform.value.eme_term_id);
       return this.termsArray[termIndex].id;
@@ -432,7 +433,7 @@ export class GradecardPrintingComponent implements OnInit {
   getSubExam() {
     this.subexamArray = [];
     if (this.paramform.value.eme_exam_id) {
-      this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.getTermid(), exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+      this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid(), exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
             this.subexamArray = result.data[0].exam_sub_exam_max_marks;
@@ -462,5 +463,9 @@ export class GradecardPrintingComponent implements OnInit {
       });
     }
   }
+  isExistUserAccessMenu(mod_id) {
+    console.log('>> Mod id :', mod_id);
 
+    return this.commonAPIService.isExistUserAccessMenu(mod_id);
+  }
 }
