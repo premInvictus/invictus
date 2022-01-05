@@ -71,7 +71,7 @@
   right: 2.1%;
   top: 7%;">
   <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-      (click)="$event.preventDefault();deleteModal()" style="margin-left:0 !important">Delete</button>
+      (click)="$event.preventDefault();deleteModal()" style="margin-left:0 !important"><i class="fas fa-file-invoice-dollar"></i> Cancel Receipt</button>
 </div>
 <br>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
@@ -103,5 +103,5 @@
 <app-bill-details-modal #billDetailsModal></app-bill-details-modal>
 <app-delete-with-reason #deleteWithReasonModal
    [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete'"
-   (deleteOk)="deleteSaleReceipt($event)">
+   (deleteOk)="createDeletedSalesReceipt($event)">
 </app-delete-with-reason>

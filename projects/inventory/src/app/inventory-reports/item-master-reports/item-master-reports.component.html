@@ -13,9 +13,12 @@
   </div>
 </form>
 <div class="container" *ngIf="isLoading">
-  <p class="text-center mt-5 mb-5">
+  <p class="text-center mt-5">
     <img src="assets/1484.gif" alt="loading">
     <!-- Loading..... -->
+  </p>
+  <p class="text-center mb-5">
+    {{loader_status}}
   </p>
 </div>
 <div style="width: 100% !important; overflow: auto" *ngIf="tableFlag && dataset.length > 0">
