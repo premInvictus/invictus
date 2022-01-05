@@ -29,6 +29,15 @@
           </div>
         </div>
       </div>
+      <div class="container" *ngIf="isLoading">
+        <p class="text-center mt-5">
+          <img src="assets/1484.gif" alt="loading">
+          <!-- Loading..... -->
+        </p>
+        <p class="text-center mb-5">
+          {{loader_status}}
+        </p>
+      </div>
     </mat-card>
   </div>
 </div>

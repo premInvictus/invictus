@@ -30,6 +30,8 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   filterData: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  isLoading: boolean = true;
+  loader_status: string = "";
 
   @ViewChild('searchModal') searchModal;
   spans = [];
@@ -195,8 +197,10 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.val) {
       this.filterData.searchData = this.val
     }
+    this.loader_status = "Populating Items";
     this.inventoryService.searchItemsFromMaster(this.filterData).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.isLoading = false;
         this.displayList(res.data);
       }
     });
