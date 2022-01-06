@@ -24,7 +24,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
   mapvalue:any = {}
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
-  displayedColumns: string[] = ['bus_number', 'registration_no', 'driver_name', 'time','location'];
+  displayedColumns: string[] = ['bus_number', 'registration_no', 'driver_name', 'time','location', 'ignition', 'motion', 'todayDistance'];
   dataSource = new MatTableDataSource<Element>();
   groupdataSource: any[] = [];
   bus_arr: any = [];
@@ -106,7 +106,14 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
                   }
                 }
               });
+            }else{
+              this.loader_status = "No Trips Found";
+              setTimeout(()=>{
+                this.isLoading = false;
+              }, 1000);
             }
+          },(error)=>{
+            this.isLoading = false;
           });
         }
       },
@@ -132,6 +139,11 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
               console.log("live location data fetched >>>>>>>>>>>>>>.", this.allDevicesLiveLocation);
               //   }
               // });
+      }else{
+        this.loader_status = "No Location Found";
+        setTimeout(()=>{
+          this.isLoading = false;
+        }, 1000);
       }
     });
   }
@@ -159,7 +171,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
           tempElement.companyName = element.companyName;
           tempElement.deviceTime = element.deviceTime;
           tempElement.deviceUniqueId = element.deviceUniqueId;
-          tempElement.lastStatusUpdate =  new DatePipe('en-in').transform(element.lastStatusUpdate, 'yyyy-MM-dd H:M:ss');
+          tempElement.lastStatusUpdate =  new DatePipe('en-in').transform(element.lastStatusUpdate, 'yyyy-MMM-dd H:M:ss');
           tempElement.latitude = element.latitude;
           tempElement.longitude = element.longitude;
           tempElement.lastLocation = element.latitude+ "," + element.longitude;
@@ -184,6 +196,11 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
             }
           )
 
+        }else{
+          this.loader_status = "No Bus Found";
+          setTimeout(()=>{
+            this.isLoading = false;
+          }, 1000);
         }
       });
     });
@@ -191,7 +208,7 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
     if (this.markers.length > 0) {
       this.mapvalue.lat = this.markers[0].lat;
       this.mapvalue.long = this.markers[0].lng;
-      this.mapvalue.zoom = 7;
+      this.mapvalue.zoom = 17;
       this.mapvalue.vehicle = this.markers[0].vehicle;
       this.mapvalue.markers = this.markers
     }

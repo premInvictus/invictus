@@ -12,7 +12,7 @@
   </div>
 </div>
 <!-- Progress Loader -->
-<div class="row"  *ngIf="isLoading">
+<div class="row" *ngIf="isLoading">
   <div class="col-12">
     <mat-card>
       <div class="container">
@@ -30,7 +30,7 @@
 <div class="row" *ngIf="tableDivFlag && !isLoading">
   <div class="col-12">
     <mat-card>
-       <app-googlemap [value]="mapvalue"></app-googlemap>
+      <app-googlemap [value]="mapvalue"></app-googlemap>
     </mat-card>
   </div>
 </div>
@@ -55,9 +55,26 @@
           <td mat-cell *matCellDef="let element"> {{element.location | titlecase}} </td>
         </ng-container>
         <ng-container matColumnDef="time">
-            <th mat-header-cell *matHeaderCellDef> Time </th>
-            <td mat-cell *matCellDef="let element"> {{element.lastStatusUpdate | date:'h:mm:ss a'}} </td>
-          </ng-container>
+          <th mat-header-cell *matHeaderCellDef> Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastStatusUpdate | date:'h:mm:ss a'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ignition">
+          <th mat-header-cell *matHeaderCellDef> Ignition </th>
+          <td mat-cell *matCellDef="let element"> <i class="far fa-thumbs-up" style="color: green;" [hidden]="!element.ignition"></i>
+            <i class="far fa-times-circle" style="color: red;" [hidden]="element.ignition"></i> {{element.ignition ? 'On' : 'Off'}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="motion">
+          <th mat-header-cell *matHeaderCellDef> Motion </th>
+          <td mat-cell *matCellDef="let element"> <i class="fas fa-truck-moving" style="color: green;" [hidden]="!element.motion"></i>
+            <i class="far fa-hand-paper" style="color: red;" [hidden]="element.motion"></i>
+            {{element.motion ? 'Moving' : 'Halted'}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="todayDistance">
+          <th mat-header-cell *matHeaderCellDef> Distance (Km)</th>
+          <td mat-cell *matCellDef="let element"> {{element.todayDistance | number : '1.2-2'}} </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
         </tr>
