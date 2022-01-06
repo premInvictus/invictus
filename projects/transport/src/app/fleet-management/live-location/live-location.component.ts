@@ -133,6 +133,11 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.tableDivFlag = false;
           }
+        }else{
+          this.loader_status = "No Vehicles Found";
+          setTimeout(()=>{
+            this.isLoading = false;
+          }, 1000);
         }
       });
       
@@ -155,6 +160,11 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
               console.log("live location data fetched >>>>>>>>>>>>>>.", this.allDevicesLiveLocation);
               //   }
               // });
+      }else{
+        this.loader_status = "No Location Found";
+        setTimeout(()=>{
+          this.isLoading = false;
+        }, 1000);
       }
     });
   }
@@ -207,6 +217,11 @@ export class LiveLocationComponent implements OnInit, OnDestroy {
             }
           )
 
+        }else{
+          this.loader_status = "No Bus Found";
+          setTimeout(()=>{
+            this.isLoading = false;
+          }, 1000);
         }
       });
     });

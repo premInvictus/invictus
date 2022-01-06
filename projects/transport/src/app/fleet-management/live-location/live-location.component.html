@@ -99,7 +99,7 @@
         </ng-container>
         <ng-container matColumnDef="todayDistance">
           <th mat-header-cell *matHeaderCellDef> Today's Distance (Kms) </th>
-          <td mat-cell *matCellDef="let element" colspan="1"> {{element.todayDistance}} </td>
+          <td mat-cell *matCellDef="let element" colspan="1"> {{element.todayDistance  | number : '1.2-2'}} </td>
         </ng-container>
         <ng-container matColumnDef="ignition">
           <th mat-header-cell *matHeaderCellDef> Ignition </th>
