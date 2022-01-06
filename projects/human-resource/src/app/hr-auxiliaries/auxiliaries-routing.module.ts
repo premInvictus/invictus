@@ -11,7 +11,7 @@ import { EmployeeShiftAttendanceComponent } from './employee-shift-attendance/em
 
 const routes: Routes = [
   { path: 'admin-return', component: AdminReturnComponent },
-  { path: 'mark-attendence', component: HrEmpMarkAttendanceComponent },
+  { path: 'mark-attendance', component: HrEmpMarkAttendanceComponent },
   { path: 'id-card-printing', component: IdCardPrintingComponent },
   { path: 'bulk-updates', component: BulkUpdatesComponent },
   { path: 'change-status', component: ChangeStatusComponent },
