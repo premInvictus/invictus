@@ -472,6 +472,7 @@
             Confirm and Process
           </button>
           <button
+            *ngIf="isExistUserAccessMenu('919')"
             mat-raised-button
             class="btn-reset btn-spacer"
             (click)="reset()"
