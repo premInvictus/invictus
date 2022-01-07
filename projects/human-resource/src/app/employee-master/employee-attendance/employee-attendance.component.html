@@ -3,7 +3,6 @@
     <mat-card>
       <form [formGroup]="searchForm">
         <div class="row">
-
           <div class="col-6 margin-top-15">
             <span class="font-size-24">Employee Attendance</span>
           </div>
@@ -11,8 +10,11 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Month</mat-label>
-              <mat-select formControlName="month_id" required
-                (selectionChange)="getMonthName($event);getEmployeeDetail();">
+              <mat-select
+                formControlName="month_id"
+                required
+                (selectionChange)="getMonthName($event); getEmployeeDetail()"
+              >
                 <!-- <mat-option value="4">April</mat-option>
                 <mat-option value="5">May</mat-option>
                 <mat-option value="6">June</mat-option>
@@ -25,14 +27,21 @@
                 <mat-option value="1">January</mat-option>
                 <mat-option value="2">February</mat-option>
                 <mat-option value="3">March</mat-option> -->
-                <mat-option value="{{item?.month_id}}" *ngFor="let item of monthArr">{{item?.month_name}}</mat-option>
+                <mat-option
+                  value="{{ item?.month_id }}"
+                  *ngFor="let item of monthArr"
+                  >{{ item?.month_name }}</mat-option
+                >
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Status</mat-label>
-              <mat-select formControlName="status_id" (selectionChange)="getStatusName($event); getEmployeeDetail();">
+              <mat-select
+                formControlName="status_id"
+                (selectionChange)="getStatusName($event); getEmployeeDetail()"
+              >
                 <mat-option value="all">All</mat-option>
                 <mat-option value="live">Live</mat-option>
                 <mat-option value="left">Left</mat-option>
@@ -42,10 +51,16 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Category</mat-label>
-              <mat-select formControlName="cat_id" (selectionChange)="getCategoryName($event);getEmployeeDetail();">
+              <mat-select
+                formControlName="cat_id"
+                (selectionChange)="getCategoryName($event); getEmployeeDetail()"
+              >
                 <mat-option value="">Please select</mat-option>
-                <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
-                  {{item.cat_name}}
+                <mat-option
+                  *ngFor="let item of categoryOneArray"
+                  [value]="item.cat_id"
+                >
+                  {{ item.cat_name }}
                 </mat-option>
                 <!-- <mat-option value="1">Teaching</mat-option>
                 <mat-option value="2">Non Teaching (Administrative)</mat-option>
@@ -53,14 +68,16 @@
               </mat-select>
             </mat-form-field>
           </div>
-
         </div>
       </form>
     </mat-card>
   </div>
 
   <div class="col-12">
-    <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
+    <mat-card
+      class="margin-top-10 card-height-325"
+      [hidden]="!(EMPLOYEE_ELEMENT.length > 0)"
+    >
       <!-- <form [formGroup]="employeeForm"> -->
       <div class="row">
         <div class="col-12 margin-top-15">
@@ -69,39 +86,67 @@
       </div>
       <div class="row" class="overflow" [hidden]="formGroupArray.length === 0">
         <div class="col-12">
-          <div class="row ">
+          <div class="row">
             <div class="col-10 remove-col-padding">
               <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" (keyup)="applyFilter($event.target.value)" />
+                <input
+                  matInput
+                  placeholder="Search"
+                  (keyup)="applyFilter($event.target.value)"
+                />
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
           </div>
-          <table mat-table [dataSource]="employeedataSource" matSort class="table-100 text-center" id="report_table3">
+          <table
+            mat-table
+            [dataSource]="employeedataSource"
+            matSort
+            class="table-100 text-center"
+            id="report_table3"
+          >
             <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="2%"> Sr. No. </th>
-              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="text-nowrap"
+                width="2%"
+              >
+                Sr. No.
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.srno }}</td>
             </ng-container>
             <ng-container matColumnDef="emp_id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Emp. ID </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
+                Emp. ID
+              </th>
               <td mat-cell *matCellDef="let element">
-                {{element.emp_code_no}}
+                {{ element.emp_code_no }}
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%"> Employee Name </th>
-              <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_name | slice: 0:50}} <span
-                  *ngIf="element?.emp_name?.length > 50">...</span>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">
+                Employee Name
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                {{ element.emp_name | slice: 0:50 }}
+                <span *ngIf="element?.emp_name?.length > 50">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_designation">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Designation </th>
-              <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_designation | slice: 0:50}} <span
-                  *ngIf="element?.emp_designation?.length > 50">...</span>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                Designation
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                {{ element.emp_designation | slice: 0:50 }}
+                <span *ngIf="element?.emp_designation?.length > 50">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_balance_leaves">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> BOL </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                BOL
+              </th>
               <td mat-cell *matCellDef="let element">
                 <!-- <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
                   <mat-form-field class="form-field lib-form" appearance="outline">
@@ -110,7 +155,7 @@
                       formControlName="emp_balance_leaves" autocomplete="off" />
                   </mat-form-field>
                 </form> -->
-                {{element?.emp_bol}}
+                {{ element?.emp_bol }}
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_present">
@@ -127,31 +172,69 @@
               </td>
 
             </ng-container> -->
-            <ng-container *ngFor="let column of leaveTypeArray; let i = index;">
+            <ng-container *ngFor="let column of leaveTypeArray; let i = index">
               <ng-container [matColumnDef]="'leave_availed' + column?.leave_id">
-                  <th mat-header-cell *matHeaderCellDef> {{column?.aliasname}} Availed </th>
-                  <td mat-cell *matCellDef="let element" class="text-center" [ngClass]="{'edit-color':element.viewFlag}" >
-                    <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup.value.emp_leave_form[i].emp_leave_form">
-                      <mat-form-field class="form-field lib-form" style="width: 100px !important;">
-                        <input matInput
-                          formControlName="leave_availed" autocomplete="off" (change)="getLWP(element,element.srno - 1,i)"
-                          [readonly]="!(element.viewFlag) ? true : false" />
-                      </mat-form-field>
-                    </form>
-                  </td>
-              </ng-container>
-              <ng-container [matColumnDef]="'leave_granted' + column?.leave_id">
-                <th mat-header-cell *matHeaderCellDef > {{column?.aliasname}} Granted </th>
-                <td mat-cell *matCellDef="let element" class="text-center" [ngClass]="{'edit-color':element.viewFlag}">
-                  <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup.value.emp_leave_form[i].emp_leave_form">
-                    <mat-form-field class="form-field lib-form" style="width: 100px !important;">
-                      <input matInput
-                        formControlName="leave_granted" autocomplete="off" (change)="getLWP(element,element.srno - 1,i)"
-                        [readonly]="!(element.viewFlag) ? true : false" />
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ column?.aliasname }} Availed
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="text-center"
+                  [ngClass]="{ 'edit-color': element.viewFlag }"
+                >
+                  <form
+                    [formGroup]="
+                      formGroupArray[element.srno - 1]?.formGroup.value
+                        .emp_leave_form[i].emp_leave_form
+                    "
+                  >
+                    <mat-form-field
+                      class="form-field lib-form"
+                      style="width: 100px !important"
+                    >
+                      <input
+                        matInput
+                        formControlName="leave_availed"
+                        autocomplete="off"
+                        (change)="getLWP(element, element.srno - 1, i)"
+                        [readonly]="!element.viewFlag ? true : false"
+                      />
                     </mat-form-field>
                   </form>
                 </td>
-            </ng-container>
+              </ng-container>
+              <ng-container [matColumnDef]="'leave_granted' + column?.leave_id">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ column?.aliasname }} Granted
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="text-center"
+                  [ngClass]="{ 'edit-color': element.viewFlag }"
+                >
+                  <form
+                    [formGroup]="
+                      formGroupArray[element.srno - 1]?.formGroup.value
+                        .emp_leave_form[i].emp_leave_form
+                    "
+                  >
+                    <mat-form-field
+                      class="form-field lib-form"
+                      style="width: 100px !important"
+                    >
+                      <input
+                        matInput
+                        formControlName="leave_granted"
+                        autocomplete="off"
+                        (change)="getLWP(element, element.srno - 1, i)"
+                        [readonly]="!element.viewFlag ? true : false"
+                      />
+                    </mat-form-field>
+                  </form>
+                </td>
+              </ng-container>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_leave_availed">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Leaves Availed </th>
@@ -180,95 +263,187 @@
               </td>
             </ng-container> -->
             <ng-container matColumnDef="emp_lwp">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> LWP </th>
-              <td mat-cell *matCellDef="let element">{{element.emp_lwp}}
-              </td>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                LWP
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.emp_lwp }}</td>
             </ng-container>
             <ng-container matColumnDef="emp_total_attendance">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Total Attendance </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                Total Attendance
+              </th>
               <td mat-cell *matCellDef="let element">
-                <ng-container *ngIf="globalSetting.attendance_calculation == 'manual'">
-                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                        <mat-form-field class="form-field lib-form">
-                          <input matInput
-                            [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
-                            formControlName="emp_total_attendance" autocomplete="off" (change)="getLWP1(element,element.srno - 1,i)" [readonly]="!(element.viewFlag)"/>
-                        </mat-form-field>
-                      </form>
+                <ng-container
+                  *ngIf="globalSetting.attendance_calculation == 'manual'"
+                >
+                  <form
+                    [formGroup]="formGroupArray[element.srno - 1].formGroup"
+                  >
+                    <mat-form-field class="form-field lib-form">
+                      <input
+                        matInput
+                        [placeholder]="
+                          !formGroupArray[element.srno - 1].formGroup.value
+                            .emp_total_attendance
+                            ? 'Enter Total Attendance.'
+                            : ''
+                        "
+                        formControlName="emp_total_attendance"
+                        autocomplete="off"
+                        (change)="getLWP1(element, element.srno - 1, i)"
+                        [readonly]="!element.viewFlag"
+                      />
+                    </mat-form-field>
+                  </form>
                 </ng-container>
-                <ng-container *ngIf="globalSetting.attendance_calculation != 'manual'">
-                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                        <mat-form-field class="form-field lib-form">
-                          <input matInput
-                            [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
-                            formControlName="emp_total_attendance" autocomplete="off" (change)="getLWP1(element,element.srno - 1,i)" [readonly]="true"/>
-                        </mat-form-field>
-                      </form>
+                <ng-container
+                  *ngIf="globalSetting.attendance_calculation != 'manual'"
+                >
+                  <form
+                    [formGroup]="formGroupArray[element.srno - 1].formGroup"
+                  >
+                    <mat-form-field class="form-field lib-form">
+                      <input
+                        matInput
+                        [placeholder]="
+                          !formGroupArray[element.srno - 1].formGroup.value
+                            .emp_total_attendance
+                            ? 'Enter Total Attendance.'
+                            : ''
+                        "
+                        formControlName="emp_total_attendance"
+                        autocomplete="off"
+                        (change)="getLWP1(element, element.srno - 1, i)"
+                        [readonly]="true"
+                      />
+                    </mat-form-field>
+                  </form>
                 </ng-container>
-                
+
                 <!-- {{element?.emp_total_attendance}} -->
               </td>
             </ng-container>
 
             <ng-container matColumnDef="emp_remarks">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Remarks </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                Remarks
+              </th>
               <td mat-cell *matCellDef="let element">
                 <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup">
                   <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_remarks) ? 'Type Here.' : ''"
-                      formControlName="emp_remarks" autocomplete="off"
-                      [readonly]="!(element.viewFlag)" />
+                    <input
+                      matInput
+                      [placeholder]="
+                        !formGroupArray[element.srno - 1]?.formGroup?.value
+                          .emp_remarks
+                          ? 'Type Here.'
+                          : ''
+                      "
+                      formControlName="emp_remarks"
+                      autocomplete="off"
+                      [readonly]="!element.viewFlag"
+                    />
                   </mat-form-field>
                 </form>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                Status
+              </th>
               <td mat-cell *matCellDef="let element">
                 <!-- <div [ngclass]="element.emp_status === 'live' ? 'green':'red'"><span class="text-capitalize">{{element.emp_status}}</span></div> -->
-                <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}} </span>
+                <span
+                  [ngClass]="element.emp_status === 'live' ? 'green' : 'red'"
+                  >{{ element.emp_status }}
+                </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef width="15%"> Action &nbsp;&nbsp;
-                <a href="javascript:void(0)" *ngIf="editAllStatus" (click)="editAll()">Edit All</a>
-                <a href="javascript:void(0)" *ngIf="!editAllStatus" (click)="resetAll()">Reset All</a>
+              <th mat-header-cell *matHeaderCellDef width="15%">
+                Action &nbsp;&nbsp;
+                <a
+                  href="javascript:void(0)"
+                  *ngIf="editAllStatus && isExistUserAccessMenu('906')"
+                  (click)="editAll()"
+                  >Edit All</a
+                >
+                <a
+                  href="javascript:void(0)"
+                  *ngIf="!editAllStatus"
+                  (click)="resetAll()"
+                  >Reset All</a
+                >
               </th>
               <td mat-cell *matCellDef="let element">
-                <a href="javascript:void(0)" *ngIf="!(element?.viewFlag)"><i
-                    class="fas fa-edit font-color-grey margin-right-15" style="font-size:16px;"
-                    (click)="editAttendance(element)"></i></a>
-                <a href="javascript:void(0)" *ngIf="element?.updateFlag"><i
-                    class="fas fa-file font-color-grey margin-right-15" style="font-size:16px;"
-                    (click)="updateAttendance(element)"></i></a>
-                <a href="javascript:void(0)" *ngIf="element?.updateFlag"><i
-                    class="fas fa-times-circle font-color-grey margin-right-15" style="font-size:16px;color:red"
-                    (click)="cancelUpdate(element)"></i></a>
+                <a
+                  href="javascript:void(0)"
+                  *ngIf="!element?.viewFlag && isExistUserAccessMenu('903')"
+                  ><i
+                    class="fas fa-edit font-color-grey margin-right-15"
+                    style="font-size: 16px"
+                    (click)="editAttendance(element)"
+                  ></i
+                ></a>
+                <a href="javascript:void(0)" *ngIf="element?.updateFlag"
+                  ><i
+                    class="fas fa-file font-color-grey margin-right-15"
+                    style="font-size: 16px"
+                    (click)="updateAttendance(element)"
+                  ></i
+                ></a>
+                <a href="javascript:void(0)" *ngIf="element?.updateFlag"
+                  ><i
+                    class="fas fa-times-circle font-color-grey margin-right-15"
+                    style="font-size: 16px; color: red"
+                    (click)="cancelUpdate(element)"
+                  ></i
+                ></a>
               </td>
             </ng-container>
 
-
             <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
-            </tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedEmployeeColumns"
+            ></tr>
           </table>
 
-          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+          <table
+            class="table table-borderd table-stripped custom-table text-center"
+            style="margin-top: 5px"
+          >
             <tr *ngIf="EMPLOYEE_ELEMENT.length == 0">
               <td colspan="7">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSizeOptions]=[100,300,500,1000] [pageSize]="300" showFirstLastButtons>
+          <mat-paginator
+            #paginator
+            [pageSizeOptions]="[100, 300, 500, 1000]"
+            [pageSize]="300"
+            showFirstLastButtons
+          >
           </mat-paginator>
         </div>
       </div>
       <br />
       <div class="row text-center" *ngIf="EMPLOYEE_ELEMENT.length > 0">
         <div class="col-12" *ngIf="!editFlag">
-          <button mat-raised-button class="btn-success-green margin-right-15" (click)="saveEmployeeAttendance()"
-            [disabled]="disabledApiButton">Submit</button>
-          <button mat-raised-button class="btn-reset btn-spacer" (click)="resetEmployeeAttendance()">
+          <button
+            mat-raised-button
+            class="btn-success-green margin-right-15"
+            (click)="saveEmployeeAttendance()"
+            [disabled]="disabledApiButton"
+            *ngIf="isExistUserAccessMenu('904')"
+          >
+            Submit
+          </button>
+          <button
+            mat-raised-button
+            class="btn-reset btn-spacer"
+            (click)="resetEmployeeAttendance()"
+            *ngIf="isExistUserAccessMenu('905')"
+          >
             Reset
           </button>
         </div>
@@ -276,15 +451,26 @@
       <!-- </form> -->
       <div class="text-center" *ngIf="EMPLOYEE_ELEMENT.length == 0">
         <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-          [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
+          [imgsrc]="
+            'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'
+          "
+          [noDataText]=""
+          [subText]="'No Employee Found'"
+        ></app-no-data>
       </div>
     </mat-card>
-    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+    <mat-card
+      class="margin-top-10 card-height-325"
+      *ngIf="EMPLOYEE_ELEMENT.length == 0"
+    >
       <div class="text-center">
         <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-          [noDataText]="" [subText]="'No Employee Attendance Found'"></app-no-data>
+          [imgsrc]="
+            'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'
+          "
+          [noDataText]=""
+          [subText]="'No Employee Attendance Found'"
+        ></app-no-data>
       </div>
     </mat-card>
   </div>

@@ -17,7 +17,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
 	sessionArray: any[] = [];
-	sessionDetails:any;
+	sessionDetails: any;
 	formGroupArray: any[] = [];
 	availedformGroupArray: any[] = [];
 	grantedformGroupArray: any[] = [];
@@ -39,22 +39,24 @@ export class EmployeeAttendanceComponent implements OnInit {
 	holidayArray: any[] = [];
 	sessionName: any;
 	currSess: any;
-	tempMonthArr = [{ month_id: 4, month_name: 'April' },
-	{ month_id: 5, month_name: 'May' },
-	{ month_id: 6, month_name: 'June' },
-	{ month_id: 7, month_name: 'July' },
-	{ month_id: 8, month_name: 'August' },
-	{ month_id: 9, month_name: 'September' },
-	{ month_id: 10, month_name: 'October' },
-	{ month_id: 11, month_name: 'November' },
-	{ month_id: 12, month_name: 'December' },
-	{ month_id: 1, month_name: 'January' },
-	{ month_id: 2, month_name: 'Feburary' },
-	{ month_id: 3, month_name: 'March' }
+	tempMonthArr = [
+		{ month_id: 1, month_name: 'January' },
+		{ month_id: 2, month_name: 'Feburary' },
+		{ month_id: 3, month_name: 'March' },
+		{ month_id: 4, month_name: 'April' },
+		{ month_id: 5, month_name: 'May' },
+		{ month_id: 6, month_name: 'June' },
+		{ month_id: 7, month_name: 'July' },
+		{ month_id: 8, month_name: 'August' },
+		{ month_id: 9, month_name: 'September' },
+		{ month_id: 10, month_name: 'October' },
+		{ month_id: 11, month_name: 'November' },
+		{ month_id: 12, month_name: 'December' },
+
 	];
 	monthArr = [];
-	leaveTypeArray:any[] = [];
-	globalSetting:any = {};
+	leaveTypeArray: any[] = [];
+	globalSetting: any = {};
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -103,8 +105,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 			this.leaveTypeArray = result;
 			this.displayedEmployeeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation'];
 			this.leaveTypeArray.forEach(ele => {
-				this.displayedEmployeeColumns.push('leave_availed'+ele.leave_id);
-				this.displayedEmployeeColumns.push('leave_granted'+ele.leave_id);
+				this.displayedEmployeeColumns.push('leave_availed' + ele.leave_id);
+				this.displayedEmployeeColumns.push('leave_granted' + ele.leave_id);
 			});
 			this.displayedEmployeeColumns.push('emp_lwp');
 			this.displayedEmployeeColumns.push('emp_total_attendance');
@@ -151,6 +153,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 									let curMonth = new Date().getMonth() + 1;
 									for (var i = 0; i < this.tempMonthArr.length; i++) {
 										if (this.tempMonthArr[i]['month_id'] <= curMonth && ([1, 2, 3].indexOf(this.tempMonthArr[i]['month_id']) < 0)) {
+											console.log('>> tempMonthArr: ', this.tempMonthArr[i]);
+
 											this.monthArr.push(this.tempMonthArr[i]);
 										}
 										if ((curMonth == 1
@@ -183,7 +187,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				session_id: this.session_id.ses_id,
 				from_attendance: true,
 				year: this.currSess,
-				fnf_status:false
+				fnf_status: false
 			};
 			var no_of_days2 = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			const inputJson2: any = {};
@@ -205,16 +209,16 @@ export class EmployeeAttendanceComponent implements OnInit {
 								dateArray.push({
 									date: date,
 									attendance: 'h',
-									dateFormate:dateFormate
+									dateFormate: dateFormate
 								});
 							} else {
 								dateArray.push({
 									date: date,
 									attendance: '',
-									dateFormate:dateFormate
+									dateFormate: dateFormate
 								});
 							}
-	
+
 						}
 					}
 					let no_of_days = Number(this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear()));
@@ -230,54 +234,54 @@ export class EmployeeAttendanceComponent implements OnInit {
 							this.formGroupArray = [];
 							let j = 0;
 							console.log('getAllEmployee', result);
-							let missingDOJ:any[] = [];
+							let missingDOJ: any[] = [];
 							for (const item of result) {
 								let tempdateArray = JSON.parse(JSON.stringify(dateArray));
 								tempdateArray.forEach(e => {
 									const tdate = new Date(e.date);
 									const dow = tdate.getDay();
-									if(item.weekly_off && item.weekly_off.length > 0) {
-										if(item.weekly_off.includes(dow))  {
-										e.attendance = 'h';                    
+									if (item.weekly_off && item.weekly_off.length > 0) {
+										if (item.weekly_off.includes(dow)) {
+											e.attendance = 'h';
 										}
 									} else {
-										if(dow == 0){
-										e.attendance = 'h';
+										if (dow == 0) {
+											e.attendance = 'h';
 										}
 									}
 								})
-								if(item.emp_code_no == 169) {
-								console.log('tempdateArray------',JSON.parse(JSON.stringify(tempdateArray)));
+								if (item.emp_code_no == 169) {
+									console.log('tempdateArray------', JSON.parse(JSON.stringify(tempdateArray)));
 								}
 
-								if(item.emp_salary_detail &&
-								item.emp_salary_detail.emp_organisation_relation_detail &&
-								item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+								if (item.emp_salary_detail &&
+									item.emp_salary_detail.emp_organisation_relation_detail &&
+									item.emp_salary_detail.emp_organisation_relation_detail.doj) {
 									var emp_month;
 									var emp_leave_approved;
 									var emp_attendance_detail;
 									var total_leave_closing_balance = 0;
 									var curr_total_leave_closing_balance = 0;
 									var leave_credited_count = 0;
-									let emp_month_attendance_data:any;
+									let emp_month_attendance_data: any;
 									let lwpDays = 0;
 									item.emp_month_attendance_data.forEach(element => {
-										if(element.ses_id == this.session_id.ses_id){
+										if (element.ses_id == this.session_id.ses_id) {
 											emp_month_attendance_data = element;
 										}
 									});
-									console.log('emp_month_attendance_data',emp_month_attendance_data);
+									console.log('emp_month_attendance_data', emp_month_attendance_data);
 									if (emp_month_attendance_data) {
 										if (emp_month_attendance_data.month_data) {
 											let month_data = emp_month_attendance_data.month_data.find(e => Number(e.month_id) == Number(this.searchForm.value.month_id));
-											if(month_data && month_data.attendance_detail.emp_balance_leaves && month_data.attendance_detail.emp_balance_leaves.length > 0){
+											if (month_data && month_data.attendance_detail.emp_balance_leaves && month_data.attendance_detail.emp_balance_leaves.length > 0) {
 												month_data.attendance_detail.emp_balance_leaves.forEach(e => {
 													total_leave_closing_balance += e.leave_value
 												});
 											}
-										}	
-									}	
-		
+										}
+									}
+
 									element = {
 										srno: pos,
 										emp_id: item.emp_id,
@@ -286,94 +290,94 @@ export class EmployeeAttendanceComponent implements OnInit {
 										emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 										emp_bol: total_leave_closing_balance,
 										emp_present: no_of_days,
-										emp_total_attendance:no_of_days,
+										emp_total_attendance: no_of_days,
 										emp_status: item.emp_status ? item.emp_status : 'live',
 										viewFlag: true,
-										absentDays:0,
+										absentDays: 0,
 										action: item,
-		
+
 									};
-									let templeaveform:any[] = [];
+									let templeaveform: any[] = [];
 									this.leaveTypeArray.forEach(e => {
 										templeaveform.push({
-											emp_leave_form:this.fbuild.group({
-												leave_id:e.leave_id,
-												leave_availed:'',
-												leave_granted:''
+											emp_leave_form: this.fbuild.group({
+												leave_id: e.leave_id,
+												leave_availed: '',
+												leave_granted: ''
 											})
 										})
 									})
 									this.formGroupArray[j] = {
 										formGroup: this.fbuild.group({
 											emp_id: item.emp_id,
-											emp_total_attendance:'',
+											emp_total_attendance: '',
 											emp_remarks: '',
-											emp_leave_form:this.fbuild.array(templeaveform)
+											emp_leave_form: this.fbuild.array(templeaveform)
 										})
 									}
 									if (emp_month_attendance_data && emp_month_attendance_data.month_data && emp_month_attendance_data.month_data.length > 0) {
-										
+
 										const index2 = emp_month_attendance_data.month_data.findIndex(f => Number(f.month_id)
-										== Number(this.searchForm.value.month_id));
-										console.log('record come from db',index2);
+											== Number(this.searchForm.value.month_id));
+										console.log('record come from db', index2);
 										let la = 0;
 										let lg = 0;
 										if (index2 !== -1) {
-											console.log('this.formGroupArray 0',this.formGroupArray);
+											console.log('this.formGroupArray 0', this.formGroupArray);
 											emp_month = emp_month_attendance_data.month_data[index2].month_id;
 											emp_attendance_detail = emp_month_attendance_data.month_data[index2];
 											if (emp_attendance_detail.attendance_detail.emp_leave_availed && emp_attendance_detail.attendance_detail.emp_leave_availed.length > 0) {
-												la = emp_attendance_detail.attendance_detail.emp_leave_availed.reduce((a,b) => a + Number(b.leave_value),0);
-												lg = emp_attendance_detail.attendance_detail.emp_leave_granted.reduce((a,b) => a + Number(b.leave_value),0);
-												
-												console.log('la',la);
+												la = emp_attendance_detail.attendance_detail.emp_leave_availed.reduce((a, b) => a + Number(b.leave_value), 0);
+												lg = emp_attendance_detail.attendance_detail.emp_leave_granted.reduce((a, b) => a + Number(b.leave_value), 0);
+
+												console.log('la', la);
 												this.formGroupArray[j].formGroup.value.emp_leave_form.forEach(e => {
 													const tempdataa = emp_attendance_detail.attendance_detail.emp_leave_availed.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
 													const tempdatag = emp_attendance_detail.attendance_detail.emp_leave_granted.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
-													console.log('tempdata',tempdataa);
-													if(tempdataa){
+													console.log('tempdata', tempdataa);
+													if (tempdataa) {
 														e.emp_leave_form.patchValue({
-															leave_availed:tempdataa.leave_value
+															leave_availed: tempdataa.leave_value
 														})
 													}
-													if(tempdatag){
+													if (tempdatag) {
 														e.emp_leave_form.patchValue({
-															leave_granted:tempdatag.leave_value
+															leave_granted: tempdatag.leave_value
 														})
 													}
-													
+
 
 												});
 											}
 											this.formGroupArray[j].formGroup.patchValue({
 												emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : ''
 											});
-											if(emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+											if (emp_attendance_detail && emp_attendance_detail.attendance_detail &&
 												emp_attendance_detail.attendance_detail.emp_lwp > -1) {
-													console.log('calling db lwpDays',emp_attendance_detail.attendance_detail.emp_lwp);
-													lwpDays = emp_attendance_detail.attendance_detail.emp_lwp;
-													element.absentDays = lwpDays;
+												console.log('calling db lwpDays', emp_attendance_detail.attendance_detail.emp_lwp);
+												lwpDays = emp_attendance_detail.attendance_detail.emp_lwp;
+												element.absentDays = lwpDays;
 											} else {
 												if (item.attendanceRecords && item.attendanceRecords.length > 0) {
 													const arrFilter: any[] = item.attendanceRecords;
 													let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
-													console.log('absentDays',absentDays);
+													console.log('absentDays', absentDays);
 													element.absentDays = absentDays;
 													lwpDays = absentDays > lg ? absentDays - lg : 0
-												} else if(item.shiftAttendanceDetails){
-													if(item.shiftAttendanceDetails.length > 0) {
+												} else if (item.shiftAttendanceDetails) {
+													if (item.shiftAttendanceDetails.length > 0) {
 														let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 														for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 															const element = item.shiftAttendanceDetails[index];
 															const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
-															if(findex != -1){
-																item.shiftAttendanceDetails.splice(index,1);
+															if (findex != -1) {
+																item.shiftAttendanceDetails.splice(index, 1);
 															}
-															
+
 														}
 														let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
-														
-														console.log('absentDays',absentDays);
+
+														console.log('absentDays', absentDays);
 														element.absentDays = absentDays;
 														lwpDays = absentDays > lg ? absentDays - lg : 0;
 													} else {
@@ -381,51 +385,51 @@ export class EmployeeAttendanceComponent implements OnInit {
 														element.absentDays = absentDays;
 														lwpDays = absentDays > lg ? absentDays - lg : 0;
 													}
-													
+
 												}
-												if(this.globalSetting.attendance_calculation == 'manual'){
-													let absentDays = la-lg;
+												if (this.globalSetting.attendance_calculation == 'manual') {
+													let absentDays = la - lg;
 													element.absentDays = absentDays;
 													lwpDays = absentDays;
 												}
 											}
 											element.emp_lwp = lwpDays;
 											var presentDays = no_of_days;
-											if(emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+											if (emp_attendance_detail && emp_attendance_detail.attendance_detail &&
 												emp_attendance_detail.attendance_detail.emp_total_attendance > -1) {
-													console.log('calling db emp_total_attendance',emp_attendance_detail.attendance_detail.emp_total_attendance);
-													presentDays = emp_attendance_detail.attendance_detail.emp_total_attendance;
+												console.log('calling db emp_total_attendance', emp_attendance_detail.attendance_detail.emp_total_attendance);
+												presentDays = emp_attendance_detail.attendance_detail.emp_total_attendance;
 											} else {
-												console.log('calling else emp_total_attendance',emp_attendance_detail.attendance_detail.emp_total_attendance);
+												console.log('calling else emp_total_attendance', emp_attendance_detail.attendance_detail.emp_total_attendance);
 
 												presentDays = Number(presentDays) - Number(lwpDays);
-												console.log('presentDays----',presentDays);
+												console.log('presentDays----', presentDays);
 
-												if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-													let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);
-													if(pDays) {
+												if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+													let pDays = this.getPresentDayDOJ(item, inputJson.month_id, no_of_days);
+													if (pDays) {
 														presentDays = pDays;
-													}	
+													}
 												}
 
 												if (item.emp_status === 'left') {
-													presentDays = this.getPresentDayDOL(item,inputJson.month_id,no_of_days);
+													presentDays = this.getPresentDayDOL(item, inputJson.month_id, no_of_days);
 												}
 
 											}
-											console.log('presentDays----',presentDays);
+											console.log('presentDays----', presentDays);
 											if (item.emp_status === 'live') {
 												// element.emp_total_attendance = presentDays && presentDays !== 0 ?
 												// 	presentDays : no_of_days;
 											}
-											
+
 											element.emp_total_attendance = presentDays;
 											this.formGroupArray[j].formGroup.patchValue({
 												emp_total_attendance: element.emp_total_attendance
 											});
 											element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
-											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
-											
+												element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
+
 										} else {
 											let totP: any = no_of_days;
 
@@ -434,48 +438,48 @@ export class EmployeeAttendanceComponent implements OnInit {
 												let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
 												element.absentDays = absentDays;
 												lwpDays = absentDays > 0 ? absentDays : 0;
-												totP = totP- lwpDays;
-											} else if(item.shiftAttendanceDetails){
-												if(item.shiftAttendanceDetails.length > 0) {
+												totP = totP - lwpDays;
+											} else if (item.shiftAttendanceDetails) {
+												if (item.shiftAttendanceDetails.length > 0) {
 													let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 													for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 														const element = item.shiftAttendanceDetails[index];
 														const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
-														if(findex != -1){
-															item.shiftAttendanceDetails.splice(index,1);
+														if (findex != -1) {
+															item.shiftAttendanceDetails.splice(index, 1);
 														}
-														
+
 													}
 													let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
-													console.log('absentDays',absentDays);
+													console.log('absentDays', absentDays);
 													element.absentDays = absentDays;
 													lwpDays = absentDays > 0 ? absentDays : 0;
-													totP = totP- lwpDays;
+													totP = totP - lwpDays;
 												} else {
 													let absentDays = no_of_days;
 													element.absentDays = absentDays;
 													lwpDays = absentDays > 0 ? absentDays : 0;
-													totP = totP- lwpDays;
+													totP = totP - lwpDays;
 												}
-												
+
 											}
-											if(this.globalSetting.attendance_calculation == 'manual'){
+											if (this.globalSetting.attendance_calculation == 'manual') {
 												totP = no_of_days;
 												element.absentDays = 0;
 												lwpDays = 0;
 											}
-											if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-												let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);
-												if(pDays) {
+											if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+												let pDays = this.getPresentDayDOJ(item, inputJson.month_id, no_of_days);
+												if (pDays) {
 													totP = pDays;
-												}	
+												}
 											}
 
 											if (item.emp_status === 'left') {
-												totP = this.getPresentDayDOL(item,inputJson.month_id,no_of_days);
+												totP = this.getPresentDayDOL(item, inputJson.month_id, no_of_days);
 											}
-											
-											
+
+
 
 											element.emp_total_attendance = totP;
 											element.emp_lwp = lwpDays;
@@ -494,45 +498,45 @@ export class EmployeeAttendanceComponent implements OnInit {
 											let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
 											element.absentDays = absentDays;
 											lwpDays = absentDays > 0 ? absentDays : 0;
-											totP = totP- lwpDays;
-										} else if(item.shiftAttendanceDetails){
-											if(item.shiftAttendanceDetails.length > 0) {
+											totP = totP - lwpDays;
+										} else if (item.shiftAttendanceDetails) {
+											if (item.shiftAttendanceDetails.length > 0) {
 												let tempholyday = tempdateArray.filter(e => e.attendance == 'h');
 												for (let index = 0; index < item.shiftAttendanceDetails.length; index++) {
 													const element = item.shiftAttendanceDetails[index];
 													const findex = tempholyday.findIndex(e => e.dateFormate == element.entrydate);
-													if(findex != -1){
-														item.shiftAttendanceDetails.splice(index,1);
+													if (findex != -1) {
+														item.shiftAttendanceDetails.splice(index, 1);
 													}
-													
+
 												}
 												let absentDays = no_of_days - item.shiftAttendanceDetails.length - tempholyday.length;
-												console.log('absentDays',absentDays);
+												console.log('absentDays', absentDays);
 												element.absentDays = absentDays;
 												lwpDays = absentDays > 0 ? absentDays : 0;
-												totP = totP- lwpDays;
+												totP = totP - lwpDays;
 											} else {
 												let absentDays = no_of_days;
 												element.absentDays = absentDays;
 												lwpDays = absentDays > 0 ? absentDays : 0;
-												totP = totP- lwpDays;
+												totP = totP - lwpDays;
 											}
-											
+
 										}
-										if(this.globalSetting.attendance_calculation == 'manual'){
+										if (this.globalSetting.attendance_calculation == 'manual') {
 											totP = no_of_days;
 											element.absentDays = 0;
 											lwpDays = 0;
 										}
 
-										if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
-											let pDays = this.getPresentDayDOJ(item,inputJson.month_id,no_of_days);	
-											if(pDays){
+										if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+											let pDays = this.getPresentDayDOJ(item, inputJson.month_id, no_of_days);
+											if (pDays) {
 												totP = pDays;
 											}
 										}
 										if (item.emp_status === 'left') {
-											totP = this.getPresentDayDOL(item,inputJson.month_id,no_of_days);
+											totP = this.getPresentDayDOL(item, inputJson.month_id, no_of_days);
 										}
 
 										element.emp_total_attendance = totP;
@@ -542,7 +546,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 											emp_total_attendance: element.emp_total_attendance
 										});
 									}
-		
+
 									// if (Number(element.emp_total_attendance)) {
 									// 	element.emp_total_attendance = element.emp_total_attendance &&
 									// 		element.emp_lwp ? (Number(element.emp_total_attendance)
@@ -555,14 +559,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 									// 			Number(element.emp_lwp) : 0);
 									// 	this.totalPresentArr.push(element.emp_total_attendance);
 									// }
-									console.log('before push element',element);
+									console.log('before push element', element);
 									this.EMPLOYEE_ELEMENT.push(element);
 									this.employeeData.push(item);
 									pos++;
 									j++;
 								} else {
-									console.log('DOJ does not exist for employee no '+item.emp_code_no);
-									this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no '+item.emp_code_no,'error');
+									console.log('DOJ does not exist for employee no ' + item.emp_code_no);
+									this.commonAPIService.showSuccessErrorMessage('DOJ does not exist for employee no ' + item.emp_code_no, 'error');
 									// missingDOJ.push(item.emp_code_no);
 								}
 							}
@@ -578,15 +582,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 							// }
 
 						}
-						console.log('this.employeeData',this.employeeData);
+						console.log('this.employeeData', this.employeeData);
 					});
-				}				
+				}
 			});
-			
+
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose Atlease one month', 'error');
 		}
-	
+
 	}
 	updateAttendance(element) {
 		let inputJson = {};
@@ -594,46 +598,46 @@ export class EmployeeAttendanceComponent implements OnInit {
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
 				var flag = false;
-				let emp_month_attendance_data:any
+				let emp_month_attendance_data: any
 				this.employeeData[i]['emp_month_attendance_data'].forEach(ema => {
-					if(ema.ses_id == this.session_id.ses_id){
+					if (ema.ses_id == this.session_id.ses_id) {
 						emp_month_attendance_data = ema;
 					}
 				});
-	
-				let emp_leave_credited:any[]=[];
-				let emp_leave_availed:any[]=[];
-				let emp_leave_granted:any[]=[];
-				let emp_balance_leaves:any[]=[];
+
+				let emp_leave_credited: any[] = [];
+				let emp_leave_availed: any[] = [];
+				let emp_leave_granted: any[] = [];
+				let emp_balance_leaves: any[] = [];
 				this.formGroupArray[i].formGroup.value.emp_leave_form.forEach(e => {
 					const tempdataa = this.leaveTypeArray.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
-					console.log('tempdata',tempdataa);
-					let tempavailed:any={};
-					let tempgranted:any={};
+					console.log('tempdata', tempdataa);
+					let tempavailed: any = {};
+					let tempgranted: any = {};
 					tempavailed.leave_id = tempdataa.leave_id;
 					tempavailed.leave_name = tempdataa.leave_name;
 					tempavailed.leave_value = e.emp_leave_form.value.leave_availed;
-	
+
 					tempgranted.leave_id = tempdataa.leave_id;
 					tempgranted.leave_name = tempdataa.leave_name;
 					tempgranted.leave_value = e.emp_leave_form.value.leave_granted;
 					emp_leave_availed.push(tempavailed);
-					emp_leave_granted.push(tempgranted);				
-	
+					emp_leave_granted.push(tempgranted);
+
 				});
 				if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
 					let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
-					
+
 					if (tempmonthdata && tempmonthdata.attendance_detail.emp_leave_credited &&
 						tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
-							emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
-							emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
-							emp_balance_leaves.forEach(element => {
-								const tempind = emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-								if(tempind != -1){
-									element.leave_value -= emp_leave_granted[tempind].leave_value;
-								} 
-							})
+						emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
+						emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
+						emp_balance_leaves.forEach(element => {
+							const tempind = emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+							if (tempind != -1) {
+								element.leave_value -= emp_leave_granted[tempind].leave_value;
+							}
+						})
 					}
 				}
 				inputJson["month_data"] = [];
@@ -648,10 +652,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 						"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
 						"emp_total_attendance": this.formGroupArray[i].formGroup.value.emp_total_attendance,
 						"emp_balance_leaves": emp_balance_leaves,
-						"emp_leave_credited":emp_leave_credited
+						"emp_leave_credited": emp_leave_credited
 					}
 				};
-	
+
 				if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(this.formGroupArray[i].formGroup.value.emp_id)) {
 					if (emp_month_attendance_data && emp_month_attendance_data['month_data']) {
 						for (var j = 0; j < emp_month_attendance_data['month_data'].length; j++) {
@@ -673,76 +677,76 @@ export class EmployeeAttendanceComponent implements OnInit {
 						inputJson["month_data"].push(monthJson);
 						let isSessionExist = 0;
 						this.employeeData[i]['emp_month_attendance_data'].forEach(ema => {
-							if(ema.ses_id == this.session_id.ses_id){
+							if (ema.ses_id == this.session_id.ses_id) {
 								emp_month_attendance_data = inputJson;
-								isSessionExist=1;
+								isSessionExist = 1;
 							}
 						});
-						if(isSessionExist == 0){
-							if(!this.employeeData[i]['emp_month_attendance_data']){
-								this.employeeData[i]['emp_month_attendance_data']=[];
+						if (isSessionExist == 0) {
+							if (!this.employeeData[i]['emp_month_attendance_data']) {
+								this.employeeData[i]['emp_month_attendance_data'] = [];
 							}
-							inputJson['ses_id'] =  this.session_id.ses_id;
+							inputJson['ses_id'] = this.session_id.ses_id;
 							this.employeeData[i]['emp_month_attendance_data'].push(inputJson)
 						}
 						//this.employeeData[i]['emp_month_attendance_data'] = inputJson;
 					}
-			}
-			const filterArr:any[] = [];
-			filterArr.push({
-				emp_id: this.employeeData[i].emp_id,
-				emp_month_attendance_data: this.employeeData[i].emp_month_attendance_data
-			});
-			console.log('filterArr',filterArr);
-			this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
-				if (result) {
-					this.getEmployeeDetail();
-					this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-				} else {
-					this.getEmployeeDetail();
-					//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 				}
-			},
-			(errorResponse:any) => {
-				this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
-			});
+				const filterArr: any[] = [];
+				filterArr.push({
+					emp_id: this.employeeData[i].emp_id,
+					emp_month_attendance_data: this.employeeData[i].emp_month_attendance_data
+				});
+				console.log('filterArr', filterArr);
+				this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
+					if (result) {
+						this.getEmployeeDetail();
+						this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+					} else {
+						this.getEmployeeDetail();
+						//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+						this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
+					}
+				},
+					(errorResponse: any) => {
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
+					});
 
 			}
 		}
-		
+
 	}
 
 	saveEmployeeAttendance() {
-		
+
 		this.disabledApiButton = true;
 		let inputJson = {};
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			const employeeDataIndex = this.employeeData.findIndex(e => e.emp_id == this.EMPLOYEE_ELEMENT[i]['emp_id'])
-			if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
+			if (this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63') {
 				// console.log('this.EMPLOYEE_ELEMENT[i] --------------------63',this.EMPLOYEE_ELEMENT[i]);
 				// console.log('this.formGroupArray[i] --------',this.formGroupArray[i]);
 				// console.log('this.employeeData[i] --------',this.employeeData[i]);
 			}
 			var flag = false;
-			let emp_month_attendance_data:any
+			let emp_month_attendance_data: any
 			let employeeData = this.employeeData.find(e => e.emp_id == this.EMPLOYEE_ELEMENT[i]['emp_id'])
 			employeeData['emp_month_attendance_data'].forEach(ema => {
-				if(ema.ses_id == this.session_id.ses_id){
+				if (ema.ses_id == this.session_id.ses_id) {
 					emp_month_attendance_data = ema;
 				}
 			});
 
-			let emp_leave_credited:any[]=[];
-			let emp_leave_availed:any[]=[];
-			let emp_leave_granted:any[]=[];
-			let emp_balance_leaves:any[]=[];
+			let emp_leave_credited: any[] = [];
+			let emp_leave_availed: any[] = [];
+			let emp_leave_granted: any[] = [];
+			let emp_balance_leaves: any[] = [];
 			this.formGroupArray[i].formGroup.value.emp_leave_form.forEach(e => {
 				const tempdataa = this.leaveTypeArray.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
 				// console.log('tempdata',tempdataa);
-				let tempavailed:any={};
-				let tempgranted:any={};
+				let tempavailed: any = {};
+				let tempgranted: any = {};
 				tempavailed.leave_id = tempdataa.leave_id;
 				tempavailed.leave_name = tempdataa.leave_name;
 				tempavailed.leave_value = e.emp_leave_form.value.leave_availed;
@@ -751,24 +755,24 @@ export class EmployeeAttendanceComponent implements OnInit {
 				tempgranted.leave_name = tempdataa.leave_name;
 				tempgranted.leave_value = e.emp_leave_form.value.leave_granted;
 				emp_leave_availed.push(tempavailed);
-				emp_leave_granted.push(tempgranted);				
+				emp_leave_granted.push(tempgranted);
 
 			});
 			if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
 				let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
-				if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
-					console.log('tempmonthdata',JSON.parse(JSON.stringify(tempmonthdata)));
+				if (this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63') {
+					console.log('tempmonthdata', JSON.parse(JSON.stringify(tempmonthdata)));
 				}
 				if (tempmonthdata && tempmonthdata.attendance_detail.emp_leave_credited &&
 					tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
-						emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
-						emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
-						emp_balance_leaves.forEach(element => {
-							const tempind = emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-							if(tempind != -1){
-								element.leave_value -= emp_leave_granted[tempind].leave_value;
-							} 
-						})
+					emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
+					emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
+					emp_balance_leaves.forEach(element => {
+						const tempind = emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+						if (tempind != -1) {
+							element.leave_value -= emp_leave_granted[tempind].leave_value;
+						}
+					})
 				}
 			}
 			inputJson["month_data"] = [];
@@ -783,7 +787,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 					"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
 					"emp_total_attendance": this.formGroupArray[i].formGroup.value.emp_total_attendance,
 					"emp_balance_leaves": emp_balance_leaves,
-					"emp_leave_credited":emp_leave_credited
+					"emp_leave_credited": emp_leave_credited
 				}
 			};
 
@@ -804,28 +808,28 @@ export class EmployeeAttendanceComponent implements OnInit {
 						//inputJson["session_id"]["month_data"].push(monthJson);
 						emp_month_attendance_data['month_data'].push(monthJson);
 					}
-					if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
-						console.log('emp_month_attendance_data if--63 ',emp_month_attendance_data);
+					if (this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63') {
+						console.log('emp_month_attendance_data if--63 ', emp_month_attendance_data);
 					}
 				} else {
 					inputJson["month_data"].push(monthJson);
 					let isSessionExist = 0;
 					employeeData['emp_month_attendance_data'].forEach(ema => {
-						if(ema.ses_id == this.session_id.ses_id){
+						if (ema.ses_id == this.session_id.ses_id) {
 							emp_month_attendance_data = inputJson;
-							isSessionExist=1;
+							isSessionExist = 1;
 						}
 					});
-					if(isSessionExist == 0){
-						if(!employeeData['emp_month_attendance_data']){
-							employeeData['emp_month_attendance_data']=[];
+					if (isSessionExist == 0) {
+						if (!employeeData['emp_month_attendance_data']) {
+							employeeData['emp_month_attendance_data'] = [];
 						}
-						inputJson['ses_id'] =  this.session_id.ses_id;
+						inputJson['ses_id'] = this.session_id.ses_id;
 						employeeData['emp_month_attendance_data'].push(inputJson)
 					}
 					//employeeData['emp_month_attendance_data'] = inputJson;
-					if(this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63'){
-						console.log('emp_month_attendance_data else--63',employeeData['emp_month_attendance_data']);
+					if (this.EMPLOYEE_ELEMENT[i]['emp_id'] == '63') {
+						console.log('emp_month_attendance_data else--63', employeeData['emp_month_attendance_data']);
 					}
 				}
 
@@ -843,7 +847,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				emp_month_attendance_data: item.emp_month_attendance_data
 			});
 		}
-		console.log('filterArr',filterArr);
+		console.log('filterArr', filterArr);
 		this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
 			if (result) {
 				this.disabledApiButton = false;
@@ -856,9 +860,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 			}
 		},
-		(errorResponse:any) => {
-			this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
-		});
+			(errorResponse: any) => {
+				this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+			});
 	}
 
 	resetEmployeeAttendance() {
@@ -890,8 +894,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.editAllStatus = true;
 		this.getEmployeeDetail();
 	}
-	getLWP(element, index,i) {
-		console.log('getLWP',element,index,i);
+	getLWP(element, index, i) {
+		console.log('getLWP', element, index, i);
 		if (Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted) > Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed)) {
 			// this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = "0";
 			// this.formGroupArray[index].formGroup.patchValue({
@@ -900,54 +904,54 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// });
 			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed', 'error');
 		} else {
-			let la=0;
-			let lg=0;
+			let la = 0;
+			let lg = 0;
 			this.formGroupArray[index].formGroup.value.emp_leave_form.forEach(e => {
-				la+=Number(e.emp_leave_form.value.leave_availed);
-				lg+=Number(e.emp_leave_form.value.leave_granted);
+				la += Number(e.emp_leave_form.value.leave_availed);
+				lg += Number(e.emp_leave_form.value.leave_granted);
 			});
-			if(element.absentDays && element.absentDays > 0){
-				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = element.absentDays-lg;
+			if (element.absentDays && element.absentDays > 0) {
+				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = element.absentDays - lg;
 			} else {
-				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
+				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = la - lg;
 			}
 			//this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
 			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = element.emp_present - this.EMPLOYEE_ELEMENT[index]['emp_lwp'];
 			this.formGroupArray[index].formGroup.patchValue({
-				emp_total_attendance:this.EMPLOYEE_ELEMENT[index]['emp_total_attendance']
+				emp_total_attendance: this.EMPLOYEE_ELEMENT[index]['emp_total_attendance']
 			});
 		}
 
 	}
-	getLWP1(element, index,i) {
-		console.log('getLWP',element,index,i);
+	getLWP1(element, index, i) {
+		console.log('getLWP', element, index, i);
 		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = element.emp_present - this.formGroupArray[index].formGroup.value.emp_total_attendance;
 
 	}
 
-	getPresentDayDOJ(item:any,month_id,no_of_days){
+	getPresentDayDOJ(item: any, month_id, no_of_days) {
 		let presentDays = no_of_days;
-		if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
+		if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
 			this.sessionDetails
 			const month = new Date(item.emp_salary_detail.emp_organisation_relation_detail.doj).getMonth() + 1;
 			if (Number(month_id) == month) {
-				var yaer='';
-				if ((month == 1	|| month == 2 || month == 3)) {
-					 yaer = this.sessionDetails.ses_name.split('-')[1];
+				var yaer = '';
+				if ((month == 1 || month == 2 || month == 3)) {
+					yaer = this.sessionDetails.ses_name.split('-')[1];
 				} else {
-					 yaer = this.sessionDetails.ses_name.split('-')[0];
+					yaer = this.sessionDetails.ses_name.split('-')[0];
 				}
 				let joinyear = new Date(item.emp_salary_detail.emp_organisation_relation_detail.doj).getFullYear();
-				if(Number(yaer) == joinyear){
+				if (Number(yaer) == joinyear) {
 					let absentDays = new Date(item.emp_salary_detail.emp_organisation_relation_detail.doj).getDate() - 1;
 					presentDays = Number(no_of_days) - Number(absentDays);
 					return presentDays;
-				}													
-			}	
+				}
+			}
 		}
 		return null;
 	}
-	getPresentDayDOL(item:any,month_id,no_of_days){
+	getPresentDayDOL(item: any, month_id, no_of_days) {
 		let presentDays = no_of_days;
 		if (item.emp_status === 'left') {
 			const month: any = item.emp_salary_detail
@@ -1026,7 +1030,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	// 			});
 	// 			if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
 	// 				let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
-					
+
 	// 				if (tempmonthdata.attendance_detail.emp_leave_credited &&
 	// 					tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
 	// 						emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
@@ -1092,6 +1096,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 	applyFilter(filterValue: String) {
 		console.log('filterValue', filterValue);
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
 	}
 
 }
