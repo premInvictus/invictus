@@ -40,18 +40,18 @@ export class EmployeeAttendanceComponent implements OnInit {
 	sessionName: any;
 	currSess: any;
 	tempMonthArr = [
-		{ month_id: 1, month_name: 'January' },
-		{ month_id: 2, month_name: 'Feburary' },
-		{ month_id: 3, month_name: 'March' },
-		{ month_id: 4, month_name: 'April' },
-		{ month_id: 5, month_name: 'May' },
-		{ month_id: 6, month_name: 'June' },
-		{ month_id: 7, month_name: 'July' },
-		{ month_id: 8, month_name: 'August' },
-		{ month_id: 9, month_name: 'September' },
-		{ month_id: 10, month_name: 'October' },
-		{ month_id: 11, month_name: 'November' },
-		{ month_id: 12, month_name: 'December' },
+		{ id: '4', name: 'April' },
+		{ id: '5', name: 'May' },
+		{ id: '6', name: 'June' },
+		{ id: '7', name: 'July' },
+		{ id: '8', name: 'August' },
+		{ id: '9', name: 'September' },
+		{ id: '10', name: 'October' },
+		{ id: '11', name: 'November' },
+		{ id: '12', name: 'December' },
+		{ id: '1', name: 'January' },
+		{ id: '2', name: 'February' },
+		{ id: '3', name: 'March' }
 
 	];
 	monthArr = [];
