@@ -338,9 +338,9 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                           transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
                         const selectedDate = new Date(new DatePipe('en-in').
                           transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
-                          if (selectedDate >= joinDate) {
-                            flag = true;
-                         
+                        if (selectedDate >= joinDate) {
+                          flag = true;
+
                         }
                       }
                     }
@@ -596,4 +596,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     });
   }
 
+  isExistUserAccessMenu(mod_id) {
+    return this.commonService.isExistUserAccessMenu(mod_id)
+  }
 }
