@@ -1,7 +1,6 @@
 <div class="padding-8">
   <div class="container-box__white">
     <div class="row">
-
       <div class="col-12 text-center">
         <h4 class="text-center"><b>Bulk Updates</b></h4>
       </div>
@@ -12,20 +11,42 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Setup Component</mat-label>
-              <mat-select (selectionChange)="loadComponent($event)" placeholder="Setup Component">
+              <mat-select
+                (selectionChange)="loadComponent($event)"
+                placeholder="Setup Component"
+              >
                 <mat-option value="">Please Select</mat-option>
-                <mat-option value="1">Employee Personal Details</mat-option>
-                <mat-option value="2">Employee Salary Details</mat-option>
-                <mat-option value="3">Employee Documents</mat-option>
-                <mat-option value="4">Employee Attendance</mat-option>
-                <mat-option value="5">Employee Leave Credit</mat-option>
-                <mat-option value="6">Update Credentials</mat-option>
+                <mat-option *ngIf="isExistUserAccessMenu('923')" value="1"
+                  >Employee Personal Details</mat-option
+                >
+                <mat-option *ngIf="isExistUserAccessMenu('924')" value="2"
+                  >Employee Salary Details</mat-option
+                >
+                <mat-option *ngIf="isExistUserAccessMenu('925')" value="3"
+                  >Employee Documents</mat-option
+                >
+                <mat-option *ngIf="isExistUserAccessMenu('926')" value="4"
+                  >Employee Attendance</mat-option
+                >
+                <mat-option *ngIf="isExistUserAccessMenu('927')" value="5"
+                  >Employee Leave Credit</mat-option
+                >
+                <mat-option *ngIf="isExistUserAccessMenu('928')" value="6"
+                  >Update Credentials</mat-option
+                >
               </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="uploadComponent && uploadComponent === '4'" class="form-field" appearance="outline">
+            <mat-form-field
+              *ngIf="uploadComponent && uploadComponent === '4'"
+              class="form-field"
+              appearance="outline"
+            >
               <mat-label>Choose Month</mat-label>
-              <mat-select formControlName="starting_month" placeholder="Choose Month"
-              (selectionChange)="changeMonth($event)">
+              <mat-select
+                formControlName="starting_month"
+                placeholder="Choose Month"
+                (selectionChange)="changeMonth($event)"
+              >
                 <mat-option value="1">January</mat-option>
                 <mat-option value="2">February</mat-option>
                 <mat-option value="3">March</mat-option>
@@ -47,8 +68,20 @@
       <div class="col-8">
         <div class="row">
           <div class="col-12 remove-col-padding text-center">
-            <span style="float:left; cursor: pointer;padding-right: 10px; font-size:14px;" (click)="downloadTemplate()">
-              <img style="cursor: pointer" src="/assets/images/xml.svg" matTooltip="Click to Download">
+            <span
+              style="
+                float: left;
+                cursor: pointer;
+                padding-right: 10px;
+                font-size: 14px;
+              "
+              (click)="downloadTemplate()"
+            >
+              <img
+                style="cursor: pointer"
+                src="/assets/images/xml.svg"
+                matTooltip="Click to Download"
+              />
               &nbsp;&nbsp;Download Sample Excel Sheet
             </span>
           </div>
@@ -58,15 +91,32 @@
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
               <div class="bulk-upload-content">
-                <div class="bulk-upload-sub-content" style="margin-top:20%">
-                  <i class="material-icons bulk-upload-icon">
-                    save_alt
-                  </i><br>
+                <div class="bulk-upload-sub-content" style="margin-top: 20%">
+                  <i class="material-icons bulk-upload-icon"> save_alt </i
+                  ><br />
                   <span><b>Choose a file</b> or drag it here !</span>
-                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
-                    (change)="bulkupdate($event)">
-                  <input style="display:none;" type="text" name="module" id="module" value="module">
-                  <input style="display:none;" type="text" name="component" id="component" value="{{uploadComponent}}">
+                  <input
+                    style="display: none"
+                    #inputFile
+                    type="file"
+                    name="uploadFile"
+                    id="bulkupdate"
+                    (change)="bulkupdate($event)"
+                  />
+                  <input
+                    style="display: none"
+                    type="text"
+                    name="module"
+                    id="module"
+                    value="module"
+                  />
+                  <input
+                    style="display: none"
+                    type="text"
+                    name="component"
+                    id="component"
+                    value="{{ uploadComponent }}"
+                  />
                 </div>
               </div>
             </label>
@@ -76,15 +126,36 @@
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
               <div class="bulk-upload-content">
-                <div class="bulk-upload-sub-content" style="margin-top:20%">
-                  <i class="material-icons bulk-upload-icon">
-                    save_alt
-                  </i><br>
-                  <span><b>Choose a zip file and excel file</b> or drag it here !</span>
-                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
-                    (change)="bulkDocumentUpdate($event)" multiple>
-                  <input style="display:none;" type="text" name="module" id="module" value="module">
-                  <input style="display:none;" type="text" name="component" id="component" value="{{uploadComponent}}">
+                <div class="bulk-upload-sub-content" style="margin-top: 20%">
+                  <i class="material-icons bulk-upload-icon"> save_alt </i
+                  ><br />
+                  <span
+                    ><b>Choose a zip file and excel file</b> or drag it here
+                    !</span
+                  >
+                  <input
+                    style="display: none"
+                    #inputFile
+                    type="file"
+                    name="uploadFile"
+                    id="bulkupdate"
+                    (change)="bulkDocumentUpdate($event)"
+                    multiple
+                  />
+                  <input
+                    style="display: none"
+                    type="text"
+                    name="module"
+                    id="module"
+                    value="module"
+                  />
+                  <input
+                    style="display: none"
+                    type="text"
+                    name="component"
+                    id="component"
+                    value="{{ uploadComponent }}"
+                  />
                 </div>
               </div>
             </label>
