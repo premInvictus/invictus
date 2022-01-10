@@ -6,20 +6,20 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { MatDialog } from '@angular/material';
 import { ErpCommonService } from 'src/app/_services';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {of} from 'rxjs'
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { of } from 'rxjs'
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { UserTimeModalComponent } from './user-time-modal/user-time-modal.component'
 
 @Component({
-  selector: 'app-employee-shift-attendance',
-  templateUrl: './employee-shift-attendance.component.html',
-  styleUrls: ['./employee-shift-attendance.component.scss']
+	selector: 'app-employee-shift-attendance',
+	templateUrl: './employee-shift-attendance.component.html',
+	styleUrls: ['./employee-shift-attendance.component.scss']
 })
 export class EmployeeShiftAttendanceComponent implements OnInit {
 
-  @ViewChild('paginator') paginator: MatPaginator;
+	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
@@ -31,7 +31,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	categoryOneArray: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
-	displayedEmployeeColumns: string[] = ['srno','shift_time', 'shift_status','shift_shortleave', 'shift_remarks',];
+	displayedEmployeeColumns: string[] = ['srno', 'shift_time', 'shift_status', 'shift_shortleave', 'shift_remarks',];
 	currentMonthName = '';
 	currentStatusName = '';
 	currentCategoryName = '';
@@ -42,16 +42,16 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	sessionName: any;
 	currSess: any;
 	hrshiftArray = [];
-	leaveTypeArray:any[] = [];
-	timeflag:any;
-  
-  	options: any[] = [];
+	leaveTypeArray: any[] = [];
+	timeflag: any;
+
+	options: any[] = [];
 	filteredOptions: Observable<any[]>;
-  	myControl = new FormControl();
-  	allEmployeeData: any[] = [];
+	myControl = new FormControl();
+	allEmployeeData: any[] = [];
 	tmpAllEmployeeData: any;
 	tempEmpData: any[] = [];
-	footer:any={duration:''};
+	footer: any = { duration: '' };
 	absent = false;
 	default = true;
 	constructor(
@@ -67,7 +67,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	}
 
 	ngOnInit() {
-    this.session_id = JSON.parse(localStorage.getItem('session'));
+		this.session_id = JSON.parse(localStorage.getItem('session'));
 		this.buildForm();
 		this.getAllEmployee();
 	}
@@ -75,11 +75,11 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	buildForm() {
 		this.searchForm = this.fbuild.group({
 			emp_code_no: '',
-      emp_name: '',
-      entry_date:''
+			emp_name: '',
+			entry_date: ''
 		});
 	}
-	getShift(){
+	getShift() {
 
 	}
 
@@ -91,34 +91,34 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 			this.tmpAllEmployeeData = result.slice(0);
 			this.employeeData = {};
 			this.options = JSON.parse(JSON.stringify(result));
-			console.log('this.options',this.options);
+			console.log('this.options', this.options);
 			this.getFilterEmployee1('');
 		});
 	}
 	private _filter(value: string): string[] {
-		console.log('_filter value',value);
+		console.log('_filter value', value);
 		const filterValue = value.toLowerCase();
-	
+
 		return this.options.filter(option => option.emp_name.toLowerCase().includes(filterValue));
 	}
-	getFilterEmployee1(event){
+	getFilterEmployee1(event) {
 		// this.filteredOptions = this.searchForm.controls.emp_name.valueChanges
 		// 	.pipe(
 		// 		startWith(''),
 		// 		map(value => this._filter(value))
 		// 	);
-		if(event){
+		if (event) {
 			this.filteredOptions = of(this._filter(event));
-			console.log('calling getfilteremployee1 if',this._filter(event));
+			console.log('calling getfilteremployee1 if', this._filter(event));
 		} else {
 			console.log('calling getfilteremployee1 else');
 			this.filteredOptions = of(this.options);
 		}
-			
+
 	}
 	getFilterEmployee(event) {
 		var tempArr = [];
-		console.log('event.target.value',event.target.value);
+		console.log('event.target.value', event.target.value);
 		if (event.target.value.length > 0) {
 			const filterVal = event.target.value;
 			this.allEmployeeData = this.tempEmpData.filter(f => {
@@ -128,43 +128,43 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 		} else {
 			this.allEmployeeData = this.tempEmpData.slice(0);
 		}
-		console.log('this.tempEmpData',this.tempEmpData)
-  }
-  setEmployeeId1(event) {
+		console.log('this.tempEmpData', this.tempEmpData)
+	}
+	setEmployeeId1(event) {
 		let tempvalue = event.option.value;
-		console.log('tempid',tempvalue);
+		console.log('tempid', tempvalue);
 		let empDetails = this.options.find(e => e.emp_code_no == tempvalue)
 		console.log('empDetails', empDetails);
 		this.searchForm.patchValue({
 			emp_code_no: empDetails.emp_code_no,
 			emp_name: empDetails.emp_name,
-    });
-    this.getEmployeeDetail();
+		});
+		this.getEmployeeDetail();
 		//this.getShiftAttendance();
 	}
-	getHolidayOnly(){
-		if(this.searchForm.valid){
+	getHolidayOnly() {
+		if (this.searchForm.valid) {
 
 			let isWeekly_off = false;
 			const tdate = new Date(this.searchForm.value.entry_date);
 			const dow = tdate.getDay();
-			if(this.employeeData.weekly_off && this.employeeData.weekly_off.length > 0) {
-				if(this.employeeData.weekly_off.includes(dow))  {
+			if (this.employeeData.weekly_off && this.employeeData.weekly_off.length > 0) {
+				if (this.employeeData.weekly_off.includes(dow)) {
 					isWeekly_off = true;
 				}
 			} else {
-				if(dow == 0){
+				if (dow == 0) {
 					isWeekly_off = true;
 				}
 			}
-			if(!isWeekly_off) {
+			if (!isWeekly_off) {
 				this.absent = false;
 				const inputJson: any = {};
 				inputJson.datefrom = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
 				inputJson.dateto = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
 				inputJson.sunday = 0;
 				this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
-					if(res && res.status=='ok') {
+					if (res && res.status == 'ok') {
 						this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
 					} else {
 						this.absent = true;
@@ -175,79 +175,79 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
 			}
-			
+
 		}
 	}
 
 	getEmployeeDetail() {
-		if(this.searchForm.valid){
+		if (this.searchForm.valid) {
 
-			this.footer.duration='';
+			this.footer.duration = '';
 			let inputJson = {
 				emp_code_no: this.searchForm.value.emp_code_no,
+			};
+			this.commonAPIService.getEmployeeDetail(inputJson).subscribe((result1: any) => {
+				let element: any = {};
+				this.employeeData = result1;
+				console.log('this.employeeData', this.employeeData);
+				this.shift_arr = [];
+				if (this.employeeData && this.employeeData.emp_shift_details && this.employeeData.emp_shift_details.length > 0) {
+					this.employeeData.emp_shift_details.forEach(element => {
+						this.shift_arr.push(element.shift_name);
+					});
+				}
+				let inputJson1: any = {
+					emp_code_no: this.searchForm.value.emp_code_no,
+					entrydate: new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd'),
+					ses_id: this.session_id.ses_id
 				};
-				this.commonAPIService.getEmployeeDetail(inputJson).subscribe((result1: any) => {
-					let element: any = {};
-					this.employeeData = result1;
-					console.log('this.employeeData',this.employeeData);
-					this.shift_arr=[];
-					if(this.employeeData && this.employeeData.emp_shift_details && this.employeeData.emp_shift_details.length > 0) {
-						this.employeeData.emp_shift_details.forEach(element => {
-							this.shift_arr.push(element.shift_name);
-						});				
-					}
-					let inputJson1:any = {
-						emp_code_no: this.searchForm.value.emp_code_no, 
-						entrydate:new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd'),
-						ses_id:this.session_id.ses_id
-					};
-					this.commonAPIService.getShiftAttendance(inputJson1).subscribe((result: any) => {
-						this.EMPLOYEE_ELEMENT = [];
-						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-						if (result && result.employeeList.length > 0) {
-							let pos = 1;
-							//console.log('result', result);
-							for (const item of result.employeeList) {
+				this.commonAPIService.getShiftAttendance(inputJson1).subscribe((result: any) => {
+					this.EMPLOYEE_ELEMENT = [];
+					this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+					if (result && result.employeeList.length > 0) {
+						let pos = 1;
+						//console.log('result', result);
+						for (const item of result.employeeList) {
 							element = {
 								srno: pos,
 								shift_shortleave: item.shortleave ? 'Yes' : '',
 								shift_remarks: item.remarks,
 								shift_status: '',
 								shift_time: item.datetime ? item.datetime.split(' ')[1] : '',
-			
+
 							};
-							if(item.in) {
+							if (item.in) {
 								element.shift_status = 'In';
 							}
-							if(item.exit) {
+							if (item.exit) {
 								element.shift_status = 'Exit';
 							}
-							console.log('before push element',element);
+							console.log('before push element', element);
 							this.EMPLOYEE_ELEMENT.push(element);
 							pos++;
-							}
-							const intm = result.employeeList.find(e => e.in == true);
-							const exittm = result.employeeList.find(e => e.exit == true);
-							var exitdate = new Date(exittm.datetime);
-							var indate = new Date(intm.datetime);
-							if(intm && exittm) {
-								const diff = exitdate.getTime()-indate.getTime();
-								let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-								let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-								let seconds = Math.floor((diff % (1000 * 60)) / 1000);
-								this.footer.duration = hours + 'h ' + minutes + 'm ' + seconds + 's ';
-							}
-							this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-							this.employeedataSource.paginator = this.paginator;
-							if (this.sort) {
+						}
+						const intm = result.employeeList.find(e => e.in == true);
+						const exittm = result.employeeList.find(e => e.exit == true);
+						var exitdate = new Date(exittm.datetime);
+						var indate = new Date(intm.datetime);
+						if (intm && exittm) {
+							const diff = exitdate.getTime() - indate.getTime();
+							let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+							let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+							let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+							this.footer.duration = hours + 'h ' + minutes + 'm ' + seconds + 's ';
+						}
+						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+						this.employeedataSource.paginator = this.paginator;
+						if (this.sort) {
 							this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 							this.employeedataSource.sort = this.sort;
-							}
-						} else {
-							this.getHolidayOnly();
 						}
-					});
+					} else {
+						this.getHolidayOnly();
+					}
 				});
+			});
 		}
 	}
 
@@ -255,29 +255,32 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 		console.log('filterValue', filterValue);
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
 	}
-	openLeaveCredit(flag){
+	openLeaveCredit(flag) {
 		this.timeflag = flag;
 		const dialogRef: any = this.dialog.open(UserTimeModalComponent, {
 			data: {
-				timeflag : flag,
-				emp_code_no : this.employeeData.emp_code_no,
-				entrydate:new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd')
+				timeflag: flag,
+				emp_code_no: this.employeeData.emp_code_no,
+				entrydate: new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd')
 			},
 			height: '50%',
 			width: '40%'
 		})
 		dialogRef.afterClosed().subscribe((result: any) => {
 			if (result && result.status) {
-			  this.getEmployeeDetail();
+				this.getEmployeeDetail();
 			}
 		});
 	}
 
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
+	}
 }
 
 export interface EmployeeElement {
 	srno: number;
-  	shift_shortleave:string,
+	shift_shortleave: string,
 	shift_remarks: string;
 	shift_time: string;
 	shift_status: any;
