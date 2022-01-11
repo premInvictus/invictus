@@ -34,6 +34,8 @@ export class AdditionalSubjectComponent implements OnInit {
 	finalArray: any[] = [];
 	selectionArray: any[] = [];
 	addselectionArray: any[] = [];
+	isLoading: boolean = false;
+	loader_status: string = "";
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -145,6 +147,8 @@ export class AdditionalSubjectComponent implements OnInit {
 		console.log(this.selectionArray);
 	}
 	fetchDetails() {
+		this.isLoading = true;
+		this.loader_status = "Fetching Student Details";
 		this.subjectFlag = false;
 		this.additionalFlag = false;
 		this.finalDivFlag = true;
@@ -161,9 +165,12 @@ export class AdditionalSubjectComponent implements OnInit {
 		studentParam.au_sec_id = this.firstForm.value.syl_section_id;
 		studentParam.au_role_id = '4';
 		studentParam.au_status = '1';
+		studentParam.au_enrollment_status = 'active';
 		this.examService.getClassStudentSubjects(studentParam)
 			.subscribe(
 				(result: any) => {
+					this.isLoading = false;
+					this.loader_status = "";
 					if (result && result.status === 'ok') {
 						this.studentArray = result.data;
 						for (const item of this.studentArray) {
@@ -193,6 +200,10 @@ export class AdditionalSubjectComponent implements OnInit {
 						this.ELEMENT_DATA = [];
 						this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 					}
+				},
+				(error) =>{
+					this.isLoading = false;
+					this.loader_status = "";
 				}
 			);
 	}
@@ -239,6 +250,7 @@ export class AdditionalSubjectComponent implements OnInit {
 			this.selectionArray.splice(sindex, 1);
 		}
 		console.log(this.selectionArray);
+		console.log("this.selectionArray", this.selectionArray.length);
 	}
 	toggleAdditionalSelection(login_id, sub_id, event) {
 		const sindex = this.addselectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
