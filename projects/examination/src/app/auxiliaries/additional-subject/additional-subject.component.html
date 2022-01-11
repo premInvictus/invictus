@@ -52,7 +52,18 @@
   <div class="col-12">
     <mat-card>
       <div style="overflow-x:auto;">
-        <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="subjectFlag">
+
+        <div class="container" *ngIf="isLoading">
+          <p class="text-center mt-5">
+            <img src="assets/1484.gif" alt="loading">
+            <!-- Loading..... -->
+          </p>
+          <p class="text-center mb-5">
+            {{loader_status}}
+          </p>
+        </div>
+
+        <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="subjectFlag && !isLoading">
           <ng-container matColumnDef="au_admission_no">
             <th mat-header-cell *matHeaderCellDef> Adm. No. </th>
             <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
@@ -86,7 +97,7 @@
 
 
 
-        <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="additionalFlag">
+        <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="additionalFlag && !isLoading">
           <ng-container matColumnDef="au_admission_no">
             <th mat-header-cell *matHeaderCellDef> Adm. No. </th>
             <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
@@ -119,7 +130,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <table>
-          <tbody *ngIf="finalDivFlag">
+          <tbody *ngIf="finalDivFlag && !isLoading">
             <tr class="text-center">
               <td colspan="12">
                 <img
