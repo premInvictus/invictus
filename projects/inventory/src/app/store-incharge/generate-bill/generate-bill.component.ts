@@ -21,6 +21,7 @@ export class GenerateBillComponent implements OnInit {
   searchForm: FormGroup;
   payForm: FormGroup;
   itemSearchForm: FormGroup;
+  itemCancelForm: FormGroup;
   userData: any = '';
   itemData: any = [];
   itemLogData: any = [];
@@ -52,6 +53,7 @@ export class GenerateBillComponent implements OnInit {
   studentArrayByName:any[] = [];
   session:any
   showReturnIssueSectionForOthers: boolean = false;
+  tableCancelArray: any[];
   constructor(
     private fbuild: FormBuilder,
     public common: CommonAPIService,
@@ -93,6 +95,15 @@ export class GenerateBillComponent implements OnInit {
       param_location_id:''
     });
     this.itemSearchForm = this.fbuild.group({
+      scanItemId: '',
+      due_date: '',
+      issue_date: '',
+      return_date: '',
+      bill_remarks: '',
+      bundle_id:'',
+      created_date:''
+    });
+    this.itemCancelForm = this.fbuild.group({
       scanItemId: '',
       due_date: '',
       issue_date: '',
@@ -168,6 +179,7 @@ export class GenerateBillComponent implements OnInit {
     this.showReturnIssueSectionForOthers = false;
     if (this.searchForm && this.searchForm.value.searchId) {
       this.resetItem();
+      this.allStoreBill();
       const au_role_id = this.searchForm.value.user_role_id;
       const au_admission_no = this.searchForm.value.searchId;
       if (au_role_id === '4') {
@@ -608,6 +620,8 @@ export class GenerateBillComponent implements OnInit {
           billArray['school_website'] = this.schoolInfo.school_website;
           billArray['name'] = result.buyer_details.au_full_name ? result.buyer_details.au_full_name : this.otherName;
           billArray['mobile'] = result.buyer_details.active_contact;
+          billArray['billStatus'] = result.status;
+          billArray['reason_remark'] = result.bill_remarks;
           billArray['active_parent'] = result.buyer_details.active_parent;
           if (result.buyer_details.au_role_id === 3) {
             billArray['adm_no'] = result.buyer_details.emp_id ? result.buyer_details.emp_id : '-';
@@ -664,6 +678,7 @@ export class GenerateBillComponent implements OnInit {
   resetItem() {
     this.itemArray = [];
     this.tableArray = [];
+    this.tableCancelArray = [];
     this.formGroupArray = [];
     this.itemSearchForm.reset();
     this.selection.clear();
@@ -734,4 +749,29 @@ export class GenerateBillComponent implements OnInit {
 			}
 		});
 	}
+
+  allStoreBill(){
+    this.inventory.allStoreBill({"em_admission_no" : this.searchForm.value.searchId}).subscribe((result: any)=>{
+      console.log("all store bills >>>>>>>", result)
+      result.forEach(element => {
+        element.bill_details.forEach(ele => {
+              const temp = 
+              {
+                "bill_no": element.bill_no,
+                "item_code": ele.item_code,
+                "item_name": ele.item_name,
+                "item_selling_price": ele.item_selling_price,
+                "item_quantity": ele.item_quantity,
+                "total_price": element.bill_total
+            };
+            this.tableCancelArray.push(temp);          
+        });
+      });
+    })
+  }
+
+  isCancellingAOrder(){
+    console.log("isCancellingAOrder >>>>>");
+    this.allStoreBill();
+  }
 }

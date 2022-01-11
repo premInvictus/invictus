@@ -37,7 +37,8 @@
               <div class="col-7">
                 <mat-form-field class="form-field" appearance="outline" *ngIf="!isOthers">
                   <mat-label>
-                    {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login
+                    {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By
+                    Login
                     Id'}}
                   </mat-label>
                   <input matInput
@@ -48,10 +49,7 @@
                   <mat-label>
                     Enter Name
                   </mat-label>
-                  <input matInput
-                    placeholder="Enter Name"
-                    formControlName="searchId" autocomplete="off"
-                  />
+                  <input matInput placeholder="Enter Name" formControlName="searchId" autocomplete="off" />
                 </mat-form-field>
               </div>
               <div class="col-1">
@@ -59,10 +57,12 @@
                   class="fas fa-search margin-top-20" matTooltip="Search Students" (click)="openSearchDialog()"></i>
               </div>
               <div class="col-4 margin-top-10  text-right">
-                <button  *ngIf="searchForm.value.user_role_id != '5'" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                <button *ngIf="searchForm.value.user_role_id != '5'" mat-button
+                  class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
                   Search
                 </button>
-                <button  *ngIf="searchForm.value.user_role_id == '5'" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="isOtherUser()">
+                <button *ngIf="searchForm.value.user_role_id == '5'" mat-button
+                  class="btn-spacer btn-lib-search margin-left-10" (click)="isOtherUser()">
                   Add Item
                 </button>
               </div>
@@ -89,9 +89,10 @@
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
           <span class="font-size-16 text-capitalize">
-            ( <span *ngIf="userData?.au_role_id == '4'"> S - {{(userData?.au_process_type == 3) ? userData?.em_provisional_admission_no : userData?.em_admission_no}}</span>
+            ( <span *ngIf="userData?.au_role_id == '4'"> S - {{(userData?.au_process_type == 3) ?
+              userData?.em_provisional_admission_no : userData?.em_admission_no}}</span>
             <span *ngIf="userData?.au_role_id == '3'"> T -
-              {{userData?.emp_id}}</span> 
+              {{userData?.emp_id}}</span>
             <span *ngIf="userData?.au_role_id == '2'"> A
               -{{userData?.emp_id}}</span> )
           </span>
@@ -162,6 +163,10 @@
                   style="width:200px !important;" (click)="showReturnIssueSection=!showReturnIssueSection">
                   Add Item
                 </button>
+                <!-- <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button
+                  style="width:200px !important;" (click)="isCancellingAOrder()">
+                  Cancel Item
+                </button> -->
               </span>
             </div>
           </div>
@@ -181,12 +186,12 @@
           <div class="col-5">
             <div class="row remove-top-margin">
               <div class="col-3" *ngIf="common.isExistUserAccessMenu('846')">
-                  <mat-form-field appearance="outline" class="form-field">
-                      <mat-label>Date</mat-label>
-                      <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Date</mat-label>
+                  <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="col-3">
                 <mat-form-field class="form-field" appearance="outline">
@@ -303,12 +308,12 @@
           <div class="col-5">
             <div class="row remove-top-margin">
               <div class="col-3" *ngIf="common.isExistUserAccessMenu('846')">
-                  <mat-form-field appearance="outline" class="form-field">
-                      <mat-label>Date</mat-label>
-                      <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Date</mat-label>
+                  <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="created_date" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="col-3">
                 <mat-form-field class="form-field" appearance="outline">
@@ -341,7 +346,7 @@
                 <tr class="custom-tr text-center">
                   <th class="custom-th">Sr No.</th>
                   <th class="custom-th">Item Code</th>
-                  <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Item Name</th>
                   <th class="custom-th">Available Qty</th>
                   <th class="custom-th">Item Price</th>
                   <th class="custom-th">Item Quantity</th>
@@ -391,16 +396,14 @@
             </table>
           </div>
         </div>
-
         <div class="row margin-top-25" [hidden]="!(tableArray.length > 0)">
           <div class="col-12">
             <mat-form-field class="full-width">
-                <mat-label>Enter Note:</mat-label>
-                <textarea matInput placeholder="remarks..." formControlName="bill_remarks"></textarea>
+              <mat-label>Enter Note:</mat-label>
+              <textarea matInput placeholder="remarks..." formControlName="bill_remarks"></textarea>
             </mat-form-field>
           </div>
         </div>
-
         <br />
         <div class="row text-center" *ngIf="tableArray.length > 0">
           <div class="col-12">
@@ -417,9 +420,70 @@
             [noDataText]="" [subText]="'Please Search Items To Add In Cart'"></app-no-data>
         </div>
       </mat-card>
+      <!-- <mat-card>
+        <div class="row margin-top-25" [hidden]="!(tableCancelArray.length > 0)">
+          <div class="col-12">
+            <p class="full-width">
+              Sales Log
+            </p>
+          </div>
+        </div>
+        <div class="row margin-top-25" [hidden]="!(tableCancelArray.length > 0)">
+          <div class="col-12">
+            <table class="table-100">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Bill No.</th>
+                  <th class="custom-th">Item Code</th>
+                  <th class="custom-th ">Item Name</th>
+                  <th class="custom-th">Item Price</th>
+                  <th class="custom-th">Item Quantity</th>
+                  <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of tableCancelArray; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="5%" class="custom-td"><span>{{item?.bill_no}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
+                    <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
+                    <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
+                    <td width="10%" class="custom-td"><span>{{item?.item_quantity}}</span></td>
+                    <td width="10%" class="custom-td">{{item?.total_price}}</td>
+                    <td width="10%" class="custom-td">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(item.bill_no) : null"
+                        [checked]="selection.isSelected(item.bill_no)" [disabled]="checkRequired(item.bill_no)"
+                        [aria-label]="checkboxLabel(item.bill_no)">
+                      </mat-checkbox>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row margin-top-25" [hidden]="!(tableCancelArray.length > 0)">
+          <div class="col-12">
+            <mat-form-field class="full-width">
+              <mat-label>Enter Note:</mat-label>
+              <textarea matInput placeholder="remarks..." formControlName="bill_remarks"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row text-center" *ngIf="tableCancelArray.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="previewSaveItem()"
+              [disabled]="disabledApiButton">Return</button>
+          </div>
+        </div>
+      </mat-card> -->
     </form>
   </div>
 </div>
+
 <div class="row" *ngIf="(userData=='' && !showReturnIssueSectionForOthers)">
   <div class="col-12">
     <mat-card>
@@ -460,7 +524,9 @@
               </tr>
               <tr>
                 <td class="text-left pad-overall-2" style="width: 30%;">
-                  <span>{{tableReciptArray.role_id}}</span><span> : {{ (tableReciptArray?.adm_no != '' && tableReciptArray?.p_adm_no != '' ) ? ((tableReciptArray?.adm_no != 0 ) ? "A-"+tableReciptArray?.adm_no : "P-"+tableReciptArray?.p_adm_no) : ''}}</span>
+                  <span>{{tableReciptArray.role_id}}</span><span> : {{ (tableReciptArray?.adm_no != '' &&
+                    tableReciptArray?.p_adm_no != '' ) ? ((tableReciptArray?.adm_no != 0 ) ?
+                    "A-"+tableReciptArray?.adm_no : "P-"+tableReciptArray?.p_adm_no) : ''}}</span>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 30%;">
                   <span>Class</span><span> : {{tableReciptArray.class_name}}</span>
@@ -557,7 +623,8 @@
 
               <tr style="margin-top: 10%; margin-bottom: 10%;">
                 <td class="text-left pad-overall-2" style="width: 80%;font-size: 12px;">
-                  <textarea matInput placeholder="remarks..." readonly> Remarks : {{tableReciptArray.bill_remarks}}</textarea>
+                  <textarea matInput placeholder="remarks..."
+                    readonly> Remarks : {{tableReciptArray.bill_remarks}}</textarea>
                 </td>
                 <td class="text-left pad-overall-2" style="width: 10%;">
                 </td>

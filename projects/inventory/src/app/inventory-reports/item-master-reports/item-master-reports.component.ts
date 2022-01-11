@@ -70,6 +70,7 @@ export class ItemMasterReportsComponent implements OnInit {
   dataArr: any[] = [];
   columnDefinitions: Column[] = [];
   isLoading: boolean = false;
+  loader_status = "";
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -282,6 +283,10 @@ export class ItemMasterReportsComponent implements OnInit {
       };
       this.filterFlag = false;
       this.getItemReport(this.reportFilterForm.value);
+    }else{
+      this.isLoading = false;
+      this.tableFlag = false;
+      this.dataset = [];
     }
   }
   clearGroupsAndSelects() {
@@ -342,6 +347,7 @@ export class ItemMasterReportsComponent implements OnInit {
           }
         ]
       };
+      this.loader_status = "Fetching Items";
       this.inventory.searchItemsFromMaster({}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.isLoading = false;

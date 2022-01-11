@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CommonAPIService, InventoryService } from '../../_services';
 import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe, IndianCurrency } from 'src/app/_pipes';
+import { CapitalizePipe, IndianCurrency, NumberToWordPipe } from 'src/app/_pipes';
 import { ErpCommonService } from 'src/app/_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
@@ -125,7 +125,7 @@ export class StoreCollectionReportComponent implements OnInit {
   };
   locationArray: any[] = [];
   constructor(private fbuild: FormBuilder, private inventory: InventoryService, public CommonService: CommonAPIService,
-    private erpCommonService: ErpCommonService, ) {
+    private erpCommonService: ErpCommonService,) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
@@ -196,7 +196,7 @@ export class StoreCollectionReportComponent implements OnInit {
   resetValues() {
     this.reportFilterForm.patchValue({
       'report_type': '',
-      'location_id' : '',
+      'location_id': '',
       'locationid': '',
       'status': 'approved',
       'from_date': '',
@@ -205,7 +205,7 @@ export class StoreCollectionReportComponent implements OnInit {
     this.dataset = [];
     this.tableFlag = false;
   }
-  
+
   changeReportType() {
     if (this.reportFilterForm.valid) {
       this.dataArr = [];
@@ -352,7 +352,7 @@ export class StoreCollectionReportComponent implements OnInit {
             aggregateCollapsed: true,
             collapsed: false
           },
-        }, 
+        },
         {
           id: 'emp_id', name: 'Emp/Student ID', field: 'emp_id', sortable: true,
           filterable: true,
@@ -448,7 +448,7 @@ export class StoreCollectionReportComponent implements OnInit {
           repoArray = result;
           let ind = 0;
           for (let item of repoArray) {
-            let count = item.bill_details.reduce((a,b) => a += b.item_quantity,0)
+            let count = item.bill_details.reduce((a, b) => a += b.item_quantity, 0)
             let obj: any = {};
             obj['id'] = ind;
             obj['srno'] = ind + 1;
@@ -465,9 +465,9 @@ export class StoreCollectionReportComponent implements OnInit {
               obj['contact'] = item.buyer_details.active_contact;
             }
             obj['count'] = count;
-            obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_hierarchy : '' ;
+            obj['location'] = item.location_details.length > 0 ? item.location_details[0].location_hierarchy : '';
             obj['action'] = item;
-            obj['class'] = item.buyer_details.class_name+'-'+item.buyer_details.sec_name;
+            obj['class'] = item.buyer_details.class_name + '-' + item.buyer_details.sec_name;
             obj['mop'] = new TitleCasePipe().transform(item.mop);
             obj['bill_total'] = item.bill_total;
             obj['au_role_id'] = item.buyer_details.au_role_id;
@@ -563,24 +563,24 @@ export class StoreCollectionReportComponent implements OnInit {
   }
   onCellClicked(e, args) {
     if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
-			const index = this.rowsChosen.indexOf(args.row);
-			if (index === -1) {
-				this.rowsChosen.push(args.row);
-			} else {
-				this.rowsChosen.splice(index, 1);
-			}
-			const item = args.grid.getDataItem(args.row);
-			const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
-			if (index2 === -1) {
-				this.rowChosenData.push({
-					data: item,
-					index: args.row
-				});
-			} else {
-				this.rowChosenData.splice(index2, 1);
-			}
-			console.log('this.rowChosenData',this.rowChosenData);
-		}
+      const index = this.rowsChosen.indexOf(args.row);
+      if (index === -1) {
+        this.rowsChosen.push(args.row);
+      } else {
+        this.rowsChosen.splice(index, 1);
+      }
+      const item = args.grid.getDataItem(args.row);
+      const index2 = this.rowChosenData.findIndex(f => Number(f.index) === Number(args.row));
+      if (index2 === -1) {
+        this.rowChosenData.push({
+          data: item,
+          index: args.row
+        });
+      } else {
+        this.rowChosenData.splice(index2, 1);
+      }
+      console.log('this.rowChosenData', this.rowChosenData);
+    }
     if (args.cell === args.grid.getColumnIndex('receipt_no')) {
       const item: any = args.grid.getDataItem(args.row);
       if (item['receipt_no']) {
@@ -589,66 +589,158 @@ export class StoreCollectionReportComponent implements OnInit {
     }
   }
   onSelectedRowsChanged(e, args) {
-		if (args.rows.length === this.dataset.length) {
-			this.rowChosenData = [];
-			this.rowsChosen = args.rows;
-			for (const item of this.rowsChosen) {
-				this.rowChosenData.push({
-					data: this.dataset[item],
-					index: item
-				});
-			}
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		} else if (args.rows.length === 0) {
-			this.rowsChosen = [];
-			this.rowChosenData = [];
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		} else {
-			this.gridObj.setSelectedRows(this.rowsChosen);
-		}
+    if (args.rows.length === this.dataset.length) {
+      this.rowChosenData = [];
+      this.rowsChosen = args.rows;
+      for (const item of this.rowsChosen) {
+        this.rowChosenData.push({
+          data: this.dataset[item],
+          index: item
+        });
+      }
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    } else if (args.rows.length === 0) {
+      this.rowsChosen = [];
+      this.rowChosenData = [];
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    } else {
+      this.gridObj.setSelectedRows(this.rowsChosen);
+    }
   }
-  deleteSaleReceipt(value){
-    console.log('value -----',value);
-		if(value.reason_id && value.reason_remark) {
-      const param:any[] = [];
-      const data:any={};
-			data.reason_id = value.reason_id;
-			data.reason_remark = value.reason_remark;
-      data.status = 'canceled';
-      if(value.inv_id.length > 0){
+  deleteSaleReceipt(value) {
+    console.log('value -----', value);
+    if (value.reason_id && value.reason_remark) {
+      const param: any[] = [];
+      const data: any = {};
+      data.reason_id = value.reason_id;
+      data.reason_remark = value.reason_remark;
+      data.status = 'pending';
+      if (value.inv_id.length > 0) {
         value.inv_id.forEach(element => {
           param.push(element.data.action.bill_id);
         });
-        this.inventory.deleteSaleReeipt({bill_id:param,data:data}).subscribe((result:any) => {
-          if(result && result.status == 'ok'){
-            this.CommonService.showSuccessErrorMessage(result.data,'success');
+        this.inventory.deleteSaleReeipt({ bill_id: param, data: data }).subscribe((result: any) => {
+          if (result && result.status == 'ok') {
+            this.CommonService.showSuccessErrorMessage(result.data, 'success');
           }
           this.changeReportType();
         })
       }
-		}
+    }
   }
+
+  createDeletedSalesReceipt(value) {
+    const insertData = value.action;
+    console.log("hey m getting deleted >>>>>>>", value);
+    console.log("current user >>>>>>>", this.currentUser);
+    value.inv_id.forEach(element => {
+      let tempData = element.data.action;
+      let insertJson = {
+
+        "created_date": "",
+        "buyer_details": tempData.buyer_details,
+        "bill_details": tempData.bill_details,
+        "bill_total": -tempData.bill_total,
+        "bill_remarks": tempData.bill_remarks,
+        "status": "canceled",
+        "mop": tempData.mop,
+        "item_location": tempData.item_location,
+        "ses_id": tempData.ses_id,
+        "created_by": this.currentUser.login_id,
+        "created_on": new Date(),
+        "bill_id": tempData.bill_id,
+        "bill_no": tempData.bill_no,
+        "date": tempData.date,
+        "store_assign": tempData.store_assign,
+        "location_details": tempData.location_details,
+        "reason_id": value.reason_id,
+        "reason_remark": value.reason_remark
+      }
+
+      console.log("insert json >>>>>>>", insertJson);
+      this.inventory.cancelSaleReceipt(insertJson).subscribe((result: any) => {
+        if (result) {  
+          this.deleteSaleReceipt(value);
+          let filterJson = {
+            emp_id: this.currentUser.login_id,
+            location_id: tempData.location_details[0].location_id,
+            item_details: tempData.bill_details,
+          }
+          console.log("add store item >>>>>>>>", filterJson);
+          
+          this.inventory.addStoreItem(filterJson).subscribe((updateResult: any) => {
+            if (updateResult) {
+              console.log("add store item updateResult >>>>>>>>", updateResult);
+              this.CommonService.showSuccessErrorMessage(updateResult.message, 'success');
+              let billArray: any = {};
+              billArray['bill_id'] = result.bill_id;
+              billArray['bill_no'] = result.bill_no;
+              billArray['bill_date'] = this.CommonService.dateConvertion(result.created_date, 'dd-MMM-y');
+              billArray['bill_total'] = new IndianCurrency().transform(result.bill_total);
+              billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
+              billArray['bill_created_by'] = this.currentUser.full_name;
+              billArray['bill_details'] = result.bill_details;
+              billArray['bill_remarks'] = result.bill_remarks;
+              billArray['school_name'] = this.schoolInfo.school_name;
+              billArray['school_logo'] = this.schoolInfo.school_logo;
+              billArray['school_address'] = this.schoolInfo.school_address;
+              billArray['school_phone'] = this.schoolInfo.school_phone;
+              billArray['school_city'] = this.schoolInfo.school_city;
+              billArray['school_state'] = this.schoolInfo.school_state;
+              billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
+              billArray['school_website'] = this.schoolInfo.school_website;
+              billArray['name'] = result.buyer_details.au_full_name;
+              billArray['mobile'] = result.buyer_details.active_contact;
+              billArray['billStatus'] = result.status;
+              billArray['reason_remark'] = value.reason_remark;
+              billArray['active_parent'] = result.buyer_details.active_parent;
+              if (result.buyer_details.au_role_id === 3) {
+                billArray['adm_no'] = result.buyer_details.emp_id ? result.buyer_details.emp_id : '-';
+                billArray['class_name'] = '';
+                billArray['role_id'] = 'Employee Id';
+              } else {
+                billArray['adm_no'] = result.buyer_details.em_admission_no != 0 ? "A-" + result.buyer_details.em_admission_no : "P-" + result.buyer_details.em_provisional_admission_no;
+                billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
+                billArray['role_id'] = 'Admission No.';
+              }
+              this.inventory.generateStoreBill(billArray).subscribe((billResult: any) => {
+                if (billResult && billResult.status == 'ok') {
+                  console.log("add store item generateStoreBill >>>>>>>>", billResult);
+                  const length = billResult.data.fileUrl.split('/').length;
+                  saveAs(billResult.data.fileUrl, billResult.data.fileUrl.split('/')[length - 1]);
+                  this.CommonService.showSuccessErrorMessage(result.data,'success');
+                }
+              });
+            }
+          });
+        }
+        this.changeReportType();
+      })
+    });
+  }
+
+
   deleteModal() {
     console.log(this.rowChosenData);
-		this.deleteWithReasonModal.openModal(this.rowChosenData);
-		// const change: any = this.deleteWithReasonModal.subscribeModalChange();
-		// change.afterClosed().subscribe((res: any) => {
-		// 	if (res && res.data && res.data.length > 0) {
-		// 		this.rowsChosen = [];
-		// 		this.rowChosenData = [];
-		// 		for (const item of res.data) {
-		// 			this.rowsChosen.push(item.index);
-		// 		}
-		// 		this.gridObj.setSelectedRows(this.rowsChosen);
-		// 		this.rowChosenData = res.data;
+    this.deleteWithReasonModal.openModal(this.rowChosenData);
+    // const change: any = this.deleteWithReasonModal.subscribeModalChange();
+    // change.afterClosed().subscribe((res: any) => {
+    // 	if (res && res.data && res.data.length > 0) {
+    // 		this.rowsChosen = [];
+    // 		this.rowChosenData = [];
+    // 		for (const item of res.data) {
+    // 			this.rowsChosen.push(item.index);
+    // 		}
+    // 		this.gridObj.setSelectedRows(this.rowsChosen);
+    // 		this.rowChosenData = res.data;
 
-		// 	} else {
-		// 		this.rowsChosen = [];
-		// 		this.rowChosenData = [];
-		// 		this.gridObj.setSelectedRows(this.rowsChosen);
-		// 	}
-		// });
-	}
+    // 	} else {
+    // 		this.rowsChosen = [];
+    // 		this.rowChosenData = [];
+    // 		this.gridObj.setSelectedRows(this.rowsChosen);
+    // 	}
+    // });
+  }
   actionList(item, action) {
     this.billDetailsModal.openModal(item);
   }
@@ -668,7 +760,7 @@ export class StoreCollectionReportComponent implements OnInit {
     this.exportColumnDefinitions = [];
     let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     for (const item of exportColumnDefinitions) {
-      if(!(item.id.includes('checkbox_select'))) {
+      if (!(item.id.includes('checkbox_select'))) {
         this.exportColumnDefinitions.push(item)
       }
     }
@@ -982,7 +1074,7 @@ export class StoreCollectionReportComponent implements OnInit {
     this.exportColumnDefinitions = [];
     let exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     for (const item of exportColumnDefinitions) {
-      if(!(item.id.includes('checkbox_select'))) {
+      if (!(item.id.includes('checkbox_select'))) {
         this.exportColumnDefinitions.push(item)
       }
     }
