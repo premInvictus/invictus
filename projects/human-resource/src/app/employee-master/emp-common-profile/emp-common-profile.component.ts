@@ -85,21 +85,21 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
           this.navigation_record = this.employeeDetails.navigation;
           this.navigation_record_sec = this.employeeDetails.navigation_sec;
           //this.employeedetails['last_record'] = emp_id;
-          if(this.employeeDetails && this.employeeDetails.emp_salary_detail && this.employeeDetails.emp_salary_detail.emp_salary_structure ) {
-            if(this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
+          if (this.employeeDetails && this.employeeDetails.emp_salary_detail && this.employeeDetails.emp_salary_detail.emp_salary_structure) {
+            if (this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.length > 0) {
               let tempsecurity_details = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details : null;
-              if(tempsecurity_details && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise){
-                this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security - this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b && b['deposite_amount'] ? b['deposite_amount']: 0), 0);
+              if (tempsecurity_details && this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise) {
+                this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security - this.employeeDetails.emp_salary_detail.emp_salary_structure.security_month_wise.reduce((a, b) => a + (b && b['deposite_amount'] ? b['deposite_amount'] : 0), 0);
                 this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
               }
-             
+
             } else {
               let tempsecurity_details = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details ? this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details : null;
-              if(tempsecurity_details){
+              if (tempsecurity_details) {
                 this.remaining_security_deposit = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].security;
                 this.security_session = this.employeeDetails.emp_salary_detail.emp_salary_structure.security_details[0].session_id
               }
-              
+
             }
           }
         }
@@ -256,5 +256,9 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
 
   goToLeave() {
     this.router.navigateByUrl('hr/school/leave-management/my-leave');
+  }
+
+  isExistUserAccessMenu(mod_id) {
+    return this.commonAPIService.isExistUserAccessMenu(mod_id)
   }
 }

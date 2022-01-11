@@ -1,11 +1,15 @@
 <div class="row">
   <div class="col-12">
-
     <div>
       <!-- [belongToForm]="formname" [config]="config" [configSetting]="settingsArray"-->
       <!-- <ng-container *ngIf="rendorForm"> -->
-      <app-employee-common  [employeedetails]="employeeRecord"></app-employee-common>
-      <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+      <app-employee-common
+        [employeedetails]="employeeRecord"
+      ></app-employee-common>
+      <mat-tab-group
+        [selectedIndex]="tabSelectedIndex"
+        (selectedIndexChange)="setTabValue($event)"
+      >
         <!-- <ng-container *ngFor="let tab of formsTab; let i=index">
         <mat-tab [disabled]="checkFormEnabled(i)">
           <ng-template mat-tab-label>
@@ -15,30 +19,45 @@
           </ng-template>
            <app-dynamic-content-theme-two *ngIf="studentdetails" [type]="tab.component" [studentdetails]="studentdetails" [belongToForm]="formname" [config]="config" [currentStudentDataId]="currentStudentDataId" [configSetting]="settingsArray"></app-dynamic-content-theme-two> 
         </mat-tab>
-      </ng-container> --> 
-        <mat-tab label="Personal Details">
-          <app-employee-tab-one-container *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
-            [employeeCommonDetails]="employeeCommonDetails"></app-employee-tab-one-container>
+      </ng-container> -->
+        <mat-tab label="Personal Details" *ngIf="isExistUserAccessMenu('895')">
+          <app-employee-tab-one-container
+            *ngIf="employeeCommonDetails"
+            [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"
+          ></app-employee-tab-one-container>
         </mat-tab>
-        <mat-tab label="Personal Contact">
-          <app-employee-tab-two-container *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
-            [employeeCommonDetails]="employeeCommonDetails">
+        <mat-tab label="Personal Contact" *ngIf="isExistUserAccessMenu('896')">
+          <app-employee-tab-two-container
+            *ngIf="employeeCommonDetails"
+            [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"
+          >
           </app-employee-tab-two-container>
         </mat-tab>
-        <mat-tab label="Salary Details">
-          <app-employee-tab-three-container *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
-            [employeeCommonDetails]="employeeCommonDetails">
+        <mat-tab label="Salary Details" *ngIf="isExistUserAccessMenu('897')">
+          <app-employee-tab-three-container
+            *ngIf="employeeCommonDetails"
+            [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"
+          >
           </app-employee-tab-three-container>
         </mat-tab>
-        <mat-tab label="Remarks">
-          <app-employee-tab-four-container *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
-            [employeeCommonDetails]="employeeCommonDetails">
+        <mat-tab label="Remarks" *ngIf="isExistUserAccessMenu('898')">
+          <app-employee-tab-four-container
+            *ngIf="employeeCommonDetails"
+            [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"
+          >
           </app-employee-tab-four-container>
         </mat-tab>
         <!-- <mat-tab label="Class &amp; Section"> <app-employee-tab-five-container></app-employee-tab-five-container>  </mat-tab> -->
-        <mat-tab label="Documents">
-          <app-employee-tab-six-container *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
-            [employeeCommonDetails]="employeeCommonDetails">
+        <mat-tab label="Documents" *ngIf="isExistUserAccessMenu('899')">
+          <app-employee-tab-six-container
+            *ngIf="employeeCommonDetails"
+            [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"
+          >
           </app-employee-tab-six-container>
         </mat-tab>
       </mat-tab-group>

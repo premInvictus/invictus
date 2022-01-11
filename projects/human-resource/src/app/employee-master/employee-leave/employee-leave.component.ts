@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
-import { FormGroup, FormBuilder,FormControl } from '@angular/forms';
-import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,MatDialog } from '@angular/material';
-import {LeaveCreditComponent} from './leave-credit/leave-credit.component';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {of} from 'rxjs'
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialog } from '@angular/material';
+import { LeaveCreditComponent } from './leave-credit/leave-credit.component';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { of } from 'rxjs'
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 @Component({
 	selector: 'app-employee-leave',
@@ -22,18 +22,18 @@ export class EmployeeLeaveComponent implements OnInit {
 	employeeData: any;
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	session_id;
-	empdetailFlag=0;
+	empdetailFlag = 0;
 	allEmployeeData: any[] = [];
 	tmpAllEmployeeData: any;
 	tempEmpData: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	leave_opening_balance = 0;
-	leaveTypeArray:any[] = [];
+	leaveTypeArray: any[] = [];
 	//'leave_opening_balance',
 	displayedEmployeeColumns: string[] = ['srno', 'month_name', 'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
 	options: any[] = [];
-	  filteredOptions: Observable<any[]>;
-	  myControl = new FormControl();
+	filteredOptions: Observable<any[]>;
+	myControl = new FormControl();
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -48,16 +48,16 @@ export class EmployeeLeaveComponent implements OnInit {
 		this.buildForm();
 		this.getAllEmployee();
 	}
-	onFocus(event){
+	onFocus(event) {
 		this.trigger._onChange("");
 		this.trigger.openPanel();
 	}
 	getLeaveType() {
 		this.commonAPIService.getLeaveManagement().subscribe((result: any) => {
-		  this.leaveTypeArray = result;
-		  console.log(this.leaveTypeArray);
+			this.leaveTypeArray = result;
+			console.log(this.leaveTypeArray);
 		});
-	  }
+	}
 	buildForm() {
 		this.searchForm = this.fbuild.group({
 			emp_id: '',
@@ -73,34 +73,34 @@ export class EmployeeLeaveComponent implements OnInit {
 			this.tmpAllEmployeeData = result.slice(0);
 			this.employeeData = {};
 			this.options = JSON.parse(JSON.stringify(result));
-			console.log('this.options',this.options);
+			console.log('this.options', this.options);
 			this.getFilterEmployee1('');
 		});
 	}
 	private _filter(value: string): string[] {
-		console.log('_filter value',value);
+		console.log('_filter value', value);
 		const filterValue = value.toLowerCase();
-	
+
 		return this.options.filter(option => option.emp_name.toLowerCase().includes(filterValue));
 	}
-	getFilterEmployee1(event){
+	getFilterEmployee1(event) {
 		// this.filteredOptions = this.searchForm.controls.emp_name.valueChanges
 		// 	.pipe(
 		// 		startWith(''),
 		// 		map(value => this._filter(value))
 		// 	);
-		if(event){
+		if (event) {
 			this.filteredOptions = of(this._filter(event));
-			console.log('calling getfilteremployee1 if',this._filter(event));
+			console.log('calling getfilteremployee1 if', this._filter(event));
 		} else {
 			console.log('calling getfilteremployee1 else');
 			this.filteredOptions = of(this.options);
 		}
-			
+
 	}
 	getFilterEmployee(event) {
 		var tempArr = [];
-		console.log('event.target.value',event.target.value);
+		console.log('event.target.value', event.target.value);
 		if (event.target.value.length > 0) {
 			const filterVal = event.target.value;
 			this.allEmployeeData = this.tempEmpData.filter(f => {
@@ -110,7 +110,7 @@ export class EmployeeLeaveComponent implements OnInit {
 		} else {
 			this.allEmployeeData = this.tempEmpData.slice(0);
 		}
-		console.log('this.tempEmpData',this.tempEmpData)
+		console.log('this.tempEmpData', this.tempEmpData)
 	}
 
 	// getEmployeeDetail() {
@@ -221,33 +221,33 @@ export class EmployeeLeaveComponent implements OnInit {
 			this.displayedEmployeeColumns = [];
 			this.displayedEmployeeColumns.push('srno');
 			this.displayedEmployeeColumns.push('month_name');
-			if(this.leaveTypeArray && this.leaveTypeArray.length >0){
+			if (this.leaveTypeArray && this.leaveTypeArray.length > 0) {
 				this.leaveTypeArray.forEach(ele => {
-					this.displayedEmployeeColumns.push('leave_credited'+ele.leave_id);
+					this.displayedEmployeeColumns.push('leave_credited' + ele.leave_id);
 				});
 				this.leaveTypeArray.forEach(ele => {
-					this.displayedEmployeeColumns.push('leave_availed'+ele.leave_id);
+					this.displayedEmployeeColumns.push('leave_availed' + ele.leave_id);
 				});
 				this.displayedEmployeeColumns.push('lwp');
 				this.leaveTypeArray.forEach(ele => {
-					this.displayedEmployeeColumns.push('leave_closing'+ele.leave_id);
-				});								
+					this.displayedEmployeeColumns.push('leave_closing' + ele.leave_id);
+				});
 				this.displayedEmployeeColumns.push('total_credited');
 				this.displayedEmployeeColumns.push('total_availed');
 				this.displayedEmployeeColumns.push('total_balance');
 			}
-			console.log('this.displayedEmployeeColumns',this.displayedEmployeeColumns);
+			console.log('this.displayedEmployeeColumns', this.displayedEmployeeColumns);
 			element = {};
 			this.EMPLOYEE_ELEMENT = [];
 			this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 			if (result) {
 				let pos = 1;
 				let recordArray = result;
-				let emp_month_attendance_data:any
-				if(result.emp_month_attendance_data && result.emp_month_attendance_data.length > 0){
+				let emp_month_attendance_data: any
+				if (result.emp_month_attendance_data && result.emp_month_attendance_data.length > 0) {
 					result.emp_month_attendance_data.forEach(element => {
-						if(element.ses_id == this.session_id.ses_id){
-							emp_month_attendance_data=element
+						if (element.ses_id == this.session_id.ses_id) {
+							emp_month_attendance_data = element
 						}
 					});
 				}
@@ -257,36 +257,36 @@ export class EmployeeLeaveComponent implements OnInit {
 				var total_leave_closing_balance = 0;
 				var total_lwp = 0;
 				if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
-					console.log('emp_month_attendance_data',emp_month_attendance_data);
+					console.log('emp_month_attendance_data', emp_month_attendance_data);
 					for (var i = 0; i < emp_month_attendance_data.month_data.length; i++) {
 						var emp_month = emp_month_attendance_data.month_data[i].month_id;
 						var emp_attendance_detail = emp_month_attendance_data.month_data[i].attendance_detail;
-						let leave_credited:any;
+						let leave_credited: any;
 						if (emp_attendance_detail.emp_leave_credited && emp_attendance_detail.emp_leave_credited.length > 0) {
 							leave_credited = emp_attendance_detail.emp_leave_credited
 						}
-						let leave_availed:any;
+						let leave_availed: any;
 						if (emp_attendance_detail.emp_leave_granted && emp_attendance_detail.emp_leave_granted.length > 0) {
 							leave_availed = emp_attendance_detail.emp_leave_granted
 						}
-						let leave_closing:any;
+						let leave_closing: any;
 						if (emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0) {
 							leave_closing = emp_attendance_detail.emp_balance_leaves
 						}
-						let total_credited=0;
-						let total_availed=0;
-						let total_balance=0;
-						if(emp_attendance_detail.emp_leave_credited && emp_attendance_detail.emp_leave_credited.length > 0){
+						let total_credited = 0;
+						let total_availed = 0;
+						let total_balance = 0;
+						if (emp_attendance_detail.emp_leave_credited && emp_attendance_detail.emp_leave_credited.length > 0) {
 							emp_attendance_detail.emp_leave_credited.forEach(e => {
 								total_credited += Number(e.leave_value)
 							});
 						}
-						if(emp_attendance_detail.emp_leave_granted && emp_attendance_detail.emp_leave_granted.length > 0){
+						if (emp_attendance_detail.emp_leave_granted && emp_attendance_detail.emp_leave_granted.length > 0) {
 							emp_attendance_detail.emp_leave_granted.forEach(e => {
 								total_availed += Number(e.leave_value)
 							});
 						}
-						if(emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0){
+						if (emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0) {
 							emp_attendance_detail.emp_balance_leaves.forEach(e => {
 								total_balance += Number(e.leave_value)
 							});
@@ -299,9 +299,9 @@ export class EmployeeLeaveComponent implements OnInit {
 							// leave_granted: '',
 							lwp: '',
 							leave_closing: leave_closing,
-							total_credited:total_credited,
-							total_availed:total_availed,
-							total_balance:total_balance
+							total_credited: total_credited,
+							total_availed: total_availed,
+							total_balance: total_balance
 						};
 						// total_leave_credited = total_leave_credited + Number(leave_credited.toFixed());
 						// total_leave_availed = total_leave_availed + parseFloat(emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0);
@@ -327,14 +327,14 @@ export class EmployeeLeaveComponent implements OnInit {
 				// 	leave_closing: '<b>' + total_closing_balance + '</b>'
 				// }
 				// this.EMPLOYEE_ELEMENT.push(lastRow);
-				console.log('EMPLOYEE_ELEMENT',this.EMPLOYEE_ELEMENT);
+				console.log('EMPLOYEE_ELEMENT', this.EMPLOYEE_ELEMENT);
 				this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 				this.employeedataSource.paginator = this.paginator;
 				if (this.sort) {
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 					this.employeedataSource.sort = this.sort;
 				}
-				
+
 			} else {
 				let element: any = {};
 				let recordArray = [];
@@ -358,7 +358,7 @@ export class EmployeeLeaveComponent implements OnInit {
 	}
 	setEmployeeId1(event) {
 		let tempvalue = event.option.value;
-		console.log('tempid',tempvalue);
+		console.log('tempid', tempvalue);
 		let empDetails = this.options.find(e => e.emp_code_no == tempvalue)
 		console.log('empDetails', empDetails);
 		this.searchForm.setValue({
@@ -372,20 +372,24 @@ export class EmployeeLeaveComponent implements OnInit {
 	applyFilter(filterValue: string) {
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
 	}
-	openLeaveCredit(){
+	openLeaveCredit() {
 		const dialogRef: any = this.dialog.open(LeaveCreditComponent, {
 			data: {
-				emp_id:this.employeeData.emp_id,
-				emp_month_attendance_data:this.employeeData.emp_month_attendance_data
+				emp_id: this.employeeData.emp_id,
+				emp_month_attendance_data: this.employeeData.emp_month_attendance_data
 			},
 			height: '50%',
 			width: '40%'
 		})
 		dialogRef.afterClosed().subscribe((result: any) => {
 			if (result && result.status) {
-			  this.getEmployeeDetail();
+				this.getEmployeeDetail();
 			}
-		  });
+		});
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
 	}
 
 }
@@ -399,7 +403,7 @@ export interface EmployeeElement {
 	leave_granted: any;
 	lwp: any;
 	leave_closing: any;
-	total_credited:any;
-	total_availed:any;
-	total_balance:any;
+	total_credited: any;
+	total_availed: any;
+	total_balance: any;
 }
