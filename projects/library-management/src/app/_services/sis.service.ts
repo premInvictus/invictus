@@ -106,4 +106,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
 	}
+
+	getStudentDataPerName(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentDataPerName', value);
+	}
+
+	getStudentInformation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
+	}
 }

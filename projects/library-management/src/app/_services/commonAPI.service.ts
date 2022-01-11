@@ -24,6 +24,7 @@ export class CommonAPIService {
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();
+	studentDataStore: any = {};
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -42,6 +43,14 @@ export class CommonAPIService {
 		if (this._cookieService && this._cookieService.get('userData')) {
 			return this.userData = JSON.parse(this._cookieService.get('userData'));
 		}
+	}
+
+	setStudentData(id , process_type) {
+		this.studentDataStore = {id : id , process_type: process_type};
+	}
+
+	getStudentData() {
+		return this.studentDataStore;
 	}
 
 	getUserAccessMenu(value) {
