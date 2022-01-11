@@ -132,7 +132,25 @@
       </mat-card>
     </div>
   </div>
-  <div class="row">
+
+<!-- Progress Loader -->
+<div class="row"  *ngIf="isLoading">
+  <div class="col-12">
+    <mat-card>
+      <div class="container">
+        <p class="text-center mt-5">
+          <img src="assets/1484.gif" alt="loading">
+        </p>
+        <p class="text-center mb-5">
+          {{loader_status}}
+        </p>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<!-- Progress Loader End -->
+
+  <div class="row" [hidden]="!isLoading">
     <div class="col-12">
       <mat-card>
         <form [formGroup]="bookForm" autocomplete="off">
