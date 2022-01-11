@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
+import { CommonAPIService as CSA, SisService} from '../../_services';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 import { BookListElement } from '../../auxillaries/physical-verification/physical-verification.component';
+import { SearchViaNameComponent } from '../../library-shared/search-via-name/search-via-name.component';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment/moment';
@@ -101,7 +103,10 @@ export class IssueReturnComponent implements OnInit {
 		private router: Router,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
-		private erpCommonService: ErpCommonService
+		private csa: CSA,
+		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
+		public dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session_id = JSON.parse(localStorage.getItem('session'));
@@ -188,6 +193,8 @@ export class IssueReturnComponent implements OnInit {
 
 	searchUser() {
 		if (this.searchForm && this.searchForm.value.searchId) {
+			console.log("search id >>>>>>>>>>>>>>", this.searchForm.value.searchId, " type >>>", typeof this.searchForm.value.searchId);
+			
 			const au_role_id = this.searchForm.value.user_role_id;
 			const au_admission_no = this.searchForm.value.searchId;
 			
@@ -252,6 +259,34 @@ export class IssueReturnComponent implements OnInit {
 		}
 	}
 
+	openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '20%',
+			height: '30%',
+			position: {
+				top: '10%'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+				let url = '';
+				if (Number(result.process_type) === 1) {
+					url = 'enquiry';
+				} else if (Number(result.process_type) === 2) {
+					url = 'registration';
+				} else if (Number(result.process_type) === 3) {
+					url = 'provisional';
+				} else if (Number(result.process_type) === 4) {
+					url = 'admission';
+				} else if (Number(result.process_type) === 5) {
+					url = 'alumini';
+				}
+				this.csa.setStudentData(result.adm_no, result.process_type);
+				this.getStudentDetailsByAdmno(result.adm_no);
+			}
+		});
+	}
 	searchReservoirData() {
 		if (this.returnIssueReservoirForm && this.returnIssueReservoirForm.value.scanBookId) {
 			const bookAlreadyAddedStatus = this.checkBookAlreadyAdded(this.returnIssueReservoirForm.value.scanBookId);
@@ -352,6 +387,21 @@ export class IssueReturnComponent implements OnInit {
 
 	}
 
+	getStudentDetailsByAdmno(admno) {
+		this.sisService.getStudentInformation({ au_login_id: admno }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				localStorage.setItem('currentStudent',result.data[0].au_class_id);
+				this.userData = result.data ? result.data[0] : '';
+				this.bookData = [];
+				this.bookLogData = [];
+				this.getUserIssueReturnLogData();
+				console.log("studentClass > new student", localStorage.getItem('currentStudent'));
+			} else {
+				this.csa.showSuccessErrorMessage(result.data, 'error');
+			}
+		});
+	}
+	
 	removeBook(index) {
 		for(var i=0; i<this.finIssueBook.length;i++) {
 			console.log(this.bookData[index]['reserv_id'],this.finIssueBook[i]['reserv_id'],i)

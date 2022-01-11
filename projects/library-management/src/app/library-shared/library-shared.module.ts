@@ -44,6 +44,7 @@ import { BookReserveRequestConfirmationComponent } from './book-reserve-request-
 import { AddVendorDialog } from './../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
 import { ReservoirEditModalComponent } from './reservoir-edit-modal/reservoir-edit-modal.component';
+import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -119,6 +120,7 @@ export const MY_FORMATS = {
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
 		ReservoirEditModalComponent,
+		SearchViaNameComponent,
 		AddVendorDialog
 	],
 	entryComponents: [
@@ -134,6 +136,7 @@ export const MY_FORMATS = {
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
 		ReservoirEditModalComponent,
+		SearchViaNameComponent,
 		AddVendorDialog
 	],
 	exports: [
@@ -179,6 +182,7 @@ export const MY_FORMATS = {
 		BarecodeScannerLivestreamModule,
 		BookDetailsModalComponent,
 		ReservoirEditModalComponent,
+		SearchViaNameComponent,
 		AddVendorDialog
 	],
 	providers: [

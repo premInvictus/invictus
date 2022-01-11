@@ -35,6 +35,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	bookImage: any = '';
 	genreArray: any[] = [];
 	bookDetailsArray: any[] = [];
+	isLoading: boolean = true;
+	loader_status = "";
 	typeArray: any[] = [{
 		type_id: '1',
 		type_name: 'Hardbound',
@@ -196,6 +198,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	}
 	updateOk($event) {
 		if ($event) {
+			let placeholderImage = 'https://s3.ap-south-1.amazonaws.com/files.invictusprojects.in/xavier/sis/documents/profile/document_book_placeholder_1641898841.png';
 			let data: any = {}
 			data = $event;
 			data.value['language_details'] = {
@@ -208,8 +211,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			};
 			data.value.authors = [data.value.authors];
 			data.value.images_links = {
-				smallThumbnail: data.value.bookImage,
-				thumbnail: data.value.bookImage
+				smallThumbnail: data.value.bookImage ? data.value.bookImage : '',
+				thumbnail: data.value.bookImage ? data.value.bookImage : ''
 			};
 			data.value['location'] = data.value.stack + '-' + data.value.row;
 			this.common.updateReservoirData({
@@ -261,6 +264,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		if ($event) {
 			this.filters = $event;
 			this.filteredFlag = true;
+			this.loader_status = "Searching the Library";
 			this.common.getReservoirDataBasedOnFilter({
 				filters: $event.filters,
 				generalFilters: $event.generalFilters,
@@ -269,6 +273,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				search_from: 'master'
 			}).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
+					this.isLoading = false;
 					this.searchViaText = true;
 					this.searchViaSearch = false;
 					this.totalRecords = Number(res.data.totalRecords);
@@ -297,6 +302,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	getReservoirDataBasedOnFilter() {
 		let i = 0;
 		this.BOOK_ELEMENT_DATA = [];
+		this.loader_status = "Searching Library";
 		this.common.getReservoirDataBasedOnFilter({
 			filters: this.filters.filters,
 			generalFilters: this.filters.generalFilters,
@@ -305,6 +311,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			search_from: 'master'
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
+				this.isLoading = false;
 				this.searchViaText = false;
 				this.searchViaSearch = true;
 				this.totalRecords = Number(res.data.totalRecords);
@@ -425,6 +432,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		event.target.value = '';
 	}
 	getLanguages() {
+		this.loader_status = "Fetching Languages";
 		this.common.getLanguages({}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.languageArray = [];
@@ -433,6 +441,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getGenres() {
+		this.loader_status = "Fetching Genres";
 		this.common.getGenres({}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.genreArray = [];
@@ -559,7 +568,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getReservoirData() {
-		
+		this.loader_status = "Searching the Library";		
 		let i = 0;
 		localStorage.removeItem('invoiceBulkRecords');
 		this.common.getReservoirData({
@@ -567,6 +576,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			page_size: this.bookpagesize
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
+				this.isLoading = false;
 				this.BOOK_ELEMENT_DATA = [];
 				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 				this.searchViaText = false;
