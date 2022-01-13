@@ -17,7 +17,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
-	configValue: any='';
+	configValue: any = '';
 	currentUser: any;
 	session: any;
 	param: any = {};
@@ -46,16 +46,16 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	multipleDropdownName: any;
 	disabledApiButton = false;
 	slabvalueFormGroupArray: any[] = [];
-	leaveTypeArray:any[]=[];
+	leaveTypeArray: any[] = [];
 	hrshiftArray: any[] = [];
-	congigArray = [
-		{ id: "1", name: 'Master' },
-		{ id: "2", name: 'Salary Component' },
-		{ id: "3", name: 'Salary Structure' },
-		{ id: "4", name: 'Leave Management' },
-		{ id: "5", name: 'Department Wise Leave' },
-		{ id: "6", name: 'Attendance Shift' }
-	];
+	congigArray: any = []
+	// { id: "1", name: 'Master' },
+	// { id: "2", name: 'Salary Component' },
+	// { id: "3", name: 'Salary Structure' },
+	// { id: "4", name: 'Leave Management' },
+	// { id: "5", name: 'Department Wise Leave' },
+	// { id: "6", name: 'Attendance Shift' }
+	// ];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
@@ -75,17 +75,17 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "Security", name: 'Security' },
 		{ id: "PTAX", name: 'PTAX' }
 	];
-	typeArray = [
-		{ id: "1", name: 'Wing Master' },
-		{ id: "2", name: 'Designation Master' },
-		{ id: "4", name: 'Category One' },
-		{ id: "5", name: 'Category Two' },
-		{ id: "6", name: 'Payment Mode' },
-		{ id: "7", name: 'Department' },
-		{ id: "12", name: 'Board' },
-		{ id: "13", name: 'Pay Scale' },
-		{ id: "14", name: 'Subject' },
-	];
+	typeArray = [];
+	// { id: "1", name: 'Wing Master' },
+	// { id: "2", name: 'Designation Master' },
+	// { id: "4", name: 'Category One' },
+	// { id: "5", name: 'Category Two' },
+	// { id: "6", name: 'Payment Mode' },
+	// { id: "7", name: 'Department' },
+	// { id: "12", name: 'Board' },
+	// { id: "13", name: 'Pay Scale' },
+	// { id: "14", name: 'Subject' },
+	// ];
 	constructor(
 		private fbuild: FormBuilder,
 		private erpCommonService: ErpCommonService,
@@ -98,6 +98,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.isExistUserAccessMenu()
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -111,7 +112,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: '',
 				name: '',
 				calculation_type: '',
-				
+
 				value: '',
 				status: '',
 				type: ''
@@ -122,14 +123,14 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: '',
 				name: '',
 				calculation_type: '',
-				calculation_option:'',
+				calculation_option: '',
 				order: '',
 				status: '',
 				type: '',
 				value: '',
 				optional: false,
 				upper_value: '',
-				deductiontype:''
+				deductiontype: ''
 			})
 		},
 		{
@@ -143,7 +144,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				id: '',
 				name: '',
-				aliasname:'',
+				aliasname: '',
 				count: '',
 				leave_percentage: '',
 				proportionated_leave: '',
@@ -167,7 +168,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				shift_graceperiod: '',
 				shift_shortleave_count: '',
 				shift_leave_id: '',
-				shift_status:''
+				shift_status: ''
 			})
 		},
 		];
@@ -198,6 +199,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	// get genre list
 	getConfiguration(event) {
+		console.log('EVENT :', event);
+		this.isExistUserAccessSubMenu()
+
 		if (this.formGroupArray[this.configValue - 1].formGroup.value.type === '6') {
 			this.displayedColumns = ['position', 'name', 'calculation_type', 'value', 'status', 'action'];
 		} else {
@@ -216,6 +220,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				if (this.configValue === '1') {
 					let pos = 1;
 					for (const item of result) {
+						console.log('ITEM of Result++++++++++++++++++', item);
+
 						// console.log('jhjhjhh',item.type.calculation_type ? item.type.calculation_type.cy_name : '');
 						this.CONFIG_ELEMENT_DATA.push({
 							position: pos,
@@ -254,11 +260,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							order: item.sc_order,
 							value: item.sc_value,
 							type: item.sc_type.type_name,
-							optional : item.sc_type.optional ?  item.sc_type.optional : '',
-							upper_value : item.sc_type.upper_value ?  item.sc_type.upper_value : '',
-							slabvalue:item.sc_calculation_type == 'Slab' ? item.slabvalue : '',
-							calculation_option : item.calculation_option ?  item.calculation_option : '',
-							deductiontype : item.deductiontype ?  item.deductiontype : '',
+							optional: item.sc_type.optional ? item.sc_type.optional : '',
+							upper_value: item.sc_type.upper_value ? item.sc_type.upper_value : '',
+							slabvalue: item.sc_calculation_type == 'Slab' ? item.slabvalue : '',
+							calculation_option: item.calculation_option ? item.calculation_option : '',
+							deductiontype: item.deductiontype ? item.deductiontype : '',
 							calculation_type: item.sc_calculation_type,
 							status: item.sc_status,
 							action: item
@@ -309,7 +315,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	getLeaveType() {
 		this.commonService.getLeaveManagement().toPromise().then((result: any) => {
-		  this.leaveTypeArray = result;
+			this.leaveTypeArray = result;
 		});
 	}
 	getShift() {
@@ -324,13 +330,13 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					for (const item of result) {
 						this.CONFIG_ELEMENT_DATA.push({
 							position: pos,
-							name:item.shift_name,
+							name: item.shift_name,
 							shift_intime: item.shift_intime,
-							shift_outtime:item.shift_outtime,
+							shift_outtime: item.shift_outtime,
 							shift_graceperiod: item.shift_graceperiod,
 							shift_shortleave_count: item.shift_shortleave_count,
 							shift_leave_id: this.getLeaveName(item.shift_leave_id),
-							status:item.shift_status,
+							status: item.shift_status,
 							action: item
 						});
 						pos++;
@@ -343,9 +349,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-	getLeaveName(id){
+	getLeaveName(id) {
 		const findex = this.leaveTypeArray.findIndex(e => e.leave_id == id);
-		if(findex != -1) {
+		if (findex != -1) {
 			return this.leaveTypeArray[findex].leave_name;
 		}
 	}
@@ -362,7 +368,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						this.CONFIG_ELEMENT_DATA.push({
 							position: pos,
 							name: item.leave_name,
-							aliasname:item.aliasname,
+							aliasname: item.aliasname,
 							count: item.leave_count,
 							leave_percentage: item.leave_percentage,
 							leave_proportionated: item.leave_proportionated,
@@ -482,7 +488,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.setupUpdateFlag = true;
 			if (value.sc_calculation_type === 'Slab') {
 				value.sc_calculation_type = '3';
-				if(value.slabvalue.length > 0){
+				if (value.slabvalue.length > 0) {
 					this.slabvalueFormGroupArray = [];
 					value.slabvalue.forEach(element => {
 						this.addSlab(element);
@@ -503,8 +509,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				value: value.sc_value,
 				calculation_type: value.sc_calculation_type,
 				status: value.sc_status,
-				calculation_option:value.calculation_option,
-				deductiontype:value.deductiontype,
+				calculation_option: value.calculation_option,
+				deductiontype: value.deductiontype,
 				upper_value: value.sc_type && value.sc_type.upper_value ? value.sc_type.upper_value : '',
 				optional: value.sc_type.type_id === '2' && value.sc_type.optional ? value.sc_type.optional : false
 			});
@@ -529,7 +535,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				id: value.leave_id,
 				name: value.leave_name,
-				aliasname:value.aliasname,
+				aliasname: value.aliasname,
 				count: value.leave_count,
 				leave_percentage: value.leave_percentage,
 				proportionated_leave: value.leave_proportionated,
@@ -551,19 +557,19 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				department_id: value.department_id.id,
 			});
 		} else if (Number(this.configValue) === 6) {
-			console.log('value',value);
+			console.log('value', value);
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				shift_id: value.shift_id,
 				shift_name: value.shift_name,
 				shift_intime: value.shift_intime,
 				shift_outtime: value.shift_outtime,
-				shift_graceperiod:value.shift_graceperiod,
+				shift_graceperiod: value.shift_graceperiod,
 				shift_shortleave_count: value.shift_shortleave_count,
 				shift_leave_id: value.shift_leave_id,
 				shift_status: value.shift_status,
 			});
-			console.log('form 6',this.formGroupArray[this.configValue - 1]);
+			console.log('form 6', this.formGroupArray[this.configValue - 1]);
 		}
 	}
 	async loadConfiguration(event) {
@@ -581,13 +587,12 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			} else {
 				this.displayedColumns = ['position', 'name', 'status', 'action'];
 			}
-
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getSalaryComponent();
 			this.addSlab();
-			this.displayedColumns = 
-				['position', 'name', 'calculation_type', 'type', 'value','slabvalue', 'order', 'optional', 'upper_value','calculation_option', 'status', 'action'];
+			this.displayedColumns =
+				['position', 'name', 'calculation_type', 'type', 'value', 'slabvalue', 'order', 'optional', 'upper_value', 'calculation_option', 'status', 'action'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSalaryComponent();
@@ -596,7 +601,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getLeaveManagement();
-			this.displayedColumns = ['position', 'name','aliasname', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
+			this.displayedColumns = ['position', 'name', 'aliasname', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
 			this.configFlag = true;
 		}
 		else if (Number(this.configValue) === 5) {
@@ -608,7 +613,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 6) {
 			await this.getLeaveType();
 			await this.getShift();
-			this.displayedColumns = ['position','name', 'shift_intime', 'shift_outtime', 'shift_graceperiod', 'shift_shortleave_count','shift_leave_id','status', 'action'];
+			this.displayedColumns = ['position', 'name', 'shift_intime', 'shift_outtime', 'shift_graceperiod', 'shift_shortleave_count', 'shift_leave_id', 'status', 'action'];
 			this.configFlag = true;
 		}
 	}
@@ -620,8 +625,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 
 
 
-	addSlab(value=''){
-		if(this.slabvalueFormGroupArray.length == 0){
+	addSlab(value = '') {
+		if (this.slabvalueFormGroupArray.length == 0) {
 			this.slabvalueFormGroupArray.push(
 				{
 					formGroup: this.fbuild.group({
@@ -630,7 +635,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				}
 			);
 		} else {
-			if(this.slabvalueFormGroupArray[this.slabvalueFormGroupArray.length-1].formGroup.get('value').value){
+			if (this.slabvalueFormGroupArray[this.slabvalueFormGroupArray.length - 1].formGroup.get('value').value) {
 				this.slabvalueFormGroupArray.push(
 					{
 						formGroup: this.fbuild.group({
@@ -640,11 +645,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				);
 			}
 		}
-		
+
 		//console.log('this.slabvalueFormGroupArray',this.slabvalueFormGroupArray);
 	}
-	deleteSlab(i){
-		this.slabvalueFormGroupArray.splice(i,1);
+	deleteSlab(i) {
+		this.slabvalueFormGroupArray.splice(i, 1);
 	}
 	getDepartmentLeave() {
 		this.dptFormGroupArray = [];
@@ -700,9 +705,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 
 	addConfiguration(value) {
 		this.setupDetails = [];
-		if(value == 2) {
-		// console.log("i am hee", this.formGroupArray[value - 1].formGroup);
-			if(this.formGroupArray[value - 1].formGroup.controls.calculation_type.value == '1') {
+		if (value == 2) {
+			// console.log("i am hee", this.formGroupArray[value - 1].formGroup);
+			if (this.formGroupArray[value - 1].formGroup.controls.calculation_type.value == '1') {
 				this.formGroupArray[value - 1].formGroup.patchValue({
 					upper_value: ''
 				})
@@ -711,7 +716,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				// this.formGroupArray[value - 1].formGroup.controls.upper_value.markAsUntouched();
 			}
 		}
-		if (!this.formGroupArray[value - 1].formGroup.valid) {			
+		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
 			this.disabledApiButton = true;
@@ -732,15 +737,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.addEntry(this.setupDetails, 'insertMaster', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
 				case '2':
-					let slabvalueArr:any[] = [];
-					if(this.slabvalueFormGroupArray.length > 0){
+					let slabvalueArr: any[] = [];
+					if (this.slabvalueFormGroupArray.length > 0) {
 						this.slabvalueFormGroupArray.forEach(element => {
-							if(element.formGroup.get('value').value){
+							if (element.formGroup.get('value').value) {
 								slabvalueArr.push(element.formGroup.get('value').value);
 							}
 						});
 					}
-					
+
 					this.setupDetails = {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
@@ -755,9 +760,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
-						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
-						deductiontype:this.formGroupArray[value - 1].formGroup.value.deductiontype,
-						slabvalue:slabvalueArr
+						calculation_option: this.formGroupArray[value - 1].formGroup.value.calculation_option,
+						deductiontype: this.formGroupArray[value - 1].formGroup.value.deductiontype,
+						slabvalue: slabvalueArr
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
@@ -846,15 +851,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.setupUpdateFlag = false;
 					break;
 				case '2':
-					let slabvalueArr:any[] = [];
-					if(this.slabvalueFormGroupArray.length > 0){
+					let slabvalueArr: any[] = [];
+					if (this.slabvalueFormGroupArray.length > 0) {
 						this.slabvalueFormGroupArray.forEach(element => {
-							if(element.formGroup.get('value').value){
+							if (element.formGroup.get('value').value) {
 								slabvalueArr.push(element.formGroup.get('value').value);
 							}
 						});
 					}
-					
+
 					this.setupDetails = {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
@@ -870,10 +875,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
-						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
-						deductiontype:this.formGroupArray[value - 1].formGroup.value.deductiontype,
+						calculation_option: this.formGroupArray[value - 1].formGroup.value.calculation_option,
+						deductiontype: this.formGroupArray[value - 1].formGroup.value.deductiontype,
 						sc_id: this.formGroupArray[value - 1].formGroup.value.id,
-						slabvalue:slabvalueArr
+						slabvalue: slabvalueArr
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					this.setupUpdateFlag = false;
@@ -1137,6 +1142,73 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 
 	deleteCancel() {
+
+	}
+
+	/**
+	 * First if statement is a hack in 
+	 * isExistUserAccessMenu
+	 * If removed: first option will not show up
+	 * 
+	 * Reason : Unclear
+	 */
+	isExistUserAccessMenu() {
+		// this.congigArray = []
+		let abc = 1
+		if (this.commonService.isExistUserAccessMenu({ id: '940', call: 'firstCall' })) {
+			// if (true == true) return;
+		}
+		if (this.commonService.isExistUserAccessMenu('940')) {
+			this.congigArray.push({ id: "1", name: 'Master' })
+		}
+		if (this.commonService.isExistUserAccessMenu('941')) {
+			this.congigArray.push({ id: "2", name: 'Salary Component' })
+		}
+		if (this.commonService.isExistUserAccessMenu('942')) {
+			this.congigArray.push({ id: "3", name: 'Salary Structure' })
+		}
+		if (this.commonService.isExistUserAccessMenu('943')) {
+			this.congigArray.push({ id: "4", name: 'Leave Management' })
+		}
+		if (this.commonService.isExistUserAccessMenu('944')) {
+			this.congigArray.push({ id: "5", name: 'Department Wise Leave' })
+		}
+		if (this.commonService.isExistUserAccessMenu('945')) {
+			this.congigArray.push({ id: "6", name: 'Attendance Shift' })
+		}
+		console.log('AFTER ENDING: ++++++++++', this.congigArray)
+	}
+
+	isExistUserAccessSubMenu() {
+		// this.typeArray = []
+		if (this.commonService.isExistUserAccessMenu('946')) {
+			this.typeArray.push({ id: "1", name: 'Wing Master' })
+		}
+		if (this.commonService.isExistUserAccessMenu('947')) {
+			this.typeArray.push({ id: "2", name: 'Designation Master' })
+		}
+		if (this.commonService.isExistUserAccessMenu('948')) {
+			this.typeArray.push({ id: "4", name: 'Category One' })
+		}
+		if (this.commonService.isExistUserAccessMenu('949')) {
+			this.typeArray.push({ id: "5", name: 'Category Two' })
+		}
+		if (this.commonService.isExistUserAccessMenu('950')) {
+			this.typeArray.push({ id: "6", name: 'Payment Mode' })
+		}
+		if (this.commonService.isExistUserAccessMenu('951')) {
+			this.typeArray.push({ id: "7", name: 'Department' })
+		}
+		if (this.commonService.isExistUserAccessMenu('952')) {
+			this.typeArray.push({ id: "12", name: 'Board' })
+		}
+		if (this.commonService.isExistUserAccessMenu('953')) {
+			this.typeArray.push({ id: "13", name: 'Pay Scale' })
+		}
+		if (this.commonService.isExistUserAccessMenu('954')) {
+			this.typeArray.push({ id: "14", name: 'Subject' })
+		}
+		console.log('++++++++++++++++ After updating ++++++++++++++', this.typeArray);
 
 	}
 }

@@ -2,7 +2,6 @@
 import { ErpCommonService } from 'src/app/_services';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonAPIService, SisService } from '../../_services';
-// import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
 	selector: 'app-reports',
@@ -54,16 +53,7 @@ export class ReportsComponent implements OnInit {
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		if (this.commonAPIService.isExistUserAccessMenu('936')) {
-			this.reportTypeArray.push({ id: '1', name: 'Employee Details' });
-		}
-		if (this.commonAPIService.isExistUserAccessMenu('939')) {
-			this.reportTypeArray.push({ id: '2', name: 'Salary Details' });
-		}
-		if (this.commonAPIService.isExistUserAccessMenu('937')) {
-			this.reportTypeArray.push({ id: '3', name: 'Employee Barcode' });
-		}
-
+		this.isExistUserAccessMenu()
 	}
 	checkEnable(report_id) {
 		return 'report-card mat-card';
@@ -114,5 +104,16 @@ export class ReportsComponent implements OnInit {
 	}
 	displyRep($event) {
 		this.reportHeader = $event.report_name;
+	}
+	isExistUserAccessMenu() {
+		if (this.commonAPIService.isExistUserAccessMenu('936')) {
+			this.reportTypeArray.push({ id: '1', name: 'Employee Details' });
+		}
+		if (this.commonAPIService.isExistUserAccessMenu('939')) {
+			this.reportTypeArray.push({ id: '2', name: 'Salary Details' });
+		}
+		if (this.commonAPIService.isExistUserAccessMenu('937')) {
+			this.reportTypeArray.push({ id: '3', name: 'Employee Barcode' });
+		}
 	}
 }
