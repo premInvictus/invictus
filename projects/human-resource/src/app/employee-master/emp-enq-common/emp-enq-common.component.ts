@@ -140,7 +140,7 @@ export class EmpEnqCommonComponent implements OnInit {
           this.employeeDetailsForm.patchValue({
             enq_profile_pic: result.enq_personal_detail.enq_profile_pic,
             enq_id: result.enq_id,
-            enq_hire_status : result && result.enq_hire_status ? result.enq_hire_status : '',
+            enq_hire_status: result && result.enq_hire_status ? result.enq_hire_status : '',
             enq_name: result.enq_personal_detail.enq_full_name,
             enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
               this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_name : '',
@@ -236,7 +236,7 @@ export class EmpEnqCommonComponent implements OnInit {
     this.employeeDetailsForm = this.fbuild.group({
       enq_profile_pic: '',
       enq_id: '',
-      enq_hire_status : '',
+      enq_hire_status: '',
       enq_name: '',
       enq_applied_for: '',
       enq_department: '',
@@ -365,8 +365,6 @@ export class EmpEnqCommonComponent implements OnInit {
   openConfig() {
 
   }
-  isExistUserAccessMenu(actionT) {
-  }
   openSearchDialog() {
     const diaogRef = this.dialog.open(SearchViaNameComponent, {
       width: '20%',
@@ -419,11 +417,11 @@ export class EmpEnqCommonComponent implements OnInit {
   }
   //  Get Class List function
   getAllSubjects() {
-    this.commonAPIService.getAllSubjects({type_id:'14', status:'1'})
+    this.commonAPIService.getAllSubjects({ type_id: '14', status: '1' })
       .subscribe(
         (result: any) => {
           console.log('all subjects', result);
-          if (result ) {
+          if (result) {
             this.subjectArray = result;
           }
         }
@@ -436,12 +434,15 @@ export class EmpEnqCommonComponent implements OnInit {
     }
   }
 
-  ValidateAlpha(evt)
-    {
-        var keyCode = (evt.which) ? evt.which : evt.keyCode
-        if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32)
-         
-        return false;
-            return true;
-    }
+  ValidateAlpha(evt) {
+    var keyCode = (evt.which) ? evt.which : evt.keyCode
+    if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32)
+
+      return false;
+    return true;
+  }
+
+  isExistUserAccessMenu(mod_id) {
+    return this.commonAPIService.isExistUserAccessMenu(mod_id)
+  }
 }

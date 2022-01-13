@@ -14,7 +14,7 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
 	selector: 'app-disbursment-sheet',
@@ -131,7 +131,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 	// tslint:disable-next-line: max-line-length
 	displayedSalaryComputeColumns: string[] = [];
-	disburseArr:any[] = [];
+	disburseArr: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -165,22 +165,22 @@ export class DisbursmentSheetComponent implements OnInit {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.salaryComputeDataSource.data.length;
 		return numSelected === numRows;
-	  }
-	
-	  /** Selects all rows if they are not all selected; otherwise clear selection. */
-	  masterToggle() {
+	}
+
+	/** Selects all rows if they are not all selected; otherwise clear selection. */
+	masterToggle() {
 		this.isAllSelected() ?
 			this.selection.clear() :
 			this.salaryComputeDataSource.data.forEach(row => this.selection.select(row));
-	  }
-	
-	  /** The label for the checkbox on the passed row */
-	  checkboxLabel(row?: SalaryComputeElement): string {
+	}
+
+	/** The label for the checkbox on the passed row */
+	checkboxLabel(row?: SalaryComputeElement): string {
 		if (!row) {
-		  return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+			return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
 		}
 		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.srno + 1}`;
-	  }
+	}
 
 	getPaymentModes() {
 		this.commonAPIService.getBanks({}).subscribe((res: any) => {
@@ -342,7 +342,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	totalGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
 	}
-	getSalaryCompute(){
+	getSalaryCompute() {
 		let inputJson = {
 			'disburse_date': new DatePipe('en-in').transform(this.searchForm.value.disburse_date, 'yyyy-MM-dd'),
 			'is_disburse': true
@@ -607,7 +607,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 	openFilter() {
-		
+
 		if (this.searchForm.value.month_id) {
 			this.searchModal.openModal();
 		} else {
@@ -659,34 +659,34 @@ export class DisbursmentSheetComponent implements OnInit {
 			this.commonAPIService.showSuccessErrorMessage('Slary Compute Successfully', 'success');
 		});
 	}
-	isDisburseExist(value){
+	isDisburseExist(value) {
 		// const findex = this.disburseArr.findIndex(e => e.emp_id == value.emp_id);
 		// return findex == -1 ? false : true;
 		const temp = this.employeeData.find(e => e.emp_id == value.emp_id);
 		return temp.is_disburse
 	}
 	saveDisburse() {
-		if(this.searchForm.value.disburse_date && this.selection.selected.length > 0) {
+		if (this.searchForm.value.disburse_date && this.selection.selected.length > 0) {
 			var inputArr = [];
 			this.selection.selected.forEach(element => {
-				const inputJson:any = {};
-				inputJson.emp_id =element.emp_id;
+				const inputJson: any = {};
+				inputJson.emp_id = element.emp_id;
 				inputJson.emp_salary_compute_month_id = this.searchForm.value.month_id;
-				inputJson.disburse_date =new DatePipe('en-in').transform(this.searchForm.value.disburse_date, 'yyyy-MM-dd');
-				inputJson.disburse_by ={emp_login_id:this.currentUser.login_id,emp_name:this.currentUser.full_name};
-				inputJson.is_disburse =true;
+				inputJson.disburse_date = new DatePipe('en-in').transform(this.searchForm.value.disburse_date, 'yyyy-MM-dd');
+				inputJson.disburse_by = { emp_login_id: this.currentUser.login_id, emp_name: this.currentUser.full_name };
+				inputJson.is_disburse = true;
 				inputArr.push(inputJson);
 			});
-			console.log('inputArr--',inputArr);
+			console.log('inputArr--', inputArr);
 			this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
-				if(result){
+				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Salary Disbursed Successfully', 'success');
 					this.getSalaryCompute();
 					this.checkForFilter();
 				}
 			});
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Plese select date' , 'error');
+			this.commonAPIService.showSuccessErrorMessage('Plese select date', 'error');
 		}
 	}
 
@@ -1280,6 +1280,10 @@ export class DisbursmentSheetComponent implements OnInit {
 
 	searchCancel() {
 		this.searchByFilter = false;
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
 	}
 }
 

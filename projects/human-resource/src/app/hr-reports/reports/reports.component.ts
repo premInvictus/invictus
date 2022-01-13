@@ -2,6 +2,7 @@
 import { ErpCommonService } from 'src/app/_services';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonAPIService, SisService } from '../../_services';
+// import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
 	selector: 'app-reports',
@@ -36,7 +37,7 @@ export class ReportsComponent implements OnInit {
 		},
 		{
 			report_id: '3',
-			report_name: 'Employee Bar code',
+			report_name: 'Employee Barcode',
 			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -49,17 +50,26 @@ export class ReportsComponent implements OnInit {
 	userArray: any[] = [];
 	userName: any = '';
 	currentUser: any = {};
-	constructor(private erpCommonService: ErpCommonService) { }
+	constructor(private erpCommonService: ErpCommonService, private commonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		if (this.commonAPIService.isExistUserAccessMenu('936')) {
+			this.reportTypeArray.push({ id: '1', name: 'Employee Details' });
+		}
+		if (this.commonAPIService.isExistUserAccessMenu('939')) {
+			this.reportTypeArray.push({ id: '2', name: 'Salary Details' });
+		}
+		if (this.commonAPIService.isExistUserAccessMenu('937')) {
+			this.reportTypeArray.push({ id: '3', name: 'Employee Barcode' });
+		}
+
 	}
 	checkEnable(report_id) {
 		return 'report-card mat-card';
 	}
 	executeReport(report_id) {
 		if (report_id.value) {
-			this.reportTypeArray = [];
 			this.reportFlag = true;
 			this.accountFlag = false;
 			this.reportType = '';
@@ -86,7 +96,6 @@ export class ReportsComponent implements OnInit {
 			setTimeout(() => this.reportFlag = false, 500);
 			setTimeout(() => this.accountFlag = true, 500);
 		} else {
-			this.reportTypeArray = [];
 			this.reportFlag = true;
 			this.accountFlag = false;
 			this.reportType = '';

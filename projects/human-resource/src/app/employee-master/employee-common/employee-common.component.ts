@@ -491,7 +491,8 @@ export class EmployeeCommonComponent implements OnInit {
 	openConfig() {
 
 	}
-	isExistUserAccessMenu(actionT) {
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
 	}
 
 	getCategoryOne() {

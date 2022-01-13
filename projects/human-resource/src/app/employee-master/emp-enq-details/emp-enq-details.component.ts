@@ -81,5 +81,9 @@ export class EmpEnqDetailsComponent implements OnInit {
 		this.tabSelectedIndex = value;
 		this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
 	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
+	}
 }
 
