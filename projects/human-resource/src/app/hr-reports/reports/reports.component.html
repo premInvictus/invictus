@@ -3,10 +3,7 @@
     <div class="col-2">
       <mat-form-field class="form-field" appearance="outline">
         <mat-label>Select Tab</mat-label>
-        <mat-select
-          formControlName="reportType"
-          (selectionChange)="executeReport($event)"
-        >
+        <mat-select (selectionChange)="executeReport($event)">
           <mat-option>Please Select</mat-option>
           <mat-option *ngFor="let item of reportTypeArray" [value]="item.id">
             {{ item.name }}

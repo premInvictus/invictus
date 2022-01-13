@@ -1,408 +1,712 @@
 <simple-notifications></simple-notifications>
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Manage Users</h1>
-         </mat-card-title>
-      </mat-card>
-   </div>
+  <div class="col-12">
+    <mat-card>
+      <mat-card-title>
+        <h1 class="remove-bottom-margin font-size-24">Manage Users</h1>
+      </mat-card-title>
+    </mat-card>
+  </div>
 </div>
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-content>
-            <div class="row row-remove-top-margin">
-               <div class="col-lg-12 col-mobile-view-add-ques">
-                  <div class="top-right-parameter top-middle-parameter">
-                     <div class="top-right-box">
-                        <div class="top-right-box-content top-middle-box-content">
-                           <div class="top-right-box-content-title">
-                              <div class="row ">
-                                 <div class=" col-lg-12 col-remove-padding col-mobile-view-add-ques">
-                                    <span class="font-16">User Access Management</span>
-                                 </div>
-                              </div>
-                              <hr>
-                              <!-- Tab panes -->
-                              <mat-tab-group (selectedTabChange)="onTabChanged($event);">
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Project</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('75')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <form>
-                                                <br>
-                                                <div class="row">
-                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
-                                                      <section class="example-section">
-                                                         <mat-checkbox name="switch" [id]="item.pro_id"
-                                                            (click)="assignProject(item)"
-                                                            [checked]="getCheckStatus(item.pro_id)">
-                                                            {{item.pro_name}}</mat-checkbox>
-                                                      </section>
-                                                   </div>
-                                                </div>
-                                             </form>
-                                          </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="submitProject()">Submit</button>
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
-                                             </a>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </mat-tab>
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Forms & Events</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('73')">
-                                       <div class="row">
-                                          <div class="col-lg-12  col-remove-padding col-mobile-view-add-ques">
-                                             <form [formGroup]="ModuleForm" novalidate>
-                                                <div class="row" *ngIf="manageAccessDiv">
-                                                   <div
-                                                      class="col-lg-2 fin-tab-col-25 col-remove-left-padding  col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>User</mat-label>
-                                                         <input matInput formControlName="login_id" placeholder="User"
-                                                            value="{{userDetails.au_full_name}}" readonly>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div
-                                                      class="col-lg-2 fin-tab-col-25 col-remove-left-padding  col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Branch</mat-label>
-                                                         <input matInput formControlName="si_id" placeholder="Branch"
-                                                            readonly>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Interface</mat-label>
-                                                         <mat-select placeholder="Interface" [value]="typeVal"
-                                                            (selectionChange)="changeIsWebApp($event)">
-                                                            <mat-option value="">Select Interface</mat-option>
-                                                            <mat-option *ngFor="let item of typeArray"
-                                                               [value]="item.id">
-                                                               {{item.name}}
-                                                            </mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Project</mat-label>
-                                                         <mat-select formControlName="pro_id" placeholder="Project"
-                                                            [disabled]="isApp"
-                                                            (selectionChange)="getModuleList($event)">
-                                                            <mat-option value="">Select Project</mat-option>
-                                                            <mat-option *ngFor="let item of projectsArray"
-                                                               [value]="item.pro_id">
-                                                               {{item.pro_name}}
-                                                            </mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                </div>
-                                                <div class="row" *ngIf="moduleArray.length > 0">
-                                                   <div
-                                                      class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
-                                                      <div>
-                                                         <div>
-                                                            <div class="col-apple-10">
-                                                               <div class="module-list">
-                                                                  <!-- <ngx-treeview [config]="config" [items]="moduleItems"
+  <div class="col-12">
+    <mat-card>
+      <mat-card-content>
+        <div class="row row-remove-top-margin">
+          <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="top-right-parameter top-middle-parameter">
+              <div class="top-right-box">
+                <div class="top-right-box-content top-middle-box-content">
+                  <div class="top-right-box-content-title">
+                    <div class="row">
+                      <div
+                        class="col-lg-12 col-remove-padding col-mobile-view-add-ques"
+                      >
+                        <span class="font-16">User Access Management</span>
+                      </div>
+                    </div>
+                    <hr />
+                    <!-- Tab panes -->
+                    <mat-tab-group (selectedTabChange)="onTabChanged($event)">
+                      <mat-tab>
+                        <ng-template mat-tab-label>
+                          <div>
+                            <span class="font-16">Manage Project</span>
+                          </div>
+                        </ng-template>
+                        <div *ngIf="isExistUserAccessMenu('75')">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <form>
+                                <br />
+                                <div class="row">
+                                  <div
+                                    class="col-lg-12"
+                                    *ngFor="let item of projectsArray"
+                                  >
+                                    <section class="example-section">
+                                      <mat-checkbox
+                                        name="switch"
+                                        [id]="item.pro_id"
+                                        (click)="assignProject(item)"
+                                        [checked]="getCheckStatus(item.pro_id)"
+                                      >
+                                        {{ item.pro_name }}</mat-checkbox
+                                      >
+                                    </section>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <button
+                                mat-raised-button
+                                class="btn-primary btn-success"
+                                (click)="submitProject()"
+                              >
+                                Submit
+                              </button>
+                              <a [routerLink]="['../../user-management']">
+                                <button
+                                  mat-raised-button
+                                  class="btn-danger btn-spacer"
+                                >
+                                  Back
+                                </button>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab>
+                        <ng-template mat-tab-label>
+                          <div>
+                            <span class="font-16">Manage Forms & Events</span>
+                          </div>
+                        </ng-template>
+                        <div *ngIf="isExistUserAccessMenu('73')">
+                          <div class="row">
+                            <div
+                              class="col-lg-12 col-remove-padding col-mobile-view-add-ques"
+                            >
+                              <form [formGroup]="ModuleForm" novalidate>
+                                <div class="row" *ngIf="manageAccessDiv">
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-remove-left-padding col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>User</mat-label>
+                                      <input
+                                        matInput
+                                        formControlName="login_id"
+                                        placeholder="User"
+                                        value="{{ userDetails.au_full_name }}"
+                                        readonly
+                                      />
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-remove-left-padding col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Branch</mat-label>
+                                      <input
+                                        matInput
+                                        formControlName="si_id"
+                                        placeholder="Branch"
+                                        readonly
+                                      />
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Interface</mat-label>
+                                      <mat-select
+                                        placeholder="Interface"
+                                        [value]="typeVal"
+                                        (selectionChange)="
+                                          changeIsWebApp($event)
+                                        "
+                                      >
+                                        <mat-option value=""
+                                          >Select Interface</mat-option
+                                        >
+                                        <mat-option
+                                          *ngFor="let item of typeArray"
+                                          [value]="item.id"
+                                        >
+                                          {{ item.name }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Project</mat-label>
+                                      <mat-select
+                                        formControlName="pro_id"
+                                        placeholder="Project"
+                                        [disabled]="isApp"
+                                        (selectionChange)="
+                                          getModuleList($event)
+                                        "
+                                      >
+                                        <mat-option value=""
+                                          >Select Project</mat-option
+                                        >
+                                        <mat-option
+                                          *ngFor="let item of projectsArray"
+                                          [value]="item.pro_id"
+                                        >
+                                          {{ item.pro_name }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                                <div class="row" *ngIf="moduleArray.length > 0">
+                                  <div
+                                    class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques"
+                                  >
+                                    <div>
+                                      <div>
+                                        <div class="col-apple-10">
+                                          <div class="module-list">
+                                            <!-- <ngx-treeview [config]="config" [items]="moduleItems"
                                                                      (selectedChange)="moduleValues = $event">
                                                                   </ngx-treeview> -->
-                                                                  <ng-container
-                                                                     *ngFor="let item of moduleArray; let i = index">
-                                                                     <div class="row">
-                                                                        <div class="col-12">
-                                                                           <i *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0"
-                                                                              [class]="item.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
-                                                                              : 'fas fa-chevron-right icon-collapse-show'"
-                                                                              (click)="toggleTopMenu(i)"></i>
-                                                                           <mat-checkbox [value]="item.mod_id"
-                                                                              [checked]="checkIfValueExist(item.mod_id)"
-                                                                              (change)="setMenuAssigned($event, item)">
-                                                                              {{item.mod_name}}
-                                                                           </mat-checkbox>
-                                                                        </div>
-                                                                     </div>
-                                                                     <ng-container
-                                                                        *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0">
-                                                                        <div class="mod-div-2"
-                                                                           [style.display]="item.display">
-                                                                           <ng-container
-                                                                              *ngFor="let submenu of item.submenu_level_1;let j = index">
-                                                                              <div class="row">
-                                                                                 <div class="col-12">
-                                                                                    <i *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0"
-                                                                                       [class]="submenu.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
-                                                                                          : 'fas fa-chevron-right icon-collapse-show'"
-                                                                                       (click)="toggleSubMenu1(i, j)"></i>
-                                                                                    <mat-checkbox
-                                                                                       [checked]="checkIfValueExist(submenu.mod_id)"
-                                                                                       (change)="setMenuAssignedLevel2($event, submenu)"
-                                                                                       [value]="submenu.mod_id">
-                                                                                       {{submenu.mod_name}}
-                                                                                    </mat-checkbox>
-                                                                                 </div>
-
-                                                                              </div>
-                                                                              <ng-container
-                                                                                 *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0">
-                                                                                 <div class="mod-div-3"
-                                                                                    [style.display]="submenu.display">
-                                                                                    <ng-container *ngFor="let submenu2 of submenu.submenu_level_2;
-                                                                                       let k = index">
-                                                                                       <div class="row">
-                                                                                          <div class="col-12">
-                                                                                             <mat-checkbox
-                                                                                                [checked]="checkIfValueExist(submenu2.mod_id)"
-                                                                                                [value]="submenu2.mod_id"
-                                                                                                (change)="setMenuAssignedLevel3($event, submenu2)">
-                                                                                                {{submenu2.mod_name}}
-                                                                                             </mat-checkbox>
-                                                                                          </div>
-
-                                                                                       </div>
-                                                                                    </ng-container>
-                                                                                 </div>
-                                                                              </ng-container>
-                                                                           </ng-container>
-                                                                        </div>
-                                                                     </ng-container>
-                                                                  </ng-container>
-                                                               </div>
+                                            <ng-container
+                                              *ngFor="
+                                                let item of moduleArray;
+                                                let i = index
+                                              "
+                                            >
+                                              <div class="row">
+                                                <div class="col-12">
+                                                  <i
+                                                    *ngIf="
+                                                      item.submenu_level_1 &&
+                                                      item.submenu_level_1
+                                                        .length > 0
+                                                    "
+                                                    [class]="
+                                                      item.display === 'block'
+                                                        ? 'fas fa-chevron-down icon-collapse-show'
+                                                        : 'fas fa-chevron-right icon-collapse-show'
+                                                    "
+                                                    (click)="toggleTopMenu(i)"
+                                                  ></i>
+                                                  <mat-checkbox
+                                                    [value]="item.mod_id"
+                                                    [checked]="
+                                                      checkIfValueExist(
+                                                        item.mod_id
+                                                      )
+                                                    "
+                                                    (change)="
+                                                      setMenuAssigned(
+                                                        $event,
+                                                        item
+                                                      )
+                                                    "
+                                                  >
+                                                    {{ item.mod_name }}
+                                                  </mat-checkbox>
+                                                </div>
+                                              </div>
+                                              <ng-container
+                                                *ngIf="
+                                                  item.submenu_level_1 &&
+                                                  item.submenu_level_1.length >
+                                                    0
+                                                "
+                                              >
+                                                <div
+                                                  class="mod-div-2"
+                                                  [style.display]="item.display"
+                                                >
+                                                  <ng-container
+                                                    *ngFor="
+                                                      let submenu of item.submenu_level_1;
+                                                      let j = index
+                                                    "
+                                                  >
+                                                    <div class="row">
+                                                      <div class="col-12">
+                                                        <i
+                                                          *ngIf="
+                                                            submenu.submenu_level_2 &&
+                                                            submenu
+                                                              .submenu_level_2
+                                                              .length > 0
+                                                          "
+                                                          [class]="
+                                                            submenu.display ===
+                                                            'block'
+                                                              ? 'fas fa-chevron-down icon-collapse-show'
+                                                              : 'fas fa-chevron-right icon-collapse-show'
+                                                          "
+                                                          (click)="
+                                                            toggleSubMenu1(i, j)
+                                                          "
+                                                        ></i>
+                                                        <mat-checkbox
+                                                          [checked]="
+                                                            checkIfValueExist(
+                                                              submenu.mod_id
+                                                            )
+                                                          "
+                                                          (change)="
+                                                            setMenuAssignedLevel2(
+                                                              $event,
+                                                              submenu
+                                                            )
+                                                          "
+                                                          [value]="
+                                                            submenu.mod_id
+                                                          "
+                                                        >
+                                                          {{ submenu.mod_name }}
+                                                        </mat-checkbox>
+                                                      </div>
+                                                    </div>
+                                                    <ng-container
+                                                      *ngIf="
+                                                        submenu.submenu_level_2 &&
+                                                        submenu.submenu_level_2
+                                                          .length > 0
+                                                      "
+                                                    >
+                                                      <div
+                                                        class="mod-div-3"
+                                                        [style.display]="
+                                                          submenu.display
+                                                        "
+                                                      >
+                                                        <ng-container
+                                                          *ngFor="
+                                                            let submenu2 of submenu.submenu_level_2;
+                                                            let k = index
+                                                          "
+                                                        >
+                                                          <div class="row">
+                                                            <div class="col-12">
+                                                              <mat-checkbox
+                                                                [checked]="
+                                                                  checkIfValueExist(
+                                                                    submenu2.mod_id
+                                                                  )
+                                                                "
+                                                                [value]="
+                                                                  submenu2.mod_id
+                                                                "
+                                                                (change)="
+                                                                  setMenuAssignedLevel3(
+                                                                    $event,
+                                                                    submenu2
+                                                                  )
+                                                                "
+                                                              >
+                                                                {{
+                                                                  submenu2.mod_name
+                                                                }}
+                                                              </mat-checkbox>
                                                             </div>
-                                                         </div>
+                                                          </div>
+                                                        </ng-container>
                                                       </div>
-                                                   </div>
+                                                    </ng-container>
+                                                  </ng-container>
                                                 </div>
-                                                <div class="row" *ngIf="moduleArray.length == 0">
-                                                   <div class="col-12">
-                                                      <span>No Records Found</span>
-                                                   </div>
-                                                </div>
-                                             </form>
+                                              </ng-container>
+                                            </ng-container>
                                           </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="submitModule()">Submit</button>
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
-                                             </a>
-                                          </div>
-                                       </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                 </mat-tab>
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Classes</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('74')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <form [formGroup]="ClassModuleForm" novalidate>
-                                                <div class="row">
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>User</mat-label>
-                                                         <input matInput formControlName="login_id" placeholder="User"
-                                                            value="{{userDetails.au_full_name}}" readonly>
-                                                      </mat-form-field>
-                                                   </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                   <div
-                                                      class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
-                                                      <div>
-                                                         <div class="col-apple-10">
-                                                            <div class="module-list">
-                                                               <ngx-treeview [config]="config" [items]="classItems"
-                                                                  (selectedChange)="classValues = $event">
-                                                               </ngx-treeview>
-                                                            </div>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </div>
-                                             </form>
-                                          </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="addUserAccessClass()">Submit</button>
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
-                                             </a>
-                                          </div>
-                                       </div>
+                                  </div>
+                                </div>
+                                <div
+                                  class="row"
+                                  *ngIf="moduleArray.length == 0"
+                                >
+                                  <div class="col-12">
+                                    <span>No Records Found</span>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <button
+                                mat-raised-button
+                                class="btn-primary btn-success"
+                                (click)="submitModule()"
+                              >
+                                Submit
+                              </button>
+                              <a [routerLink]="['../../user-management']">
+                                <button
+                                  mat-raised-button
+                                  class="btn-danger btn-spacer"
+                                >
+                                  Back
+                                </button>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab>
+                        <ng-template mat-tab-label>
+                          <div>
+                            <span class="font-16">Manage Classes</span>
+                          </div>
+                        </ng-template>
+                        <div *ngIf="isExistUserAccessMenu('74')">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <form [formGroup]="ClassModuleForm" novalidate>
+                                <div class="row">
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>User</mat-label>
+                                      <input
+                                        matInput
+                                        formControlName="login_id"
+                                        placeholder="User"
+                                        value="{{ userDetails.au_full_name }}"
+                                        readonly
+                                      />
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                  <div
+                                    class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques"
+                                  >
+                                    <div>
+                                      <div class="col-apple-10">
+                                        <div class="module-list">
+                                          <ngx-treeview
+                                            [config]="config"
+                                            [items]="classItems"
+                                            (selectedChange)="
+                                              classValues = $event
+                                            "
+                                          >
+                                          </ngx-treeview>
+                                        </div>
+                                      </div>
                                     </div>
-                                 </mat-tab>
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Assessment Years</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('75')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <br>
-                                             <h6 class="text-center font-16">Manage Project Wise Academic Sessions</h6>
-                                             <br>
-                                          </div>
-                                          <div class="col-lg-12">
-                                             <form>
-                                                <div class="row">
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>User</mat-label>
-                                                         <input matInput placeholder="User" value="USER" readonly>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Branch</mat-label>
-                                                         <mat-select id="exampleSelect1" placeholder="Branch">
-                                                            <mat-option>DPS School, Ranchi</mat-option>
-                                                            <mat-option>St. Xavier's School, Ranchi</mat-option>
-                                                            <mat-option>Loyala School, Ranchi</mat-option>
-                                                            <mat-option>St. Micheal School, Ranchi</mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Project</mat-label>
-                                                         <mat-select id="exampleSelect1" placeholder="Project">
-                                                            <mat-option [value]="">Select Project</mat-option>
-                                                            <mat-option>S.M.A.R.T</mat-option>
-                                                            <mat-option>AXIOM</mat-option>
-                                                            <mat-option>Website Management</mat-option>
-                                                            <mat-option>School ERP</mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
-                                                   <div class="col-lg-12">
-                                                      <section class="example-section">
-                                                         <mat-checkbox name="switch" id="my1">2018-19</mat-checkbox>
-                                                      </section>
-                                                      <section class="example-section">
-                                                         <mat-checkbox name="switch" id="my2">2019-20</mat-checkbox>
-                                                      </section>
-                                                   </div>
-                                                </div>
-                                             </form>
-                                          </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button
-                                                   class="btn-primary btn-success">Submit</button>
-                                             </a>
-                                             <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
-                                          </div>
-                                       </div>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <button
+                                mat-raised-button
+                                class="btn-primary btn-success"
+                                (click)="addUserAccessClass()"
+                              >
+                                Submit
+                              </button>
+                              <a [routerLink]="['../../user-management']">
+                                <button
+                                  mat-raised-button
+                                  class="btn-danger btn-spacer"
+                                >
+                                  Back
+                                </button>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab>
+                        <ng-template mat-tab-label>
+                          <div>
+                            <span class="font-16">Manage Assessment Years</span>
+                          </div>
+                        </ng-template>
+                        <div *ngIf="isExistUserAccessMenu('75')">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <br />
+                              <h6 class="text-center font-16">
+                                Manage Project Wise Academic Sessions
+                              </h6>
+                              <br />
+                            </div>
+                            <div class="col-lg-12">
+                              <form>
+                                <div class="row">
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>User</mat-label>
+                                      <input
+                                        matInput
+                                        placeholder="User"
+                                        value="USER"
+                                        readonly
+                                      />
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Branch</mat-label>
+                                      <mat-select
+                                        id="exampleSelect1"
+                                        placeholder="Branch"
+                                      >
+                                        <mat-option
+                                          >DPS School, Ranchi</mat-option
+                                        >
+                                        <mat-option
+                                          >St. Xavier's School,
+                                          Ranchi</mat-option
+                                        >
+                                        <mat-option
+                                          >Loyala School, Ranchi</mat-option
+                                        >
+                                        <mat-option
+                                          >St. Micheal School,
+                                          Ranchi</mat-option
+                                        >
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Project</mat-label>
+                                      <mat-select
+                                        id="exampleSelect1"
+                                        placeholder="Project"
+                                      >
+                                        <mat-option [value]=""
+                                          >Select Project</mat-option
+                                        >
+                                        <mat-option>S.M.A.R.T</mat-option>
+                                        <mat-option>AXIOM</mat-option>
+                                        <mat-option
+                                          >Website Management</mat-option
+                                        >
+                                        <mat-option>School ERP</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <section class="example-section">
+                                      <mat-checkbox name="switch" id="my1"
+                                        >2018-19</mat-checkbox
+                                      >
+                                    </section>
+                                    <section class="example-section">
+                                      <mat-checkbox name="switch" id="my2"
+                                        >2019-20</mat-checkbox
+                                      >
+                                    </section>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <a [routerLink]="['../../user-management']">
+                                <button
+                                  mat-raised-button
+                                  class="btn-primary btn-success"
+                                >
+                                  Submit
+                                </button>
+                              </a>
+                              <button
+                                mat-raised-button
+                                class="btn-danger btn-spacer"
+                              >
+                                Reset
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab>
+                        <ng-template mat-tab-label>
+                          <div>
+                            <span class="font-16">Assign Schools</span>
+                          </div>
+                        </ng-template>
+                        <div *ngIf="isExistUserAccessMenu('75')">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <br />
+                              <h6 class="text-center font-16">
+                                Assign School and Manage Permissions
+                              </h6>
+                              <br />
+                            </div>
+                            <div class="col-lg-12">
+                              <form [formGroup]="schoolAssignForm" novalidate>
+                                <div class="row" *ngIf="!editNewUserFlag">
+                                  <div class="col-12">
+                                    <mat-checkbox
+                                      formControlName="showNewSchoolUser"
+                                      (change)="showNewUser($event)"
+                                      [checked]="showNewSchoolUser"
+                                      >Do you want to create new
+                                      User</mat-checkbox
+                                    >
+                                  </div>
+                                </div>
+                                <div
+                                  *ngIf="showNewSchoolUser && !editNewUserFlag"
+                                >
+                                  <div class="row">
+                                    <div
+                                      class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                    >
+                                      <mat-form-field
+                                        class="form-field"
+                                        appearance="outline"
+                                      >
+                                        <mat-label>Schools</mat-label>
+                                        <mat-select
+                                          formControlName="schoolList"
+                                          id="exampleSelect1"
+                                          placeholder="School"
+                                        >
+                                          <mat-option
+                                            *ngFor="
+                                              let sitem of schoolGroupData
+                                            "
+                                            value="{{
+                                              sitem?.si_school_prefix
+                                            }}"
+                                          >
+                                            {{
+                                              sitem?.si_school_name
+                                            }}</mat-option
+                                          >
+                                        </mat-select>
+                                      </mat-form-field>
                                     </div>
-                                 </mat-tab>
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Assign Schools</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('75')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <br>
-                                             <h6 class="text-center font-16">Assign School and Manage Permissions</h6>
-                                             <br>
-                                          </div>
-                                          <div class="col-lg-12">
-                                             <form [formGroup]="schoolAssignForm" novalidate>
-                                                <div class="row" *ngIf="!editNewUserFlag">
-                                                   <div class="col-12">
-                                                      <mat-checkbox [(ngModel)]="showNewSchoolUser"
-                                                         (change)="showNewUser($event)" [checked]="showNewSchoolUser">Do you want to create new
-                                                         User</mat-checkbox>
-                                                   </div>
-                                                </div>
-                                                <div *ngIf="showNewSchoolUser && !editNewUserFlag">
-                                                   <div class="row">
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Schools</mat-label>
-                                                            <mat-select formControlName="schoolList" id="exampleSelect1"
-                                                               placeholder="School">
-                                                               <mat-option *ngFor="let sitem of schoolGroupData"
-                                                                  value="{{sitem?.si_school_prefix}}">
-                                                                  {{sitem?.si_school_name}}</mat-option>
-                                                            </mat-select>
-                                                         </mat-form-field>
-                                                      </div>
 
+                                    <div
+                                      class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques"
+                                    >
+                                      <button
+                                        *ngIf="!editNewUserFlag"
+                                        mat-raised-button
+                                        class="btn-primary btn-success"
+                                        (click)="saveSchoolAccessPermission()"
+                                      >
+                                        Create
+                                      </button>
+                                      <!-- <button *ngIf="editNewUserFlag" mat-raised-button class="btn-primary  btn-success" (click)="saveSchoolAccessPermission()">   Update</button> -->
+                                    </div>
 
-                                                      <div class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques">
-
-                                                         <button *ngIf="!editNewUserFlag" mat-raised-button
-                                                            class="btn-primary  btn-success "
-                                                            (click)="saveSchoolAccessPermission()"> Create</button>
-                                                         <!-- <button *ngIf="editNewUserFlag" mat-raised-button class="btn-primary  btn-success" (click)="saveSchoolAccessPermission()">   Update</button> -->
-                                                      </div>
-
-                                                      <div class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <button mat-raised-button class="btn-primary  btn-danger"
-                                                            (click)="toggleCreateUser($event)"> Cancel</button>
-                                                      </div>
-
-                                                   </div>
-
-                                                </div>
-                                                <div class="row" *ngIf="editNewUserFlag">
-                                                   <span class="user-info"><b>{{currentMappedSchoolData?.au_full_name}}
-                                                         ( {{currentMappedSchoolData?.si_school_prefix}} ) </b></span>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Project</mat-label>
-                                                         <mat-select id="exampleSelect1" placeholder="Project"
-                                                            formControlName="projectList" multiple
-                                                            (selectionChange)="getMappedModuleList($event)">
-                                                            <mat-option *ngFor="let pitem of projectsArray"
-                                                               value="{{pitem?.pro_id}}">{{pitem?.pro_name}}
-                                                            </mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <!-- <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                    <div
+                                      class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques"
+                                    >
+                                      <button
+                                        mat-raised-button
+                                        class="btn-primary btn-danger"
+                                        (click)="toggleCreateUser($event)"
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row" *ngIf="editNewUserFlag">
+                                  <span class="user-info"
+                                    ><b
+                                      >{{
+                                        currentMappedSchoolData?.au_full_name
+                                      }}
+                                      (
+                                      {{
+                                        currentMappedSchoolData?.si_school_prefix
+                                      }}
+                                      )
+                                    </b></span
+                                  >
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Project</mat-label>
+                                      <mat-select
+                                        id="exampleSelect1"
+                                        placeholder="Project"
+                                        formControlName="projectList"
+                                        multiple
+                                        (selectionChange)="
+                                          getMappedModuleList($event)
+                                        "
+                                      >
+                                        <mat-option
+                                          *ngFor="let pitem of projectsArray"
+                                          value="{{ pitem?.pro_id }}"
+                                          >{{ pitem?.pro_name }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                  <!-- <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
                                                       >
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Session</mat-label>
@@ -416,223 +720,428 @@
                                                          </mat-select>
                                                       </mat-form-field>
                                                    </div> -->
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Interface</mat-label>
-                                                         <mat-select formControlName="interfaceList"
-                                                            placeholder="Interface" [value]="typeVal"
-                                                            (selectionChange)="getMappedModuleList($event)">
+                                  <div
+                                    class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                  >
+                                    <mat-form-field
+                                      class="form-field"
+                                      appearance="outline"
+                                    >
+                                      <mat-label>Interface</mat-label>
+                                      <mat-select
+                                        formControlName="interfaceList"
+                                        placeholder="Interface"
+                                        [value]="typeVal"
+                                        (selectionChange)="
+                                          getMappedModuleList($event)
+                                        "
+                                      >
+                                        <mat-option
+                                          *ngFor="let item of typeArray"
+                                          [value]="item.id"
+                                        >
+                                          {{ item.name }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10"
+                                  >
+                                    <button
+                                      mat-raised-button
+                                      class="btn-primary btn-success"
+                                      (click)="updateSchoolAccessPermission()"
+                                    >
+                                      Update
+                                    </button>
+                                  </div>
+                                  &nbsp;&nbsp;
+                                  <div
+                                    class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10"
+                                  >
+                                    <button
+                                      mat-raised-button
+                                      class="btn-primary btn-danger"
+                                      (click)="toggleCreateUser($event)"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div *ngIf="!showNewSchoolUser">
+                                  <div class="row">
+                                    <div
+                                      class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                    >
+                                      <mat-form-field
+                                        class="form-field"
+                                        appearance="outline"
+                                      >
+                                        <mat-label>Schools</mat-label>
+                                        <mat-select
+                                          formControlName="schoolList"
+                                          id="exampleSelect1"
+                                          placeholder="School"
+                                          (selectionChange)="getSchoolUser()"
+                                        >
+                                          <mat-option
+                                            *ngFor="
+                                              let sitem of schoolGroupData
+                                            "
+                                            value="{{
+                                              sitem?.si_school_prefix
+                                            }}"
+                                          >
+                                            {{
+                                              sitem?.si_school_name
+                                            }}</mat-option
+                                          >
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    <div
+                                      class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                    >
+                                      <mat-form-field
+                                        class="form-field"
+                                        appearance="outline"
+                                      >
+                                        <mat-label>Map User</mat-label>
+                                        <mat-select
+                                          formControlName="mapUser"
+                                          id="exampleSelect1"
+                                          placeholder="Map User"
+                                        >
+                                          <mat-option
+                                            *ngFor="let sitem of schoolUseArray"
+                                            value="{{ sitem?.au_login_id }}"
+                                            >{{ sitem?.au_full_name }} ({{
+                                              sitem?.au_username
+                                            }})</mat-option
+                                          >
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row" *ngIf="!showNewSchoolUser">
+                                  <div class="col-lg-12">
+                                    <!-- <a [routerLink]="['../../user-management']"> -->
+                                    <button
+                                      mat-raised-button
+                                      class="btn-primary btn-success"
+                                      (click)="createSchoolUserMapping()"
+                                    >
+                                      Submit
+                                    </button>
+                                    <!-- </a> -->
+                                    <button
+                                      mat-raised-button
+                                      class="btn-danger btn-spacer"
+                                    >
+                                      Reset
+                                    </button>
+                                  </div>
+                                </div>
 
-                                                            <mat-option *ngFor="let item of typeArray"
-                                                               [value]="item.id">
-                                                               {{item.name}}
-                                                            </mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10">
-
-
-                                                      <button mat-raised-button class="btn-primary  btn-success"
-                                                         (click)="updateSchoolAccessPermission()"> Update </button>
-                                                   </div> &nbsp;&nbsp;
-                                                   <div class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10">
-                                                      <button mat-raised-button class="btn-primary  btn-danger"
-                                                         (click)="toggleCreateUser($event)"> Cancel</button>
-                                                   </div>
-                                                </div>
-                                                <br>
-                                                <br>
-                                                <div *ngIf="!showNewSchoolUser">
-                                                   <div class="row">
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Schools</mat-label>
-                                                            <mat-select formControlName="schoolList" id="exampleSelect1"
-                                                               placeholder="School" (selectionChange)="getSchoolUser()">
-                                                               <mat-option *ngFor="let sitem of schoolGroupData"
-                                                                  value="{{sitem?.si_school_prefix}}">
-                                                                  {{sitem?.si_school_name}}</mat-option>
-                                                            </mat-select>
-                                                         </mat-form-field>
-                                                      </div>
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Map User</mat-label>
-                                                            <mat-select formControlName="mapUser" id="exampleSelect1"
-                                                               placeholder="Map User">
-                                                               <mat-option *ngFor="let sitem of schoolUseArray"
-                                                                  value="{{sitem?.au_login_id}}">{{sitem?.au_full_name}}
-                                                                  ({{sitem?.au_username}})</mat-option>
-                                                            </mat-select>
-                                                         </mat-form-field>
-                                                      </div>
-                                                   </div>
-
-                                                </div>
-                                                <div class="row" *ngIf="!showNewSchoolUser">
-                                                   <div class="col-lg-12">
-                                                      <!-- <a [routerLink]="['../../user-management']"> -->
-                                                      <button mat-raised-button class="btn-primary btn-success"
-                                                         (click)="createSchoolUserMapping()">Submit</button>
-                                                      <!-- </a> -->
-                                                      <button mat-raised-button
-                                                         class="btn-danger btn-spacer">Reset</button>
-                                                   </div>
-                                                </div>
-
-                                                <div class="row">
-                                                   <div *ngIf="editNewUserFlag && moduleArray.length > 0"
-                                                      class="col-lg-3 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
-                                                      <div>
-                                                         <div>
-                                                            <div class="col-apple-10">
-                                                               <div class="module-list">
-                                                                  <!-- <ngx-treeview [config]="config" [items]="moduleItems"
+                                <div class="row">
+                                  <div
+                                    *ngIf="
+                                      editNewUserFlag && moduleArray.length > 0
+                                    "
+                                    class="col-lg-3 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques"
+                                  >
+                                    <div>
+                                      <div>
+                                        <div class="col-apple-10">
+                                          <div class="module-list">
+                                            <!-- <ngx-treeview [config]="config" [items]="moduleItems"
                                                                         (selectedChange)="moduleValues = $event">
                                                                      </ngx-treeview> -->
-                                                                  <ng-container
-                                                                     *ngFor="let item of moduleArray; let i = index">
-                                                                     <div class="row">
-                                                                        <div class="col-12">
-                                                                           <i *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0"
-                                                                              [class]="item.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
-                                                                                 : 'fas fa-chevron-right icon-collapse-show'"
-                                                                              (click)="toggleTopMenu(i)"></i>
-                                                                           <mat-checkbox [value]="item.mod_id"
-                                                                              [checked]="checkIfValueExist(item.mod_id)"
-                                                                              (change)="setMenuAssigned($event, item)">
-                                                                              {{item.mod_name}}
-                                                                           </mat-checkbox>
-                                                                        </div>
-                                                                     </div>
-                                                                     <ng-container
-                                                                        *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0">
-                                                                        <div class="mod-div-2"
-                                                                           [style.display]="item.display">
-                                                                           <ng-container
-                                                                              *ngFor="let submenu of item.submenu_level_1;let j = index">
-                                                                              <div class="row">
-                                                                                 <div class="col-12">
-                                                                                    <i *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0"
-                                                                                       [class]="submenu.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
-                                                                                             : 'fas fa-chevron-right icon-collapse-show'"
-                                                                                       (click)="toggleSubMenu1(i, j)"></i>
-                                                                                    <mat-checkbox
-                                                                                       [checked]="checkIfValueExist(submenu.mod_id)"
-                                                                                       (change)="setMenuAssignedLevel2($event, submenu)"
-                                                                                       [value]="submenu.mod_id">
-                                                                                       {{submenu.mod_name}}
-                                                                                    </mat-checkbox>
-                                                                                 </div>
-
-                                                                              </div>
-                                                                              <ng-container
-                                                                                 *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0">
-                                                                                 <div class="mod-div-3"
-                                                                                    [style.display]="submenu.display">
-                                                                                    <ng-container *ngFor="let submenu2 of submenu.submenu_level_2;
-                                                                                          let k = index">
-                                                                                       <div class="row">
-                                                                                          <div class="col-12">
-                                                                                             <mat-checkbox
-                                                                                                [checked]="checkIfValueExist(submenu2.mod_id)"
-                                                                                                [value]="submenu2.mod_id"
-                                                                                                (change)="setMenuAssignedLevel3($event, submenu2)">
-                                                                                                {{submenu2.mod_name}}
-                                                                                             </mat-checkbox>
-                                                                                          </div>
-
-                                                                                       </div>
-                                                                                    </ng-container>
-                                                                                 </div>
-                                                                              </ng-container>
-                                                                           </ng-container>
-                                                                        </div>
-                                                                     </ng-container>
-                                                                  </ng-container>
-                                                               </div>
+                                            <ng-container
+                                              *ngFor="
+                                                let item of moduleArray;
+                                                let i = index
+                                              "
+                                            >
+                                              <div class="row">
+                                                <div class="col-12">
+                                                  <i
+                                                    *ngIf="
+                                                      item.submenu_level_1 &&
+                                                      item.submenu_level_1
+                                                        .length > 0
+                                                    "
+                                                    [class]="
+                                                      item.display === 'block'
+                                                        ? 'fas fa-chevron-down icon-collapse-show'
+                                                        : 'fas fa-chevron-right icon-collapse-show'
+                                                    "
+                                                    (click)="toggleTopMenu(i)"
+                                                  ></i>
+                                                  <mat-checkbox
+                                                    [value]="item.mod_id"
+                                                    [checked]="
+                                                      checkIfValueExist(
+                                                        item.mod_id
+                                                      )
+                                                    "
+                                                    (change)="
+                                                      setMenuAssigned(
+                                                        $event,
+                                                        item
+                                                      )
+                                                    "
+                                                  >
+                                                    {{ item.mod_name }}
+                                                  </mat-checkbox>
+                                                </div>
+                                              </div>
+                                              <ng-container
+                                                *ngIf="
+                                                  item.submenu_level_1 &&
+                                                  item.submenu_level_1.length >
+                                                    0
+                                                "
+                                              >
+                                                <div
+                                                  class="mod-div-2"
+                                                  [style.display]="item.display"
+                                                >
+                                                  <ng-container
+                                                    *ngFor="
+                                                      let submenu of item.submenu_level_1;
+                                                      let j = index
+                                                    "
+                                                  >
+                                                    <div class="row">
+                                                      <div class="col-12">
+                                                        <i
+                                                          *ngIf="
+                                                            submenu.submenu_level_2 &&
+                                                            submenu
+                                                              .submenu_level_2
+                                                              .length > 0
+                                                          "
+                                                          [class]="
+                                                            submenu.display ===
+                                                            'block'
+                                                              ? 'fas fa-chevron-down icon-collapse-show'
+                                                              : 'fas fa-chevron-right icon-collapse-show'
+                                                          "
+                                                          (click)="
+                                                            toggleSubMenu1(i, j)
+                                                          "
+                                                        ></i>
+                                                        <mat-checkbox
+                                                          [checked]="
+                                                            checkIfValueExist(
+                                                              submenu.mod_id
+                                                            )
+                                                          "
+                                                          (change)="
+                                                            setMenuAssignedLevel2(
+                                                              $event,
+                                                              submenu
+                                                            )
+                                                          "
+                                                          [value]="
+                                                            submenu.mod_id
+                                                          "
+                                                        >
+                                                          {{ submenu.mod_name }}
+                                                        </mat-checkbox>
+                                                      </div>
+                                                    </div>
+                                                    <ng-container
+                                                      *ngIf="
+                                                        submenu.submenu_level_2 &&
+                                                        submenu.submenu_level_2
+                                                          .length > 0
+                                                      "
+                                                    >
+                                                      <div
+                                                        class="mod-div-3"
+                                                        [style.display]="
+                                                          submenu.display
+                                                        "
+                                                      >
+                                                        <ng-container
+                                                          *ngFor="
+                                                            let submenu2 of submenu.submenu_level_2;
+                                                            let k = index
+                                                          "
+                                                        >
+                                                          <div class="row">
+                                                            <div class="col-12">
+                                                              <mat-checkbox
+                                                                [checked]="
+                                                                  checkIfValueExist(
+                                                                    submenu2.mod_id
+                                                                  )
+                                                                "
+                                                                [value]="
+                                                                  submenu2.mod_id
+                                                                "
+                                                                (change)="
+                                                                  setMenuAssignedLevel3(
+                                                                    $event,
+                                                                    submenu2
+                                                                  )
+                                                                "
+                                                              >
+                                                                {{
+                                                                  submenu2.mod_name
+                                                                }}
+                                                              </mat-checkbox>
                                                             </div>
-                                                         </div>
+                                                          </div>
+                                                        </ng-container>
                                                       </div>
-                                                   </div>
-                                                   <div
-                                                      [ngClass]="editNewUserFlag && moduleArray.length > 0 ? 'col-9' : 'col-12'">
-                                                      <br /><br /><br />
-                                                      <h3 style="text-align:center;text-transform: capitalize"
-                                                         *ngIf="mappedSchoolUserArray?.length > 0">You are Mapped With
-                                                         Below Schools <span
-                                                            *ngIf="schoolGroupData && schoolGroupData[0]">(
-                                                            <b>Group : <span style="text-transform: uppercase;">
-                                                                  {{schoolGroupData[0]['si_group'] }} </span></b>
-                                                            )</span></h3><br />
-                                                      <div *ngIf="mappedSchoolUserArray?.length > 0">
-                                                         <table
-                                                            class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
-                                                            <thead>
-                                                               <th>Sr. No.</th>
-                                                               <th>School Name</th>
-                                                               <th>School Prefix</th>
-                                                               <th>Name / Login</th>
-                                                               <th>Action</th>
-                                                            </thead>
-                                                            <tbody>
-                                                               <tr
-                                                                  *ngFor="let sitem of mappedSchoolUserArray; let i=index;">
-                                                                  <td>{{i+1}}</td>
-                                                                  <td>{{sitem?.si_school_name}}</td>
-                                                                  <td>{{sitem?.si_school_prefix}}</td>
-                                                                  <td>{{sitem?.au_full_name}} / {{sitem?.au_username}}
-                                                                  </td>
-                                                                  <td>
-                                                                     <a *ngIf="sitem?.sgm_mapped_status==='1'"
-                                                                        href="javascript:void(0)"
-                                                                        (click)="manageSchoolUserAccess(sitem)">Manage
-                                                                        Access
-                                                                        & Privildeges | </a>
-                                                                     <a *ngIf="sitem?.sgm_mapped_status==='1'"
-                                                                        href="javascript:void(0)"
-                                                                        (click)="revokeAccessToAssignSchool(sitem)">Revoke
-                                                                        Access to Assign School</a>
-                                                                     <a *ngIf="sitem?.sgm_mapped_status==='0'"
-                                                                        href="javascript:void(0)"
-                                                                        (click)="enableAccessToAssignSchool(sitem)">Enable
-                                                                        Access to Assign School</a>
-                                                                  </td>
-                                                               </tr>
-                                                            </tbody>
-                                                         </table>
-                                                      </div>
+                                                    </ng-container>
+                                                  </ng-container>
+                                                </div>
+                                              </ng-container>
+                                            </ng-container>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    [ngClass]="
+                                      editNewUserFlag && moduleArray.length > 0
+                                        ? 'col-9'
+                                        : 'col-12'
+                                    "
+                                  >
+                                    <br /><br /><br />
+                                    <h3
+                                      style="
+                                        text-align: center;
+                                        text-transform: capitalize;
+                                      "
+                                      *ngIf="mappedSchoolUserArray?.length > 0"
+                                    >
+                                      You are Mapped With Below Schools
+                                      <span
+                                        *ngIf="
+                                          schoolGroupData && schoolGroupData[0]
+                                        "
+                                        >(
+                                        <b
+                                          >Group :
+                                          <span
+                                            style="text-transform: uppercase"
+                                          >
+                                            {{ schoolGroupData[0]["si_group"] }}
+                                          </span></b
+                                        >
+                                        )</span
+                                      >
+                                    </h3>
+                                    <br />
+                                    <div
+                                      *ngIf="mappedSchoolUserArray?.length > 0"
+                                    >
+                                      <table
+                                        class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height"
+                                      >
+                                        <thead>
+                                          <th>Sr. No.</th>
+                                          <th>School Name</th>
+                                          <th>School Prefix</th>
+                                          <th>Name / Login</th>
+                                          <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                          <tr
+                                            *ngFor="
+                                              let sitem of mappedSchoolUserArray;
+                                              let i = index
+                                            "
+                                          >
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ sitem?.si_school_name }}</td>
+                                            <td>
+                                              {{ sitem?.si_school_prefix }}
+                                            </td>
+                                            <td>
+                                              {{ sitem?.au_full_name }} /
+                                              {{ sitem?.au_username }}
+                                            </td>
+                                            <td>
+                                              <a
+                                                *ngIf="
+                                                  sitem?.sgm_mapped_status ===
+                                                  '1'
+                                                "
+                                                href="javascript:void(0)"
+                                                (click)="
+                                                  manageSchoolUserAccess(sitem)
+                                                "
+                                                >Manage Access & Privildeges |
+                                              </a>
+                                              <a
+                                                *ngIf="
+                                                  sitem?.sgm_mapped_status ===
+                                                  '1'
+                                                "
+                                                href="javascript:void(0)"
+                                                (click)="
+                                                  revokeAccessToAssignSchool(
+                                                    sitem
+                                                  )
+                                                "
+                                                >Revoke Access to Assign
+                                                School</a
+                                              >
+                                              <a
+                                                *ngIf="
+                                                  sitem?.sgm_mapped_status ===
+                                                  '0'
+                                                "
+                                                href="javascript:void(0)"
+                                                (click)="
+                                                  enableAccessToAssignSchool(
+                                                    sitem
+                                                  )
+                                                "
+                                                >Enable Access to Assign
+                                                School</a
+                                              >
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
 
-
-
-                                                      <!-- <div *ngIf="mappedSchoolUserArray?.length == 0">
+                                    <!-- <div *ngIf="mappedSchoolUserArray?.length == 0">
                                                             <div clas="text-center">No Data Available</div>
                                                          </div> -->
-
-                                                   </div>
-                                                </div>
-                                                <!-- <div class="row" *ngIf="moduleArray.length == 0">
+                                  </div>
+                                </div>
+                                <!-- <div class="row" *ngIf="moduleArray.length == 0">
                                                    <div class="col-12">
                                                       <span>No Records Found</span>
                                                    </div>
                                                 </div> -->
-
-                                             </form>
-
-                                          </div>
-                                       </div>
-
-                                    </div>
-                                 </mat-tab>
-                              </mat-tab-group>
-                           </div>
+                              </form>
+                            </div>
+                          </div>
                         </div>
-                     </div>
+                      </mat-tab>
+                    </mat-tab-group>
                   </div>
-               </div>
+                </div>
+              </div>
             </div>
-         </mat-card-content>
-      </mat-card>
-   </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
