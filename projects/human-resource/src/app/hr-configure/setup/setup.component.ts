@@ -199,7 +199,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	// get genre list
 	getConfiguration(event) {
-		console.log('EVENT :', event);
 		this.isExistUserAccessSubMenu()
 
 		if (this.formGroupArray[this.configValue - 1].formGroup.value.type === '6') {
@@ -220,7 +219,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				if (this.configValue === '1') {
 					let pos = 1;
 					for (const item of result) {
-						console.log('ITEM of Result++++++++++++++++++', item);
+						// console.log('ITEM of Result++++++++++++++++++', item);
 
 						// console.log('jhjhjhh',item.type.calculation_type ? item.type.calculation_type.cy_name : '');
 						this.CONFIG_ELEMENT_DATA.push({
@@ -1150,14 +1149,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	 * isExistUserAccessMenu
 	 * If removed: first option will not show up
 	 * 
-	 * Reason : Unclear
+	 * Reason: Done purposefully
 	 */
 	isExistUserAccessMenu() {
-		// this.congigArray = []
-		let abc = 1
-		if (this.commonService.isExistUserAccessMenu({ id: '940', call: 'firstCall' })) {
-			// if (true == true) return;
-		}
+		this.congigArray = []
+		if (this.commonService.isExistUserAccessMenu('940')) { }
 		if (this.commonService.isExistUserAccessMenu('940')) {
 			this.congigArray.push({ id: "1", name: 'Master' })
 		}
@@ -1176,11 +1172,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (this.commonService.isExistUserAccessMenu('945')) {
 			this.congigArray.push({ id: "6", name: 'Attendance Shift' })
 		}
-		console.log('AFTER ENDING: ++++++++++', this.congigArray)
+		// console.log('AFTER ENDING: ++++++++++', this.congigArray)
 	}
 
 	isExistUserAccessSubMenu() {
-		// this.typeArray = []
+		this.typeArray = []
 		if (this.commonService.isExistUserAccessMenu('946')) {
 			this.typeArray.push({ id: "1", name: 'Wing Master' })
 		}
@@ -1208,7 +1204,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (this.commonService.isExistUserAccessMenu('954')) {
 			this.typeArray.push({ id: "14", name: 'Subject' })
 		}
-		console.log('++++++++++++++++ After updating ++++++++++++++', this.typeArray);
+		// console.log('++++++++++++++++ After updating ++++++++++++++', this.typeArray);
 
 	}
 }
