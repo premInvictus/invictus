@@ -274,6 +274,10 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/insertBulk', value);
   }
+  insertWalletLedger(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-bill/insertWalletLedger', value);
+  }
   insertWalletsBulk(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/insertWalletsBulk',value);

@@ -50,3 +50,15 @@ td.mat-footer-cell {
 .debit {
     color: red;
 }
+.color-blue{
+    color: blue;
+}
+.size-15{
+    font-size: 15px;
+}
+.size-20{
+    font-size: 20px;
+}
+.size-25{
+    font-size: 25px;
+}

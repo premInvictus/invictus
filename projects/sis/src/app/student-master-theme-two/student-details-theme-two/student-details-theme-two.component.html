@@ -32,17 +32,20 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img margin-top-10">
-              <img class="student-pic--imgone student-pic__circle "
-                [src]="checkimageonce" />
-              <img (click)="changeAllow()"  *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
+              <img class="student-pic--imgone student-pic__circle " [src]="checkimageonce" />
+              <img (click)="changeAllow()" *ngIf="!viewOnly"
+                class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
-                <img *ngIf="!viewOnly" (click)="changeAllow()" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
+              <img *ngIf="!viewOnly" (click)="changeAllow()"
+                class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
-                <span *ngIf="!viewOnly && defaultsrc != 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png' && defaultsrc !='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png' " (click)="removeImage()" class="material-icons position_delete_button">
-                  delete
-                </span>
+              <span
+                *ngIf="!viewOnly && defaultsrc != 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png' && defaultsrc !='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png' "
+                (click)="removeImage()" class="material-icons position_delete_button">
+                delete
+              </span>
             </label>
-            
+
             <input *ngIf="allowImg" type="file" placeholder="Upload image" id="image" class="image-upload-btn"
               (change)="bindImageToForm($event)" [disabled]="viewOnly && allowImg">
             <div>
@@ -54,6 +57,13 @@
                   {{studentdetails.prevStep.process_no}}</span>
               </div>
             </div>
+          </div>
+          <div
+            [ngClass]="studentdetails?.currStep?.process_name == 'Alumuni' ? 'registration-container__box':'registration-container__box'"
+            *ngIf="divFlag && studentdetails?.currStep?.process_name  == 'Alumuni' && studentdetails?.currStep?.process_no">
+            <span class="regno-title font-size-14 font-white"
+              *ngIf="studentdetails?.currStep?.process_name  == 'Alumuni' ">{{studentdetails?.currStep?.process_name}}:
+              {{studentdetails?.currStep.process_no}}</span>
           </div>
           <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
             <div class="row remove-margin">
@@ -84,11 +94,11 @@
                 </mat-form-field><br>
                 <div class="font-size-16 font-bold blink"
                   *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type == '5' && studentdetails.au_enrollment_status == 'left'))">
-                  <span>Left</span> 
+                  <span>Left</span>
                 </div>
                 <div class="font-size-16 font-bold blink"
                   *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type != '5' && studentdetails.au_enrollment_status == 'left'))">
-                  <span>Dropout</span> 
+                  <span>Dropout</span>
                 </div>
                 <br>
               </div>
@@ -118,9 +128,9 @@
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
                     required [readonly]="viewOnly" [value]="studentdetailsform.get('au_full_name').value">
-                    <mat-error>
-                      This field is required
-                    </mat-error>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
@@ -153,7 +163,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              
+
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Section</mat-label>
@@ -168,7 +178,7 @@
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist('au_process_class')">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Admitted In</mat-label>
-                    <mat-select formControlName="au_process_class" placeholder="Admitted In" required
+                  <mat-select formControlName="au_process_class" placeholder="Admitted In" required
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -191,12 +201,12 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" >
-                <div [ngClass]= 'remove-col-padding'>
-                  <mat-form-field appearance="outline" 
-                    class="form-field">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
+                <div [ngClass]='remove-col-padding'>
+                  <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Reference No</mat-label>
-                    <input class="margin-left-10" formControlName="au_reference_no" [value]="studentdetailsform.get('au_reference_no').value" matInput [readonly]="viewOnly" >
+                    <input class="margin-left-10" formControlName="au_reference_no"
+                      [value]="studentdetailsform.get('au_reference_no').value" matInput [readonly]="viewOnly">
                     <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
                   </mat-form-field>
                 </div>
@@ -211,20 +221,19 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_mobile')" >
-                <div [ngClass]='remove-col-padding' >
-                  <mat-form-field appearance="outline" 
-                    class="form-field">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_mobile')">
+                <div [ngClass]='remove-col-padding'>
+                  <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Mobile No</mat-label>
-                    <input class="margin-left-10" formControlName="au_mobile" mask="00000 00000" matInput [readonly]="viewOnly" >
+                    <input class="margin-left-10" formControlName="au_mobile" mask="00000 00000" matInput
+                      [readonly]="viewOnly">
                     <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_email')" >
-                <div [ngClass]='remove-col-padding' >
-                  <mat-form-field appearance="outline" 
-                    class="form-field">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="checkIfFieldExist2('au_email')">
+                <div [ngClass]='remove-col-padding'>
+                  <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Email</mat-label>
                     <input class="margin-left-10" formControlName="au_email" matInput [readonly]="viewOnly">
                     <!-- <i class="fas fa-phone call-field-icon" matPrefix></i> -->
@@ -233,8 +242,7 @@
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="whatsapp_no">
                 <div [ngClass]="whatsapp_no? 'remove-col-padding' : 'remove-col-padding '">
-                  <mat-form-field appearance="outline" *ngIf="whatsapp_no"
-                    class="form-field">
+                  <mat-form-field appearance="outline" *ngIf="whatsapp_no" class="form-field">
                     <mat-label>WhatsApp No.</mat-label>
                     <input class="margin-left-10" formControlName="epd_whatsapp_no" mask="00000 00000" matInput
                       readonly>
@@ -283,14 +291,15 @@
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
-                  <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
-                  (studentdetails.fee_outstanding | number): '0'}}</span>
+                  <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ?
+                    (studentdetails.fee_outstanding | number): '0'}}</span>
                 </div>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
-                  <span><b>Concession:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
+                  <span><b>Concession:</b>{{studentdetails.ead_concession_category ?
+                    (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
                 </div>
               </div>
             </div>
@@ -317,7 +326,8 @@
                               <td valign="middle" width="35%" style="text-align: right;">
                                 <strong><img [src]="
                                   'https://apisis.invictusdigisoft.com/createonfly.php?src=' + schoolInfo.school_logo
-                                  + '&h=70&w=70'" width="70"></strong></td>
+                                  + '&h=70&w=70'" width="70"></strong>
+                              </td>
                               <td width="65%" valign="middle">
                                 <table border="0" cellpadding="0" cellspacing="0" style="color: #021b8f;font-family: Helvetica, Arial, sans-serif;border-collapse: collapse;
                                                               margin-left:12px; font-size: 8px;" width="100%">
@@ -348,7 +358,8 @@
                                     <tr>
                                       <td class="info-text" style="
                                                               color: #021b8f
-                                                              ">{{schoolInfo.school_address}}, {{schoolInfo.school_city}}, {{schoolInfo.school_state}}</td>
+                                                              ">{{schoolInfo.school_address}},
+                                        {{schoolInfo.school_city}}, {{schoolInfo.school_state}}</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -423,7 +434,8 @@
                                         :
                                       </td>
                                       <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
-                                        {{studentdetailsform.value.au_full_name ? studentdetailsform.value.au_full_name : '-'}}
+                                        {{studentdetailsform.value.au_full_name ? studentdetailsform.value.au_full_name
+                                        : '-'}}
                                       </td>
                                     </tr>
                                     <tr *ngIf="checkIfFieldExist2('au_class_id') && studentDet[0].au_class_id">
@@ -511,8 +523,8 @@
                                         :
                                       </td>
                                       <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
-                                        {{ studentDet[1].upd_mt_id ? 
-                                            motherTongueArray[studentDet[1].upd_mt_id] : '-'}}
+                                        {{ studentDet[1].upd_mt_id ?
+                                        motherTongueArray[studentDet[1].upd_mt_id] : '-'}}
                                       </td>
                                     </tr>
                                     <tr *ngIf="checkIfFieldExist2('upd_aadhaar_no') && studentDet[1].upd_aadhaar_no">
@@ -566,7 +578,7 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              {{p.epd_parent_dob ? (p.epd_parent_dob | date: 'd-MMM-y') : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
@@ -589,7 +601,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] :
+                                              '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
@@ -612,7 +625,7 @@
                                             </td>
                                             <td style="padding-left:10px">
                                               {{p.epd_qualification ? qualificationArray[p.epd_qualification]
-                                                :'-'}}
+                                              :'-'}}
                                             </td>
                                           </tr>
                                           <tr
@@ -624,8 +637,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_occupation_type ? 
-                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              {{p.epd_parent_occupation_type ?
+                                              occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
@@ -636,8 +649,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_designation ? 
-                                                  p.epd_designation : '-'}}
+                                              {{p.epd_designation ?
+                                              p.epd_designation : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
@@ -648,8 +661,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_income ? 
-                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              {{p.epd_income ?
+                                              annualIncomeArray[p.epd_income] : '-'}}
                                             </td>
                                           </tr>
                                         </tbody>
@@ -695,7 +708,7 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              {{p.epd_parent_dob ? (p.epd_parent_dob | date: 'd-MMM-y') : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
@@ -718,7 +731,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] :
+                                              '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
@@ -741,7 +755,7 @@
                                             </td>
                                             <td style="padding-left:10px">
                                               {{p.epd_qualification ? qualificationArray[p.epd_qualification]
-                                                :'-'}}
+                                              :'-'}}
                                             </td>
                                           </tr>
                                           <tr
@@ -753,8 +767,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_occupation_type ? 
-                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              {{p.epd_parent_occupation_type ?
+                                              occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
@@ -765,8 +779,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_designation ? 
-                                                  p.epd_designation : '-'}}
+                                              {{p.epd_designation ?
+                                              p.epd_designation : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
@@ -777,8 +791,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_income ? 
-                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              {{p.epd_income ?
+                                              annualIncomeArray[p.epd_income] : '-'}}
                                             </td>
                                           </tr>
                                         </tbody>
@@ -824,7 +838,7 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              {{p.epd_parent_dob ? (p.epd_parent_dob | date: 'd-MMM-y') : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
@@ -847,7 +861,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] :
+                                              '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
@@ -870,7 +885,7 @@
                                             </td>
                                             <td style="padding-left:10px">
                                               {{p.epd_qualification ? qualificationArray[p.epd_qualification]
-                                                :'-'}}
+                                              :'-'}}
                                             </td>
                                           </tr>
                                           <tr
@@ -882,8 +897,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_parent_occupation_type ? 
-                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              {{p.epd_parent_occupation_type ?
+                                              occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
@@ -894,8 +909,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_designation ? 
-                                                  p.epd_designation : '-'}}
+                                              {{p.epd_designation ?
+                                              p.epd_designation : '-'}}
                                             </td>
                                           </tr>
                                           <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
@@ -906,8 +921,8 @@
                                               :
                                             </td>
                                             <td style="padding-left:10px">
-                                              {{p.epd_income ? 
-                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              {{p.epd_income ?
+                                              annualIncomeArray[p.epd_income] : '-'}}
                                             </td>
                                           </tr>
                                         </tbody>
@@ -997,7 +1012,7 @@
                                           :
                                         </td>
                                         <td style="padding-left:10px">
-                                          {{item.eed_joining_from ? (item.eed_joining_from  | date :'d-MMM-y') : '-'}}
+                                          {{item.eed_joining_from ? (item.eed_joining_from | date :'d-MMM-y') : '-'}}
                                         </td>
                                     </tbody>
                                   </table>
@@ -1016,7 +1031,7 @@
                                           :
                                         </td>
                                         <td style="padding-left:10px">
-                                          {{item.eed_joining_to ? (item.eed_joining_to  | date : 'd-MMM-y') : '-'}}
+                                          {{item.eed_joining_to ? (item.eed_joining_to | date : 'd-MMM-y') : '-'}}
                                         </td>
                                     </tbody>
                                   </table>
@@ -1085,7 +1100,8 @@
                                         :
                                       </td>
                                       <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
-                                        {{studentDet[1].addressDetails[0].ea_address1 ? studentDet[1].addressDetails[0].ea_address1 : '-'}}
+                                        {{studentDet[1].addressDetails[0].ea_address1 ?
+                                        studentDet[1].addressDetails[0].ea_address1 : '-'}}
                                       </td>
                                     </tr>
                                     <tr
@@ -1109,7 +1125,8 @@
                                         :
                                       </td>
                                       <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
-                                        {{studentDet[1].addressDetails[0].ea_state ? stateArray[studentDet[1].addressDetails[0].ea_state] : '-'}}
+                                        {{studentDet[1].addressDetails[0].ea_state ?
+                                        stateArray[studentDet[1].addressDetails[0].ea_state] : '-'}}
                                       </td>
                                     </tr>
                                     <tr
@@ -1121,7 +1138,8 @@
                                         :
                                       </td>
                                       <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
-                                        {{studentDet[1].addressDetails[0].ea_pincode ? studentDet[1].addressDetails[0].ea_pincode : '-'}}
+                                        {{studentDet[1].addressDetails[0].ea_pincode ?
+                                        studentDet[1].addressDetails[0].ea_pincode : '-'}}
                                       </td>
                                     </tr>
                                   </tbody>
@@ -1204,7 +1222,7 @@
                                         <td>
                                           School Name
                                         </td>
-                                        <td width="10%"    style="padding-left:10px">
+                                        <td width="10%" style="padding-left:10px">
                                           :
                                         </td>
                                         <td style="padding-left:10px">
@@ -1257,7 +1275,8 @@
                                           :
                                         </td>
                                         <td style="padding-left:10px">
-                                          {{item.eaw_level_of_interest ? levelOfIntrestArray[item.eaw_level_of_interest] : '-'}}
+                                          {{item.eaw_level_of_interest ? levelOfIntrestArray[item.eaw_level_of_interest]
+                                          : '-'}}
                                         </td>
                                     </tbody>
                                   </table>
@@ -1409,6 +1428,7 @@
     </div>
   </div>
 </form>
-<app-imagecrop #cropModal *ngIf="allowImg == true" (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
+<app-imagecrop #cropModal *ngIf="allowImg == true" (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)">
+</app-imagecrop>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteUser()"
   (deleteCancel)="deleteCancel()"></app-delete-modal>
