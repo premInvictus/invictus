@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./mark-attendance.component.css']
 })
 export class MarkAttendanceComponent implements OnInit {
+	@ViewChild('deleteModal') deleteModal;
 	submitFlag = false;
 	defaultFlag = false;
 	finalDivFlag = true;
@@ -317,7 +318,8 @@ export class MarkAttendanceComponent implements OnInit {
 		}
 
 	}
-
+	confirmNotification(e){
+	}
 	sendPushMessage(data) {
 		var validationFlag = true;
 		const devices: any[] = [];
@@ -462,5 +464,7 @@ export class MarkAttendanceComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage('Error While Sending Message', 'error');
 			}
 		});
+	}
+	cancelNotification(){
 	}
 }
