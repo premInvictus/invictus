@@ -6,7 +6,7 @@
 }
 
 .functional-button-one button {
-    background-color: #9e9e9e;
+    background-color: #9E9E9E;
     color: #fff;
 }
 
@@ -27,29 +27,23 @@
 }
 
 .functional-button-five button:hover {
-    background-color: rgb(28, 122, 180);
+    background-color:  rgb(28, 122, 180);
     color: #fff;
 }
-.blink {
+.blink{
     background-color: #e11022;
     text-align: center;
 }
-.blink span {
+.blink span{
     font-family: cursive;
     color: white;
     animation: blink 1s linear infinite;
 }
-@keyframes blink {
-    0% {
-        opacity: 0;
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
     }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
 .functional-button-two {
     z-index: 11111;
     position: fixed;
@@ -75,7 +69,7 @@
 }
 
 .functional-button-three button {
-    background-color: #0091ea;
+    background-color: #0091EA;
     color: #fff;
 }
 
@@ -110,64 +104,63 @@
     opacity: 0;
     text-align: center;
     padding-top: 0px;
-    transition: all 0.3s ease-in-out;
+    transition: all .3s ease-in-out;
     display: none;
 }
 
-button.mat-fab:hover {
+  button.mat-fab:hover {
     border-radius: 0%;
     width: 120px;
     height: 60px;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
-    transition: all 0.3s ease-in-out;
-}
+    transition: all .3s ease-in-out;
+  }
 
-button.float-btn-right:hover {
+  button.float-btn-right:hover {
     border-radius: 0%;
     width: 120px;
     height: 60px;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
-    transition: all 0.3s ease-in-out;
-}
+    transition: all .3s ease-in-out;
+  }
 
-button.float-btn-right:hover .right-btn-text {
+  button.float-btn-right:hover .right-btn-text {
     padding-top: 40px;
     opacity: 1;
     color: #fff;
     text-align: center;
     padding-top: 0px;
-    transition: all 0.3s ease-in-out;
+    transition: all .3s ease-in-out;
     display: block;
-}
+    
+  }
 
-button.mat-fab:hover .right-btn-text {
+  button.mat-fab:hover .right-btn-text {
     padding-top: 40px;
     opacity: 1;
     color: #fff;
     text-align: center;
     padding-top: 0px;
-    transition: all 0.3s ease-in-out;
+    transition: all .3s ease-in-out;
     display: block;
-}
+    
+  }
 
-button.mat-fab:hover .float-btn-right {
-    display: none;
-}
+  button.mat-fab:hover .float-btn-right {
+    display:none;
+  }
 
-button.mat-fab:hover mat-icon {
-    display: none;
-}
+  button.mat-fab:hover mat-icon {
+    display:none;
+  }
 
-.position_delete_button {
+  .position_delete_button{
     margin-top: 5.4rem;
     font-size: 30px;
     /* z-index: 133; */
     margin-left: -7rem;
     position: absolute;
     color: red;
-}
-.registration-container__box {
-    width: 105%;
-}
+  }
