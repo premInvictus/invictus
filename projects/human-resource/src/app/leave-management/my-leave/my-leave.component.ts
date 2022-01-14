@@ -31,7 +31,7 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('approveModal') approveModal;
 	@ViewChild('rejectModal') rejectModal;
 	@ViewChild(MatSort) sort: MatSort;
-	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason','status', 'action'];
+	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'status', 'action'];
 	MY_LEAVE_ELEMENT_DATA: MyLeaveElement[] = [];
 	myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 
@@ -48,10 +48,10 @@ export class MyLeaveComponent implements OnInit {
 	cancelMessage = 'Are you sure to Cancel ';
 	approveMessage = 'Are you sure to Approve ';
 	rejectMessage = 'Are you sure to Reject !';
-	approvedArray: any[] 	= [];
+	approvedArray: any[] = [];
 	finalapprovedArray: any[] = [];
 	disabledApiButton = false;
-	session_id:any;
+	session_id: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -119,7 +119,7 @@ export class MyLeaveComponent implements OnInit {
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 		this.common.getEmployeeLeaveData({
 			'leave_from': this.currentUser ? this.currentUser.login_id : '',
-			'role_id' : this.currentUser.role_id,
+			'role_id': this.currentUser.role_id,
 			'leave_status': ''
 		}).subscribe((result: any) => {
 			if (result) {
@@ -134,7 +134,7 @@ export class MyLeaveComponent implements OnInit {
 						status: this.getLeaveStatusStr(item.leave_status),
 						leave_reason: item.leave_reason,
 						action: item,
-						futuredateflag:this.getFutureDateFlag(item.leave_start_date)
+						futuredateflag: this.getFutureDateFlag(item.leave_start_date)
 					};
 					this.MY_LEAVE_ELEMENT_DATA.push(dataJson);
 					pos++;
@@ -148,33 +148,33 @@ export class MyLeaveComponent implements OnInit {
 			}
 		});
 	}
-	getFutureDateFlag(UserDate){
+	getFutureDateFlag(UserDate) {
 		let ToDate = new Date();
 		if (new Date(UserDate).getTime() >= ToDate.getTime()) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
-	getLeaveStatusStr(status){
-		let statusstr ='';
-		if(status == 0){
-			statusstr='Pending'
-		} else if(status == 1){
-			statusstr='Approved'
-		} else if(status == 2){
-			statusstr='Cancel'
+	getLeaveStatusStr(status) {
+		let statusstr = '';
+		if (status == 0) {
+			statusstr = 'Pending'
+		} else if (status == 1) {
+			statusstr = 'Approved'
+		} else if (status == 2) {
+			statusstr = 'Cancel'
 		}
 		return statusstr;
 	}
-	getLeaveStatusColor(status){
-		let statusstr ='';
-		if(status == 0){
-			statusstr='pending'
-		} else if(status == 1){
-			statusstr='approved'
-		} else if(status == 2){
-			statusstr='cancel'
+	getLeaveStatusColor(status) {
+		let statusstr = '';
+		if (status == 0) {
+			statusstr = 'pending'
+		} else if (status == 1) {
+			statusstr = 'approved'
+		} else if (status == 2) {
+			statusstr = 'cancel'
 		}
 		return statusstr;
 	}
@@ -247,7 +247,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	submit(result, attachment) {
-		console.log('result',result);
+		console.log('result', result);
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -281,7 +281,7 @@ export class MyLeaveComponent implements OnInit {
 			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
-		console.log('inputJson',inputJson);
+		console.log('inputJson', inputJson);
 
 		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
@@ -372,10 +372,10 @@ export class MyLeaveComponent implements OnInit {
 		item.text = this.approveMessage;
 		this.approveModal.openModal(item);
 	}
-	cancelConfirm(item){
-		
-		console.log('cancelConfirm',item);
-		if(item.leave_emp_detail.emp_id && item.leave_status == 1){
+	cancelConfirm(item) {
+
+		console.log('cancelConfirm', item);
+		if (item.leave_emp_detail.emp_id && item.leave_status == 1) {
 			let inputJson = {};
 			inputJson['leave_id'] = item.leave_id;
 			inputJson['leave_status'] = '2';
@@ -387,34 +387,34 @@ export class MyLeaveComponent implements OnInit {
 				const tempR = finResult[0].emp_month_attendance_data || [];
 				let emp_month_attendance_data = tempR.find(f => f.ses_id == leave_session);
 				let attendance_detail = emp_month_attendance_data.month_data.find(f => f.month_id == leave_month);
-				if(attendance_detail) {
-					console.log('attendance_detail',attendance_detail);
+				if (attendance_detail) {
+					console.log('attendance_detail', attendance_detail);
 					attendance_detail.attendance_detail.emp_leave_availed.forEach(e => {
-						if(e.leave_id == item.leave_type.leave_id) {
+						if (e.leave_id == item.leave_type.leave_id) {
 							e.leave_value -= item.leave_request_schedule_data.length;
-							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+							e.leave_value = e.leave_value <= 0 ? '' : e.leave_value;
 						}
 					});
 					attendance_detail.attendance_detail.emp_leave_granted.forEach(e => {
-						if(e.leave_id == item.leave_type.leave_id) {
+						if (e.leave_id == item.leave_type.leave_id) {
 							e.leave_value -= item.leave_request_schedule_data.length;
-							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+							e.leave_value = e.leave_value <= 0 ? '' : e.leave_value;
 						}
 					});
 					attendance_detail.attendance_detail.emp_balance_leaves.forEach(e => {
-						if(e.leave_id == item.leave_type.leave_id) {
+						if (e.leave_id == item.leave_type.leave_id) {
 							e.leave_value += item.leave_request_schedule_data.length;
-							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+							e.leave_value = e.leave_value <= 0 ? '' : e.leave_value;
 
 							//when balance is more than credited value, handle this error
-							if(attendance_detail.attendance_detail.emp_leave_credited) {
+							if (attendance_detail.attendance_detail.emp_leave_credited) {
 								attendance_detail.attendance_detail.emp_leave_credited.forEach(e1 => {
-									if(e1.leave_id == item.leave_type.leave_id) {
+									if (e1.leave_id == item.leave_type.leave_id) {
 										e.leave_value = e.leave_value > e1.leave_value ? e1.leave_value : e.leave_value;
-										e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+										e.leave_value = e.leave_value <= 0 ? '' : e.leave_value;
 									}
 								});
-							}	
+							}
 						}
 					});
 					let approvedjson = {};
@@ -423,14 +423,14 @@ export class MyLeaveComponent implements OnInit {
 						emp_month_attendance_data: tempR
 					}
 					console.log(item.leave_emp_detail.emp_id);
-					console.log('inputJson',inputJson);
-					console.log('approvedjson',approvedjson);
+					console.log('inputJson', inputJson);
+					console.log('approvedjson', approvedjson);
 					this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 						if (result) {
 							this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
 								if (approved_result) {
 									this.common.showSuccessErrorMessage('Leave Request Canceled Successfully', 'success');
-									
+
 									this.getMyLeave();
 								}
 							});
@@ -443,12 +443,12 @@ export class MyLeaveComponent implements OnInit {
 				}
 			});
 		}
-			
+
 	}
 
 	approveConfirm(item) {
-		
-		console.log('item',item)
+
+		console.log('item', item)
 		this.finalapprovedArray = [];
 		this.approvedArray = [];
 		var months = [
@@ -494,15 +494,15 @@ export class MyLeaveComponent implements OnInit {
 			this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
 				var finResult = result ? result : []
 				const tempR = finResult[0].emp_month_attendance_data || [];
-				console.log('tempR',tempR);
-				console.log('this.session_id',this.session_id);
-				console.log('tempR',tempR);
+				console.log('tempR', tempR);
+				console.log('this.session_id', this.session_id);
+				console.log('tempR', tempR);
 				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						console.log('lennngth',element.month_data.length)
-						let tempmonthdata:any[]=[];
+					if (element.ses_id == this.session_id.ses_id) {
+						console.log('lennngth', element.month_data.length)
+						let tempmonthdata: any[] = [];
 						element.month_data.forEach(element1 => {
-							console.log('element1',element1);
+							console.log('element1', element1);
 							tempmonthdata.push(element1);
 						});
 
@@ -510,17 +510,17 @@ export class MyLeaveComponent implements OnInit {
 					}
 				});
 				//this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
-				console.log('this.approvedArray',this.approvedArray);
-				console.log('this.employeeArrData',employeeArrData);
-				const approvedArraytemp:any[] = this.approvedArray[0] || [];
-				console.log('approvedArraytemp',approvedArraytemp);
-				console.log('approvedArraytemp.length',approvedArraytemp.length);
+				console.log('this.approvedArray', this.approvedArray);
+				console.log('this.employeeArrData', employeeArrData);
+				const approvedArraytemp: any[] = this.approvedArray[0] || [];
+				console.log('approvedArraytemp', approvedArraytemp);
+				console.log('approvedArraytemp.length', approvedArraytemp.length);
 				for (const dety of employeeArrData) {
-					
+
 					// const findex = approvedArraytemp.findIndex(e => Number(e.month_id) == Number(dety.month_id));
 					let findex = -1;
-					console.log('dety',dety);
-					console.log('approvedArraytemp.length',approvedArraytemp.length);;
+					console.log('dety', dety);
+					console.log('approvedArraytemp.length', approvedArraytemp.length);;
 					// for (let index = 0; index < approvedArraytemp.length; index++) {
 					// 	const e = approvedArraytemp[index];
 					// 	console.log('e.month_id',e.month_id);
@@ -529,28 +529,28 @@ export class MyLeaveComponent implements OnInit {
 					// 		findex = index;
 					// 	}
 					// }
-					let ind=0;
+					let ind = 0;
 					approvedArraytemp.forEach(e => {
-						console.log('e.month_id',e.month_id);
-						console.log('dety.month_id',dety.month_id);
-						if(e.month_id == dety.month_id) {
+						console.log('e.month_id', e.month_id);
+						console.log('dety.month_id', dety.month_id);
+						if (e.month_id == dety.month_id) {
 							findex = ind;
 						}
 						ind++;
 					});
-					if(item.leave_half_day) {
-						dety.attendance_detail.emp_leave_approved.leave_credit_count = 0.5;					
+					if (item.leave_half_day) {
+						dety.attendance_detail.emp_leave_approved.leave_credit_count = 0.5;
 					}
-					console.log('findex',findex);
+					console.log('findex', findex);
 					let leave_availed_ele = {
-						leave_id:dety.attendance_detail.emp_leave_approved.leave_id,
-						leave_name:dety.attendance_detail.emp_leave_approved.leave_name,
-						leave_value:dety.attendance_detail.emp_leave_approved.leave_credit_count
+						leave_id: dety.attendance_detail.emp_leave_approved.leave_id,
+						leave_name: dety.attendance_detail.emp_leave_approved.leave_name,
+						leave_value: dety.attendance_detail.emp_leave_approved.leave_credit_count
 					}
-					
-					console.log('leave_half_day',leave_availed_ele);
+
+					console.log('leave_half_day', leave_availed_ele);
 					if (findex !== -1) {
-						console.log(' exist',findex);
+						console.log(' exist', findex);
 						// if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
 						// 	if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
 						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
@@ -566,23 +566,23 @@ export class MyLeaveComponent implements OnInit {
 
 						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed &&
 							approvedArraytemp[findex].attendance_detail.emp_leave_availed.length > 0) {
-								let isLeaveTypeExist = 0;;
-								approvedArraytemp[findex].attendance_detail.emp_leave_availed.forEach(element => {
-									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-										isLeaveTypeExist = 1;
-									}
-								});
-								if(isLeaveTypeExist == 0){
-									approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
+							let isLeaveTypeExist = 0;;
+							approvedArraytemp[findex].attendance_detail.emp_leave_availed.forEach(element => {
+								if (element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id) {
+									element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
+									isLeaveTypeExist = 1;
 								}
+							});
+							if (isLeaveTypeExist == 0) {
+								approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
+							}
 						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed']=[];
+							approvedArraytemp[findex].attendance_detail['emp_leave_availed'] = [];
 							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						}
 
 						//emp_leave_granted is not in use ********** further can be used
-						approvedArraytemp[findex].attendance_detail['emp_leave_granted']=approvedArraytemp[findex].attendance_detail.emp_leave_availed;
+						approvedArraytemp[findex].attendance_detail['emp_leave_granted'] = approvedArraytemp[findex].attendance_detail.emp_leave_availed;
 						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
 						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
 						// 		let isLeaveTypeExist = 0;;
@@ -602,14 +602,14 @@ export class MyLeaveComponent implements OnInit {
 						// new code -- calculation for emp_balance_leaves
 						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
 							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
+							let temp_balance_leaves: any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
+							temp_balance_leaves.forEach(element => {
+								const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+								if (tempind != -1) {
+									element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
+								}
+								approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] = temp_balance_leaves;
+							})
 						}
 					} else {
 						//dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
@@ -617,34 +617,34 @@ export class MyLeaveComponent implements OnInit {
 						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						dety.attendance_detail['emp_leave_granted'] = [];
 						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-						const lastindex = approvedArraytemp.length-1;
+						const lastindex = approvedArraytemp.length - 1;
 						if (approvedArraytemp[lastindex].attendance_detail.emp_leave_credited &&
 							approvedArraytemp[lastindex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[lastindex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[lastindex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[lastindex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[lastindex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
+							let temp_balance_leaves: any[] = JSON.parse(JSON.stringify(approvedArraytemp[lastindex].attendance_detail.emp_leave_credited));
+							temp_balance_leaves.forEach(element => {
+								const tempind = approvedArraytemp[lastindex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+								if (tempind != -1) {
+									element.leave_value -= approvedArraytemp[lastindex].attendance_detail.emp_leave_granted[tempind].leave_value;
+								}
+								approvedArraytemp[lastindex].attendance_detail['emp_balance_leaves'] = temp_balance_leaves;
+							})
 						}
-						
+
 						approvedArraytemp.push(dety);
 					}
 				}
 				let isSessionExist = 0;
 				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						element.month_data=approvedArraytemp;
+					if (element.ses_id == this.session_id.ses_id) {
+						element.month_data = approvedArraytemp;
 						isSessionExist = 1;
 					}
 				});
-				if(isSessionExist == 0){
+				if (isSessionExist == 0) {
 					tempR.push({
-						ses_id:this.session_id.ses_id,
-						leave_opening_balance:0,
-						month_data:approvedArraytemp
+						ses_id: this.session_id.ses_id,
+						leave_opening_balance: 0,
+						month_data: approvedArraytemp
 					})
 				}
 				let approvedjson = {};
@@ -659,8 +659,8 @@ export class MyLeaveComponent implements OnInit {
 					emp_month_attendance_data: tempR
 				}
 				console.log(item.leave_emp_detail.emp_id);
-				console.log('inputJson',inputJson);
-				console.log('approvedjson',approvedjson);
+				console.log('inputJson', inputJson);
+				console.log('approvedjson', approvedjson);
 				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
@@ -701,7 +701,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	editLeave(item) {
-		if(this.employeeRecord.emp_id){
+		if (this.employeeRecord.emp_id) {
 			item.emp_id = this.employeeRecord.emp_id;
 		}
 		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
@@ -751,12 +751,12 @@ export class MyLeaveComponent implements OnInit {
 		});
 	}
 	openLeaveApplicationForm() {
-		if(this.employeeRecord && this.employeeRecord.emp_id){
+		if (this.employeeRecord && this.employeeRecord.emp_id) {
 			localStorage.setItem('eRecord', JSON.stringify(this.employeeRecord));
 			const dialogRef = this.dialog.open(LeaveApplicationComponent, {
 				width: '500px',
 				height: '500px',
-				data: {emp_id:this.employeeRecord.emp_id}
+				data: { emp_id: this.employeeRecord.emp_id }
 			});
 			dialogRef.afterClosed().subscribe(dresult => {
 				if (dresult && dresult.data) {
@@ -764,11 +764,15 @@ export class MyLeaveComponent implements OnInit {
 				}
 			});
 		} else {
-			this.common.showSuccessErrorMessage('Does not have employee details in HR','error');
+			this.common.showSuccessErrorMessage('Does not have employee details in HR', 'error');
 		}
 	}
 	deleteCancel() {
 
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.common.isExistUserAccessMenu(mod_id)
 	}
 
 }
