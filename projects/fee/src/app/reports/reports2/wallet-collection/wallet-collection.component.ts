@@ -8,7 +8,7 @@ import {
 	FileType
 } from 'angular-slickgrid';
 import { TranslateService } from '@ngx-translate/core';
-import { FeeService, CommonAPIService, SisService } from '../../../_services';
+import { FeeService, CommonAPIService, SisService, InventoryService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
@@ -137,6 +137,7 @@ export class WalletCollectionComponent implements OnInit {
 		private feeService: FeeService,
 		private common: CommonAPIService,
 		private sisService: SisService,
+		private inventoryService: InventoryService,
 		public dialog: MatDialog,
 		private fbuild: FormBuilder) { }
 
@@ -485,13 +486,25 @@ export class WalletCollectionComponent implements OnInit {
 		// 	filterSearchType: FieldType.string,
 		// 	filter: { model: Filters.compoundInputText },
 		// });
-		this.feeService.getWalletsReport(collectionJSON).subscribe((result: any) => {
+		let allStoreBills: any;
+		this.feeService.getWalletsReport(collectionJSON).subscribe(async (result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+			
+			this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 				console.log('result', result);
 				repoArray = result.data;
 				let index = 0;
 				for (const item of repoArray) {
+					
+					
+					let statusOfBills = await this.inventoryService.allStoreBill({"bill_id": Number(item.w_ref_id)}).subscribe((res: any)=>{
+						allStoreBills = res[0]
+						// return res[0];
+					})
+					if(statusOfBills.closed) console.log("location id >>>>>>", allStoreBills); else console.log("request open");
+					
+	
+					
 					const obj: any = {};
 					obj['id'] = index+1;
 					obj['srno'] =index+1;
@@ -511,17 +524,19 @@ export class WalletCollectionComponent implements OnInit {
 						obj['particulars'] = 'Opening Balance';
 					} else if(item.w_amount_status == 'deposit'){
 						obj['deposit_amt'] = parseInt(item.w_amount);
-						obj['particulars'] = item.pay_name ? 'Amount Received (By '+item.pay_name+')': 'Amount Received';
+						// obj['particulars'] = item.pay_name ? 'Amount Received (By '+item.pay_name+')': 'Amount Received';
+						obj['particulars'] = item.w_remarks ? 'Amount Received (By '+item.pay_name+')': 'Deposit';
 					} else if(item.w_amount_status == 'withdrawal'){
 						obj['withdrawal_amt'] = parseInt(item.w_amount);
 						obj['particulars'] = item.pay_name ? 'Withdrawal (By '+item.pay_name+')': 'Withdrawal';
 					} else if(item.w_amount_status == 'purchase'){
 						if (this.reportType === 'wallet_transaction_all') {
 							obj['purchase_amt'] = parseInt(item.w_amount);
+							
+							obj['store'] = allStoreBills ? allStoreBills.item_location : this.getLocationName(82);
 							const particulars=this.getLocationName(item.w_ref_location_id);
 							const subparticulars = item.w_ref_no_of_items ? '(No of items - '+item.w_ref_no_of_items+')' : '';
 							obj['particulars'] = subparticulars ? particulars+subparticulars: particulars;
-							obj['store'] = particulars;
 						}						
 					}
 					if(!obj['deposit_amt']) {
@@ -539,7 +554,10 @@ export class WalletCollectionComponent implements OnInit {
 						}
 					}
 					// obj['balance'] = '';
+					console.log("wallet >>>>>>>>>>>>", obj);
+					
 					this.dataset.push(obj);
+					// allStoreBills ? this.dataset.push(obj): this.dataset.push({});
 					this.aggregatearray.push(new Aggregators.Sum('deposit_amt'));
 					this.aggregatearray.push(new Aggregators.Sum('withdrawal_amt'));
 					if (this.reportType === 'wallet_transaction_all') {
@@ -568,11 +586,11 @@ export class WalletCollectionComponent implements OnInit {
 				this.totalRow=obj3;
 				
 				if (this.dataset.length <= 5) {
-					this.gridHeight = 300;
-				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 					this.gridHeight = 400;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 500;
 				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-					this.gridHeight = 550;
+					this.gridHeight = 650;
 				} else if (this.dataset.length > 20) {
 					this.gridHeight = 750;
 				}
