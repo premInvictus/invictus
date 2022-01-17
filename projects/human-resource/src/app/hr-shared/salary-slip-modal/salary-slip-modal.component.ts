@@ -13,8 +13,8 @@ export class SalarySlipModalComponent implements OnInit {
   header: string = '';
   schoolInfo: any = '';
   values: any = {};
-  ch:any = {};
-  employeeDetailsFlag=false;
+  ch: any = {};
+  employeeDetailsFlag = false;
   constructor(private dialogRef: MatDialogRef<SalarySlipModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data, private common: CommonAPIService,
     private sis: SisService,
@@ -38,10 +38,10 @@ export class SalarySlipModalComponent implements OnInit {
       if (res) {
         this.employeeDetails = res[0];
         this.employeeDetailsFlag = true;
-        console.log('this.employeeDetails',this.employeeDetails);
-        this.employeeDetails.datax = this.ch.security_details ? this.ch.security_details[0].security_month_amount: '-';
-        console.log('__________________________', this.employeeDetails);
-        
+        // console.log('this.employeeDetails', this.employeeDetails);
+        this.employeeDetails.datax = this.ch.security_details ? this.ch.security_details[0].security_month_amount : '-';
+        // console.log('__________________________', this.employeeDetails);
+
       }
     });
   }
@@ -89,11 +89,11 @@ export class SalarySlipModalComponent implements OnInit {
 
   getTotalDeductions(values: any[], value2: any, value3) {
     let tds = 0;
-      console.log("i am value", value2, 'ssss', values);
-      
-      tds = value2 && value2.emp_modes_data && value2.emp_modes_data.tds ?
-        Math.round(Number(value2.emp_modes_data.tds)) : 0;
-    
+    // console.log("i am value", value2, 'ssss', values);
+
+    tds = value2 && value2.emp_modes_data && value2.emp_modes_data.tds ?
+      Math.round(Number(value2.emp_modes_data.tds)) : 0;
+
     if (values) {
 
       var result = Number(values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
@@ -117,4 +117,7 @@ export class SalarySlipModalComponent implements OnInit {
     });
   }
 
+  isExistUserAccessMenu(mod_id) {
+    return this.common.isExistUserAccessMenu(mod_id)
+  }
 }

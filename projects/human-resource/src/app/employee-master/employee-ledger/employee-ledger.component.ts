@@ -122,7 +122,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.ledgerDataSource.paginator = this.paginator;
 	}
-	getSession(emp_id,login_id) {
+	getSession(emp_id, login_id) {
 		this.sis.getSession().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.sessionArray = [];
@@ -130,7 +130,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				const index = this.sessionArray.findIndex((f) => f.ses_id === this.session.ses_id);
 
 				this.sessionName = this.sessionArray[index].ses_name;
-				this.getEmployeeLedger(emp_id ,login_id);
+				this.getEmployeeLedger(emp_id, login_id);
 			}
 		});
 	}
@@ -175,16 +175,16 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 
 	getSessionName(id, month_id) {
 		const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
-		
+
 		if (findex !== -1) {
 			const year = this.sessionArray[findex].ses_name;
 			console.log(month_id, year)
 			let str: string = '';
-			if (Number(month_id) >= 4 && Number(month_id)<=12) {
-			 	str = year.split('-')[0];
-			 } else {
-				str = year.split('-')[1]; 
-			 }
+			if (Number(month_id) >= 4 && Number(month_id) <= 12) {
+				str = year.split('-')[0];
+			} else {
+				str = year.split('-')[1];
+			}
 			console.log(str.substring(str.length - 2, str.length));
 			return str.substring(str.length - 2, str.length);
 
@@ -202,7 +202,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	getEmployeeLedger(emp_id, emp_code_no) {
 		this.EMPLOYEE_LEDGER_ELEMENT = [];
 		this.ledgerDataSource = new MatTableDataSource<any>(this.EMPLOYEE_LEDGER_ELEMENT);
-		this.commonAPIService.getEmployeeLedger({ emp_id: emp_id , emp_code_no : emp_code_no}).subscribe((res: any) => {
+		this.commonAPIService.getEmployeeLedger({ emp_id: emp_id, emp_code_no: emp_code_no }).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.EMPLOYEE_LEDGER_ELEMENT = [];
 				this.tempData = [];
@@ -269,12 +269,12 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 						}
 					}
 					let deductions = item && item.details &&
-					item.details.emp_total_deductions ?
-					-(item.details.emp_total_deductions) : 0;
+						item.details.emp_total_deductions ?
+						-(item.details.emp_total_deductions) : 0;
 					deductions += item && item.details &&
-					item.details.emp_modes_data &&
-					item.details.emp_modes_data.tds ?
-					item.details.emp_modes_data.tds : 0;
+						item.details.emp_modes_data &&
+						item.details.emp_modes_data.tds ?
+						item.details.emp_modes_data.tds : 0;
 					obj['srno'] = srno;
 					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id, item.id) + ')';
 					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id, item.id);
@@ -296,7 +296,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 						item.details.emp_salary_payable ?
 						Number(item.details.emp_salary_payable) : 0;
 					obj['salarypaid'] = item && item.details &&
-					Number(item.details.emp_total) ?
+						Number(item.details.emp_total) ?
 						Number(item.details.emp_total) : 0;
 					obj['balance'] = item && item.details &&
 						item.details.balance ?
@@ -378,7 +378,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				this.ledgerDataSource.paginator = this.paginator;
 				this.tempData.map(f => console.log("i am f", f));
 				console.log("i am check", this.totalObj['security']);
-				
+
 			}
 		});
 	}
@@ -432,7 +432,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				data: {
 					values: item,
 					emp_id: emp_id,
-					ch:ch
+					ch: ch
 				},
 				height: '70%',
 				width: '55%'
@@ -736,4 +736,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id)
+	}
 }
