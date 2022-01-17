@@ -34,6 +34,8 @@ export class AdditionalSubjectComponent implements OnInit {
 	finalArray: any[] = [];
 	selectionArray: any[] = [];
 	addselectionArray: any[] = [];
+	selectionRemoveArray: any[] = [];
+	addSelectionRemoveArray: any[] = [];
 	isLoading: boolean = false;
 	loader_status: string = "";
 	constructor(
@@ -211,10 +213,16 @@ export class AdditionalSubjectComponent implements OnInit {
 		if(this.firstForm.value.syl_mapping_id === '0') {
 			if(this.selectionArray.length > 0) {
 				this.disableApiCall = true;
-				this.examService.insertExamSubjectStudent({insertData: this.selectionArray}).subscribe((result: any) => {
+				console.log("insert data >>>>", this.selectionArray);
+				let insData ={
+					insertData : this.selectionArray,
+					removeData : this.selectionRemoveArray
+				}				
+				this.examService.insertExamSubjectStudent({insertData: insData}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
 						this.datareset();
+						this.selectionRemoveArray = [];
 						this.disableApiCall = false;
 						this.firstForm.reset();
 					} else {
@@ -225,10 +233,15 @@ export class AdditionalSubjectComponent implements OnInit {
 		} else {
 			if(this.addselectionArray.length > 0) {
 				this.disableApiCall = true;
-				this.examService.updateExamSubjectStudent({updatetData: this.addselectionArray}).subscribe((result: any) => {
+				let insData ={
+					insertData : this.addselectionArray,
+					removeData : this.addSelectionRemoveArray
+				}	
+				this.examService.updateExamSubjectStudent({updatetData: insData}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
 						this.datareset();
+						this.addSelectionRemoveArray = [];
 						this.disableApiCall = false;
 						this.firstForm.reset();
 					} else {
@@ -244,22 +257,45 @@ export class AdditionalSubjectComponent implements OnInit {
 		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
 		if(event.checked) {
 			console.log('true');
-			this.selectionArray.push({ess_login_id: login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
+			this.selectionArray.push({
+				ess_login_id: login_id, 
+				ess_sub_id: sub_id, 
+				ess_ses_id: this.session.ses_id, 
+				ess_additional: this.firstForm.value.syl_mapping_id
+			});
+			this.selectionRemoveArray.splice(sindex, 1);
 		} else {
 			console.log('false');
 			this.selectionArray.splice(sindex, 1);
+			this.selectionRemoveArray.push({
+				ess_login_id: login_id, 
+				ess_sub_id: sub_id, 
+				ess_ses_id: this.session.ses_id, 
+				ess_additional: this.firstForm.value.syl_mapping_id
+			});
 		}
 		console.log(this.selectionArray);
+		console.log(this.selectionRemoveArray);
 		console.log("this.selectionArray", this.selectionArray.length);
 	}
 	toggleAdditionalSelection(login_id, sub_id, event) {
 		const sindex = this.addselectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
 		if(event.checked) {
-			console.log('true');
+			console.log('true');			
 			this.addselectionArray.push({ess_login_id: login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
+			this.addSelectionRemoveArray.splice(sindex, 1);
+			console.log("selection array >>>>>>>",this.selectionArray);
 		} else {
 			console.log('false');
 			this.addselectionArray.splice(sindex, 1);
+			this.addSelectionRemoveArray.push({
+				ess_login_id: login_id, 
+				ess_sub_id: sub_id, 
+				ess_ses_id: this.session.ses_id, 
+				ess_additional: this.firstForm.value.syl_mapping_id
+			});
+			console.log("selection array on remove >>>>>>>",this.addselectionArray);
+			console.log("selection array on remove >>>>>>>",this.addSelectionRemoveArray);
 		}
 		console.log(this.addselectionArray);
 	}
@@ -288,7 +324,7 @@ export class AdditionalSubjectComponent implements OnInit {
 		}
 	}
 	isSelected(login_id, sub_id) {
-		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
+		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id && e.ess_additional === '0');
 		if(sindex === -1) {
 			return false;
 		} else {
@@ -309,6 +345,14 @@ export class AdditionalSubjectComponent implements OnInit {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	isSubjectDisabled(login_id, sub_id) {
+		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id && e.ess_additional === '1');
+		if(sindex === -1) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 	changeMapping(){

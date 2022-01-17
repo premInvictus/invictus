@@ -182,6 +182,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
 
           this.dataSource = new MatTableDataSource<any>(this.CHEQUE_ELEMENT_DATA);
           this.submitAndPrint();
+          finalArray = [];
           // this.dialogRef.close({ status: '1' });
         } else {
           this.studentDetails = [];
@@ -309,15 +310,15 @@ export class BouncedChequeMultipleComponent implements OnInit {
   downloadPdf() {
     
      var dated = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
-     dated = dated ? this.commonAPIService.dateConvertion(dated, "dd-MMM-yyyy") : 'N/A';
+     dated = dated ? this.commonAPIService.dateConvertion(dated, "dd-MMM-yyyy") : '';
     // var toDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date : '';
     var fromDate1 = this.studentDetails[0]['transaction_date'];
     var toDate1 = this.studentDetails[this.studentDetails.length-1]['transaction_date'];
-    var fromDate = fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MMM-yyyy") : 'N/A';
-    var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MMM-yyyy") : 'N/A';
+    var fromDate = fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MMM-yyyy") : '';
+    var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MMM-yyyy") : '';
     var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
     var bankInfo = this.getBankInfo(this.bouncedForm.value.ftr_deposit_bnk_id);
-    let bankName = bankInfo && bankInfo['bnk_alias'] ? bankInfo['bnk_alias'] : ((bankInfo['bank_name']) ? (bankInfo['bank_name']).toUpperCase() : '');
+    let bankName = bankInfo && bankInfo['bnk_alias'] ? bankInfo['bnk_alias'] : ((bankInfo && bankInfo['bank_name']) ? (bankInfo['bank_name']).toUpperCase() : '');
     let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
     let bankBranch = bankInfo && bankInfo['bnk_branch'] ? bankInfo['bnk_branch'] : '';
   

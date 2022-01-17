@@ -204,7 +204,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.dataSource.sort = this.sort;
 				
-					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 					this.dataSource.paginator = this.paginator;
 				
 				

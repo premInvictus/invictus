@@ -437,6 +437,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.commonStu.showWalletLedger = false;
 		this.studentInfo = {};
 		this.entryModes = JSON.parse(JSON.stringify(this.tempentryModes));
+		console.log("entry modes >>>>>", this.entryModes);
+		
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'inv_invoice_no': '',
@@ -1131,7 +1133,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
-		console.log("i ma here", $event.value, $event);
+		console.log("i ma here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.", $event.value, $event);
 		if ($event.value == '1') {
 			this.readonlymodeforinvoice = true;
 		} else {
@@ -1152,6 +1154,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.studentInfo.student_opening_balance,
 				'ftr_actual_amount': this.studentInfo.student_opening_balance
+			});
+		}
+
+		if (this.selectedMode == '4') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': 1
 			});
 		}
 	}

@@ -75,6 +75,9 @@ export class BillDetailsModalComponent implements OnInit {
     billArray['school_website'] = this.schoolInfo.school_website;
     billArray['name'] = this.data.buyer_details.au_full_name;
     billArray['mobile'] = this.data.buyer_details.au_mobile;
+    billArray['billStatus'] = this.data.status;
+    billArray['reason_remark'] = this.data.bill_remarks;
+    billArray['active_parent'] = this.data.buyer_details.active_parent;
     billArray['adm_no'] = this.data.buyer_details.em_admission_no;
     billArray['class_name'] = this.data.buyer_details.sec_name ? this.data.buyer_details.class_name + '-' + this.data.buyer_details.sec_name : '';
     billArray['role_id'] = 'Admission No.';
