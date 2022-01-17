@@ -72,7 +72,7 @@
                     <span *ngIf="reportType !== 'aging' &&  reportType !== 'aging_detail'">From Date</span>
                     <span *ngIf="reportType == 'aging' ||  reportType == 'aging_detail' ">To Date</span>
                 </mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
+                <input class="input-sm" matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
                     (blur)="getFromDate($event.target.value)" />
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
@@ -96,7 +96,8 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && (reportType !== 'feedue' ) && reportFilterForm.value.day_book_type !== '1' && reportFilterForm.value.day_book_type !== '2'" class="col-2">
+        <div *ngIf="filterFlag && (reportType !== 'feedue' ) && reportFilterForm.value.day_book_type !== '1' && reportFilterForm.value.day_book_type !== '2'"
+            class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label
                     *ngIf="reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' && reportType !== 'aging' &&  reportType !== 'aging_detail'  && reportFilterForm.value.day_book_type === '0'">
@@ -104,28 +105,39 @@
                 <mat-label
                     *ngIf="reportType == 'defaulter' || reportType == 'defaulter_month_wise' || reportType == 'aging' ||  reportType == 'aging_detail'">
                     Current Date</mat-label>
-                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
+                <input class="input-sm" matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
                     (blur)="getToDate($event.target.value)" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag" class="col-4">
-            <div class="margin-top-10" >
-                <button *ngIf="reportType !=='day_book'" class="filter-bt" mat-raised-button (click)="openFilterDialog()">
-                    filter
-                </button>
-                <button *ngIf="reportType !=='day_book'" class="sort-bt" mat-raised-button (click)="openSort()">
-                    sort
-                </button>
-                &nbsp;
-                <button class="btn-success text-uppercase" mat-raised-button
+        <div *ngIf="filterFlag" class="col-2">
+            <div class="margin-top-10">
+                <button class="btn btn-success text-uppercase" mat-raised-button
                     (click)="getOutstandingReport(reportFilterForm.value)">
-                    generate
+                    <i class="fas fa-search"></i> &nbsp; generate
                 </button>
-                <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
-                    reset
-                </button>
+            </div>
+        </div>
+        <div *ngIf="filterFlag" class="col-2">
+            <div class="text-right mr-auto">
+                <fieldset class="fieldset_invoice">
+                    <legend><i>Tools</i></legend>
+                    <button class="btn btn-default text-uppercase padding-0" mat-raised-button matTooltip="Reset"
+                        (click)="resetValues()">
+                        <i class="fas fa-undo"></i> &nbsp;
+                    </button>
+                    &nbsp;
+                    <button *ngIf="reportType !=='day_book'" class="btn btn-default padding-0" mat-raised-button
+                        matTooltip="Filter" (click)="openFilterDialog()">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    &nbsp;
+                    <button *ngIf="reportType !=='day_book'" class=" btn btn-default padding-0" mat-raised-button
+                        matTooltip="Sort" (click)="openSort()">
+                        <i class="fas fa-sort-amount-up"></i>
+                    </button>
+                </fieldset>
             </div>
         </div>
     </div>
