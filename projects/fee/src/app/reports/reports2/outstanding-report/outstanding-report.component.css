@@ -125,6 +125,6 @@ button.sort-bt:hover {
   font-size: 14px;
   color: #afb7b7;
 }
-.mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {
-  top: 0px;
+.mt--10{
+  margin-top: -10px;
 }

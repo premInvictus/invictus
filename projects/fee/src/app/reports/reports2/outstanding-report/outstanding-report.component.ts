@@ -159,6 +159,8 @@ export class OutstandingReportComponent implements OnInit {
 	previousYearVoucherExists: boolean;
 	feeMonthArray: any[];
 	objobjectmain = {};
+	isLoading: boolean = true;
+	loader_status = "";
 	arrayOfWidth = {
 		'srno': 4,
 		'stu_admission_no': 8,
@@ -249,6 +251,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.filterFlag = true;
 	}
 	checkForMultiBranch() {
+		this.loader_status = "Reading your settings";
 		let param: any = {};
 		param.gs_name = ['show_branch_on_reports'];
 		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
@@ -356,6 +359,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getInvoiceFeeMonths() {
+		this.loader_status = "Reading Fee Invoices";
 		this.monthArray = [];
 		this.feeService.getInvoiceFeeMonths({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -366,7 +370,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getOutstandingReport(value: any) {
-
+		this.isLoading = true;
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
@@ -512,8 +516,10 @@ export class OutstandingReportComponent implements OnInit {
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
 				};
+				this.loader_status = "Preparing Outstanding Data";
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.isLoading = false;
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
@@ -965,8 +971,10 @@ export class OutstandingReportComponent implements OnInit {
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
 				};
+				this.loader_status = "Preparing Outstanding Data";
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.isLoading = false;
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
@@ -1630,8 +1638,10 @@ export class OutstandingReportComponent implements OnInit {
 					this.columnDefinitions.splice(1, 0, aColumn);
 
 				}
+				this.loader_status = "Preparing Outstanding Data";
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.isLoading = false;
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
@@ -1928,8 +1938,10 @@ export class OutstandingReportComponent implements OnInit {
 					this.columnDefinitions.splice(1, 0, aColumn);
 
 				}
+				this.loader_status = "Preparing Outstanding Data";
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.isLoading = false;
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
@@ -2530,8 +2542,10 @@ export class OutstandingReportComponent implements OnInit {
 				if (!(this.reportFilterForm.value.month_id)) {
 					this.common.showSuccessErrorMessage('Please Choose a Month', 'error');
 				} else {
+					this.loader_status = "Preparing Outstanding Data";
 					this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
+							this.isLoading = false;
 							this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 							repoArray = result.data.reportData;
 							this.totalRecords = Number(result.data.totalRecords);
@@ -3335,10 +3349,11 @@ export class OutstandingReportComponent implements OnInit {
 					};
 
 					if (1 == 1) {
+						this.loader_status = "Preparing Outstanding Data";
 						this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 							this.common.startLoading();
 							console.log("i am result", result);
-							
+							this.isLoading = false;
 							if (result && result.status === 'ok' && result.data != null) {
 								this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 								repoArray = result.data != null ? result.data.reportData.filter(e => e.invoice_date == this.reportFilterForm.value.to_date) : [];
@@ -3777,6 +3792,7 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	getChartsOfAccount() {
+		this.loader_status = "Reading all accounts"
 		this.chartsOfAccount = [];
 		this.feeService.getAllChartsOfAccount({}).subscribe((result: any) => {
 			for (var i = 0; i < result.length; i++) {
@@ -3800,6 +3816,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.apiInvoiceData = [];
 		this.apiReceiptData = [];
 		this.previousBalanceObject = {};
+		this.loader_status = "Reading Invoices";
 		this.feeService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: this.reportFilterForm.value.month_id, vc_process: 'automatic/invoice' }).subscribe((data: any) => {
 			// this.commonAPIService.startLoading();
 			if (data && data.invoice_due_data.length > 0) {
@@ -3987,6 +4004,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.apiInvoiceData = [];
 		this.apiReceiptData = [];
 		this.previousBalanceObject = {};
+		this.loader_status = "Reading Invoices";
 		this.feeService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: montid, vc_process: 'automatic/invoice' }).subscribe((data: any) => {
 			this.common.startLoading();
 			if (data && data.invoice_due_data.length > 0) {
@@ -4194,7 +4212,7 @@ export class OutstandingReportComponent implements OnInit {
 
 	}
 	checkForPreviousYearVoucher() {
-
+		this.loader_status = "Reading Previous Vouchers";
 		this.feeService.checkPreviosuDueStatus({ vc_narrations: 'Previous Due' }).subscribe((data: any) => {
 			// this.commonAPIService.startLoading();
 			console.log('data--', data);
@@ -4224,6 +4242,7 @@ export class OutstandingReportComponent implements OnInit {
 		})
 	}
 	getGlobalSetting() {
+		this.loader_status = "Reading Settings";
 		let param: any = {};
 		param.gs_alias = ['fee_invoice_includes_adjustments'];
 		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
@@ -4436,6 +4455,7 @@ export class OutstandingReportComponent implements OnInit {
 		console.log('this.classDataArray', this.classDataArray)
 	}
 	getModes() {
+		this.loader_status = "Reading Payment Modes";
 		this.valueArray = [];
 		this.feeService.getPaymentMode({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -4449,6 +4469,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getRoutes() {
+		this.loader_status = "Reading Transport Routes";
 		this.valueArray = [];
 		this.feeService.getRoutes({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -4609,6 +4630,7 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	getGroupedFeeHeads() {
+		this.loader_status = "Reading Fee Heads";
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
 		console.log('inputJson--', inputJson)
@@ -4651,6 +4673,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getMultiBranchFeeHeads() {
+		this.loader_status = "Reading Fee Heads";
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
 		console.log('inputJson--', inputJson)
@@ -4685,6 +4708,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getMultiBranchRoutes() {
+		this.loader_status = "Reading Transport Routes";
 		this.multiValueArray = [];
 		let inputJson = { school_branch: this.reportFilterForm.value.school_branch };
 		console.log('multi branch route json', inputJson)
@@ -4714,6 +4738,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getMultiBranchClass() {
+		this.loader_status = "Reading Classes";
 		this.feeService.getMultiBranchClass({ school_branch: this.reportFilterForm.value.school_branch }).subscribe((result: any) => {
 			if (result && result.data) {
 				this.multiBranchClass = result.data;
@@ -4805,6 +4830,7 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getSchool() {
+		this.loader_status = "Getting School Information";
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
@@ -4819,10 +4845,11 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	getSchoolBranch() {
+		this.loader_status = "Reading School Groups";
 		this.feeService.getAllSchoolGroups({ si_group: this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix }).subscribe((data: any) => {
 			if (data && data.status == 'ok') {
 				//this.schoolGroupData = data.data;
-
+				this.isLoading =false;
 				console.log('this.schoolGroupData--', data.data);
 				this.feeService.getMappedSchoolWithUser({ prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id }).subscribe((result: any) => {
 					if (result && result.data && result.data.length > 0) {
@@ -5961,6 +5988,7 @@ export class OutstandingReportComponent implements OnInit {
 		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	getFeeMonths() {
+		this.loader_status = "Reading Fee Months";
 		this.feeMonthArray = [];
 		this.feeService.getFeeMonths({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

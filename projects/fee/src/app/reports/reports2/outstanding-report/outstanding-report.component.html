@@ -53,7 +53,7 @@
             </mat-form-field>
         </div>
         <div *ngIf="filterFlag && reportType !== 'day_book' && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length > 0"
-            class="col-2">
+            class="col-2 mt--10">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
                 <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
@@ -150,7 +150,24 @@
             class="fas fa-paper-plane"></i></button>
 </div>
 <br>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
+
+<!-- Progress Loader -->
+<div class="row"  *ngIf="isLoading">
+    <div class="col-12">
+      <mat-card>
+        <div class="container">
+          <p class="text-center mt-5">
+            <img src="assets/1484.gif" alt="loading">
+          </p>
+          <p class="text-center mb-5">
+            {{loader_status}}
+          </p>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <!-- Progress Loader End -->
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0 && !isLoading">
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
@@ -158,7 +175,7 @@
         (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
     </angular-slickgrid>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0 && !isLoading">
     <div class="text-center margin-top-20" style="margin-bottom:20px !important">
         <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
         <br>
