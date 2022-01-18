@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-6">
           <div class="top-card-title">
-            <span class="font-size-24 font-medium">Subjectwise Mapping</span>
+            <span class="font-size-24 font-medium">Subject-wise Mapping</span>
           </div>
         </div>
         <div class="col-6 text-right">
@@ -85,7 +85,8 @@
               </th>
               <td mat-cell *matCellDef="let element">
                 <mat-checkbox (change)="$event ? toggleSelection(element.au_login_id,each.sub_id, $event) : null"
-                  [checked]="isSelected(element.au_login_id,each.sub_id)">
+                  [checked]="isSelected(element.au_login_id,each.sub_id)"
+                  >
                 </mat-checkbox>
               </td>
             </ng-container>

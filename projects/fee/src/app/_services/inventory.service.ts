@@ -246,7 +246,7 @@ export class InventoryService {
     return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
   }
   allStoreBill(value) {
-    this.service.stopLoading();
+    this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
   }
   storeCollection(value) {
@@ -309,5 +309,9 @@ export class InventoryService {
   printGoodsReceipt(value: any) {
     this.service.startLoading();  
     return this.http.post(environment.apiInvUrl + '/requistion-master/printGoodsReceipt', value);
+  }
+  getStoreBill(value: any) {
+    this.service.startLoading();  
+    return this.http.post(environment.apiInvUrl + '/store-bill/get-store-bill', value);
   }
 }

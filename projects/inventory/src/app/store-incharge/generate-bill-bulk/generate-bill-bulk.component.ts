@@ -395,6 +395,13 @@ export class GenerateBillBulkComponent implements OnInit {
                 inputJson.login_id=result.buyer_details.au_login_id;
                 walletparam.push(inputJson);
               });
+              this.inventory.insertWalletLedger(results).subscribe((result: any) => {
+                if(result){
+                  this.common.showSuccessErrorMessage('Ledger Updated','success');
+                } else {
+                  this.common.showSuccessErrorMessage(result.message,'error');
+                }
+              })
               if(walletparam.length > 0){
                 this.inventory.insertWalletsBulk(walletparam).subscribe((result:any)=>{
                   if(result && result.status == 'ok'){
@@ -429,6 +436,9 @@ export class GenerateBillBulkComponent implements OnInit {
                 billArray['school_website'] = this.schoolInfo.school_website;
                 billArray['name'] = result.buyer_details.au_full_name;
                 billArray['mobile'] = result.buyer_details.au_mobile;
+                billArray['billStatus'] = result.status;
+                billArray['reason_remark'] = result.bill_remarks;
+                billArray['active_parent'] = result.buyer_details.active_parent;
                 billArray['adm_no'] = result.buyer_details.em_admission_no;
                 billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
                 billArray['role_id'] = 'Admission No.';

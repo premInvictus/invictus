@@ -55,6 +55,7 @@ export class EmpDetailsReportComponent implements OnInit {
   sessionName: any;
   gridHeight: any;
   nodataFlag = false;
+  isLoading: boolean = true;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -611,6 +612,7 @@ export class EmpDetailsReportComponent implements OnInit {
         }
         this.tableFlag = true;
         this.nodataFlag = false;
+        this.isLoading = false;
       } else {
         this.nodataFlag = true;
         this.tableFlag = true;

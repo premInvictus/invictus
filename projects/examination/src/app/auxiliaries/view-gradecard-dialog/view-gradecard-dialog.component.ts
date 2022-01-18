@@ -24,7 +24,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   examArray: any[] = [];
   sexamArray: any[] = [];
   cexamArray: any[] = [];
-  isPreparingCard : Boolean = true ;
+  isPreparingCard: Boolean = true;
   gradeCardMarkArray: any[] = [];
   sflag = false;
   eflag = false;
@@ -71,7 +71,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     remark: false,
     subjectwise_bifurcation: false,
     scholastic_b_grade: false,
-    scholastic_b_gradeset:''
+    scholastic_b_gradeset: ''
   };
   exambifurcateCount = 0;
   classtermdate: any;
@@ -85,12 +85,12 @@ export class ViewGradecardDialogComponent implements OnInit {
   all_term_subject_total_mark = 0;
   all_term_student_total_mark = 0;
   all_term_student_total_percentage = 0;
-  gradecard_attendance:any;
-  gradecard_total_mettings:any;
-  gradecard_mettings_present:any;
-  gradecard_show_scholastic_gradescale:any;
-  gradecard_scholastic_abbreviation:any;
-	showLoadingFlag = false;
+  gradecard_attendance: any;
+  gradecard_total_mettings: any;
+  gradecard_mettings_present: any;
+  gradecard_show_scholastic_gradescale: any;
+  gradecard_scholastic_abbreviation: any;
+  showLoadingFlag = false;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -101,9 +101,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     this.commonAPIService.showLoading.subscribe((flag: boolean) => {
-			this.showLoadingFlag = flag;
-		});
-   }
+      this.showLoadingFlag = flag;
+    });
+  }
 
   ngOnInit() {
     this.printGradecard();
@@ -136,7 +136,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (obj.scholastic_b_grade && obj.scholastic_b_grade == true) {
         this.obtainedGradeAvgHighest.scholastic_b_grade = true;
         this.obtainedGradeAvgHighest.scholastic_b_gradeset = obj.scholastic_b_gradeset
-        
+
       }
     }
     if (this.data.param.eme_subexam_id.length > 0) {
@@ -165,7 +165,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark(); 
     this.getClassTermDate();
-    console.log('this.obtainedGradeAvgHighest----',this.obtainedGradeAvgHighest);
+    console.log('this.obtainedGradeAvgHighest----', this.obtainedGradeAvgHighest);
 
 
   }
@@ -202,23 +202,23 @@ export class ViewGradecardDialogComponent implements OnInit {
     //   }
     // })
     this.examService.printGradecard(param).subscribe(
-      (response : any) => {
-          this.showLoadingFlag = true;
-           if (response && response.status === 'ok') {
-                this.printData = response.data;
-                console.log("printGradecard", this.printData);
-                this.printData.so_printData.forEach(element => {
-                  this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
-                  this.all_term_student_total_mark += element.term_student_total_mark['A'];
-                });
-                this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
-              }
+      (response: any) => {
+        this.showLoadingFlag = true;
+        if (response && response.status === 'ok') {
+          this.printData = response.data;
+          console.log("printGradecard", this.printData);
+          this.printData.so_printData.forEach(element => {
+            this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
+            this.all_term_student_total_mark += element.term_student_total_mark['A'];
+          });
+          this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
+        }
       },
       err => {
-           console.log(err);
-           console.log("error prepared grade card");
-           this.isPreparingCard = false;
-           this.showLoadingFlag = false;
+        console.log(err);
+        console.log("error prepared grade card");
+        this.isPreparingCard = false;
+        this.showLoadingFlag = false;
       },
       () => {
         console.log("prepared grade card");
@@ -226,7 +226,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.printDataFlag = true;
         this.showLoadingFlag = false;
       }
- )
+    )
 
   }
   getClassTermDate() {
@@ -413,7 +413,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_alias = ['gradecard_scholastic_abbreviation','gradecard_show_scholastic_gradescale','gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+    param.gs_alias = ['gradecard_scholastic_abbreviation', 'gradecard_show_scholastic_gradescale', 'gradecard_attendance', 'gradecard_total_mettings', 'gradecard_mettings_present', 'gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
       'gradecard_health_status', 'gradecard_date', 'school_achievement'];
     this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -426,7 +426,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           }
           else if (element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
-            this.header = this.header.replace('@','data:image/png;base64,');
+            this.header = this.header.replace('@', 'data:image/png;base64,');
             // var regex = /<img.*?src="(.*?)"/;
             // var src = regex.exec(this.header)[1];
             // console.log(src);
@@ -969,7 +969,10 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
         this.examArray.forEach(element => {
           if (element.eac_type === '1') {
-            this.sexamArray[element.eac_category].push(element);
+            // this.sexamArray[element.eac_category].push(element);
+            if (this.sexamArray[element.eac_category]) {
+              this.sexamArray[element.eac_category].push(element);
+            }
             if (element.exam_bifurcate.bifurcated_marks) {
               this.exambifurcateCount += 1;
             }

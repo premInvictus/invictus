@@ -229,6 +229,9 @@ export class WalletsLedgerComponent implements OnInit {
 		this.getLocation();
 		this.getSchool();
 		this.getSession();
+		this.refreshData();
+	}
+	refreshData(){		
 		this.gridOptions = {
 			enableDraggableGrouping: true,
 			createPreHeaderPanel: true,
@@ -424,7 +427,7 @@ export class WalletsLedgerComponent implements OnInit {
 		this.feeService.getWallets({ login_id: this.feeLoginId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.recordArray = result.data;
-				let pos = 1;
+				let pos = 0;
 				this.footerRecord = {
 					balancetotal: 0,
 					balancetype: ''
@@ -617,9 +620,11 @@ export class WalletsLedgerComponent implements OnInit {
 		}
 	}
 	openReceiptDialog(element, args): void {
-		console.log("i am here",);
+		console.log("i am here >>>>>>>>>>>>",element, ">>>>>>>>>>>", args);
 		if (args.cell === args.grid.getColumnIndex('txn_id')) {
 			let check = args.grid.getDataItem(args.row);
+			console.log("data item >>>>>>>", check);
+			
 			if (check.w_amount_status == 'deposit' || check.w_amount_status == 'withdrawal') {
 				const dialogRef = this.dialog.open(WalletReceiptDetailsModalComponent, {
 					width: '80%',
@@ -633,8 +638,10 @@ export class WalletsLedgerComponent implements OnInit {
 
 				dialogRef.afterClosed().subscribe(result => {
 				});
-			} else if (element.w_amount_status == 'purchase') {
-				this.feeService.allStoreBill({ bill_no: parseInt(check.txn_id) }).subscribe((result: any) => {
+			} else if (check.w_amount_status == 'purchase') {
+				console.log("purchase >>>>>>>>>", check);
+				
+				this.feeService.allStoreBill({ bill_id: parseInt(check.txn_id) }).subscribe((result: any) => {
 					if (result && result.length > 0) {
 						this.billDetailsModal.openModal(result[result.length - 1]);
 
