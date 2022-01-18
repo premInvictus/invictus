@@ -185,15 +185,14 @@
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-              (click)="openRecalculateDialog()">Recalculate Invoice</button>
-            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button
-              class="btn-primary btn-danger btn-spacer make-payement-btn" (click)="makePayment(invoiceDetails)">Make
-              Payment</button>
-            <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
-              (click)="printInvoice()">Print Invoice</button>
+              (click)="openRecalculateDialog()"><i class="fas fa-calculator"></i> &nbsp; Recalculate Invoice</button>
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button matTooltip="Make Payment" 
+              class="btn-default btn-spacer" (click)="makePayment(invoiceDetails)"><i class="fas fa-credit-card"></i></button>
+            <button mat-raised-button  matTooltip="Print Invoice" class="btn-default btn-spacer"
+              (click)="printInvoice()"><i class="fas fa-print"></i></button>
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
-              mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
+              mat-raised-button matTooltip="Delete" class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()"><i class="far fa-trash-alt"></i></button>
 
           </div>
           <!--</div>-->

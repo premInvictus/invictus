@@ -195,31 +195,39 @@
                         </div>
                      </div>
                   </form>
-                  <div class="row">
-                     <div class="col-12 remove-col-padding text-right ">
+                  <div class="row mt--25">
+                     <div class="col-8 remove-col-padding text-left">
+
+                     </div>
+                     <div class="col-4 remove-col-padding text-right ">
                         <div class="margin-right">
-                        <button
-                           *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
-                           mat-raised-button class=" recalulate-invoice-btn btn-spacer"
-                           (click)="openRecalculateDialog({})">Recalculate</button>
-                        <button
-                           *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
-                           mat-raised-button class=" btn-danger btn-spacer"
-                           (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                        <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
+                           <fieldset class="fieldset_invoice">
+                              <legend><i>Tools</i></legend>
+                              <button
+                                 *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
+                                 mat-raised-button class=" recalulate-invoice-btn btn-spacer"
+                                 (click)="openRecalculateDialog({})">Recalculate</button>
+                              <button
+                                 *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
+                                 mat-raised-button class=" btn-danger btn-spacer"
+                                 (click)="openDeleteDialog(fetchInvId())">Delete</button>
+                              <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button> -->
-                        <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 reset-btn "
-                        (click)="resetFilter()" [hidden]="(searchparam.length > 0)"><i class="fas fa-redo-alt"></i> &nbsp; Reset Filter</button>
-                           <button mat-raised-button class="btn-filter-grey  btn-spacer" (click)="openSearchDialog({})"><i class="fas fa-search"></i> Filter
-                              Search</button>
-                        <button *ngIf="ELEMENT_DATA.length > 0" mat-raised-button
-                           class=" btn-print-invoice btn-spacer" (click)="printInvoice()"><i class="fas fa-print"></i> Print</button>
-                        <div class="inline-flex btn-spacer" *ngIf="ELEMENT_DATA.length > 0">
-                           <div>
-                              <img style="cursor: pointer; height: 33px !important" src="/assets/images/xml.svg"
-                                 matTooltip="Export as excel" (click)="exportAsExcel()" />
-                           </div>
-                        </div>
+                              <button mat-raised-button matTooltip="Reset" style="margin-left: 10px"
+                                 class="custom-margin-top-10" (click)="resetFilter()"
+                                 [hidden]="(searchparam.length > 0)"><i class="fas fa-redo-alt"></i> &nbsp;</button>
+                              <button mat-raised-button matTooltip="Filter" class="btn-spacer"
+                                 (click)="openSearchDialog({})"><i class="fas fa-filter"></i></button>
+                              <button *ngIf="ELEMENT_DATA.length > 0" mat-raised-button matTooltip="Print"
+                                 class="btn-spacer" (click)="printInvoice()"><i class="fas fa-print"></i></button>
+                              <div class="inline-flex btn-spacer" *ngIf="ELEMENT_DATA.length > 0">
+                                 <div>
+                                    <img style="cursor: pointer; height: 22px !important" src="/assets/images/xml.svg"
+                                       matTooltip="Export as excel" (click)="exportAsExcel()" />
+                                 </div>
+                              </div>
+
+                           </fieldset>
                         </div>
                      </div>
                   </div>
@@ -312,11 +320,14 @@
                            No records found
                         </div>
                         <div class="container" *ngIf="isLoading">
-                           <p class="text-center mt-5 mb-5">
-                             <img src="assets/1484.gif" alt="loading">
-                             <!-- Loading..... -->
+                           <p class="text-center mt-5">
+                              <img src="assets/1484.gif" alt="loading">
+                              <!-- Loading..... -->
                            </p>
-                         </div>
+                           <p class="text-center mb-5">
+                              {{loader_status}}
+                           </p>
+                        </div>
                      </div>
                   </div>
                   <mat-paginator #paginator [pageSize]="invoicepagesize" [pageSizeOptions]="invoicepagesizeoptions"
@@ -335,4 +346,4 @@
 </app-delete-with-reason>
 <app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
    Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
-   <app-invoice-search-modal (searchOk)="searchOk($event)" #searchModal></app-invoice-search-modal>
+<app-invoice-search-modal (searchOk)="searchOk($event)" #searchModal></app-invoice-search-modal>
