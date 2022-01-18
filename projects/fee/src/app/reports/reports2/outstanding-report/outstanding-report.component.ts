@@ -1371,6 +1371,20 @@ export class OutstandingReportComponent implements OnInit {
 								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
+							{
+								id: 'transport_amount',
+								name: 'Transport Amt.',
+								field: 'transport_amount',
+								width: 60,
+								cssClass: 'amount-report-fee',
+								sortable: true,
+								filterable: true,
+								filterSearchType: FieldType.number,
+								type: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								formatter: this.checkFeeFormatter,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
 						);
 						if (this.columnDefinitions.length > 18) {
 							this.gridOptions.defaultColumnWidth = 100;
@@ -6233,6 +6247,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
+						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
