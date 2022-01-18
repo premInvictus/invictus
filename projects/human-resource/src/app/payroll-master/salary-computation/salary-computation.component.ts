@@ -160,6 +160,7 @@ export class SalaryComputationComponent implements OnInit {
 	records: any[] = [];
 	chartsOfAccount: any[] = [];
 	paymentModeAccount: any[] = [];
+	isReadonly: boolean = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -183,6 +184,12 @@ export class SalaryComputationComponent implements OnInit {
 		this.getSalaryHeads();
 		this.getChartsOfAccount();
 
+		// For Edit Access control
+		setTimeout(() => {
+			if (this.isExistUserAccessMenu('965')) {
+				this.isReadonly = true;
+			}
+		}, 9000)
 	}
 
 	getChartsOfAccount() {
@@ -481,7 +488,7 @@ export class SalaryComputationComponent implements OnInit {
 									if (this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns &&
 										this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns.length > 0) {
 										const empShacolumnsdata = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].empShacolumns.find(e => e.columnDef == this.shacolumns[i]['data']['sc_name']);
-										console.log("i am jhere", empShacolumnsdata);
+										// console.log("i am jhere", empShacolumnsdata);
 
 										if (empShacolumnsdata) {
 											this.empShacolumns[i] = empShacolumnsdata;
@@ -494,7 +501,7 @@ export class SalaryComputationComponent implements OnInit {
 									}
 									//
 
-									console.log("check ---------------------------->>>>", this.empShacolumns[i], this.shacolumns[i]);
+									// console.log("check ---------------------------->>>>", this.empShacolumns[i], this.shacolumns[i]);
 
 								}
 
@@ -743,7 +750,7 @@ export class SalaryComputationComponent implements OnInit {
 									this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 								}
 
-								console.log("i am here -------------------------- ", this.empShacolumns[i]);
+								// console.log("i am here -------------------------- ", this.empShacolumns[i]);
 
 
 								if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
@@ -949,7 +956,7 @@ export class SalaryComputationComponent implements OnInit {
 						if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.security_details && item.emp_salary_detail.emp_salary_structure.security_details) {
 							let obj: any = item.emp_salary_detail.emp_salary_structure.security_details;
 							let objArr: any[] = item.emp_salary_detail.emp_salary_structure.security_details;
-							console.log("here i am ", obj.constructor === Object);
+							// console.log("here i am ", obj.constructor === Object);
 
 							if (obj.constructor === Object) {
 								console.log('yes adv', obj);
@@ -1017,7 +1024,7 @@ export class SalaryComputationComponent implements OnInit {
 											let total_advance_deposite = 0;
 											if (item.emp_salary_detail.emp_salary_structure.security_month_wise) {
 												for (const dety of item.emp_salary_detail.emp_salary_structure.security_month_wise) {
-													console.log("i am dety", dety);
+													// console.log("i am dety", dety);
 
 													total_advance_deposite = total_advance_deposite + Number(dety != null ? dety.deposite_amount : '0');
 												}

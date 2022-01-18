@@ -384,6 +384,7 @@
                         autocomplete="off"
                         [value]="element?.emp_modes_data.td"
                         (keydown.enter)="setNetPerTA(element, $event)"
+                        [readonly]="isReadonly"
                       />
                     </mat-form-field>
                   </form>
@@ -418,6 +419,7 @@
                           setNetPerTDS(element, $event);
                           $event.stopPropagation()
                         "
+                        [readonly]="isReadonly"
                       />
                     </mat-form-field>
                   </form>
@@ -448,6 +450,7 @@
                         autocomplete="off"
                         [value]="element?.emp_modes_data.arrear"
                         (keydown.enter)="setNetPerArr(element, $event)"
+                        [readonly]="isReadonly"
                       />
                     </mat-form-field>
                   </form>
@@ -526,6 +529,7 @@
                         autocomplete="off"
                         [value]="element?.emp_modes_data.advance"
                         (keydown.enter)="setNetPerAdv(element, $event)"
+                        [readonly]="isReadonly"
                       />
                     </mat-form-field>
                   </form>
@@ -557,6 +561,7 @@
                         autocomplete="off"
                         [value]="element?.emp_modes_data.security"
                         (keydown.enter)="setNetPerSec(element, $event)"
+                        [readonly]="isReadonly"
                       />
                     </mat-form-field>
                   </form>
@@ -634,6 +639,7 @@
                           }}"
                           autocomplete="off"
                           (keydown.enter)="setNetTotal(element, $event)"
+                          [readonly]="isReadonly"
                         />
                       </span>
                       <span *ngIf="!element?.emp_modes_data?.mode_data[i]">
@@ -653,6 +659,7 @@
                           value="0"
                           autocomplete="off"
                           (blur)="setNetTotal(element, $event)"
+                          [readonly]="isReadonly"
                         />
                       </span>
                     </mat-form-field>
