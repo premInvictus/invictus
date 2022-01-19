@@ -140,9 +140,9 @@
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-              (click)="openRecalculateDialog()">Recalulate Invoice</button>
+              (click)="openRecalculateDialog()"><i class="fas fa-calculator"></i> Recalculate Invoice</button>
             <button mat-raised-button class="btn-primary btn-danger  print-invoice-btn"
-              (click)="printReceipt(invoiceDetails?.receipt_id)">Print Receipt</button>
+              (click)="printReceipt(invoiceDetails?.receipt_id)"><i class="fas fa-print"></i> Print Receipt</button>
           </div>
         </div>
       </div>

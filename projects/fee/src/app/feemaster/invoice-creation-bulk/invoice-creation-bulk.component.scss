@@ -1,44 +1,44 @@
 .no-records {
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-  }
-  .text-link {
-    text-decoration: none !important;
-    cursor: pointer;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
 }
-  .my-filter-btn.mat-raised-button {
-    color: white !important;
-    background-color: #757b85 !important;
-    text-transform: uppercase;
-    margin-left: 25px !important;
-    width: 126px;
-    height: 32px;
-    font-size: 13px;
-    line-height: 32px !important;
+.text-link {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.my-filter-btn.mat-raised-button {
+  color: white !important;
+  background-color: #757b85 !important;
+  text-transform: uppercase;
+  margin-left: 25px !important;
+  width: 126px;
+  height: 32px;
+  font-size: 13px;
+  line-height: 32px !important;
 }
 .my-filter-btn.mat-raised-button:hover {
-  color:#757b85 !important;
+  color: #757b85 !important;
   background-color: white !important ;
   margin-left: 25px !important;
-  border: 2px solid  #757b85;
+  border: 2px solid #757b85;
   text-transform: uppercase;
   width: 126px;
   height: 32px;
   font-size: 13px;
 }
-button.reset-bt{
+button.reset-bt {
   color: white !important;
   background-color: #e11022 !important;
   height: 33px !important;
   text-transform: uppercase;
 }
-button.reset-bt:hover{
+button.reset-bt:hover {
   color: #e11022 !important;
   background-color: white !important ;
-  border: 2px solid  #e11022;
+  border: 2px solid #e11022;
   height: 33px;
 }
 @media (max-width: 1899px) and (min-width: 1200px) {
@@ -50,22 +50,22 @@ button.reset-bt:hover{
   margin-right: 0px;
 }
 table.mat-table {
-margin-left: 0px;
-border-spacing: 0;
-width: 100% !important;
+  margin-left: 0px;
+  border-spacing: 0;
+  width: 100% !important;
 }
-.cdk-column-select{
-  width: 3%!important;
+.cdk-column-select {
+  width: 3% !important;
 }
 .mat-column-srno {
   width: 6% !important;
   flex: 0 0 8% !important;
 }
 td.mat-cell {
-  border: 1px solid #89A8C9 !important;
+  border: 1px solid #89a8c9 !important;
 }
 th.mat-header-cell {
-  border: 1px solid #89A8C9 !important;
+  border: 1px solid #89a8c9 !important;
   border-collapse: collapse;
 }
 ::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
@@ -74,7 +74,7 @@ th.mat-header-cell {
 ::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
   background-color: #1aed11 !important;
 }
-.reset-btn{
+.reset-btn {
   background-color: #e11022;
   color: #fff;
   text-transform: uppercase;
@@ -83,7 +83,27 @@ th.mat-header-cell {
   font-size: 13px;
   line-height: 32px !important;
 }
-.mar-left-5{
+.mar-left-5 {
   margin-left: 5px;
   padding-left: 10px !important;
+}
+
+.mat-raised-button{
+  min-width: auto;
+  line-height: 0px;
+  padding: 0 0px;
+}
+.fieldset_invoice {
+  border: 1px solid #e0e0e0;
+  padding: 0px !important;
+  border-radius: 5px;
+  margin-top: 0px;
+}
+.fieldset_invoice legend{
+  margin-bottom: 0px;
+  font-size: 14px;
+  color: #afb7b7;
+}
+.mt--25{
+  margin-top: -25px;
 }

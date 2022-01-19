@@ -69,6 +69,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	length: any;
 	currentUser: any;
 	isLoading : boolean = true;
+	loader_status = "";
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -260,6 +261,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	getInvoice(value) {
 		this.invoiceArray = [];
 		this.selection.clear();
+		this.loader_status = "Reading Invoices";
 		this.feeService.getInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.isLoading = false;
