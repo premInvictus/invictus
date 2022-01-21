@@ -10,6 +10,7 @@ import 'jspdf-autotable';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
 import { Observable, Observer } from 'rxjs';
+import { MatRadioChange } from '@angular/material';
 @Component({
   selector: 'app-bounced-cheque-multiple',
   templateUrl: './bounced-cheque-multiple.component.html',
@@ -141,7 +142,13 @@ export class BouncedChequeMultipleComponent implements OnInit {
   isExistUserAccessMenu(actionT) {
     return this.commonAPIService.isExistUserAccessMenu(actionT);
   }
+  radioChange(event: MatRadioChange) {
+    console.log(">>>>>>>>>>>>>>>>>>>>>radio",event.value);
+  }
   selectedValue(event) {
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>selected data", event);
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> bank", this.bouncedForm.value.ftr_deposit_bnk_id);
+    
     this.selectedData = {
       value: event.value,
       text: event.source.triggerValue
@@ -228,6 +235,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
             }
             console.log("school info >>>>", this.noCORSImage.join('/'));
             this.noCORSImage = this.noCORSImage.join('/');
+            this.noCORSImage = this.noCORSImage.replace("https","http");
             this.getSchoolSetting();
           }
         });
@@ -274,7 +282,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     let bankOInfo: any;
     for (let i = 0; i < this.allBanks.length; i++) {
       
-      if (this.allBanks[i]['bnk_alias'] && (this.allBanks[i]['bnk_alias'] === this.selectedData.text)) {
+      if (this.allBanks[i] && this.allBanks[i]['bnk_alias'] && (this.allBanks[i]['bnk_alias'] === this.selectedData.text)) {
         bankOInfo = this.allBanks[i];
         break;
       } else if (this.allBanks[i]['bnk_gid'] && (this.allBanks[i]['bnk_gid'] === bnk_id)) {

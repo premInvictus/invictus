@@ -55,6 +55,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	currentUser: any;
 	schoolInfo: any
 	showPdf = false;
+	isLoading:boolean = true;
+	loader_status = "";
 	sessionArray:any[] = [];
 	constructor(public feeService: FeeService,
 		private fbuild: FormBuilder,
@@ -155,8 +157,10 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		this.formGroupArray = [];
 		this.CHEQUE_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+		this.loader_status = "Preparing Check Control Tools";
 		this.feeService.getCheckControlList(this.filterForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.isLoading = false;
 				let pos = 1;
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.totalRecords);

@@ -5,7 +5,7 @@
   <form [formGroup]="bouncedForm">
     <div class="row margin-top-25">
       <div class="col-12">
-        <mat-radio-group aria-label="Select an option" formControlName="fcc_status">
+        <mat-radio-group aria-label="Select an option" (change)="radioChange($event)" formControlName="fcc_status">
           <mat-radio-button value="d">Deposited
           </mat-radio-button>
           <mat-radio-button value="c">Cleared
@@ -30,7 +30,7 @@
         </div>
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
-            <mat-label>Deposite Date</mat-label>
+            <mat-label>Deposit Date</mat-label>
             <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date"
               [min]="studentDetails?.transaction_date" required>
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -48,7 +48,7 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Deposited Bank</mat-label>
-            <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
+            <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" (selectionChange)="selectedValue($event)" required>
               <mat-option value="">Please Select</mat-option>
               <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">
                 <span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
