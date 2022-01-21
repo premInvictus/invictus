@@ -297,7 +297,20 @@
               </tr>
             </table>
             <table class="table-100 text-center" style="margin-top:5px;">
-              <tr *ngIf="CHEQUE_ELEMENT_DATA.length == 0">
+              <tr>
+
+                <div class="container" *ngIf="isLoading">
+                  <p class="text-center mt-5">
+                    <img src="assets/1484.gif" alt="loading">
+                    <!-- Loading..... -->
+                  </p>
+                  <p class="text-center mb-5">
+                    {{loader_status}}
+                  </p>
+                </div>
+
+              </tr>
+              <tr *ngIf="CHEQUE_ELEMENT_DATA.length == 0 && !isLoading">
                 <td colspan="11">No Record Found</td>
               </tr>
             </table>
