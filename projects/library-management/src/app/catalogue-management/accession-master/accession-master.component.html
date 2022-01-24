@@ -150,7 +150,7 @@
 </div>
 <!-- Progress Loader End -->
 
-  <div class="row" [hidden]="!isLoading">
+  <div class="row" [hidden]="!isLoading && !addBookContainer">
     <div class="col-12">
       <mat-card>
         <form [formGroup]="bookForm" autocomplete="off">
