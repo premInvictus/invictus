@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ErpCommonService } from 'src/app/_services';
 import { SisService, CommonAPIService } from '../../../_services/index';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from 'src/app/_pipes';
+import { CapitalizePipe, DateformatPipe } from 'src/app/_pipes';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 declare var require;
@@ -340,6 +340,36 @@ export class EmpDetailsReportComponent implements OnInit {
         },
       },
       {
+        id: 'gender',
+        name: 'Gender',
+        field: 'gender',
+        sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80,
+        grouping: {
+          getter: 'gender',
+          formatter: (g) => {
+            return `${g.value} <span style="color:green">(${g.count})</span>`
+          }
+        }
+      },
+      {
+        id: 'dob',
+        name: 'DOB',
+        field: 'dob',
+        sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80,
+        grouping: {
+          getter: 'dob',
+          formatter: (g) => {
+            return `${g.value} <span style="color:green">(${g.count})</span>`
+          }
+        }
+      },
+      {
         id: 'employee_type', name: 'Employee Type', field: 'employee_type', sortable: true,
         filterable: true,
         width: 120,
@@ -590,12 +620,14 @@ export class EmpDetailsReportComponent implements OnInit {
               item.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin : '-',
             obj['reference'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_reference_detail ?
               item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-';
-            obj['emp_status'] = item.emp_status ? new CapitalizePipe().transform(item.emp_status) : '-';
+          obj['emp_status'] = item.emp_status ? new CapitalizePipe().transform(item.emp_status) : '-';
+          obj['gender'] = item.emp_personal_detail && item.emp_personal_detail.gender ? item.emp_personal_detail.gender : '-';
+          obj['dob'] = item.emp_personal_detail && item.emp_personal_detail.dob ? new DateformatPipe().transform(item.emp_personal_detail.dob, 'dd-MM-yyyy') : '-';
           for (const item of this.documentArray) {
             for (const detz of item.files_data) {
               console.log("i am here", detz);
-              
-              obj[item.document_name] = detz && detz.file_url ? detz.file_url: '';
+
+              obj[item.document_name] = detz && detz.file_url ? detz.file_url : '';
             }
           }
           this.dataset.push(obj);
@@ -964,6 +996,8 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['contact_address'] = '';
           obj3['contact_city'] = '';
           obj3['reference'] = '';
+          obj3['gender'] = '';
+          obj3['dob'] = '';
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1018,6 +1052,8 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['contact_address'] = '';
           obj3['contact_city'] = '';
           obj3['reference'] = '';
+          obj3['gender'] = '';
+          obj3['dob'] = '';
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1055,7 +1091,7 @@ export class EmpDetailsReportComponent implements OnInit {
     reportType = new TitleCasePipe().transform('employee_details_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('employee details report: ') + this.sessionName;
-    const fileName =reportType + '_' + this.reportdate +'.xlsx';
+    const fileName = reportType + '_' + this.reportdate + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });
@@ -1311,6 +1347,8 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['contact_address'] = '';
           obj3['contact_city'] = '';
           obj3['reference'] = '';
+          obj3['gender'] = '';
+          obj3['dob'] = '';
 
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
@@ -1397,6 +1435,8 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['contact_address'] = '';
           obj3['contact_city'] = '';
           obj3['reference'] = '';
+          obj3['gender'] = '';
+          obj3['dob'] = '';
 
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
