@@ -13,7 +13,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Gender</mat-label>
               <mat-select formControlName="gender" placeholder="Gender" required
-                [errorStateMatcher]="confirmValidParentMatcher" #gender (change)="console.log(gender.value)">
+                [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option value="">Please Select</mat-option>
                 <mat-option value="male">Male</mat-option>
                 <mat-option value="female">Female</mat-option>
