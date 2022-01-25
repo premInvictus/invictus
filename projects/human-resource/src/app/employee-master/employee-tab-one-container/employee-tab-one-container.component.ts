@@ -53,7 +53,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		{ hon_id: "7", hon_name: 'Dr.' },
 		{ hon_id: "8", hon_name: 'Lady.' },
 		{ hon_id: "9", hon_name: 'Late' },
-    	{ hon_id: "10", hon_name: 'Md.' }
+		{ hon_id: "10", hon_name: 'Md.' }
 
 	];
 	departmentArray;
@@ -88,7 +88,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				same_as_residential: false,
 				emp_status: 'live',
 				gender: '',
-				dob: ''
+				dob: '',
+				marital_status: ''
 			});
 			this.addressFlag = false;
 			this.requiredOnly = false;
@@ -147,6 +148,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			email_id: '',
 			gender: '',
 			dob: '',
+			marital_status: '',
 			emp_status: 'live'
 		});
 	}
@@ -181,8 +183,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPersonalDetailsdata() {
-		console.log('employeedetails',this.employeedetails);
+		console.log('employeedetails', this.employeedetails);
 		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
+			// console.log('PERSONAL DETAILS :', this.employeedetails.emp_personal_detail);
 			this.personalDetails.patchValue({
 				p_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.address : '',
 				p_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.city.cit_name : '',
@@ -201,6 +204,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				emp_status: this.employeedetails.emp_status ? this.employeedetails.emp_status : 'live',
 				gender: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender : '',
 				dob: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob : '',
+				marital_status: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.marital_status ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.marital_status : ''
 			});
 			if (this.employeedetails.emp_personal_detail.same_as_residential) {
 				this.addressFlag = false;
@@ -261,6 +265,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					},
 					gender: this.personalDetails.value.gender,
 					dob: this.personalDetails.value.dob,
+					marital_status: this.personalDetails.value.marital_status
 				};
 			} else {
 				this.personaldetails['emp_personal_detail'] = {
@@ -304,7 +309,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						email_id: this.personalDetails.value.email_id
 					},
 					gender: this.personalDetails.value.gender,
-					dob: this.personalDetails.value.dob
+					dob: this.personalDetails.value.dob,
+					marital_status: this.personalDetails.value.marital_status
 				};
 			}
 			this.personaldetails['emp_personal_contact'] = {
@@ -413,7 +419,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 							tds_deduction: ''
 						}
 					],
-					gratuity:'',
+					gratuity: '',
 					emp_net_salary: '',
 					emp_total_earning: ''
 				}
@@ -485,7 +491,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
-			if(this.employeeCommonDetails.employeeDetailsForm.value.emp_id && this.employeeCommonDetails.employeeDetailsForm.value.emp_id != ''){
+			if (this.employeeCommonDetails.employeeDetailsForm.value.emp_id && this.employeeCommonDetails.employeeDetailsForm.value.emp_id != '') {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 					if (result) {
 						this.disabledApiButton = false;
@@ -503,7 +509,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
 						this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
-	
+
 					} else {
 						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
@@ -516,7 +522,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	}
 
 	updateForm(moveStatus) {
-		console.log('update',this.employeedetails);
+		console.log('update', this.employeedetails);
 		if (this.personalDetails.valid) {
 			this.disabledApiButton = true;
 			if (this.addressFlag) {
@@ -561,7 +567,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						email_id: this.personalDetails.value.email_id
 					},
 					gender: this.personalDetails.value.gender,
-					dob: this.personalDetails.value.dob
+					dob: this.personalDetails.value.dob,
+					marital_status: this.personalDetails.value.marital_status
 				};
 			} else {
 				this.personaldetails['emp_personal_detail'] = {
@@ -605,7 +612,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						email_id: this.personalDetails.value.email_id
 					},
 					gender: this.personalDetails.value.gender,
-					dob: this.personalDetails.value.dob
+					dob: this.personalDetails.value.dob,
+					marital_status: this.personalDetails.value.marital_status
 				};
 			}
 			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
@@ -637,18 +645,18 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 				if (this.employeedetails['emp_salary_detail'] && this.employeedetails['emp_salary_detail'].emp_salary_structure && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_id) {
 					this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale = {
-						pc_id:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_id,
-						pc_name:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_name
+						pc_id: this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_id,
+						pc_name: this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_name
 					};
 				}
-				
+
 				if (this.employeedetails['emp_salary_detail'] && this.employeedetails['emp_salary_detail'].emp_salary_structure && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.config_id) {
 					this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode = {
-						pm_id:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.config_id,
-						pm_name:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.name
+						pm_id: this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.config_id,
+						pm_name: this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.name
 					};
 				}
-				
+
 			}
 			if (!moveStatus) {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
@@ -716,14 +724,14 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {
-						if(result.data.length > 0){
+						if (result.data.length > 0) {
 							this.cityCountryArray = result.data;
-						}else {
-							this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Does not exist', 'error');
 							$event.target.value = '';
 						}
-					} else{
-						this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Does not exist', 'error');
 						$event.target.value = '';
 					}
 				});
@@ -739,7 +747,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	}
 	getCityPerId(item: any) {
 		this.cityId = item.cit_id;
-		if(item.cit_id){
+		if (item.cit_id) {
 			this.personalDetails.patchValue({
 				p_city: this.getCityName(item.cit_id),
 				p_state: item.sta_id,
