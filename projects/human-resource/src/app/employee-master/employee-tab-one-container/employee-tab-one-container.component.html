@@ -13,7 +13,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Gender</mat-label>
               <mat-select formControlName="gender" placeholder="Gender" required
-                [errorStateMatcher]="confirmValidParentMatcher">
+                [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                 <mat-option value="">Please Select</mat-option>
                 <mat-option value="male">Male</mat-option>
                 <mat-option value="female">Female</mat-option>
@@ -29,7 +29,7 @@
               <mat-label>Date of Birth</mat-label>
               <input matInput [matDatepicker]="picker" [max]="today" placeholder="Date of Birth" formControlName="dob"
                 required [readonly]="viewOnly">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="viewOnly"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>
                 This field is required
@@ -41,13 +41,14 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Marital Status</mat-label>
               <mat-select formControlName="marital_status" placeholder="Marital Status" required
-                [errorStateMatcher]="confirmValidParentMatcher">
+                [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                 <mat-option value="">Please Select</mat-option>
                 <mat-option value="single">Single</mat-option>
-                <mat-option value="divorced">Divorced</mat-option>
                 <mat-option value="married">Married</mat-option>
-                <mat-option value="widowed">Widowed</mat-option>
+                <mat-option value="divorced">Divorced</mat-option>
                 <mat-option value="seperated">Seperated</mat-option>
+                <mat-option value="widowed">Widowed</mat-option>
+                <mat-option value="prefer_not_to_say">Prefer not to say</mat-option>
               </mat-select>
               <mat-error>
                 This field is required

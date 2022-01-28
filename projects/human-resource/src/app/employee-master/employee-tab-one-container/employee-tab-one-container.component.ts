@@ -183,7 +183,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPersonalDetailsdata() {
-		console.log('employeedetails', this.employeedetails);
 		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
 			// console.log('PERSONAL DETAILS :', this.employeedetails.emp_personal_detail);
 			this.personalDetails.patchValue({
@@ -427,7 +426,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.personaldetails['emp_remark_detail'] = {
 				management_remark: '',
 				interview_remark: '',
-				skills: ''
+				skills: '',
+				role_and_responsibilities: ''
 			};
 			this.personaldetails['emp_class_section_detail'] = [
 				{
