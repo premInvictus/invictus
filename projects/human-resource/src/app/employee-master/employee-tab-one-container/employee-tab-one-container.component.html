@@ -27,14 +27,33 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Date of Birth</mat-label>
-              <input matInput [matDatepicker]="picker" [max]="today" placeholder="Date of Birth" formControlName="dob" required
-                [readonly]="viewOnly">
+              <input matInput [matDatepicker]="picker" [max]="today" placeholder="Date of Birth" formControlName="dob"
+                required [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
+          </div>
+          <div class="col-4 col-pad-5">
+            <!-- Martial Status -->
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Marital Status</mat-label>
+              <mat-select formControlName="marital_status" placeholder="Marital Status" required
+                [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="single">Single</mat-option>
+                <mat-option value="divorced">Divorced</mat-option>
+                <mat-option value="married">Married</mat-option>
+                <mat-option value="widowed">Widowed</mat-option>
+                <mat-option value="seperated">Seperated</mat-option>
+              </mat-select>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+            <!-- Martial Status Ends -->
           </div>
         </div>
         <div class="row remove-top-margin">
@@ -53,8 +72,9 @@
                 [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
-                <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="$event.stopPropagation();getCityPerId(item)"
-                  (click)="getCityPerId(item)" *ngFor="let item of cityCountryArray" [value]="item.cit_id">
+                <mat-option (onSelectionChange)="getCityPerId(item)"
+                  (keyup.enter)="$event.stopPropagation();getCityPerId(item)" (click)="getCityPerId(item)"
+                  *ngFor="let item of cityCountryArray" [value]="item.cit_id">
                   {{item.cit_name}} -
                   {{item.sta_name}} - {{item.cou_name}}</mat-option>
               </mat-autocomplete>
@@ -78,8 +98,8 @@
 
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
-              <input matInput placeholder="Pincode" required [readonly]="viewOnly"
-              minlength="6" maxlength="6" pattern="[0-9]*" formControlName="p_pincode"  [errorStateMatcher]="confirmValidParentMatcher">
+              <input matInput placeholder="Pincode" required [readonly]="viewOnly" minlength="6" maxlength="6"
+                pattern="[0-9]*" formControlName="p_pincode" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -100,8 +120,9 @@
                 [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
-                <mat-option (onSelectionChange)="getCityResId(item)" (click)="$event.stopPropagation();getCityResId(item)"
-                  *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
+                <mat-option (onSelectionChange)="getCityResId(item)"
+                  (click)="$event.stopPropagation();getCityResId(item)" *ngFor="let item of cityCountryArray"
+                  [value]="item.cit_id">{{item.cit_name}} -
                   {{item.sta_name}} - {{item.cou_name}}</mat-option>
               </mat-autocomplete>
               <mat-error>
@@ -126,9 +147,9 @@
               <input matInput placeholder="Pincode" [readonly]="viewOnly" [required]="requiredOnly" minlength="6"
                 maxlength="6" pattern="[0-9]*" formControlName="r_pincode"
                 [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
+              <mat-error>
+                This field is required
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -138,9 +159,9 @@
               <input class="text-capitalize" matInput placeholder="Primary Mobile No." required minlength="10"
                 maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" formControlName="pri_mobile"
                 [errorStateMatcher]="confirmValidParentMatcher" />
-                <mat-error>
-                  This field is required
-                </mat-error>
+              <mat-error>
+                This field is required
+              </mat-error>
             </mat-form-field>
             <i class="fab fa-whatsapp whatsapp-field-icon" matTooltip="Mark as What's app No."
               (click)="copyForWhatsapp('primary')" matPrefix></i>
@@ -182,8 +203,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"
-          >Save &
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)"
           [disabled]="disabledApiButton">Submit</button>
