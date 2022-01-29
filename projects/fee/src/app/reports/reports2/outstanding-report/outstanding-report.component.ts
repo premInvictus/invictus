@@ -173,6 +173,11 @@ export class OutstandingReportComponent implements OnInit {
 		'fp_name': 20,
 		'other': 10
 	}
+	serviceRequest: any;
+	centered = false;
+	disabled = false;
+	unbounded = false;
+	radius: number = 50;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -212,8 +217,8 @@ export class OutstandingReportComponent implements OnInit {
 		// 		report_type: 'aging', report_name: 'Aging'
 		// 	}
 		// );
-		if(this.common.isExistUserAccessMenu('656')) {
-			this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
+		if (this.common.isExistUserAccessMenu('656')) {
+			this.reportTypeArray.push({ report_type: 'headwise', report_name: 'Head Wise' });
 		}
 		// if (this.common.isExistUserAccessMenu('657')) {
 		// 	this.reportTypeArray.push({ report_type: 'headwisedetail', report_name: 'Head Wise Detail' });
@@ -249,6 +254,9 @@ export class OutstandingReportComponent implements OnInit {
 		}
 
 		this.filterFlag = true;
+	}
+	ngOnDestroy() {
+		this.serviceRequest.unsubscribe();
 	}
 	checkForMultiBranch() {
 		this.loader_status = "Reading your settings";
@@ -370,6 +378,9 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getOutstandingReport(value: any) {
+		if (this.serviceRequest) {
+			this.serviceRequest.unsubscribe();
+		}
 		this.isLoading = true;
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
@@ -500,6 +511,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.dataset = [];
 		if (this.reportFilterForm.value.report_type) {
 			if (this.reportType === 'headwise') {
+				console.log("hello i am in head wise details >>>>>>>>>>>>>>>>>>>>>>>>");
 				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
@@ -517,7 +529,7 @@ export class OutstandingReportComponent implements OnInit {
 					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.loader_status = "Preparing Outstanding Data";
-				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.serviceRequest = this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.isLoading = false;
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -555,6 +567,8 @@ export class OutstandingReportComponent implements OnInit {
 								commonHeadsArray.push(tempHeadArray[ti]);
 							}
 						}
+						console.log(">>>>>>>>>>>>> report array", repoArray);
+
 						Object.keys(repoArray).forEach((keys: any) => {
 							const obj: any = {};
 							if (Number(keys) === 0) {
@@ -737,12 +751,14 @@ export class OutstandingReportComponent implements OnInit {
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 
 								}
-								console.log('----------', commonHeadsArray);
+								// console.log('>>>>>>>>>>>>>>>>>>', commonHeadsArray);
 
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
+
 										if (key2 === 'fh_name' && Number(keys) === 0) {
-											console.log("sshshs ", titem[key2], 'fh_name' + j);
+											// console.log(">>>> key 2", repoArray[Number(keys)]);
+											// console.log("sshshs ", titem[key2], 'fh_name' + j);
 
 											const feeObj: any = {};
 											this.columnDefinitions.push({
@@ -765,6 +781,7 @@ export class OutstandingReportComponent implements OnInit {
 											j++;
 										}
 										if (key2 === 'fh_name') {
+											// console.log(">>>> key 2", repoArray[Number(keys)]);
 											obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
 												repoArray[Number(keys)]['rpt_id'];
 											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
@@ -794,11 +811,12 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
+											console.log(">>>>>> SFHA", titem['fh_name']);
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													// console.log(">>>>>> fh_name", stuFeeHeadArray[fi]['fh_name'], ">>>>", stuFeeHeadArray[fi]['fh_prefix']);
 													if (stuFeeHeadArray[fi]['fh_calm_id'] == '6') {
-														console.log("herecheck", stuFeeHeadArray[fi]);
 
 														obj[key2 + k] = repoArray[Number(keys)]['inv_opening_balance']
 															? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
@@ -2220,10 +2238,12 @@ export class OutstandingReportComponent implements OnInit {
 					this.columnDefinitions.splice(1, 0, aColumn);
 
 				}
+				this.loader_status = "Reading Defaulter List";
 				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
+						console.log("hey m here >>>>>>>>>>>>>>", repoArray);
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 						let index = 0;
@@ -2278,9 +2298,11 @@ export class OutstandingReportComponent implements OnInit {
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
 						}
+						this.isLoading = false;
 						this.tableFlag = true;
 						setTimeout(() => this.groupByClass(), 2);
 					} else {
+						this.isLoading = false;
 						this.tableFlag = true;
 					}
 				});
@@ -3962,12 +3984,12 @@ export class OutstandingReportComponent implements OnInit {
 											if (element.fine_amt)
 												fine_amt = Number(element.fine_amt);
 											// console.log(element, '+++++++++++++++', Number(element.head_amt) , Number(element.concession_at));
-											if(element.fh_id !== -1) {
+											if (element.fh_id !== -1) {
 												tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
-											}else {
+											} else {
 												tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
 											}
-											
+
 											obj3[ee.id] += tempvaluehead;
 											tempelement['total'] += tempvaluehead;
 										}
@@ -4094,7 +4116,7 @@ export class OutstandingReportComponent implements OnInit {
 					this.columnDefinitions.forEach((e: any) => {
 						if (e.id != "date") {
 							this.objobjectmain[e.id] = 0;
-							
+
 						} else {
 							this.objobjectmain['date'] = 'Grand Total'
 						}
@@ -4200,7 +4222,7 @@ export class OutstandingReportComponent implements OnInit {
 					});
 					obj3['id'] = montid;
 					obj3['date'] = this.monName[montid - 1];
-					
+
 					this.dataset.push(obj3);
 					if (montid == 3) {
 						console.log(this.objobjectmain);
@@ -4863,7 +4885,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.feeService.getAllSchoolGroups({ si_group: this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix }).subscribe((data: any) => {
 			if (data && data.status == 'ok') {
 				//this.schoolGroupData = data.data;
-				this.isLoading =false;
+				this.isLoading = false;
 				console.log('this.schoolGroupData--', data.data);
 				this.feeService.getMappedSchoolWithUser({ prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id }).subscribe((result: any) => {
 					if (result && result.data && result.data.length > 0) {
@@ -4906,25 +4928,27 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 	groupByClass() {
-		this.dataviewObj.setGrouping({
-			getter: 'stu_class_name',
-			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-			},
-			comparer: (a, b) => {
-				// (optional) comparer is helpful to sort the grouped data
-				// code below will sort the grouped value in ascending order
-				if (this.reportType == 'defaulter_month_wise') {
-					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
-				} else {
-					return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
-				}
-			},
-			aggregators: this.aggregatearray,
-			aggregateCollapsed: true,
-			collapsed: false,
-		});
-		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
+		if (this.dataviewObj) {
+			this.dataviewObj.setGrouping({
+				getter: 'stu_class_name',
+				formatter: (g) => {
+					return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+				},
+				comparer: (a, b) => {
+					// (optional) comparer is helpful to sort the grouped data
+					// code below will sort the grouped value in ascending order
+					if (this.reportType == 'defaulter_month_wise') {
+						return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+					} else {
+						return Sorters.string(a.value, b.value, SortDirectionNumber.neutral);
+					}
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			});
+			this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
+		}
 	}
 	checkReturn(data) {
 		if (Number(data)) {
@@ -5067,7 +5091,7 @@ export class OutstandingReportComponent implements OnInit {
 			}
 			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
 		} else if (this.reportType === 'day_book') {
-			
+
 			for (const item of this.exportColumnDefinitions) {
 				if (!(item.id.includes('checkbox_select'))) {
 					columns.push({
@@ -5078,7 +5102,7 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			}
 			reportType2 = new TitleCasePipe().transform('day book_') + this.sessionName;
-		
+
 		}
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
@@ -5695,8 +5719,8 @@ export class OutstandingReportComponent implements OnInit {
 		return max2 > max ? max2 : max;
 	}
 	checkWidthwithArray(id, header) {
-		console.log("i am id------------", id,'-----------', this.arrayOfWidth[id]);
-		if(this.arrayOfWidth[id]) {
+		console.log("i am id------------", id, '-----------', this.arrayOfWidth[id]);
+		if (this.arrayOfWidth[id]) {
 			return this.arrayOfWidth[id];
 		} else {
 			const res = this.dataset.map((f) => (f[id] !== '-' && f[id]) ? f[id].toString().length : 1);
@@ -5704,7 +5728,7 @@ export class OutstandingReportComponent implements OnInit {
 			const max = Math.max.apply(null, res);
 			return max2 > max ? max2 : max;
 		}
-		
+
 	}
 	getGroupColumns(columns) {
 		let grName = '';
