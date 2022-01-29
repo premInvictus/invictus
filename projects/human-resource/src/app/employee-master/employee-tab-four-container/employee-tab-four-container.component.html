@@ -299,31 +299,54 @@
         <div class="col-6">
           <div class="heading-class">Skills </div>
         </div>
+        <div class="col-6">
+          <div class="heading-class">Role & Responsibilities </div>
+        </div>
       </div>
       <div class="row">
-        <div class="col-2" *ngIf="!viewOnly">
-          <form [formGroup]="skillForm">
-            <div class="inline-flex ">
-              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Skills</mat-label>
-                <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
-                  type="text" formControlName="skill_id" [readonly]="viewOnly">
-              </mat-form-field>
+        <div class="col-6">
+          <div class="row">
+            <div class="col-12" *ngIf="!viewOnly">
+              <form [formGroup]="skillForm">
+                <div class="inline-flex ">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Skills</mat-label>
+                    <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
+                      type="text" formControlName="skill_id" [readonly]="viewOnly">
+                  </mat-form-field>
+                </div>
+              </form>
             </div>
-          </form>
+            <div class="col-12" *ngIf="skillsArray.length > 0">
+              <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
+                <span class="custom-btn-text">{{item}}</span>
+                <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="!viewOnly" (click)="deleteSkill(item)"></i>
+              </button>
+            </div>
+            <div class="col-12" *ngIf="skillsArray.length === 0 && viewOnly">
+              <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
+                <span class="custom-btn-text">No Record Found</span>
+                <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="viewOnly"></i>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="col-10" *ngIf="skillsArray.length > 0">
-          <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
-            <span class="custom-btn-text">{{item}}</span>
-            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="!viewOnly" (click)="deleteSkill(item)"></i>
-          </button>
+        <!-- Role & Responsibilities -->
+        <div class="col-6">
+          <div class="row">
+            <div class="col-12">
+              <form [formGroup]="roleForm">
+                <div class="row">
+                  <div class="col-12" style="padding: 0 !important">
+                    <textarea rows="5" class="form-control" formControlName="role_and_responsibilities"
+                      [readonly]="viewOnly"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        <div class="col-10" *ngIf="skillsArray.length === 0 && viewOnly">
-          <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
-            <span class="custom-btn-text">No Record Found</span>
-            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="viewOnly"></i>
-          </button>
-        </div>
+        <!-- Role & Responsibilities Ends-->
       </div>
     </div>
     <div class="padding-15">
@@ -345,7 +368,7 @@
           <div class="col-6">
             <div class="row">
               <div class="col-6">
-                <div class="heading-class">Role & Responsibilities </div>
+                <div class="heading-class">Interview Remarks</div>
               </div>
             </div>
             <div class="row">

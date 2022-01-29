@@ -118,6 +118,8 @@ export class EmpDetailsReportComponent implements OnInit {
     { docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
     { docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
   ];
+  q_id: any = 0
+  q_name: any = ''
   @Input() userName: any = '';
   constructor(translate: TranslateService,
     private commonAPIService: CommonAPIService,
@@ -351,7 +353,10 @@ export class EmpDetailsReportComponent implements OnInit {
           getter: 'gender',
           formatter: (g) => {
             return `${g.value} <span style="color:green">(${g.count})</span>`
-          }
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
         }
       },
       {
@@ -364,6 +369,51 @@ export class EmpDetailsReportComponent implements OnInit {
         width: 80,
         grouping: {
           getter: 'dob',
+          formatter: (g) => {
+            return `${g.value} <span style="color:green">(${g.count})</span>`
+          }
+        }
+      },
+      {
+        id: 'highest_qualification',
+        name: 'Highest Qualification',
+        field: 'highest_qualification',
+        sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80,
+        grouping: {
+          getter: '',
+          formatter: (g) => {
+            return `${g.value} <span style="color:green">(${g.count})</span>`
+          }
+        }
+      },
+      {
+        id: 'marital_status',
+        name: 'Marital Status',
+        field: 'marital_status',
+        sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80,
+        grouping: {
+          getter: '',
+          formatter: (g) => {
+            return `${g.value} <span style="color:green">(${g.count})</span>`
+          }
+        }
+      },
+      {
+        id: 'role_and_responsibilities',
+        name: 'Role & Responsibilities',
+        field: 'role_and_responsibilities',
+        sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 80,
+        grouping: {
+          getter: '',
           formatter: (g) => {
             return `${g.value} <span style="color:green">(${g.count})</span>`
           }
@@ -621,8 +671,52 @@ export class EmpDetailsReportComponent implements OnInit {
             obj['reference'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_reference_detail ?
               item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-';
           obj['emp_status'] = item.emp_status ? new CapitalizePipe().transform(item.emp_status) : '-';
-          obj['gender'] = item.emp_personal_detail && item.emp_personal_detail.gender ? item.emp_personal_detail.gender : '-';
+          obj['gender'] = item.emp_personal_detail && item.emp_personal_detail.gender ? new CapitalizePipe().transform(item.emp_personal_detail.gender) : '-';
           obj['dob'] = item.emp_personal_detail && item.emp_personal_detail.dob ? new DateformatPipe().transform(item.emp_personal_detail.dob, 'dd-MM-yyyy') : '-';
+          obj['marital_status'] = item.emp_personal_detail && item.emp_personal_detail.marital_status ? item.emp_personal_detail.marital_status : '-';
+          obj['role_and_responsibilities'] = item.emp_remark_detail && item.emp_remark_detail.role_and_responsibilities ? item.emp_remark_detail.role_and_responsibilities : '-';
+          if (item.emp_remark_detail && item.emp_remark_detail.education_detail) {
+            item.emp_remark_detail.education_detail.forEach((ele) => {
+              if (this.q_id < ele.qualification) this.q_id = ele.qualification
+            })
+          }
+          /**
+           * Get the Qualification name according to the Qualification id
+           */
+          switch (this.q_id) {
+            case '1':
+              this.q_name = 'Below Secondary'
+              break;
+            case '2':
+              this.q_name = 'Secondary'
+              break;
+            case '3':
+              this.q_name = 'Higher Secondary'
+              break;
+            case '4':
+              this.q_name = 'Graduate'
+              break;
+            case ' 5':
+              this.q_name = 'Post Graduate'
+              break;
+            case '6':
+              this.q_name = 'M. Phil'
+              break;
+            case '7':
+              this.q_name = 'Ph.D'
+              break;
+            case '8':
+              this.q_name = 'Post Doctoral'
+              break;
+
+            default:
+              this.q_name = '-'
+          }
+
+          obj['highest_qualification'] = this.q_name
+          this.q_id = 0
+          this.q_name = ''
+
           for (const item of this.documentArray) {
             for (const detz of item.files_data) {
               console.log("i am here", detz);
@@ -998,6 +1092,9 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['reference'] = '';
           obj3['gender'] = '';
           obj3['dob'] = '';
+          obj3['highest_qualification'] = '';
+          obj3['marital_status'] = '';
+          obj3['role_and_responsibilities'] = '';
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1054,6 +1151,9 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['reference'] = '';
           obj3['gender'] = '';
           obj3['dob'] = '';
+          obj3['highest_qualification'] = '';
+          obj3['marital_status'] = '';
+          obj3['role_and_responsibilities'] = '';
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -1349,6 +1449,9 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['reference'] = '';
           obj3['gender'] = '';
           obj3['dob'] = '';
+          obj3['highest_qualification'] = '';
+          obj3['marital_status'] = '';
+          obj3['role_and_responsibilities'] = '';
 
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
@@ -1437,6 +1540,9 @@ export class EmpDetailsReportComponent implements OnInit {
           obj3['reference'] = '';
           obj3['gender'] = '';
           obj3['dob'] = '';
+          obj3['highest_qualification'] = '';
+          obj3['marital_status'] = '';
+          obj3['role_and_responsibilities'] = '';
 
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
