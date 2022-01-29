@@ -1,3 +1,4 @@
+<!-- <mat-progress-bar mode="query" [hidden]="!isLoading"></mat-progress-bar> -->
 <form [formGroup]="reportFilterForm">
     <div class="row">
         <div class="col-2" *ngIf="schoolBranchArray.length > 0">
@@ -123,17 +124,17 @@
             <div class="text-right mr-auto">
                 <fieldset class="fieldset_invoice">
                     <legend><i>Tools</i></legend>
-                    <button class="btn btn-default text-uppercase padding-0" mat-raised-button matTooltip="Reset"
+                    <button matRipple class="btn btn-default text-uppercase padding-0 tools-btn color-blue" mat-raised-button matTooltip="Reset"
                         (click)="resetValues()">
                         <i class="fas fa-undo"></i> &nbsp;
                     </button>
                     &nbsp;
-                    <button *ngIf="reportType !=='day_book'" class="btn btn-default padding-0" mat-raised-button
+                    <button matRipple *ngIf="reportType !=='day_book'" class="btn btn-default padding-0 tools-btn color-blue" mat-raised-button
                         matTooltip="Filter" (click)="openFilterDialog()">
                         <i class="fas fa-filter"></i>
                     </button>
                     &nbsp;
-                    <button *ngIf="reportType !=='day_book'" class=" btn btn-default padding-0" mat-raised-button
+                    <button matRipple *ngIf="reportType !=='day_book'" class=" btn btn-default padding-0 tools-btn color-blue" mat-raised-button
                         matTooltip="Sort" (click)="openSort()">
                         <i class="fas fa-sort-amount-up"></i>
                     </button>
