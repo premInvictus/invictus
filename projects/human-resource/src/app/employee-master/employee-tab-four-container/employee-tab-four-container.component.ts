@@ -65,6 +65,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
   wingArray;
   categoryOneArray: any[] = [];
   disabledApiButton = false;
+  qualificationOrder: any;
   @ViewChild('editReference') editReference;
   constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
     private sisService: SisService) {
@@ -197,6 +198,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
       division: '',
       percentage: '',
       subject: '',
+      order: ''
     });
     this.Experience_Form = this.fbuild.group({
       organisation: '',
@@ -220,6 +222,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
   addPreviousEducations() {
     if (this.Education_Form.value.qualification && this.Education_Form.value.board && this.Education_Form.value.year
       && this.Education_Form.value.percentage && this.Education_Form.value.subject) {
+      this.Education_Form.patchValue({ order: this.qualificationOrder }) // Passing the order key to the form
       this.educationsArray.push(this.Education_Form.value);
       this.otherFlag = false;
       this.Education_Form.patchValue({
@@ -230,6 +233,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
         division: '',
         percentage: '',
         subject: '',
+        order: ''
       });
     } else {
       Object.keys(this.Education_Form.value).forEach(key => {
@@ -320,7 +324,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
       year: this.educationsArray[value].year,
       division: this.educationsArray[value].division,
       percentage: this.educationsArray[value].percentage,
-      subject: this.educationsArray[value].subject
+      subject: this.educationsArray[value].subject,
+      order: this.educationsArray[value].order
     });
   }
   updateEducation() {
@@ -581,5 +586,11 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
         this.otherFlag = false;
       }
     }
+  }
+
+  selectQualificationOrder(item) {
+    this.qualficationArray.forEach((e) => {
+      if (e.qlf_id == this.Education_Form.value.qualification) this.qualificationOrder = e.qlf_order;
+    })
   }
 } 
