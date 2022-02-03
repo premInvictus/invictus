@@ -32,6 +32,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	isTeacher = false;
 	assignmentForm: FormGroup;
 	disabledApiButton = false;
+	is_downloadable: any;
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -47,11 +48,12 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			sec_id: '',
 			sub_id: '',
 			topic_id: '',
-			assignment_desc: ''
+			assignment_desc: '',
+			is_downloadable: false
 		});
 	}
 	ngOnInit() {
-		console.log(this.data);
+		console.log('DATA', this.data);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		if (this.currentUser.role_id === '3') {
 			this.isTeacher = true;
@@ -67,10 +69,11 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.assignment_desc = this.data.assignment_desc;
 		this.assignmentForm.patchValue({
 			class_id: this.class_id,
-			sec_id:this.sec_id,
+			sec_id: this.sec_id,
 			sub_id: this.sub_id,
 			topic_id: this.topic_id,
-			assignment_desc: this.assignment_desc
+			assignment_desc: this.assignment_desc,
+			is_downloadable: this.is_downloadable
 		});
 		this.ckeConfig = {
 			allowedContent: true,
@@ -135,7 +138,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			if (this.sec_id) {
 				this.smartService.getSubjectByTeacherIdClassIdSectionId({
 					teacher_id: this.currentUser.login_id,
-					class_id: this.assignmentForm.value.class_id, 
+					class_id: this.assignmentForm.value.class_id,
 					sec_id: this.assignmentForm.value.sec_id
 				}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -149,7 +152,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				});
 			}
 		} else {
-			this.smartService.getSubjectsByClass({ class_id: this.assignmentForm.value.class_id,sub_timetable:1 }).subscribe((result: any) => {
+			this.smartService.getSubjectsByClass({ class_id: this.assignmentForm.value.class_id, sub_timetable: 1 }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 					if (this.sub_id) {
@@ -163,8 +166,10 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getTopicByClassIdSubjectId() {
 		this.topicArray = [];
-		this.smartService.getTopicByClassIdSubjectId({ class_id: this.assignmentForm.value.class_id,
-			 sub_id: this.assignmentForm.value.sub_id }).subscribe((result: any) => {
+		this.smartService.getTopicByClassIdSubjectId({
+			class_id: this.assignmentForm.value.class_id,
+			sub_id: this.assignmentForm.value.sub_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray = result.data;
 			} else {
@@ -239,7 +244,6 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.dialogRef.close();
 	}
 	addAttachment() {
-		console.log('addAttachment');
 		if (this.assignmentForm.value.class_id && this.assignmentForm.value.sec_id
 			&& this.assignmentForm.value.sub_id && this.assignmentForm.value.topic_id
 			&& this.assignmentForm.value.assignment_desc) {
@@ -251,6 +255,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			param.as_topic_id = this.assignmentForm.value.topic_id;
 			param.as_assignment_desc = this.assignmentForm.value.assignment_desc;
 			param.as_attachment = this.imageArray;
+			param.as_is_downloadable = this.assignmentForm.value.is_downloadable ? '1' : '0';
 			this.smartService.assignmentInsert(param).subscribe((result: any) => {
 				this.disabledApiButton = false;
 				if (result && result.status === 'ok') {
