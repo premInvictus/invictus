@@ -734,6 +734,9 @@ export class EmpDetailsReportComponent implements OnInit {
                 obj['latest_qualification'] = ele.qlf_name
               }
             })
+          } else {
+            obj['highest_qualification'] = '-'
+            obj['latest_qualification'] = '-'
           }
 
 
