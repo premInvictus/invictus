@@ -457,7 +457,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 24) {
 			this.getParameterTable(this);
-			this.displayedColumns = ['parameter', 'type', 'class1', 'action', 'modify']
+			this.displayedColumns = ['parameter', 'type', 'class', 'action', 'modify']
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 25) {
 			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'modify'];
