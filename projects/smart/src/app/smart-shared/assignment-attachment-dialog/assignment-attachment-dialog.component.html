@@ -75,7 +75,7 @@
             <ckeditor [config]="ckeConfig" formControlName="assignment_desc">{{assignment_desc}}</ckeditor>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="assignmentForm.value.assignment_desc">
           <div class="col-12">
             <mat-checkbox formControlName="is_downloadable" [checked]="is_downloadable">Allow Download
             </mat-checkbox>

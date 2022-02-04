@@ -73,7 +73,7 @@ export class AssignmentComponent implements OnInit {
 	setMinDate() {
 		this.toMin = this.paramForm.value.from;
 	}
-	previewDocuments(attachmentArray) {
+	previewDocuments(attachmentArray, allowDownload) {
 		const attArr: any[] = [];
 		if (attachmentArray && attachmentArray.length > 0) {
 			attachmentArray.forEach(element => {
@@ -86,7 +86,8 @@ export class AssignmentComponent implements OnInit {
 				width: '1000px',
 				data: {
 					index: '',
-					images: attArr
+					images: attArr,
+					allowDownload: allowDownload
 				}
 			});
 		}
@@ -125,26 +126,26 @@ export class AssignmentComponent implements OnInit {
 				this.assignmentArray = [];
 				tempcw = result.data;
 				let asid_arr = [];
-				let param1:any = {};
+				let param1: any = {};
 				param1.as_id = asid_arr;
 				param1.sas_login_id = this.currentUser.login_id;
 				await this.erpCommonService.getAssignmentSubmit(param1).toPromise().then((result1: any) => {
 					if (result1 && result1.status === 'ok') {
 						assignmentSubmit_arr = result1.data;
-						console.log('assignmentSubmit_arr',assignmentSubmit_arr);
-						
+						console.log('assignmentSubmit_arr', assignmentSubmit_arr);
+
 					}
 				});
 				if (tempcw.length > 0) {
-					console.log('assignmentSubmit_arr1',assignmentSubmit_arr);
+					console.log('assignmentSubmit_arr1', assignmentSubmit_arr);
 					tempcw.forEach(element => {
 						const findex = assignmentSubmit_arr.findIndex(e => e.as_id == element.as_id);
-						if(findex != -1){
+						if (findex != -1) {
 							element['sas_attachment'] = assignmentSubmit_arr[findex].as_attachment;
 							element['sas_remarks'] = assignmentSubmit_arr[findex].sas_remarks;
 							element['sas_action_status'] = assignmentSubmit_arr[findex].sas_action_status;
 						} else {
-							element['sas_attachment']=[];
+							element['sas_attachment'] = [];
 						}
 					});
 				}
@@ -155,7 +156,7 @@ export class AssignmentComponent implements OnInit {
 						asid_arr.push(element.as_id);
 					});
 				}
-				
+
 				console.log(dateSet);
 				dateSet.forEach(item => {
 					this.assignmentArray.push({
@@ -204,7 +205,7 @@ export class AssignmentComponent implements OnInit {
 		});
 	}
 	submit(item) {
-		console.log('item',item);
+		console.log('item', item);
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
 			width: '950px',
 			height: '500px',
@@ -214,7 +215,7 @@ export class AssignmentComponent implements OnInit {
 				edit: false,
 				attachments: [],
 				as_id: item.as_id,
-				login_id : this.currentUser.login_id,
+				login_id: this.currentUser.login_id,
 				assignment_desc: ''
 			}
 		});
