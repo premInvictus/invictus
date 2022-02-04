@@ -434,8 +434,8 @@
                         <mat-select placeholder="Hostel Bed" [disabled]="viewOnly" formControlName="hs_bed" required
                             (selectionChange)="isAllocatedToStudent()">
                             <mat-option value="">Please Select</mat-option>
-                            <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
-                                {{item.hc_name}}
+                            <mat-option *ngFor="let item of bedStatusArray" [value]="item.hc_id">
+                                <span [class]="item.hc_status" >{{item.hc_name}}</span>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

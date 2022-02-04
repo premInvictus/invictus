@@ -25,6 +25,7 @@ import { DeletedReceiptReportComponent } from './reports2/deleted-receipt-report
 import { SummarizedFeeReviewReportComponent } from './reports2/summarized-fee-review-report/summarized-fee-review-report.component';
 import { WalletCollectionComponent } from './reports2/wallet-collection/wallet-collection.component';
 import { HostelReportComponent } from './reports2/hostel-report/hostel-report.component';
+import { HostelOccupancyReportComponent } from './reports2/hostel-occupancy-report/hostel-occupancy-report.component';
 import { PaymentOnlineSettlementReportComponent } from './reports2/payment-online-settlement-report/payment-online-settlement-report.component';
 import { FeeOutstandingSummaryReportComponent } from './reports2/fee-outstanding-summary-report/fee-outstanding-summary-report.component';
 import {CancelReceiptReportComponent} from './reports2/app-cancel-receipt-report/app-cancel-receipt-report.component';
@@ -42,7 +43,7 @@ import {CancelReceiptReportComponent} from './reports2/app-cancel-receipt-report
 		CollectionReportComponent, OutstandingReportComponent, FeeLedgerReportComponent,
 		DeletedFeetransReportComponent, FeeadjReportComponent, FeeconReportComponent,
 		MissingFeeinvReportComponent, FeestrucReportComponent, ChequeclearanceReportComponent,
-		SecurityDepositReportComponent, TransportReportComponent,DropoutReportComponent,DeletedReceiptReportComponent,CancelReceiptReportComponent,SummarizedFeeReviewReportComponent, WalletCollectionComponent, HostelReportComponent, PaymentOnlineSettlementReportComponent, FeeOutstandingSummaryReportComponent],
+		SecurityDepositReportComponent, TransportReportComponent,DropoutReportComponent,DeletedReceiptReportComponent,CancelReceiptReportComponent,SummarizedFeeReviewReportComponent, WalletCollectionComponent, HostelReportComponent, HostelOccupancyReportComponent, PaymentOnlineSettlementReportComponent, FeeOutstandingSummaryReportComponent],
 	entryComponents: [ReportFilterComponent, ReportSortComponent],
 	providers: [TranslateService],
 })

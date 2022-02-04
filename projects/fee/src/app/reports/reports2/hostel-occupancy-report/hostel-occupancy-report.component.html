@@ -1,0 +1,83 @@
+<form [formGroup]="reportFilterForm" class="mb-2">
+  <div class="row">
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Hostel Building</mat-label>
+        <mat-select placeholder="Hostel Building" formControlName="hs_building"
+            (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()">
+            <mat-option value="0" disabled>Please Select</mat-option>
+            <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
+                {{item.hc_name}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Hostel Room</mat-label>
+        <mat-select placeholder="Hostel Room" formControlName="hs_room" multiple>
+            <mat-option value="0" disabled>Please Select</mat-option>
+            <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
+                {{item.hc_name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    </div>
+    <div *ngIf="filterFlag" class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
+          (blur)="getFromDate($event.target.value)" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <!-- <div *ngIf="filterFlag" class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
+          (blur)="getToDate($event.target.value)" />
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </div> -->
+    <div style="margin-bottom: 10px !important" class="col-4">
+      <div class="margin-top-10">
+        <button class="btn-success text-uppercase" mat-raised-button
+          (click)="getHostelBedReport(reportFilterForm.value)">
+          <i class="fa fa-search" aria-hidden="true"></i> generate
+        </button>
+        &nbsp;
+        <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+          <i class="fa fa-filter" aria-hidden="true"></i> filter
+        </button>
+        <button class="sort-bt" mat-raised-button (click)="openSort()">
+          <i class="fa fa-sort-amount-desc" aria-hidden="true"></i> sort
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container" *ngIf="isLoading">
+  <p class="text-center mt-5">
+    <img src="assets/1484.gif" alt="loading">
+    <!-- Loading..... -->
+  </p>
+  <p class="text-center mb-5">
+    {{loader_status}}
+  </p>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0 && !isLoading">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0  && !isLoading">
+  <div class="mb-5 text-center margin-top-20" style="margin-bottom:20px !important">
+    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+    <br><br>
+    No Records Found
+  </div>
+</div>
