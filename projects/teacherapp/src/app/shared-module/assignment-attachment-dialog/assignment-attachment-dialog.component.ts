@@ -29,6 +29,8 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	ckeConfig: any = {};
 	currentUser: any = {};
 	isTeacher = false;
+	hasDescData: any = true;
+	is_downloadable: any = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
@@ -40,7 +42,6 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		if (this.currentUser.role_id === '3') {
 			this.isTeacher = true;
@@ -53,6 +54,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.sub_id = this.data.sub_id;
 		this.topic_id = this.data.topic_id;
 		this.assignment_desc = this.data.assignment_desc;
+		this.is_downloadable = this.is_downloadable;
 		this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
@@ -87,7 +89,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				}
 			});
 		} else {
-			this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+			this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
 					if (this.class_id) {
@@ -120,6 +122,12 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				}
 			});
 		}
+	}
+	toggleAccess(event): void {
+		this.is_downloadable = event.checked ? true : false;
+	}
+	handleChange(event): void {
+		this.hasDescData = event === '' ? true : false;
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
@@ -205,6 +213,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	resetAttachment() {
 		this.imageArray = [];
 		this.assignment_desc = '';
+		this.is_downloadable = false;
 	}
 
 	submitAttachment() {
@@ -214,7 +223,6 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.dialogRef.close();
 	}
 	addAttachment() {
-		console.log('addAttachment');
 		if (this.class_id && this.sec_id && this.sub_id && this.topic_id && this.assignment_desc) {
 			const param: any = {};
 			param.as_class_id = this.class_id;
@@ -223,6 +231,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			param.as_topic_id = this.topic_id;
 			param.as_assignment_desc = this.assignment_desc;
 			param.as_attachment = this.imageArray;
+			param.as_is_downloadable = this.is_downloadable ? '1' : '0';
 			this.smartService.assignmentInsert(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

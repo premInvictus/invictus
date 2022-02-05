@@ -14,8 +14,9 @@
         <div class="col-6">
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Class</mat-label>
-            <mat-select [disabled]="!editFlag" [(value)]="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass()" required>
-                <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+            <mat-select [disabled]="!editFlag" [(value)]="class_id"
+              (selectionChange)="getSectionsByClass();getSubjectsByClass()" required>
+              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -23,7 +24,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Section</mat-label>
             <mat-select [disabled]="!editFlag" [(value)]="sec_id" (selectionChange)="getSubjectsByClass()">
-                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+              <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -43,7 +44,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Subject</mat-label>
             <mat-select [disabled]="!editFlag" [(value)]="sub_id" (selectionChange)="getTopicByClassIdSubjectId()">
-                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+              <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -53,14 +54,16 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Topic</mat-label>
             <mat-select [disabled]="!editFlag" [(value)]="topic_id">
-                <mat-option *ngFor="let item of topicArray" [value]="item.topic_id"><span [innerHTML]="item.topic_name"></span></mat-option>
+              <mat-option *ngFor="let item of topicArray" [value]="item.topic_id"><span
+                  [innerHTML]="item.topic_name"></span></mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment" style="display: none">
+        <div class="col-12" [hidden]="hasDescData">
+          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment"
+            style="display: none">
           <label class="cursor-pointer btn-primary-100 assignment-btn" for="addattachment">Add Attachment</label>
         </div>
       </div>
@@ -73,7 +76,14 @@
             <mat-label>Assignment</mat-label>            
             <textarea rows="9" matInput [disabled]="!editFlag" [(value)]="assignment_desc">{{assignment_desc}}</textarea>
           </mat-form-field> -->
-          <ckeditor [config]="ckeConfig" [(ngModel)]="assignment_desc">{{assignment_desc}}</ckeditor>
+          <ckeditor [config]="ckeConfig" (change)="handleChange($event)" [(ngModel)]="assignment_desc">
+            {{assignment_desc}}
+          </ckeditor>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12" [hidden]="hasDescData">
+          <mat-checkbox (change)="toggleAccess($event)">Allow Download</mat-checkbox>
         </div>
       </div>
 
@@ -81,33 +91,35 @@
   </div>
   <div class="row">
     <ng-container *ngFor="let img of this.imageArray;let i = index">
-          <div class="col-1 col-doc-img-3 custom-col-15" >
-              <div class="remove-col-padding" >
-                  <div>
-                      <div>
-                          <div>
-                              <div style="float:right;">
-                                  <button  mat-button class="upload-document-delete-btn"
-                                      (click)="deleteFile(i)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>
-                              </div>
-                              <div class="inline-flex ">
-                                      <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
-                                      <img  class="btn-doc-upload-preview margin-left-10"
-                                      [src]="img.file_url">{{img.file_ulr}}<br>
-                              </div>
-                              <br>
-                          </div>
-                      </div>
-                  </div>
+      <div class="col-1 col-doc-img-3 custom-col-15">
+        <div class="remove-col-padding">
+          <div>
+            <div>
+              <div>
+                <div style="float:right;">
+                  <button mat-button class="upload-document-delete-btn" (click)="deleteFile(i)">
+                    <mat-icon class="btn-upload-icon">delete</mat-icon>
+                  </button>
+                </div>
+                <div class="inline-flex ">
+                  <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
+                  <img class="btn-doc-upload-preview margin-left-10" [src]="img.file_url">{{img.file_ulr}}<br>
+                </div>
+                <br>
               </div>
+            </div>
           </div>
-      </ng-container>
+        </div>
+      </div>
+    </ng-container>
   </div>
   <div class="row margin-top-20" style="margin-bottom: 20px;">
     <div class="col-12 text-center">
-      <button *ngIf="!editFlag" mat-raised-button class="btn-success-green" (click)="submitAttachment()" >Submit</button>
-      <button *ngIf="!editFlag" mat-raised-button class="btn-reset margin-left-10" (click)="resetAttachment()" >Reset</button>
-      <button *ngIf="editFlag" mat-raised-button class="btn-success-green" (click)="addAttachment()" >Submit</button>
-      <button *ngIf="editFlag" mat-raised-button class="btn-reset margin-left-10" (click)="resetAddAttachment()" >Reset</button>
+      <button *ngIf="!editFlag" mat-raised-button class="btn-success-green" (click)="submitAttachment()">Submit</button>
+      <button *ngIf="!editFlag" mat-raised-button class="btn-reset margin-left-10"
+        (click)="resetAttachment()">Reset</button>
+      <button *ngIf="editFlag" mat-raised-button class="btn-success-green" (click)="addAttachment()">Submit</button>
+      <button *ngIf="editFlag" mat-raised-button class="btn-reset margin-left-10"
+        (click)="resetAddAttachment()">Reset</button>
     </div>
   </div>
