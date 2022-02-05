@@ -591,7 +591,6 @@ export class HostelOccupancyReportComponent implements OnInit {
 							repoArray[Number(index)]['hsl_to'] : '-';
 						if(repoArray[Number(index)]['hs_login_id'] ){
 							obj['bed_status'] = "Occupied";
-							$($('.grid-canvas').children()[Number(index)]).css('background-color','red');
 						}else{
 							obj['bed_status'] = "Un-Occupied"
 						}
