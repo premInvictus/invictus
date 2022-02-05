@@ -64,6 +64,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	userConcessionForm: FormGroup;
 	indexUpdate = -1;
 	currentUser: any = {};
+	bedStatusArray: any[];
+	tempObj: {};
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -261,9 +263,36 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	getBed() {
 		this.bedArray = [];
+		this.bedStatusArray = [];
+		this.tempObj = {};
 		this.feeService.getHostelConfigType({ hc_type: 'bed', hc_status: '1', hm_building: this.accountsForm.value.hs_building, hm_room: this.accountsForm.value.hs_room }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.bedArray = result.data;
+				this.bedArray.forEach((e:any)=>{
+					// this.tempObj = {};
+					this.feeService.isAllocatedToStudent({
+						hs_building: this.accountsForm.value.hs_building,
+						hs_room: this.accountsForm.value.hs_room,
+						hs_bed: e.hc_id,
+					}).subscribe((result: any) => {
+						if (result.status === 'ok') {							
+							this.bedStatusArray.push({
+								"hc_id": e.hc_id,
+								"hc_name": e.hc_name,
+								"hc_status": "bg-green"
+							});
+						} else {
+							this.bedStatusArray.push({
+								"hc_id": e.hc_id,
+								"hc_name": e.hc_name,
+								"hc_status": "bg-red"
+							});
+						}
+					});
+					// this.bedStatusArray.push(this.tempObj);
+				});
+				console.log("this bed status array >>>>>>>>>>>>>>>>>>>", this.bedStatusArray);
+				
 			}
 		});
 	}

@@ -26,3 +26,22 @@ table.custom-table th {
 .example-radio-button {
     margin: 5px;
   }
+  .bg-green{
+        background: #81ed81;
+        display: inline-block;
+        width: 100%;
+        color: #056205 !important;
+        font-size: 18px;
+        padding: 10px 15px;
+  }
+  .bg-green .mat-option-text{
+    width: 100%;
+  }
+  .bg-red{      
+    background: #ed4c4c;
+    display: inline-block;
+    width: 100%;
+    color: #380101 !important;
+    font-size: 18px;
+    padding: 10px 15px;
+  }
