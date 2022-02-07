@@ -1,6 +1,2 @@
-<app-image-viewer
-  [images]="finalImageArray" 
-  [currentImageIndex] = "data.index"
-  [idContainer]="'idOnHTML'" 
-  [loadOnInit]="true" 
-  [download]="false"></app-image-viewer>
+<app-image-viewer [images]="finalImageArray" [currentImageIndex]="data.index" [idContainer]="'idOnHTML'"
+  [loadOnInit]="true" [download]="false" [downloadable]="data.allowDownload"></app-image-viewer>
