@@ -717,7 +717,7 @@ export class EmpDetailsReportComponent implements OnInit {
           obj['emp_status'] = item.emp_status ? new CapitalizePipe().transform(item.emp_status) : '-';
           obj['gender'] = item.emp_personal_detail && item.emp_personal_detail.gender ? new CapitalizePipe().transform(item.emp_personal_detail.gender) : '-';
           obj['dob'] = item.emp_personal_detail && item.emp_personal_detail.dob ? new DateformatPipe().transform(item.emp_personal_detail.dob, 'dd-MM-yyyy') : '-';
-          obj['marital_status'] = item.emp_personal_detail && item.emp_personal_detail.marital_status ? item.emp_personal_detail.marital_status : '-';
+          obj['marital_status'] = item.emp_personal_detail && item.emp_personal_detail.marital_status ? new CapitalizePipe().transform(item.emp_personal_detail.marital_status) : '-';
           obj['role_and_responsibilities'] = item.emp_remark_detail && item.emp_remark_detail.role_and_responsibilities ? item.emp_remark_detail.role_and_responsibilities : '-';
 
           if (item.emp_remark_detail && item.emp_remark_detail.education_detail[0]) {
