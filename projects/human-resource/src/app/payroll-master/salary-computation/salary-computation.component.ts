@@ -185,11 +185,11 @@ export class SalaryComputationComponent implements OnInit {
 		this.getChartsOfAccount();
 
 		// For Edit Access control
-		setTimeout(() => {
-			if (this.isExistUserAccessMenu('965')) {
-				this.isReadonly = true;
-			}
-		}, 9000)
+		// setTimeout(() => {
+		// if (this.isExistUserAccessMenu('965')) {
+		// 	this.isReadonly = true;
+		// }
+		// }, 9000)
 	}
 
 	getChartsOfAccount() {
