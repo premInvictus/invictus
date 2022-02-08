@@ -2,6 +2,17 @@
   <div class="row">
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Bed Status</mat-label>
+        <mat-select placeholder="Hostel Building" formControlName="hs_status">
+            <mat-option value="0" disabled>Please Select</mat-option>
+            <mat-option value="0"> All </mat-option>
+            <mat-option value="1"> Occupied</mat-option>
+            <mat-option value="2"> Un-Occupied</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
         <mat-label>Hostel Building</mat-label>
         <mat-select placeholder="Hostel Building" formControlName="hs_building"
             (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()">
@@ -52,7 +63,7 @@
           <i class="fa fa-filter" aria-hidden="true"></i> filter
         </button>
         <button class="sort-bt" mat-raised-button (click)="openSort()">
-          <i class="fa fa-sort-amount-desc" aria-hidden="true"></i> sort
+          <i class="fas fa-sort-amount-up-alt"></i> sort
         </button>
       </div>
     </div>
