@@ -202,7 +202,7 @@ export class Reports2Component implements OnInit {
 			report_id: '24',
 			report_name: 'Hostel Occupancy Report',
 			report_image:
-				'/assets/images/Fee Reports/deleted_fee_transaction.png',
+				'/assets/images/Fee Reports/occupied-theatre-seat-100.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -389,7 +389,7 @@ export class Reports2Component implements OnInit {
 			// return true;
 		}
 		if (actionT === '24') {
-			return this.CommonAPIService.isExistUserAccessMenu('806');
+			return this.CommonAPIService.isExistUserAccessMenu('969');
 			// return true;
 		}
 		if (actionT === '21') {
