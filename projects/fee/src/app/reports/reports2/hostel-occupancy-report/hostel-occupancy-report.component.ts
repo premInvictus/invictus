@@ -604,11 +604,11 @@ export class HostelOccupancyReportComponent implements OnInit {
 					this.tableFlag = true;
 					this.isLoading = false;
 					if (this.dataset.length <= 5) {
-						this.gridHeight = 300;
-					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 						this.gridHeight = 400;
+					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+						this.gridHeight = 500;
 					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-						this.gridHeight = 550;
+						this.gridHeight = 650;
 					} else if (this.dataset.length > 20) {
 						this.gridHeight = 750;
 					}

@@ -131,6 +131,7 @@ export class FeeLedgerComponent implements OnInit {
 
 	};
 	isLoading = true;
+	loader_status = "";
 	spans = [];
 	showMore = false;
 	currentShowMoreId = '';
@@ -159,6 +160,7 @@ export class FeeLedgerComponent implements OnInit {
 		this.recordArray = [];
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+		this.loader_status = "Preparing Data.....";
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordId = data.adm_no;
@@ -1062,6 +1064,7 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getFeeLedger(login_id) {
+		this.isLoading = true;
 		this.selection.clear();
 		this.resetActionFlag();
 		let element: any = {};
@@ -1143,7 +1146,7 @@ export class FeeLedgerComponent implements OnInit {
 						flgr_payment_mode: item.flgr_payment_mode ? item.flgr_payment_mode : ''
 					};
 
-					console.log('element--', element);
+					console.log('element-->>>>>>>', element);
 					// console.log('dupInvoiceArr--',dupInvoiceArr);
 					// console.log('element.invoiceno--',element.invoiceno);
 					// console.log('dupInvoiceArr.indexOf(element.invoiceno)-',dupInvoiceArr.indexOf(element.invoiceno));
@@ -1187,7 +1190,7 @@ export class FeeLedgerComponent implements OnInit {
 					pos++;
 
 
-					//console.log(this.FEE_LEDGER_ELEMENT);
+					console.log("Ledger balance >>>>>>>>>>>",this.FEE_LEDGER_ELEMENT);
 				}
 				this.isLoading = false;
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -1206,6 +1209,11 @@ export class FeeLedgerComponent implements OnInit {
 				this.cacheSpan('fine', d => d.fine);
 				this.cacheSpan('netpayableamount', d => d.netpayableamount);
 				this.cacheSpan('balance', d => d.balance);
+				this.cacheSpan('reciept', d => d.reciept);
+				this.cacheSpan('remarks', d => d.remarks);
+				this.cacheSpan('mop', d => d.mop);
+				this.cacheSpan('receiptno', d => d.receiptno);
+				this.cacheSpan('receiptdate', d => d.receiptdate);
 
 
 			} else {
@@ -1239,7 +1247,7 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getRowSpan(col, index) {
-		//console.log('col '+col, 'index'+index, this.spans);
+		// console.log('col >>>>>>'+col, 'index'+index, this.spans[index][col]);
 		return this.spans[index] && this.spans[index][col];
 	}
 	cacheSpan(key, accessor) {
