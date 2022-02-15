@@ -205,16 +205,16 @@
                               <legend><i>Tools</i></legend>
                               <button
                                  *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
-                                 mat-raised-button class=" recalulate-invoice-btn btn-spacer"
-                                 (click)="openRecalculateDialog({})">Recalculate</button>
+                                 mat-raised-button class="custom-margin-top-10"  matTooltip="Recalculate"
+                                 (click)="openRecalculateDialog({})"><i class="fas fa-calculator"></i> </button>
                               <button
                                  *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
-                                 mat-raised-button class=" btn-danger btn-spacer"
-                                 (click)="openDeleteDialog(fetchInvId())">Delete</button>
+                                 mat-raised-button class="custom-margin-top-10 btn-spacer"  matTooltip="Delete"
+                                 (click)="openDeleteDialog(fetchInvId())"><i class="fas fa-light fa-trash"></i> </button>
                               <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button> -->
                               <button mat-raised-button matTooltip="Reset" style="margin-left: 10px"
-                                 class="custom-margin-top-10" (click)="resetFilter()"
+                                 class="btn-spacer custom-margin-top-10" (click)="resetFilter()"
                                  [hidden]="(searchparam.length > 0)"><i class="fas fa-redo-alt"></i> &nbsp;</button>
                               <button mat-raised-button matTooltip="Filter" class="btn-spacer"
                                  (click)="openSearchDialog({})"><i class="fas fa-filter"></i></button>

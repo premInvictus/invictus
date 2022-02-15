@@ -626,9 +626,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	hostel($event) {
 		if ($event.checked) {
+			this.accountsForm.patchValue({
+				accd_is_hostel_terminate: 'Y',
+			});
 			this.hostelTerminateFlag = true;
 			this.hostelStatus = 'Terminate Hostel Facility';
 		} else {
+			this.accountsForm.patchValue({
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
 			this.hostelTerminateFlag = false;
 			this.hostelStatus = 'Terminate Hostel Facility';
 		}
