@@ -49,6 +49,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	bnk_charge = 0;
 	bnk_charge_per = 0;
 	readonlymodeforinvoice = false;
+	processingPayment: boolean = false;
 	footerRecord: any;
 	constructor(
 		private sisService: SisService,
@@ -642,6 +643,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 	}
 	submit() {
+		this.processingPayment = true;
 		const datePipe = new DatePipe('en-in');
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -758,6 +760,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 						this.btnDisable = false;
 						if (result && result.status === 'ok' && !((this.selectedMode === '1' && this.feeTransactionForm.value.ftr_pay_id == '7'))) {
+							this.processingPayment = false;
 							this.common.showSuccessErrorMessage(result.messsage, 'success');
 							this.reset();
 							this.getStudentInformation(this.lastRecordId);
@@ -815,6 +818,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				console.log('inputjson-->', inputjson);
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
+					this.processingPayment = false;
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.messsage, 'success');
 						this.reset();
@@ -873,6 +877,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
+						this.processingPayment = false;
 						this.common.showSuccessErrorMessage(result.messsage, 'success');
 						this.reset();
 						this.getStudentInformation(this.lastRecordId);
