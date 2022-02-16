@@ -1217,6 +1217,7 @@ export class FeeLedgerComponent implements OnInit {
 
 
 			} else {
+				this.isLoading = false;
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
