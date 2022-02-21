@@ -159,7 +159,7 @@
                               <ng-container *ngFor="let item of invoiceArray;let i=index" mat-stroked-button
                                 class="custom-entry-button margin-left-10 invoicefrm">
 
-                                <form [formGroup]="invoiceAmtBulkForm.controls[i]">
+                                <form *ngIf="invoiceAmtBulkForm.controls" [formGroup]="invoiceAmtBulkForm.controls[i]">
                                   <div class="row invoicefrmrow"
                                     [ngStyle]="{'background-color':invoiceAmtBulkForm.value[i].color}">
                                     <div style="width:15.1%;padding-top:10px;" class="text-center">
