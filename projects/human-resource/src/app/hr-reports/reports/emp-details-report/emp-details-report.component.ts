@@ -720,7 +720,7 @@ export class EmpDetailsReportComponent implements OnInit {
           obj['marital_status'] = item.emp_personal_detail && item.emp_personal_detail.marital_status ? new CapitalizePipe().transform(item.emp_personal_detail.marital_status) : '-';
           obj['role_and_responsibilities'] = item.emp_remark_detail && item.emp_remark_detail.role_and_responsibilities ? item.emp_remark_detail.role_and_responsibilities : '-';
 
-          if (item.emp_remark_detail && item.emp_remark_detail.education_detail[0]) {
+          if (item.emp_remark_detail && item.emp_remark_detail.education_detail && item.emp_remark_detail.education_detail[0]) {
             let qlf_highest_order = item.emp_remark_detail.education_detail[0]['order']
             let qlf_latest_id = this.temp_item.emp_remark_detail.education_detail[0]['qualification']
 
