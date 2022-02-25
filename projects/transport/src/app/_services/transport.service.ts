@@ -76,13 +76,25 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/route-management/insert', value);
 	}
+	insertRouteStoppageMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/route-stoppage-mapping/insert', value);
+	}
 	updateRouteManagement(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/route-management/update', value);
 	}
+	updateRouteStoppageMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/route-stoppage-mapping/update', value);
+	}
 	getAllRouteManagement(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/route-management/getAll', value);
+	}
+	getAllRouteStoppageMapping(value) {
+		this.service.startLoading()
+		return this.http.post(environment.apiTransportUrl + '/route-stoppage-mapping/getAll', value);
 	}
 	getRouteManagement(value) {
 		this.service.startLoading();
@@ -196,8 +208,16 @@ export class TransportService {
 		// this.service.startLoading();
 		return this.http.post(environment.apiTransportUrl + '/startstop-trip/getGoogleMapsAPIKey', value);
 	}
-	reverseGeoCoding(value,key){
-		let params = new HttpParams().set("latlng",value).set("key", key); //Create new HttpParams
-		return this.http.get(environment.reverseGeoCoding, {params: params});
+	reverseGeoCoding(value, key) {
+		let params = new HttpParams().set("latlng", value).set("key", key); //Create new HttpParams
+		return this.http.get(environment.reverseGeoCoding, { params: params });
+	}
+	getSlabs(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportslab/getTransportSlab', value);
+	}
+	saveStoppage(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/insertTransportStoppages', value);
 	}
 }

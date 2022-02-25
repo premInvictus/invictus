@@ -1,4 +1,4 @@
-<div >
+<div>
   <div class="row">
     <div class="col-12">
       <mat-card class="card-content__container card-height-830 card-height-835">
@@ -11,16 +11,16 @@
               <form [formGroup]="transportStopagges" autocomplete="off">
                 <div class="row">
                   <div class="col-12 remove-col-padding margin-top-25">
-                      <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>Transport Stop Name</mat-label>
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Transport Stop Name</mat-label>
                       <input matInput placeholder="Transport Stop Name" formControlName="transport_stop_name" required>
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12 remove-col-padding">
-                      <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>Distance From School(in KMs)</mat-label>
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Distance From School(in KMs)</mat-label>
                       <input matInput placeholder="Distance From School(in KMs)"
                         formControlName="transport_distance_from_school">
                     </mat-form-field>
@@ -29,8 +29,8 @@
                 </div>
                 <div class="row">
                   <div class="col-12 remove-col-padding">
-                      <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>Select Slab</mat-label>
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Select Slab</mat-label>
                       <mat-select placeholder="Select Slab" formControlName="transport_slab" required>
                         <mat-option *ngFor="let item of slabsData; let i = index;" [value]="item?.ts_id">
                           {{item?.ts_name}}
@@ -39,12 +39,28 @@
                     </mat-form-field>
                   </div>
                 </div>
-
+                <div class="row">
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Latitude</mat-label>
+                      <input matInput placeholder="Latitude" formControlName="transport_latitude">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Longitude</mat-label>
+                      <input matInput placeholder="Longitude" formControlName="transport_longitude">
+                    </mat-form-field>
+                  </div>
+                </div>
                 <div class="text-center margin-top-25">
                   <div class="inline-flex">
-                  <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()" [disabled]="btnDisable">Submit</button>
-                  <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
-                    (click)="resetForm()">Reset</button>
+                    <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()"
+                      [disabled]="btnDisable">Submit</button>
+                    <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
+                      (click)="resetForm()">Reset</button>
                   </div>
                 </div>
               </form>
@@ -56,9 +72,10 @@
             <div class="col-9 fee-custom-col-64">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <div >
+                  <div>
                     <mat-form-field>
-                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                        placeholder="Filter">
                       <mat-icon matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
@@ -85,6 +102,16 @@
                         <td mat-cell *matCellDef="let element"> {{element.transport_slab}} </td>
                       </ng-container>
 
+                      <ng-container matColumnDef="transport_latitude">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </th>
+                        <td mat-cell *matCellDef="let element"> {{element.transport_latitude}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="transport_longitude">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </th>
+                        <td mat-cell *matCellDef="let element"> {{element.transport_longitude}} </td>
+                      </ng-container>
+
                       <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                         <!-- <td mat-cell *matCellDef="let element"> {{element.status}} </td> -->
@@ -107,11 +134,12 @@
                       <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
                     </table>
                     <table class="table-100 text-center" style="margin-top:5px;">
-                        <tr *ngIf="stoppageRoutesData.length == 0">
-                          <td colspan="6">No Record Found</td>
-                        </tr>
-                      </table>
-                    <mat-paginator #paginator  [hidden]="!(stoppageRoutesData.length>0)"  [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                      <tr *ngIf="stoppageRoutesData.length == 0">
+                        <td colspan="6">No Record Found</td>
+                      </tr>
+                    </table>
+                    <mat-paginator #paginator [hidden]="!(stoppageRoutesData.length>0)" [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
                     </mat-paginator>
                   </div>
 
@@ -125,4 +153,4 @@
   </div>
 </div>
 <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
-  </app-delete-modal>
+</app-delete-modal>
