@@ -1,32 +1,55 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, TransportService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Element } from './element.model';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe } from '@angular/common';
+import { e, t } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-route-management',
   templateUrl: './route-management.component.html',
   styleUrls: ['./route-management.component.scss']
 })
-export class RouteManagementComponent implements OnInit {
 
-  displayedColumns: string[] = ['route_no', 'route_name', 'tv_id', 'start_time','end_time', 'stoppages','status', 'modify'];
+export class RouteManagementComponent implements OnInit, AfterViewInit {
+
+  displayedColumns: string[] = ['route_no', 'route_name', 'tv_id', 'start_time', 'end_time', 'stoppages', 'status', 'modify'];
+  displayedColumns2: string[] = [
+    'counter',
+    'stop_name',
+    'distance_from_school',
+    'transport_slab',
+    'transport_latitude',
+    'transport_longitude',
+    'status',
+    'action'
+  ];
+  @ViewChild(MatSort) sort: MatSort;
+  // @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('deleteModal') deleteModal;
   subExamForm: FormGroup;
+  transportStopagges: FormGroup;
   currentUser: any;
   session: any;
   disableApiCall = false;
   ckeConfig: any = {};
   routemanagementArray: any[] = [];
-  ELEMENT_DATA: Element[] = [];
+  stoppageRoutesData: any[] = [];
+  slabsData: any[] = [];
+  TRANSPORT_STOPPAGE_ELEMENT_DATA: any[] = [];
+  stoppageStatus = '0';
+  current_stop_id = 0;
+  currentIndex = 0;
+  selectedSlabData: any[] = [];
+  TRANSPORT_ROUTE_ELEMENT_DATA: Element[] = [];
   UpdateFlag = false;
   viewOnly = true;
   param: any = {};
-  subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+  stoppageDataSource = new MatTableDataSource<Element>(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+  subExamDataSource = new MatTableDataSource<Element>(this.TRANSPORT_ROUTE_ELEMENT_DATA);
   multipleFileArray: any[] = [];
   imageArray: any[] = [];
   finalDocumentArray: any[] = [];
@@ -38,6 +61,13 @@ export class RouteManagementComponent implements OnInit {
   stoppage_arr = [];
   route_arr = [];
   route_no_arr = ['petrol', 'diesel', 'cng'];
+  selected_options: any = [];
+  selected_stoppage_arr: any = [];
+  currentTab: any = 0;
+  btnDisable = false;
+  routeStoppageMappingArray: any;
+  curr_user: any
+  curr_session: any
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -50,6 +80,13 @@ export class RouteManagementComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
+
+  // For Stoppage Component
+  ngAfterViewInit() {
+    // this.stoppageDataSource.paginator = this.paginator;
+    this.stoppageDataSource.sort = this.sort;
+  }
+
   ngOnInit() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildForm();
@@ -58,6 +95,10 @@ export class RouteManagementComponent implements OnInit {
     this.getUser();
     this.getRoutes();
     this.getStoppages();
+    this.getStoppages2();
+    this.selected_stoppage_arr = [];
+    this.curr_user = JSON.parse(localStorage.getItem("currentUser"));
+    this.curr_session = JSON.parse(localStorage.getItem("session"))
   }
   buildForm() {
     this.subExamForm = this.fbuild.group({
@@ -70,8 +111,14 @@ export class RouteManagementComponent implements OnInit {
       'start_time': '',
       'end_time': '',
       'stoppages': [],
-      'status': ''
+      'status': '',
+      'pick_time': '',
+      'drop_time': ''
     });
+
+    // For Stoppage Component
+    this.prepareForm()
+    this.getSlabs();
   }
   // delete dialog open modal function
   openDeleteModal(value) {
@@ -90,11 +137,19 @@ export class RouteManagementComponent implements OnInit {
       'start_time': '',
       'end_time': '',
       'stoppages': [],
-      'status': ''
+      'status': '',
+      'pick_time': '',
+      'drop_time': ''
     });
     this.imageArray = [];
     this.UpdateFlag = false;
     this.viewOnly = true;
+    this.selected_stoppage_arr = [];
+
+    // For Stoppage Component
+    this.btnDisable = false;
+    this.stoppageStatus = '0';
+    this.prepareForm()
   }
   submit() {
     if (this.subExamForm.valid) {
@@ -103,7 +158,7 @@ export class RouteManagementComponent implements OnInit {
       inputJson.status = '1';
       inputJson.created_by = { login_id: this.currentUser.login_id, full_name: this.currentUser.full_name };
       const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
-      if(selectedRoute){
+      if (selectedRoute) {
         inputJson.route_no = selectedRoute.tr_route_no;
         inputJson.route_name = selectedRoute.tr_route_name;
       }
@@ -132,14 +187,14 @@ export class RouteManagementComponent implements OnInit {
   }
   getUser() {
     this.userDataArr = [];
-    const inputJson : any = {};
+    const inputJson: any = {};
     inputJson['role_id'] = '2';
-			inputJson['status'] = '1';
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-          this.userDataArr = result.data;
-				}
-			});
+    inputJson['status'] = '1';
+    this.sisService.getUser(inputJson).subscribe((result: any) => {
+      if (result && result.data && result.data[0]['au_login_id']) {
+        this.userDataArr = result.data;
+      }
+    });
   }
   getRoutes() {
     this.route_arr = [];
@@ -150,13 +205,13 @@ export class RouteManagementComponent implements OnInit {
     });
   }
   getStoppagesPerRoute(value) {
-		this.stoppage_arr = [];
-		this.transportService.getStoppagesPerRoute({ tr_id: this.subExamForm.value.route_id }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.stoppage_arr = result.data;
-			}
-		});
-	}
+    this.stoppage_arr = [];
+    this.transportService.getStoppagesPerRoute({ tr_id: this.subExamForm.value.route_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.stoppage_arr = result.data;
+      }
+    });
+  }
   getStoppages() {
     this.stoppage_arr = [];
     this.transportService.getStoppages({ tsp_status: '1' }).subscribe((result: any) => {
@@ -166,17 +221,55 @@ export class RouteManagementComponent implements OnInit {
     });
   }
   getRouteManagement() {
-    this.ELEMENT_DATA = [];
-    this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.TRANSPORT_ROUTE_ELEMENT_DATA = [];
+    this.subExamDataSource = new MatTableDataSource<Element>(this.TRANSPORT_ROUTE_ELEMENT_DATA);
+
+    let pick_time: any, drop_time: any, stoppages_list = []
+
+    // TODO call the transport route stoppage mapping---- 'get all' or 'get' api here
+    // TODO GET the trs_id from here
+    /**
+      * @api
+      * @route GET getAll - http://dev-api-transport.invictusprojects.in/route-stoppage-mapping/getAll
+     */
+
+    const getAllPayload = {
+      "status": '1',
+      "ses_id": '5'
+    }
+
+    this.transportService.getAllRouteStoppageMapping(getAllPayload).subscribe((result: any) => {
+      if (result) {
+        this.routeStoppageMappingArray = result.data
+        console.log('>>>>>>>> Result data : ', result.data);
+      }
+    })
+
     this.transportService.getAllRouteManagement({}).subscribe((result: any) => {
       if (result && result.length > 0) {
         this.routemanagementArray = result;
+        console.log('>>>>>>> Result data for RouteManagementArray : ', this.routemanagementArray)
         for (const item of this.routemanagementArray) {
-          let stoppage_name_arr = '';
-          if(item.stoppages_det){
-            stoppage_name_arr = item.stoppages_det.map(e => e.tsp_name).join(', ');
+          // console.log('>>>>>item', item);
+
+          for (const item2 of this.routeStoppageMappingArray) {
+            // console.log('>>>>>item2', item2);
+
+            // pick_time = item2.tsp_pick_time ? item2.tsp_pick_time : '-'
+            // drop_time = item2.tsp_drop_time ? item2.tsp_drop_time : '-'
+
+            let stoppages_details_arr = item.stoppages_det
+
+
+            // stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + item2.tsp_pick_time ? item2.tsp_pick_time : '-' + ' : ' + item2.tsp_drop_time ? item2.tsp_drop_time : '-' + ' ),')
           }
-          this.ELEMENT_DATA.push({
+
+          // *Stoppages List creation [ Original ]
+          if (item.stoppages_det) {
+            stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + pick_time + ' : ' + drop_time + ' ), ')
+          }
+
+          this.TRANSPORT_ROUTE_ELEMENT_DATA.push({
             rm_id: item.rm_id,
             tv_id: item.transport_vehicle.bus_number,
             route_id: item.route_id,
@@ -184,13 +277,13 @@ export class RouteManagementComponent implements OnInit {
             route_name: item.route_name,
             start_time: item.start_time,
             end_time: item.end_time,
-            stoppages: stoppage_name_arr,
+            stoppages: stoppages_list,
             status: item.status,
             modify: item.rm_id,
-            action: item
+            action: item,
           });
         }
-        this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.subExamDataSource = new MatTableDataSource<Element>(this.TRANSPORT_ROUTE_ELEMENT_DATA);
       }
     });
   }
@@ -224,30 +317,172 @@ export class RouteManagementComponent implements OnInit {
       start_time: value.start_time,
       end_time: value.end_time,
       stoppages: value.stoppages,
-      status: value.status
+      status: value.status,
     });
 
   }
-  updateRouteManagement() {
+
+
+  updateRM(item) {
     if (this.subExamForm.valid) {
+      let tr_id: any
       const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
-      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
-      if(selectedRoute){
+      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.get('route_id').value);
+      if (selectedRoute) {
         inputJson.route_no = selectedRoute.tr_route_no;
         inputJson.route_name = selectedRoute.tr_route_name;
+        inputJson.route_id = selectedRoute.tr_id
       }
-      this.transportService.updateRouteManagement(inputJson).subscribe((result: any) => {
-        if (result) {
-          this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
-          this.getRouteManagement();
-          this.resetForm();
-        }
-      });
+
+      console.log("slected route array", this.selected_stoppage_arr);
+      console.log("route stoppage array", this.routemanagementArray);
+
+      // this.selected_stoppage_arr.array.forEach(element => {
+      //   this.routemanagementArray.forEach((el) => {
+      //     if (element.)
+      //   });
+      // });
+
+      console.log("item array", item);
+    }
+  }
+
+
+
+  updateRouteManagement() {
+    if (this.subExamForm.valid) {
+      let tr_id: any
+      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
+      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
+      if (selectedRoute) {
+        inputJson.route_no = selectedRoute.tr_route_no;
+        inputJson.route_name = selectedRoute.tr_route_name;
+        inputJson.route_id = selectedRoute.tr_id
+      }
+
+      this.selected_stoppage_arr.forEach(e => (
+        this.routeStoppageMappingArray.forEach(el => {
+          if ((el.tsp_id == e.tsp_id) && (selectedRoute.tr_id == e.ts_id)) {
+            e.tr_id = el.tr_id;
+            console.log(">>>>>>>>>>>>>>>>", e, "\n>>>>>>>>>>", tr_id);
+            //todo 
+            //  Update
+            this.updateRouteStoppageMapping()
+
+          } else {
+            // Insert
+            /**
+             * @payload insert API
+             * {
+                  "status": "1",
+                  "ts_id": "2",
+                  "tsp_id": "4",
+                  "tsp_pick_time": "08:00:00",
+                  "tsp_drop_time": "15:00:00",
+                  "created_by": {
+                      "login_id": "2648",
+                      "full_name": "Admin"
+                  },
+                  "ses_id": 5
+                }
+             */
+            const inputJson = {
+              "status": "1",
+              "ts_id": el.ts_id,
+              "tsp_id": el.tsp_id,
+              "tsp_pick_time": el.tsp_pick_time,
+              "tsp_drop_time": el.tsp_drop_time,
+              "created_by": {
+                "login_id": this.curr_user.login_id,
+                "full_name": this.curr_user.full_name
+              },
+              "ses_id": this.curr_session.ses_id
+            }
+
+            this.transportService.insertRouteStoppageMapping(inputJson).subscribe((result: any) => {
+              if (result) {
+                console.log('>>>>>> RESULT: ', result.data, '\n >>>>>', result);
+              }
+            })
+          }
+
+        })
+      ))
+
+
+      // TODO getting the trs_id
+      const trs_id = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
+      console.log('TRS ID: ', trs_id);
+
+
+      // for (const item of this.routeStoppageMappingArray) {
+      //   trs_id = item.trs_id
+      //   pick_time = item.tsp_pick_time ? item.tsp_pick_time : '-'
+      //   drop_time = item.tsp_drop_time ? item.tsp_drop_time : '-'
+      // }
+      // this.transportService.updateRouteManagement(inputJson).subscribe((result: any) => {
+      //   if (result) {
+      //     // TODO UPDATE ----- transport route stoppage mapping [TRS] based on trs_id
+      //     this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+      //     this.updateRouteStoppageMapping()
+      //     this.getRouteManagement();
+      //     this.resetForm();
+      //   }
+      // });
+
     } else {
       this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
     }
 
   }
+
+  updateRouteStoppageMapping() {
+    /**
+     * @payload 
+     * {
+        "status": "1", //  Default val = 1
+        "ts_id": "1",  // route id 
+        "tsp_id": "1", // stoppage id
+        "tsp_pick_time": "07:30:00", // pick time
+        "tsp_drop_time": "15:10:00", // drop time
+        "created_by": {
+            "login_id": "2648", // currentUser
+            "full_name": "Admin" // currentUser
+        },
+        "trs_id": 1, // refrence id for transport route stoppage mapping
+        "ses_id": 5  // current session
+      }
+    */
+
+    let inputJson = []
+
+    this.selected_stoppage_arr.forEach(element => (
+      console.log('>>>>>>>>>>>>>>>>>>>', element),
+
+      inputJson.push({
+        status: '1',
+        ts_id: element.ts_id,
+        tsp_id: element.tsp_id,
+        tsp_pick_time: element.tsp_pick_time,
+        tsp_drop_time: element.tsp_drop_time,
+        created_by: {
+          login_id: this.curr_user.login_id,
+          full_name: this.curr_user.full_name
+        },
+        trs_id: element.trs_id,
+        ses_id: Number(this.curr_session.ses_id)
+      }))
+    )
+
+    this.transportService.updateRouteStoppageMapping(inputJson).subscribe((result: any) => {
+      if (result) {
+        this.commonService.showSuccessErrorMessage('Stoppage Mapping Updated Successfully', 'success')
+      } else {
+        this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessfull', 'error')
+      }
+    })
+  }
+
   deleteTransportLogs($event) {
     const deleteJson = {
       rm_id: $event.rm_id,
@@ -262,4 +497,214 @@ export class RouteManagementComponent implements OnInit {
     });
   }
 
+  changeTab(event) {
+    this.currentTab = event.index;
+  }
+
+  prepareStoppageData(event, item) {
+    if (event.source._selected) {
+      const inputJson = this.subExamForm;
+      console.log("sub exam form >>>>>>> by an idiot guy who couldnt even change  the form name ", this.subExamForm);
+      if (this.subExamForm.get('route_id').value) {
+        const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.get('route_id').value);
+        item.route_id = selectedRoute.tr_route_no;
+      } else {
+        item.route_id = 0;
+      }
+      this.selected_stoppage_arr.push(item)
+    } else {
+      const index = this.selected_stoppage_arr.findIndex(ele => ele.tsp_id === item.tsp_id)
+      this.selected_stoppage_arr.splice(index, 1)
+    }
+  }
+
+  updateTime(event: any, item: any) {
+    /**
+     * @payload
+     * {
+        "tsp_id": "315",
+        "tsp_name": "Baidyanath Talkies",
+        "tsp_distance": "10",
+        "tsp_status": "1",
+        "tsp_sess_id": "5",
+        "tsp_slab_id": "41",
+        "tsp_created_by": "2648",
+        "tsp_created_at": "2021-05-29 05:28:38",
+        "tsp_latitude": null,
+        "tsp_longitude": null,
+        "tsp_pick_time": "08:00",
+        "tsp_drop_time": "16:00",
+        "ts_name": "Slab-1",
+        "ts_id": "41",
+        "ts_ft_id": "2",
+        "ts_fm_id": "[\"04\",\"05\",\"07\",\"08\",\"09\",\"10\",\"11\",\"12\",\"01\",\"02\",\"03\"]",
+        "ts_calm_id": "2",
+        "ts_cost": "650",
+        "ts_status": "1"
+      }
+     */
+    this.selected_stoppage_arr.forEach(element => {
+      if (element.tsp_id == item.tsp_id) {
+        if (event.target.id == 'pick_time') {
+          element.tsp_pick_time = event.target.value;
+        } else {
+          element.tsp_drop_time = event.target.value;
+        }
+      }
+    });
+    console.log(this.selected_stoppage_arr)
+  }
+
+  /**
+   * STOPPAGE CODE
+   */
+  prepareForm() {
+    this.transportStopagges = this.fbuild.group({
+      transport_stop_name: '',
+      transport_distance_from_school: '',
+      transport_slab: '',
+      transport_longitude: '',
+      transport_latitude: ''
+    });
+  }
+
+  getSlabs() {
+    this.slabsData = [];
+    this.transportService.getSlabs({ ts_status: '1' }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.slabsData = result.data;
+      } else {
+        this.slabsData = [];
+      }
+    }, (error) => {
+      this.slabsData = [];
+    });
+  }
+
+  prepareDataSource() {
+    this.stoppageDataSource = new MatTableDataSource<Element>(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+    let counter = 1;
+    for (let i = 0; i < this.stoppageRoutesData.length; i++) {
+      const tempObj = {};
+      if (this.stoppageRoutesData[i]['ts_id'] !== null) {
+        tempObj['counter'] = counter;
+        tempObj['tsp_id'] = this.stoppageRoutesData[i]['tsp_id'];
+        tempObj['stop_name'] = this.stoppageRoutesData[i]['tsp_name'];
+        tempObj['distance_from_school'] = this.stoppageRoutesData[i]['tsp_distance'];
+        tempObj['transport_slab'] = this.stoppageRoutesData[i]['ts_name'];
+        tempObj['status'] = this.stoppageRoutesData[i]['tsp_status'];
+        tempObj['transport_latitude'] = this.stoppageRoutesData[i]['tsp_latitude'],
+          tempObj['transport_longitude'] = this.stoppageRoutesData[i]['tsp_longitude']
+        this.TRANSPORT_STOPPAGE_ELEMENT_DATA.push(tempObj);
+        counter++;
+      }
+    }
+    this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+    this.stoppageDataSource.sort = this.sort;
+    // this.stoppageDataSource.paginator = this.paginator;
+    // this.sort.sortChange.subscribe((() => this.paginator.pageIndex = 0));
+  }
+
+  patchFormValues() {
+    const formData = this.stoppageRoutesData[this.currentIndex];
+    this.transportStopagges.patchValue({
+      transport_stop_name: formData && formData['tsp_name'] ? formData['tsp_name'] : '',
+      transport_distance_from_school: formData && formData['tsp_distance'] ? formData['tsp_distance'] : '',
+      transport_slab: formData && formData['tsp_slab_id'] ? formData['tsp_slab_id'] : '',
+      transport_latitude: formData && formData['tsp_latitude'] ? formData['tsp_latitude'] : '',
+      transport_longitude: formData && formData['tsp_longitude'] ? formData['tsp_longitude'] : ''
+    });
+  }
+
+  getStoppages2() {
+    this.stoppageRoutesData = [];
+    this.TRANSPORT_STOPPAGE_ELEMENT_DATA = [];
+    this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+    this.transportService.getStoppages({}).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.stoppageRoutesData = result.data;
+        this.prepareDataSource();
+      } else {
+        this.TRANSPORT_STOPPAGE_ELEMENT_DATA = [];
+        this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+      }
+    }, (error) => {
+      this.TRANSPORT_STOPPAGE_ELEMENT_DATA = [];
+      this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+    });
+  }
+
+  callSaveAPI(inputJson) {
+    this.transportService.saveStoppage(inputJson).subscribe((result: any) => {
+      this.btnDisable = false;
+      if (result.status === 'ok') {
+        this.commonService.showSuccessErrorMessage(result.message, 'success');
+        this.resetForm();
+        this.stoppageStatus = '';
+        this.current_stop_id = 0;
+        this.getStoppages2();
+      } else {
+        this.commonService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+
+  saveForm() {
+    const slabArr = [];
+    if (this.transportStopagges.valid) {
+      this.btnDisable = true;
+      let inputJson = {};
+      inputJson = {
+        tsp_name: this.transportStopagges.value.transport_stop_name,
+        tsp_distance: this.transportStopagges.value.transport_distance_from_school,
+        tsp_slab_id: this.transportStopagges.value.transport_slab,
+        tsp_status: '1',
+        tsp_latitude: this.transportStopagges.value.transport_latitude,
+        tsp_longitude: this.transportStopagges.value.transport_longitude
+      };
+      if (this.current_stop_id) {
+        inputJson['tsp_id'] = this.current_stop_id;
+        inputJson['tsp_status'] = this.stoppageStatus;
+      }
+      this.callSaveAPI(inputJson);
+    } else {
+      this.btnDisable = false;
+      this.commonService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
+    }
+  }
+
+  editStoppage(element) {
+    this.stoppageStatus = element.status;
+    this.current_stop_id = element.tsp_id;
+    this.currentIndex = parseInt(element.counter, 10) - 1;
+    this.patchFormValues();
+  }
+
+  deleteStoppage(element) {
+    this.stoppageStatus = '5';
+    this.current_stop_id = element.tsp_id;
+    this.deleteModal.openModal(element);
+  }
+  changeStatus(element, event) {
+    const inputJson = {};
+    if (event.checked) {
+      this.stoppageStatus = '1';
+    } else {
+      this.stoppageStatus = '0';
+    }
+    this.current_stop_id = element.tsp_id;
+    inputJson['tsp_id'] = this.current_stop_id;
+    inputJson['tsp_status'] = this.stoppageStatus;
+    inputJson['statusUpdate'] = true;
+    this.callSaveAPI(inputJson);
+  }
+  deleteConfirm(event) {
+    const inputJson = {};
+    inputJson['tsp_id'] = this.current_stop_id;
+    inputJson['tsp_status'] = this.stoppageStatus;
+    this.callSaveAPI(inputJson);
+  }
+  applyFilter(filterValue: string) {
+    this.stoppageDataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
