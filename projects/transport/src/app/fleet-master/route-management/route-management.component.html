@@ -7,20 +7,52 @@
             <span class="font-size-24 font-medium">Route Management</span>
           </div>
         </div>
-        <div class="col-6 text-right">
-
+        <div class="col-6" style=" display: flex; justify-content: end; align-items: center;">
+          <mat-tab-group (selectedTabChange)="changeTab($event)" class="padding-tab">
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div>
+                  <span>Routes</span>
+                </div>
+              </ng-template>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <div>
+                  <span>Stoppages</span>
+                </div>
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
         </div>
       </div>
     </mat-card>
   </div>
 </div>
 
-<div class="row">
+<!-- Routes -->
+<div class="mt-3" *ngIf="currentTab === 0">
   <div class="col-12">
-    <mat-card class="card-height-850-lp card-height-960">
+    <mat-card class="card-content__container">
       <div class="row">
         <div class="col-2 col-ver-line-divider">
           <form [formGroup]="subExamForm" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Route No.</mat-label>
+                  <input matInput placeholder="Route No." formControlName="route_no">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Route Name</mat-label>
+                  <input matInput placeholder="Route Name" formControlName="route_name">
+                </mat-form-field>
+              </div>
+            </div>
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
@@ -38,7 +70,7 @@
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Bus No</mat-label>
-                  <mat-select formControlName="tv_id" required placeholder="Bus No">
+                  <mat-select formControlName="tv_id" placeholder="Bus No">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of bus_arr" [value]="item.tv_id">
                       {{item.bus_number}}
@@ -68,7 +100,8 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Stoppage</mat-label>
                   <mat-select formControlName="stoppages" required placeholder="Stoppage" multiple>
-                    <mat-option *ngFor="let item of stoppage_arr" [value]="item.tsp_id">
+                    <mat-option *ngFor="let item of stoppage_arr" [value]="item.tsp_id"
+                      (onSelectionChange)="prepareStoppageData($event, item)">
                       {{item.tsp_name | titlecase}}
                     </mat-option>
                   </mat-select>
@@ -76,11 +109,48 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-12 remove-col-padding">
+                <!-- Stoppage Option -->
+                <ng-container *ngFor="let item of selected_stoppage_arr">
+                  <fieldset style="border: 1px solid #8f8d8d; padding: 0">
+                    <legend>{{item.tsp_name}}:</legend>
+                    <div class="row">
+                      <div class="col-6">
+                        <!-- Pickup Time -->
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Pick</mat-label>
+                          <input matInput placeholder="Pick" type="time" formControlName="pick_time" id="pick_time"
+                            [errorStateMatcher]="confirmValidParentMatcher" (change)="updateTime($event, item)"
+                            [value]="0">
+                          <mat-error>
+                            Please Enter Pickup Time
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <!-- Drop Time -->
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Drop</mat-label>
+                          <input matInput placeholder="Drop" type="time" formControlName="drop_time" id="drop_time"
+                            [errorStateMatcher]="confirmValidParentMatcher" (change)="updateTime($event,item)"
+                            [value]="0">
+                          <mat-error>
+                            Please Enter Drop Time
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </fieldset>
+                </ng-container>
+                <!-- Stoppage Option Ends -->
+              </div>
+            </div>
+            <div class="row">
               <div class="col-12 remove-col-padding text-center">
                 <!-- [disabled]="disableApiCall" -->
                 <button mat-raised-button class="btn-add" *ngIf="viewOnly" (click)="submit()">Add</button>
                 <button *ngIf="UpdateFlag && !viewOnly" mat-raised-button class="btn-add"
-                  (click)="updateRouteManagement()">Update</button>
+                  (click)="updateRM(item)">Update</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
               </div>
             </div>
@@ -136,8 +206,8 @@
                     Stoppage
                   </th>
                   <td mat-cell *matCellDef="let item">
-                      {{ item.stoppages }}
-                    </td>
+                    {{ item.stoppages }}
+                  </td>
                 </ng-container>
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -171,5 +241,152 @@
       </div>
     </mat-card>
   </div>
+  <app-delete-modal #deleteModal (deleteOk)="deleteTransportLogs($event)"></app-delete-modal>
 </div>
-<app-delete-modal #deleteModal (deleteOk)="deleteTransportLogs($event)"></app-delete-modal>
+<!-- Routes Ends-->
+
+<!-- Stoppages -->
+<div class="mt-3" *ngIf="currentTab === 1">
+  <div class="col-12">
+    <mat-card class="card-content__container">
+      <div class="row">
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="transportStopagges" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Transport Stop Name</mat-label>
+                  <input matInput placeholder="Transport Stop Name" formControlName="transport_stop_name" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Distance From School(in KMs)</mat-label>
+                  <input matInput placeholder="Distance From School(in KMs)"
+                    formControlName="transport_distance_from_school">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Select Slab</mat-label>
+                  <mat-select placeholder="Select Slab" formControlName="transport_slab" required>
+                    <mat-option *ngFor="let item of slabsData; let i = index;" [value]="item?.ts_id">
+                      {{item?.ts_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Latitude</mat-label>
+                  <input matInput placeholder="Latitude" formControlName="transport_latitude">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Longitude</mat-label>
+                  <input matInput placeholder="Longitude" formControlName="transport_longitude">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding text-center">
+                <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()"
+                  [disabled]="btnDisable">Submit</button>
+                <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
+                  (click)="resetForm()">Reset</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-10">
+          <div class="row">
+            <div class="col-12 remove-col-padding">
+              <div>
+                <mat-form-field>
+                  <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                    placeholder="Filter">
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+                <table class="table-100 text-center " mat-table [dataSource]="stoppageDataSource" matSort>
+
+                  <ng-container matColumnDef="counter">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.counter}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="stop_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Stop Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.stop_name | titlecase}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="distance_from_school">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance From School </th>
+                    <td mat-cell *matCellDef="let element"> {{element.distance_from_school}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="transport_slab">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Transport Slab </th>
+                    <td mat-cell *matCellDef="let element"> {{element.transport_slab}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="transport_latitude">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </th>
+                    <td mat-cell *matCellDef="let element"> {{element.transport_latitude}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="transport_longitude">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </th>
+                    <td mat-cell *matCellDef="let element"> {{element.transport_longitude}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-slide-toggle [ngModel]="element.status == '1' ? 'checked' : ''"
+                        (change)="changeStatus(element, $event)">
+                      </mat-slide-toggle>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element"> <i class="material-icons icon-edit"
+                        (click)="editStoppage(element)">
+                        create
+                      </i> <i class="material-icons icon-danger icon-spacer" (click)="deleteStoppage(element)">
+                        delete
+                      </i> </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns2; "></tr>
+                </table>
+                <table class="table-100 text-center" style="margin-top:5px;">
+                  <tr *ngIf="stoppageRoutesData.length == 0">
+                    <td colspan="6">No Record Found</td>
+                  </tr>
+                </table>
+                <!-- <mat-paginator #paginator [hidden]="!(stoppageRoutesData.length>0)" [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 100]">
+                </mat-paginator> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
+  </app-delete-modal>
+</div>
+<!-- Stoppages Ends -->
