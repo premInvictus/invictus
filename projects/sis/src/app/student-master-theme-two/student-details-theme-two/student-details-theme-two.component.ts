@@ -112,6 +112,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	cityName: any;
 	contact_no: any;
 	whatsapp_no: any;
+	studentStrength: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -155,6 +156,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.getClass();
 		this.getHouses();
 		this.getBloodGroup();
+		this.getClassStudentStrength()
 		const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 		inputElem.select();
 		this.commonAPIService.studentData.subscribe((data: any) => {
@@ -455,6 +457,13 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			return false;
 		}
 	}
+	getClassStudentStrength() {
+		const inputJson = { "from_date": this.commonAPIService.dateConvertion(new Date(), 'yyyy-MM-dd') }
+		this.sisService.generateStudentStrengthSummaryReport(inputJson).subscribe((result: any) => {
+			this.studentStrength = result.data
+		})
+	}
+
 	ngOnChanges() {
 		if (localStorage.getItem('remark_entry_last_state')) {
 			this.backOnly = true;
@@ -567,6 +576,20 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.sectionArray = [];
 		this.sisService.getSectionsByClass({ class_id: this.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				result.data.forEach((sec_by_class: any) => {
+
+					this.studentStrength.forEach((stu_stnth: any) => {
+						if (stu_stnth.class_id == this.studentdetailsform.value.au_class_id) {
+							if (stu_stnth.sec_id == sec_by_class.sec_id && stu_stnth.sec_name == sec_by_class.sec_name) {
+								sec_by_class['sec_strength'] = stu_stnth['student_login_ids'].split(',').length
+							} else {
+								sec_by_class['sec_strength'] = 'Not Updated'
+							}
+						} else {
+							sec_by_class['sec_strength'] = 'Not Updated'
+						}
+					})
+				})
 				this.sectionArray = result.data;
 			}
 		});
@@ -583,8 +606,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.studentdetails = [];
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
-						localStorage.setItem('currentStudent',result.data[0].au_class_id);
-						
+						localStorage.setItem('currentStudent', result.data[0].au_class_id);
+
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
@@ -661,7 +684,6 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	// read image from html and bind with formGroup
 	bindImageToForm(event) {
 		console.log("i am here", this.allowImg);
-		
 		if (this.allowImg == true) {
 			let files = event.target.files[0].name;
 			var ext = files.substring(files.lastIndexOf('.') + 1);
@@ -775,7 +797,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.sisService.getStudentInformation({ au_login_id: admno }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.lastRecordId = result.data[0].au_login_id;
-				localStorage.setItem('currentStudent',result.data[0].au_class_id);
+				localStorage.setItem('currentStudent', result.data[0].au_class_id);
 				console.log("studentClass > new student", localStorage.getItem('currentStudent'));
 				this.commonAPIService.studentData.next(
 					{
