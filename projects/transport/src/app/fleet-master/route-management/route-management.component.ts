@@ -406,8 +406,8 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     
               // *Stoppages List creation [ Original ]
               // const trsm = this.routeStoppageMappingArray.find(e => e.route_id == item.tr_id);
-              // if (item.stoppages_det && trsm) {
-              //   // stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + pick_time + ' : ' + drop_time + ' ), ')
+              if (item.stoppages_det) {
+                stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + pick_time + ' : ' + drop_time + ' ), ')
               //   // stoppages_list = item.stoppages_det.map((e: any) => {
               //   //   if(e.tsp_name)
               //   // })
@@ -416,7 +416,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
               //       stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + trsm.tsp_pick_time + ' : ' + trsm.tsp_drop_time + ' ), ')
               //     }
               //   })
-              // }
+              }
     
     
               this.TRANSPORT_ROUTE_ELEMENT_DATA.push({
