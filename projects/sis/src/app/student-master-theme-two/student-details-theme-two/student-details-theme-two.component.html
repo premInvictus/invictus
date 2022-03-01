@@ -170,7 +170,7 @@
                   <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                      {{item.sec_name}} &nbsp; {{item.sec_strength}}
+                      {{item.sec_name}} <span style="float: right;"> {{item.sec_strength}}</span>
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

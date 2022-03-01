@@ -577,16 +577,13 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.sisService.getSectionsByClass({ class_id: this.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				result.data.forEach((sec_by_class: any) => {
-
-					this.studentStrength.forEach((stu_stnth: any) => {
-						if (stu_stnth.class_id == this.studentdetailsform.value.au_class_id) {
-							if (stu_stnth.sec_id == sec_by_class.sec_id && stu_stnth.sec_name == sec_by_class.sec_name) {
-								sec_by_class['sec_strength'] = stu_stnth['student_login_ids'].split(',').length
+					this.studentStrength.forEach((ele: any) => {
+						if (ele.class_id == this.studentdetailsform.value.au_class_id) {
+							if (ele.sec_id == sec_by_class.sec_id && ele.sec_name == sec_by_class.sec_name) {
+								sec_by_class['sec_strength'] = '( ' + ele['student_login_ids'].split(',').length + ' )'
 							} else {
-								sec_by_class['sec_strength'] = 'Not Updated'
+								sec_by_class['sec_strength'] = '( - )'
 							}
-						} else {
-							sec_by_class['sec_strength'] = 'Not Updated'
 						}
 					})
 				})
