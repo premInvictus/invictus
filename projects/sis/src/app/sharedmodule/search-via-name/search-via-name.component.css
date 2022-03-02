@@ -22,3 +22,8 @@ td {
     tr:nth-child(odd) {
         background-color: #f1f4f7 !important;
     }
+.table-container {
+    height: 440px;
+    overflow-y: scroll;
+    padding: 0 !important;
+}
