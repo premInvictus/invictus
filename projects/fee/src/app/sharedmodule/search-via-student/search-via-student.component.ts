@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { FeeService } from '../../_services/fee.service';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort, Sort } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
 	selector: 'app-search-via-student',
