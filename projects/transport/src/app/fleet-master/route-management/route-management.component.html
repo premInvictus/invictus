@@ -36,7 +36,7 @@
     <mat-card class="card-content__container">
       <div class="row">
         <div class="col-2 col-ver-line-divider">
-          <form [formGroup]="subExamForm" novalidate>
+          <form [formGroup]="routeManagementForm" novalidate>
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
@@ -101,7 +101,7 @@
                   <mat-label>Stoppage</mat-label>
                   <mat-select formControlName="stoppages" required placeholder="Stoppage" multiple>
                     <mat-option *ngFor="let item of stoppage_arr" [value]="item.tsp_id"
-                      (onSelectionChange)="prepareStoppageData($event, item)">
+                      (onSelectionChange)="getRouteStoppages($event, item)">
                       {{item.tsp_name | titlecase}}
                     </mat-option>
                   </mat-select>
@@ -110,17 +110,46 @@
             </div>
             <div class="row">
               <div class="col-12 remove-col-padding">
+
+                <div class="row" [hidden]="!(formGroupArray.length > 0)" *ngFor="let stoppages of formGroupArray">
+
+                  <fieldset style="border: 1px solid #8f8d8d; padding: 0">
+                    <legend>{{stoppages.tsp_name | titlecase}}:</legend>
+                    <div class="row">
+                      <div class="col-6">
+                        <form [formGroup]="stoppages.formGroup">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Drop Time</mat-label>
+                            <input formControlName="tsp_drop_time" type="time" matInput placeholder="Drop Time"
+                              required>
+                          </mat-form-field>
+                        </form>
+                      </div>
+                      <div class="col-6">
+                        <form [formGroup]="stoppages.formGroup">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Pick Time</mat-label>
+                            <input formControlName="tsp_pick_time" type="time" matInput placeholder="Pick Time"
+                              required>
+                          </mat-form-field>
+                        </form>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                </div>
+
                 <!-- Stoppage Option -->
-                <ng-container *ngFor="let item of selected_stoppage_arr">
+                <!-- <ng-container *ngFor="let item of selected_stoppage_arr">
                   <fieldset style="border: 1px solid #8f8d8d; padding: 0">
                     <legend>{{item.tsp_name}}:</legend>
                     <div class="row">
                       <div class="col-6">
-                        <!-- Pickup Time -->
+                        <!-- Pickup Time --
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Pick</mat-label>
                           <input matInput placeholder="Pick" type="time" formControlName="pick_time" id="pick_time"
-                            [errorStateMatcher]="confirmValidParentMatcher" (change)="updateTime($event, item)"
+                            [errorStateMatcher]="confirmValidParentMatcher" (keyup)="updateTime($event, item)"
                             [value]="0">
                           <mat-error>
                             Please Enter Pickup Time
@@ -128,11 +157,11 @@
                         </mat-form-field>
                       </div>
                       <div class="col-6">
-                        <!-- Drop Time -->
+                        <!-- Drop Time --
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Drop</mat-label>
                           <input matInput placeholder="Drop" type="time" formControlName="drop_time" id="drop_time"
-                            [errorStateMatcher]="confirmValidParentMatcher" (change)="updateTime($event,item)"
+                            [errorStateMatcher]="confirmValidParentMatcher" (keyup)="updateTime($event,item)"
                             [value]="0">
                           <mat-error>
                             Please Enter Drop Time
@@ -141,7 +170,7 @@
                       </div>
                     </div>
                   </fieldset>
-                </ng-container>
+                </ng-container> -->
                 <!-- Stoppage Option Ends -->
               </div>
             </div>
@@ -150,7 +179,7 @@
                 <!-- [disabled]="disableApiCall" -->
                 <button mat-raised-button class="btn-add" *ngIf="viewOnly" (click)="submit()">Add</button>
                 <button *ngIf="UpdateFlag && !viewOnly" mat-raised-button class="btn-add"
-                  (click)="updateRM(item)">Update</button>
+                  (click)="updateRouteManagement(item)">Update</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
               </div>
             </div>

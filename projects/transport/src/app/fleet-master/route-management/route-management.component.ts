@@ -30,7 +30,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   // @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('deleteModal') deleteModal;
-  subExamForm: FormGroup;
+  routeManagementForm: FormGroup;
   transportStopagges: FormGroup;
   currentUser: any;
   session: any;
@@ -67,7 +67,9 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
   btnDisable = false;
   routeStoppageMappingArray: any;
   curr_user: any
+  formGroupArray: any[] = [];
   curr_session: any
+  stoppageSchedule: any[];
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -89,19 +91,20 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getRoutes();
     this.buildForm();
     this.getRouteManagement();
     this.getAllTransportVehicle();
     this.getUser();
-    this.getRoutes();
     this.getStoppages();
-    this.getStoppages2();
+    // this.getStoppages2();
     this.selected_stoppage_arr = [];
     this.curr_user = JSON.parse(localStorage.getItem("currentUser"));
-    this.curr_session = JSON.parse(localStorage.getItem("session"))
+    this.curr_session = JSON.parse(localStorage.getItem("session"));
+    this.getAllRouteStoppageMapping();
   }
   buildForm() {
-    this.subExamForm = this.fbuild.group({
+    this.routeManagementForm = this.fbuild.group({
       'rm_id': '',
       'date': '',
       'tv_id': '',
@@ -127,7 +130,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     this.deleteModal.openModal(this.param);
   }
   resetForm() {
-    this.subExamForm.patchValue({
+    this.routeManagementForm.patchValue({
       'rm_id': '',
       'date': '',
       'tv_id': '',
@@ -151,28 +154,152 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     this.stoppageStatus = '0';
     this.prepareForm()
   }
+
+
+  getRouteStoppages(event, item) {
+    // console.log("event route stoppage array >>>>>>", event);
+    let routeStoppageArray: any[] = [];
+    // this.formGroupArray = [];
+    routeStoppageArray = event.source.value;
+    // this.setFormValue(item);
+    let stoppage: any = this.getStoppage(routeStoppageArray);
+    // console.log(">>>>>", stoppage.tsp_id);
+    // console.log(">>>>>", routeStoppageArray);
+    if (this.routeManagementForm.get('route_id').value) {
+      const selectedRoute = this.route_arr.find(e => e.tr_id == this.routeManagementForm.get('route_id').value);
+      item.tr_id = selectedRoute.tr_id;
+    } else {
+      item.tr_id = 0;
+    }
+    if(this.formGroupArray.length > 0 && this.routeManagementForm.get('route_id').value !== this.formGroupArray[0].tr_id){
+      this.formGroupArray = [];
+    }
+    // console.log(">>>>>", item);
+    // if (this.stoppageSchedule.length === 0) {
+    // for (const titem of routeStoppageArray) {
+    const findex = this.formGroupArray.findIndex(f => Number(f.tsp_id) === Number(routeStoppageArray));
+    console.log(">>>>> event.source._selected", event.source._selected);
+    if (event.isUserInput && !event.source._selected) {
+      if (findex !== -1) {
+        // console.log(">>>>> findex", findex);
+        this.formGroupArray.splice(findex);
+      }
+    } else if (event.source._selected) {
+      // console.log(">>>>>", findex);
+      if (findex === -1) {
+        this.formGroupArray.push({
+          tsp_id: stoppage.tsp_id,
+          tr_id: item.tr_id,
+          tsp_name: stoppage.tsp_name,
+          formGroup: this.fbuild.group({
+            'tsp_drop_time': '',
+            'tsp_pick_time': ''
+          })
+        });
+      }
+
+      let foundItem;
+      this.formGroupArray.forEach((el) => {
+
+        foundItem = this.routeStoppageMappingArray.find((e) => (el.tr_id == e.tr_id && el.tsp_id == e.tsp_id));
+        if (foundItem) {
+          el.tsp_pick_time = foundItem.tsp_pick_time;
+          el.tsp_drop_time = foundItem.tsp_drop_time;
+
+          el.formGroup.patchValue({
+            "tsp_pick_time": el.tsp_pick_time,
+            "tsp_drop_time": el.tsp_drop_time
+          })
+        }
+      });
+      // console.log(">>>>>>>>>>>>>>>>fga", this.formGroupArray);
+
+    }
+    // }
+    // } 
+    // else {
+    //   for (const item of this.stoppageSchedule) {
+    //     for (const titem of routeStoppageArray) {
+    //       const findex = this.formGroupArray.findIndex(f => Number(f.se_id) === Number(titem));
+    //       const findex2 = this.stoppageSchedule.findIndex(f => Number(f.se_id) === Number(titem));
+    //       if (findex === -1 && Number(titem) === Number(item.se_id)
+    //         && findex2 !== -1) {
+    //         this.formGroupArray.push({
+    //           tsp_id: titem,
+    //           tsp_name: item.tsp_name,
+    //           formGroup: this.fbuild.group({
+    //             'tsp_drop_time': item.tsp_drop_time,
+    //             'tsp_pick_time': ''
+    //           })
+    //         });
+    //       }
+    //       if (findex === -1 && findex2 === -1) {
+    //         this.formGroupArray.push({
+    //           tsp_id: titem,
+    //           tsp_name: item.tsp_name,
+    //           formGroup: this.fbuild.group({
+    //             'tsp_drop_time': '',
+    //             'tsp_pick_time': ''
+    //           })
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
+    console.log("fgA >>>>>>>>>>>>>>>>>.", this.formGroupArray);
+
+  }
+  getStoppage(stoppageId) {
+    console.log("get a stoppage >>>>>>>>>>>>", stoppageId);
+    const stoppage = this.stoppage_arr.find(element => element.tsp_id == stoppageId);
+    return stoppage;
+  }
+
+
+  // setFormValue(value) {
+  //   this.stoppageSchedule = [];
+  //   const stoppagePickAndDrop: any = [];
+  //   this.formGroupArray = [];
+  //   if (value.tsp_pick_time) {
+  //     for (const item of value.tsp_pick_time) {
+  //       this.formGroupArray.push({
+  //         se_id: item.se_id,
+  //         sexam_name: item.tsp_name,
+  //         formGroup: this.fbuild.group({
+  //           'tsp_drop_time': '',
+  //           'tsp_pick_time': ''
+  //         })
+  //       });
+  //       stoppagePickAndDrop.push(item.tsp_id);
+  //     }
+  //     this.stoppageSchedule = value.tsp_pick_time;
+  //   }
+  // }
+
   submit() {
-    if (this.subExamForm.valid) {
+    if (this.routeManagementForm.valid) {
       this.disableApiCall = true;
-      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
+      const inputJson = JSON.parse(JSON.stringify(this.routeManagementForm.value));
       inputJson.status = '1';
       inputJson.created_by = { login_id: this.currentUser.login_id, full_name: this.currentUser.full_name };
-      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
+      const selectedRoute = this.route_arr.find(e => e.tr_id == this.routeManagementForm.value.route_id);
       if (selectedRoute) {
         inputJson.route_no = selectedRoute.tr_route_no;
         inputJson.route_name = selectedRoute.tr_route_name;
       }
-      this.transportService.insertRouteManagement(inputJson).subscribe((result_i: any) => {
-        if (result_i) {
-          this.getRouteManagement();
-          this.resetForm();
-          this.disableApiCall = false;
-          this.commonService.showSuccessErrorMessage('Route Added Successfully', 'success');
-        } else {
-          this.commonService.showSuccessErrorMessage('Insert failed', 'error');
-          this.disableApiCall = false;
-        }
-      });
+      console.log("fga >>>> submit", this.formGroupArray);
+
+      // this.transportService.insertRouteManagement(inputJson).subscribe((result_i: any) => {
+      //   if (result_i) {
+      //     this.getRouteManagement();
+      //     this.resetForm();
+      //     this.disableApiCall = false;
+      //     this.commonService.showSuccessErrorMessage('Route Added Successfully', 'success');
+      //   } else {
+      //     this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+      //     this.disableApiCall = false;
+      //   }
+      // });
     } else {
       this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
     }
@@ -204,11 +331,13 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  getStoppagesPerRoute(value) {
+  getStoppagesPerRoute(route_id) {
     this.stoppage_arr = [];
-    this.transportService.getStoppagesPerRoute({ tr_id: this.subExamForm.value.route_id }).subscribe((result: any) => {
+    this.transportService.getStoppagesPerRoute({ tr_id: route_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.stoppage_arr = result.data;
+        console.log("stoppage array >>>>", this.stoppage_arr);
+
       }
     });
   }
@@ -217,6 +346,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     this.transportService.getStoppages({ tsp_status: '1' }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.stoppage_arr = result.data;
+        console.log("stoppage array >>>>", this.stoppage_arr);
       }
     });
   }
@@ -242,50 +372,72 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
       if (result) {
         this.routeStoppageMappingArray = result.data
         console.log('>>>>>>>> Result data : ', result.data);
+
+        this.transportService.getAllRouteManagement({}).subscribe((result: any) => {
+          if (result && result.length > 0) {
+            this.routemanagementArray = result;
+            console.log('>>>>>>> Result data for RouteManagementArray : ', this.routemanagementArray)
+            for (const item of this.routemanagementArray) {
+              console.log('>>>>>item', item);
+              console.log('>>>>> this.route_arr', this.stoppage_arr);
+    
+    
+              // for (const item2 of this.routeStoppageMappingArray) {
+                // console.log('>>>>> stoppages', item.stoppages_det);
+                // console.log('>>>>> trsm', trsm);
+    
+              //   let stoppages_details_arr = item.stoppages_det
+    
+              //   stoppages_details_arr.forEach(e => {
+                //   if(item.route_id == item2.tr_id && e.tsp_id == item2.tsp_id){
+                    
+                //     pick_time = trsm.tsp_pick_time ? trsm.tsp_pick_time : '-'
+                //     drop_time = trsm.tsp_drop_time ? trsm.tsp_drop_time : '-'
+                //   }
+                // else{
+                //     pick_time = "-";
+                //     drop_time = "-";
+                //   }              
+              //   })
+    
+    
+              //   // stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + item2.tsp_pick_time ? item2.tsp_pick_time : '-' + ' : ' + item2.tsp_drop_time ? item2.tsp_drop_time : '-' + ' ),')
+              // }
+    
+              // *Stoppages List creation [ Original ]
+              // const trsm = this.routeStoppageMappingArray.find(e => e.route_id == item.tr_id);
+              if (item.stoppages_det) {
+                stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + pick_time + ' : ' + drop_time + ' ), ')
+              //   // stoppages_list = item.stoppages_det.map((e: any) => {
+              //   //   if(e.tsp_name)
+              //   // })
+              //   item.stoppages_det.forEach((el)=> {
+              //     if(el.tsp_id == trsm.tsp_id){
+              //       stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + trsm.tsp_pick_time + ' : ' + trsm.tsp_drop_time + ' ), ')
+              //     }
+              //   })
+              }
+    
+    
+              this.TRANSPORT_ROUTE_ELEMENT_DATA.push({
+                rm_id: item.rm_id,
+                tv_id: item.transport_vehicle.bus_number,
+                route_id: item.route_id,
+                route_no: item.route_no,
+                route_name: item.route_name,
+                start_time: item.start_time,
+                end_time: item.end_time,
+                stoppages: stoppages_list,
+                status: item.status,
+                modify: item.rm_id,
+                action: item,
+              });
+            }
+            this.subExamDataSource = new MatTableDataSource<Element>(this.TRANSPORT_ROUTE_ELEMENT_DATA);
+          }
+        });
       }
     })
-
-    this.transportService.getAllRouteManagement({}).subscribe((result: any) => {
-      if (result && result.length > 0) {
-        this.routemanagementArray = result;
-        console.log('>>>>>>> Result data for RouteManagementArray : ', this.routemanagementArray)
-        for (const item of this.routemanagementArray) {
-          // console.log('>>>>>item', item);
-
-          for (const item2 of this.routeStoppageMappingArray) {
-            // console.log('>>>>>item2', item2);
-
-            // pick_time = item2.tsp_pick_time ? item2.tsp_pick_time : '-'
-            // drop_time = item2.tsp_drop_time ? item2.tsp_drop_time : '-'
-
-            let stoppages_details_arr = item.stoppages_det
-
-
-            // stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + item2.tsp_pick_time ? item2.tsp_pick_time : '-' + ' : ' + item2.tsp_drop_time ? item2.tsp_drop_time : '-' + ' ),')
-          }
-
-          // *Stoppages List creation [ Original ]
-          if (item.stoppages_det) {
-            stoppages_list = item.stoppages_det.map((e: any) => (e.tsp_name)).join(' ( ' + pick_time + ' : ' + drop_time + ' ), ')
-          }
-
-          this.TRANSPORT_ROUTE_ELEMENT_DATA.push({
-            rm_id: item.rm_id,
-            tv_id: item.transport_vehicle.bus_number,
-            route_id: item.route_id,
-            route_no: item.route_no,
-            route_name: item.route_name,
-            start_time: item.start_time,
-            end_time: item.end_time,
-            stoppages: stoppages_list,
-            status: item.status,
-            modify: item.rm_id,
-            action: item,
-          });
-        }
-        this.subExamDataSource = new MatTableDataSource<Element>(this.TRANSPORT_ROUTE_ELEMENT_DATA);
-      }
-    });
   }
   getActiveStatus(value: any) {
     if (value.status === '1') {
@@ -308,7 +460,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
   formEdit(value: any) {
     this.UpdateFlag = true;
     this.viewOnly = false;
-    this.subExamForm.patchValue({
+    this.routeManagementForm.patchValue({
       rm_id: value.rm_id,
       tv_id: value.tv_id,
       route_id: value.route_id.toString(),
@@ -319,116 +471,189 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
       stoppages: value.stoppages,
       status: value.status,
     });
-
+    // console.log("edit control >>>>>", value);
+    let foundItem;
+    this.formGroupArray.forEach((el) => {
+      foundItem = this.routeStoppageMappingArray.find((e) => (el.tr_id == e.tr_id && el.tsp_id == e.tsp_id));
+      if (foundItem) {
+        el.tsp_pick_time = foundItem.tsp_pick_time;
+        el.tsp_drop_time = foundItem.tsp_drop_time;
+      }
+    });
+    // this.setFormValue(value);
+    // this.getStoppagesPerRoute(value.route_id);
   }
 
+  getAllRouteStoppageMapping() {
+    const getAllPayload = {
+      "status": '1',
+      "ses_id": '5'
+    }
+    this.transportService.getAllRouteStoppageMapping(getAllPayload).subscribe((result: any) => {
+      if (result) {
+        this.routeStoppageMappingArray = result.data;
+      }
+    });
+  }
 
   updateRM(item) {
-    if (this.subExamForm.valid) {
-      let tr_id: any
-      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
-      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.get('route_id').value);
-      if (selectedRoute) {
-        inputJson.route_no = selectedRoute.tr_route_no;
-        inputJson.route_name = selectedRoute.tr_route_name;
-        inputJson.route_id = selectedRoute.tr_id
-      }
 
-      console.log("slected route array", this.selected_stoppage_arr);
-      console.log("route stoppage array", this.routemanagementArray);
-
-      // this.selected_stoppage_arr.array.forEach(element => {
-      //   this.routemanagementArray.forEach((el) => {
-      //     if (element.)
-      //   });
-      // });
-
-      console.log("item array", item);
+    console.log("fga update >>>>>>>>>>>>>>>>>>>>>>>>>", this.formGroupArray);
+    let presentRouteStoppage;
+    let updateJson = []
+    let insertJson = []
+    const getAllPayload = {
+      "status": '1',
+      "ses_id": '5'
     }
+    this.transportService.getAllRouteStoppageMapping(getAllPayload).subscribe((result: any) => {
+      if (result) {
+        this.routeStoppageMappingArray = result.data;
+        this.formGroupArray.forEach((e) => {
+          presentRouteStoppage = this.routeStoppageMappingArray.find(el => (el.tr_id == e.tr_id && el.tsp_id == e.tsp_id));
+          if (presentRouteStoppage) {
+            updateJson.push({
+              status: '1',
+              tr_id: e.tr_id,
+              tsp_id: e.tsp_id,
+              tsp_pick_time: e.formGroup.value.tsp_pick_time,
+              tsp_drop_time: e.formGroup.value.tsp_drop_time,
+              created_by: {
+                login_id: this.curr_user.login_id,
+                full_name: this.curr_user.full_name
+              },
+              trs_id: presentRouteStoppage.trs_id,
+              ses_id: Number(this.curr_session.ses_id)
+            });
+          } else {
+            insertJson.push({
+              status: '1',
+              tr_id: e.tr_id,
+              tsp_id: e.tsp_id,
+              tsp_pick_time: e.formGroup.value.tsp_pick_time,
+              tsp_drop_time: e.formGroup.value.tsp_drop_time,
+              created_by: {
+                login_id: this.curr_user.login_id,
+                full_name: this.curr_user.full_name
+              },
+              ses_id: Number(this.curr_session.ses_id)
+            })
+          }
+        });
+        if (updateJson) {
+          this.transportService.updateRouteStoppageMapping(updateJson).subscribe((result: any) => {
+            if (result) {
+              this.commonService.showSuccessErrorMessage('Stoppage Mapping Updated Successful', 'success')
+            } else {
+              this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
+            }
+          });
+        }
+        if (insertJson) {
+          this.transportService.insertRouteStoppageMapping(insertJson).subscribe((result: any) => {
+            if (result) {
+              this.commonService.showSuccessErrorMessage('Stoppage Mapping Updated Successful', 'success')
+            } else {
+              this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
+            }
+          });
+        }
+      } else {
+        this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
+      }
+    });
+    console.log("update json >>>>>>>>>>>>", updateJson);
+    console.log("insert Json >>>>>>>>>>>>", insertJson);
+
+    // const getAllPayload = {
+    //   "status": '1',
+    //   "ses_id": '5'
+    // }
+    // let updateJson = []
+    // let insertJson = []
+
+    // this.transportService.getAllRouteStoppageMapping(getAllPayload).subscribe((result: any) => {
+    //   if (result) {
+    //     this.routeStoppageMappingArray = result.data
+    //     // console.log('>>>>>>>> Result data : ', result.data);
+    //     let presentRouteStoppage: any = 0;
+    //     // console.log("route stoppage mapping all >>>>", this.routeStoppageMappingArray);    
+    //     if (this.routeManagementForm.valid) {
+    //       let tr_id: any
+    //       const selectedRoute = this.route_arr.find(e => e.tr_id == this.routeManagementForm.get('route_id').value);
+    //       // console.log("selected route array", this.selected_stoppage_arr);
+    //       // console.log("route stoppage array", this.routemanagementArray);
+    //       this.selected_stoppage_arr.forEach(element => {
+    //         // this.routeStoppageMappingArray.forEach(e => {
+    //         //   if(element.tsp_id)
+    //         // });            
+    //         presentRouteStoppage = this.routeStoppageMappingArray.find(e => (e.tr_id == element.tr_id && e.tsp_id == element.tsp_id));
+    //         // this.routeStoppageMappingArray.forEach(element => {
+    //         // });
+    //         // console.log("present >>>", element);
+
+    //         if (presentRouteStoppage && presentRouteStoppage.trs_id) {
+    //           updateJson.push({
+    //             status: '1',
+    //             tr_id: presentRouteStoppage.tr_id,
+    //             tsp_id: presentRouteStoppage.tsp_id,
+    //             tsp_pick_time: element.tsp_pick_time,
+    //             tsp_drop_time: element.tsp_drop_time,
+    //             created_by: {
+    //               login_id: this.curr_user.login_id,
+    //               full_name: this.curr_user.full_name
+    //             },
+    //             trs_id: presentRouteStoppage.trs_id,
+    //             ses_id: Number(this.curr_session.ses_id)
+    //           });
+    //         } else {
+    //           insertJson.push({
+    //             status: '1',
+    //             tr_id: element.tr_id,
+    //             tsp_id: element.tsp_id,
+    //             tsp_pick_time: element.tsp_pick_time,
+    //             tsp_drop_time: element.tsp_drop_time,
+    //             created_by: {
+    //               login_id: this.curr_user.login_id,
+    //               full_name: this.curr_user.full_name
+    //             },
+    //             ses_id: Number(this.curr_session.ses_id)
+    //           });
+    //         }
+    //       });
+
+    //     }
+    //     console.log("update array", updateJson);
+    //     console.log("insert array", insertJson);
+
+    //   } else {
+    //     this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
+    //   }
+    // })
   }
 
 
 
-  updateRouteManagement() {
-    if (this.subExamForm.valid) {
+  updateRouteManagement(item) {
+    if (this.routeManagementForm.valid) {
       let tr_id: any
-      const inputJson = JSON.parse(JSON.stringify(this.subExamForm.value));
-      const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
+      const inputJson = JSON.parse(JSON.stringify(this.routeManagementForm.value));
+      const selectedRoute = this.route_arr.find(e => e.tr_id == this.routeManagementForm.value.route_id);
       if (selectedRoute) {
         inputJson.route_no = selectedRoute.tr_route_no;
         inputJson.route_name = selectedRoute.tr_route_name;
         inputJson.route_id = selectedRoute.tr_id
       }
 
-      this.selected_stoppage_arr.forEach(e => (
-        this.routeStoppageMappingArray.forEach(el => {
-          if ((el.tsp_id == e.tsp_id) && (selectedRoute.tr_id == e.ts_id)) {
-            e.tr_id = el.tr_id;
-            console.log(">>>>>>>>>>>>>>>>", e, "\n>>>>>>>>>>", tr_id);
-            //todo 
-            //  Update
-            this.updateRouteStoppageMapping()
-
-          } else {
-            // Insert
-            /**
-             * @payload insert API
-             * {
-                  "status": "1",
-                  "ts_id": "2",
-                  "tsp_id": "4",
-                  "tsp_pick_time": "08:00:00",
-                  "tsp_drop_time": "15:00:00",
-                  "created_by": {
-                      "login_id": "2648",
-                      "full_name": "Admin"
-                  },
-                  "ses_id": 5
-                }
-             */
-            const inputJson = {
-              "status": "1",
-              "ts_id": el.ts_id,
-              "tsp_id": el.tsp_id,
-              "tsp_pick_time": el.tsp_pick_time,
-              "tsp_drop_time": el.tsp_drop_time,
-              "created_by": {
-                "login_id": this.curr_user.login_id,
-                "full_name": this.curr_user.full_name
-              },
-              "ses_id": this.curr_session.ses_id
-            }
-
-            this.transportService.insertRouteStoppageMapping(inputJson).subscribe((result: any) => {
-              if (result) {
-                console.log('>>>>>> RESULT: ', result.data, '\n >>>>>', result);
-              }
-            })
-          }
-
-        })
-      ))
-
-
-      // TODO getting the trs_id
-      const trs_id = this.route_arr.find(e => e.tr_id == this.subExamForm.value.route_id);
-      console.log('TRS ID: ', trs_id);
-
-
-      // for (const item of this.routeStoppageMappingArray) {
-      //   trs_id = item.trs_id
-      //   pick_time = item.tsp_pick_time ? item.tsp_pick_time : '-'
-      //   drop_time = item.tsp_drop_time ? item.tsp_drop_time : '-'
-      // }
-      // this.transportService.updateRouteManagement(inputJson).subscribe((result: any) => {
-      //   if (result) {
-      //     // TODO UPDATE ----- transport route stoppage mapping [TRS] based on trs_id
-      //     this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
-      //     this.updateRouteStoppageMapping()
-      //     this.getRouteManagement();
-      //     this.resetForm();
-      //   }
-      // });
+      this.transportService.updateRouteManagement(inputJson).subscribe((result: any) => {
+        if (result) {
+          // TODO UPDATE ----- transport route stoppage mapping [TRS] based on trs_id
+          this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+          this.updateRM(item);
+          this.getRouteManagement();
+          this.resetForm();
+        }
+      });
 
     } else {
       this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
@@ -457,7 +682,7 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     let inputJson = []
 
     this.selected_stoppage_arr.forEach(element => (
-      console.log('>>>>>>>>>>>>>>>>>>>', element),
+      // console.log('>>>>>>>>>>>>>>>>>>>', element),
 
       inputJson.push({
         status: '1',
@@ -503,13 +728,12 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
 
   prepareStoppageData(event, item) {
     if (event.source._selected) {
-      const inputJson = this.subExamForm;
-      console.log("sub exam form >>>>>>> by an idiot guy who couldnt even change  the form name ", this.subExamForm);
-      if (this.subExamForm.get('route_id').value) {
-        const selectedRoute = this.route_arr.find(e => e.tr_id == this.subExamForm.get('route_id').value);
-        item.route_id = selectedRoute.tr_route_no;
+      const inputJson = this.routeManagementForm;
+      if (this.routeManagementForm.get('route_id').value) {
+        const selectedRoute = this.route_arr.find(e => e.tr_id == this.routeManagementForm.get('route_id').value);
+        item.tr_id = selectedRoute.tr_id;
       } else {
-        item.route_id = 0;
+        item.tr_id = 0;
       }
       this.selected_stoppage_arr.push(item)
     } else {

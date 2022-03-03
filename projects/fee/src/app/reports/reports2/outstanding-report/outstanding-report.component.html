@@ -120,7 +120,7 @@
                 </button>
             </div>
         </div>
-        <div *ngIf="filterFlag" class="col-2">
+        <div *ngIf="filterFlag" class="col-2 float-right pull-right">
             <div class="text-right mr-auto">
                 <fieldset class="fieldset_invoice">
                     <legend><i>Tools</i></legend>
@@ -158,9 +158,9 @@
       <mat-card>
         <div class="container">
           <p class="text-center mt-5">
-            <img src="assets/1484.gif" alt="loading">
+            <img width="50px" src="assets/1484.gif" alt="loading">
           </p>
-          <p class="text-center mb-5">
+          <p class="text-center mb-5 blink">
             {{loader_status}}
           </p>
         </div>
