@@ -2,23 +2,28 @@
     border: 1px solid #06536b !important;
 }
 td {
-    border: 1px solid #89A8C9 !important;
-    }
-    th {
-    border: 1px solid #89A8C9 !important;
-    border-collapse: collapse;
-    }
-    th {
-        background-color: #c8d6e5 !important;
-        font-weight: bold;
-        height: 40px !important;
-    }
-    tr {
-        height: 35px !important;
-    }
-    td {
-        font-size: 16px !important;
-    }
-    tr:nth-child(odd) {
-        background-color: #f1f4f7 !important;
-    }
+border: 1px solid #89A8C9 !important;
+}
+th {
+border: 1px solid #89A8C9 !important;
+border-collapse: collapse;
+}
+th {
+    background-color: #c8d6e5 !important;
+    font-weight: bold;
+    height: 40px !important;
+}
+tr {
+    height: 35px !important;
+}
+td {
+    font-size: 16px !important;
+}
+tr:nth-child(odd) {
+    background-color: #f1f4f7 !important;
+}
+.table-container {
+    height: 440px;
+    overflow-y: scroll;
+    padding: 0 !important;
+}
