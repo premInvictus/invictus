@@ -60,7 +60,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
     this.stoppageRoutesData = [];
     this.TRANSPORT_STOPPAGE_ELEMENT_DATA = [];
     this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
-    this.feeService.getStoppages({}).subscribe((result: any) => {
+    this.feeService.getStoppages({}).subscribe((result: any) => {      
       if (result && result.status === 'ok') {
         this.stoppageRoutesData = result.data;
         this.prepareDataSource();
@@ -89,6 +89,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 
   prepareDataSource() {
     this.stoppageDataSource = new MatTableDataSource<Element>(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
+    
     let counter = 1;
     for (let i = 0; i < this.stoppageRoutesData.length; i++) {
       const tempObj = {};
@@ -103,6 +104,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
           tempObj['transport_longitude'] = this.stoppageRoutesData[i]['tsp_longitude']
         counter++;
       }
+      this.TRANSPORT_STOPPAGE_ELEMENT_DATA.push(tempObj);
     }
     this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
     this.stoppageDataSource.sort = this.sort;
