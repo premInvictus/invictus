@@ -10,12 +10,13 @@ import {
   DelimiterType,
   FileType
 } from 'angular-slickgrid';
-declare var slickgroup:any;
+declare var slickgroup: any;
 //const slickgroup =  require('slickgrid-colgroup-plugin');
 //declare const slickgroup: any;
 //import * as slickgroup from 'slickgrid-colgroup-plugin'
 
 //import * as slickgroup from './../../../../../../node_modules/slickgrid-colgroup-plugin/src/slick.colgroup.js';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-student-attendence',
@@ -42,16 +43,22 @@ export class StudentAttendenceComponent implements OnInit {
   gridHeight: any;
   tableFlag = false;
   totalRow: any;
+  report_type = "";
+  reportArray: any[] = [
+    {
+      id: 0,
+      attendance_report_type: 'Summarised Report'
+    },
+    {
+      id: 1,
+      attendance_report_type: 'Detailed Report'
+    }
+  ]
+
   ngOnInit() {
     this.buildForm();
     this.getClass();
     this.getFeeMonths();
-    
-    
-
-    
-
-
     this.gridOptions = {
       enableDraggableGrouping: false,
       createPreHeaderPanel: true,
@@ -68,10 +75,9 @@ export class StudentAttendenceComponent implements OnInit {
       fullWidthRows: true,
       enableAutoTooltip: true,
       enableCellNavigation: true,
-     
-      //colspanCallback: this.renderDifferentColspan,
+      // colspanCallback: this.renderDifferentColspan,
       headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',  
+        iconColumnHideCommand: 'fas fa-times',
         iconSortAscCommand: 'fas fa-sort-up',
         iconSortDescCommand: 'fas fa-sort-down',
         title: 'Sort'
@@ -109,7 +115,7 @@ export class StudentAttendenceComponent implements OnInit {
         },
         onColumnsChanged: (e, args) => {
           console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-         // this.updateTotalRow(this.angularGrid.slickGrid);
+          this.updateTotalRow(this.angularGrid.slickGrid);
         },
       }
     };
@@ -132,9 +138,28 @@ export class StudentAttendenceComponent implements OnInit {
     this.paramform = this.fbuild.group({
       class_id: '',
       sec_id: '',
-      fm_id: ''
+      fm_id: '',
+      date_id: '',
     })
   }
+  resetData() {
+    this.paramform.patchValue({
+      class_id: '',
+      sec_id: '',
+      fm_id: '',
+      date_id: '',
+    })
+    this.dataset = []
+  }
+  toggleReport(item) {
+    this.resetData()
+    if (item.value == 0) {
+      this.report_type = "summarised_report"
+    } else if (item.value == 1) {
+      this.report_type = "detailed_report"
+    }
+  }
+
   getFeeMonths() {
     this.monthArray = [];
     this.feeService.getFeeMonths({}).subscribe((result: any) => {
@@ -180,13 +205,24 @@ export class StudentAttendenceComponent implements OnInit {
     }
   }
   submit() {
-    this.resetDataset();
-    this.examService.getStudentAttendence(this.paramform.value).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        console.log(result.data);
-        this.prepareDataSource(result.data);
-      }
-    })
+    if (this.report_type == 'summarised_report') {
+      this.resetDataset();
+      const date = new DatePipe('en-in').transform(this.paramform.value.date_id, 'yyyy-MM-dd')
+      this.examService.getAttendanceReportClassSectionWise(date).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log('>>> Result ', result.data)
+          this.prepareDataSource(result.data);
+        }
+      })
+    } else if (this.report_type == 'detailed_report') {
+      this.resetDataset();
+      this.examService.getStudentAttendence(this.paramform.value).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          // console.log(result.data);
+          this.prepareDataSource(result.data);
+        }
+      })
+    }
   }
   resetDataset() {
     this.dataset = [];
@@ -194,25 +230,23 @@ export class StudentAttendenceComponent implements OnInit {
     this.tableFlag = false;
   }
   angularGridReady(angularGrid: AngularGridInstance) {
-		this.angularGrid = angularGrid;
+    this.angularGrid = angularGrid;
     const grid = angularGrid.slickGrid; // grid object
-    
 
-
-		//this.updateTotalRow(angularGrid.slickGrid);
-	}
+    this.updateTotalRow(angularGrid.slickGrid);
+  }
   updateTotalRow(grid: any) {
-		//console.log('this.groupColumns', this.groupColumns);
-		let columnIdx = grid.getColumns().length;
-		while (columnIdx--) {
+    //console.log('this.groupColumns', this.groupColumns);
+    let columnIdx = grid.getColumns().length;
+    while (columnIdx--) {
       const columnId = grid.getColumns()[columnIdx].id;
       if (columnId) {
         const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			  columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
       }
-			
-		}
-	}
+
+    }
+  }
   iconFormatter(row, cell, value, columnDef, dataContext) {
     if (value !== '-') {
       if (value === '1') {
@@ -226,68 +260,142 @@ export class StudentAttendenceComponent implements OnInit {
       return "-";
     }
   }
+
+  getStudentsTotalPresentAbsent(value: any) {
+    let studentDetailsArray = []
+    for (const item of value) {
+      let present = 0, absent = 0
+      for (const item2 of item['sectionWiseDetails']) {
+        present += item2['present']
+        absent += item2['absent']
+      }
+      studentDetailsArray.push({
+        class_name: item['class_name'],
+        present: present,
+        absent: absent,
+        total: present + absent
+      })
+    }
+    // console.log('>>>>> studentDetailsArray :', studentDetailsArray);
+
+    return studentDetailsArray
+  }
   prepareDataSource(value) {
-    this.columnDefinitions = [
-      { id: 'au_admission_no', name: 'Admission no', field: 'au_admission_no', sortable: true, filterable: true, resizable: false, },
-      { id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: false, columnGroup: 'info' },
-    ];
-    for (let index = 1; index <= value.no_of_days_in_month; index++) {
-      this.columnDefinitions.push({
-        id: index.toString(), name: index.toString(), field: index.toString(), sortable: true, filterable: true, resizable: false, formatter: this.iconFormatter, columnGroup: 'days'
-      });
-    }
-    this.columnDefinitions.push(
-      { id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
-    );
-    this.columnDefinitions.push(
-      { id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
-    );
-
-    this.columnDefinitions.push(
-      { id: 'absent1', name: 'Absent1', field: 'attendance', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance1' }
-    );
-
-   
-
-    for (let i = 0; i < value.attendence.length; i++) {
-      const tempObj = {};
-      tempObj['id'] = i;
-      tempObj['au_admission_no'] = value.attendence[i]['au_admission_no'];
-      tempObj['au_full_name'] = value.attendence[i]['au_full_name'];
-      tempObj['present'] = value.attendence[i]['present'];
-      tempObj['absent'] = value.attendence[i]['absent'];
-      for (let key in value.attendence[i]['attendence']) {
-        tempObj[key] = value.attendence[i]['attendence'][key];
-      }
-      this.dataset.push(tempObj);
-    }
-    const blankTempObj = {};
-		blankTempObj['id'] = value.attendence.length;
-		blankTempObj['au_admission_no'] = 'Grand Total';
-    blankTempObj['au_full_name'] = '';
-    blankTempObj['present'] = '';
-    blankTempObj['absent'] = '';
-    for (let index = 1; index <= value.no_of_days_in_month; index++) {
-      let totalpresent = 0;
-      for (let i = 0; i < value.attendence.length; i++) {
-        if( value.attendence[i]['attendence'][index] === '1') {
-          totalpresent++;
+    if (this.report_type == 'summarised_report') {
+      this.columnDefinitions = [
+        {
+          id: 'class_name', name: 'Class Name', field: 'class_name', sortable: true, filterable: true, resizable: true,
+        },
+        {
+          id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: true,
+        },
+        {
+          id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: true,
+        },
+        {
+          id: 'total', name: 'Total', field: 'total', sortable: true, filterable: true, resizable: true,
         }
+      ]
+      const classWiseAttendanceArray = this.getStudentsTotalPresentAbsent(value)
+      for (let i = 0; i < classWiseAttendanceArray.length; i++) {
+        const tempObj = {}
+        tempObj['id'] = i
+        tempObj['class_name'] = classWiseAttendanceArray[i]['class_name']
+        tempObj['present'] = classWiseAttendanceArray[i]['present']
+        tempObj['absent'] = classWiseAttendanceArray[i]['absent']
+        tempObj['total'] = classWiseAttendanceArray[i]['total']
+        this.dataset.push(tempObj)
       }
-      blankTempObj[index.toString()] = totalpresent;
+      const blankTempObj = {};
+      let totalPresent = 0, totalAbsent = 0, totalStrength = 0
+      classWiseAttendanceArray.forEach(ele => {
+        totalPresent += ele['present']
+        totalAbsent += ele['absent']
+        totalStrength += ele['total']
+      })
+      blankTempObj['id'] = classWiseAttendanceArray.length;
+      blankTempObj['class_name'] = 'Grand Total';
+      blankTempObj['present'] = totalPresent;
+      blankTempObj['absent'] = totalAbsent;
+      blankTempObj['total'] = totalStrength;
+
+      this.totalRow = blankTempObj;
+
+      if (this.dataset.length > 20) {
+        this.gridHeight = 750;
+      } else if (this.dataset.length > 10) {
+        this.gridHeight = 600;
+      } else if (this.dataset.length > 5) {
+        this.gridHeight = 400;
+      } else {
+        this.gridHeight = 300;
+      }
+      this.tableFlag = true;
+    } else if (this.report_type == 'detailed_report') {
+      this.columnDefinitions = [
+        { id: 'au_admission_no', name: 'Admission no', field: 'au_admission_no', sortable: true, filterable: true, resizable: false, },
+        { id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: false, columnGroup: 'info' },
+      ];
+      for (let index = 1; index <= value.no_of_days_in_month; index++) {
+        this.columnDefinitions.push({
+          id: index.toString(), name: index.toString(), field: index.toString(), sortable: true, filterable: true, resizable: false, formatter: this.iconFormatter, columnGroup: 'days'
+        });
+      }
+      this.columnDefinitions.push(
+        { id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
+      );
+      this.columnDefinitions.push(
+        { id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
+      );
+
+      this.columnDefinitions.push(
+        { id: 'absent1', name: 'Absent1', field: 'attendance', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance1' }
+      );
+
+
+
+      for (let i = 0; i < value.attendence.length; i++) {
+        const tempObj = {};
+        tempObj['id'] = i;
+        tempObj['au_admission_no'] = value.attendence[i]['au_admission_no'];
+        tempObj['au_full_name'] = value.attendence[i]['au_full_name'];
+        tempObj['present'] = value.attendence[i]['present'];
+        tempObj['absent'] = value.attendence[i]['absent'];
+        for (let key in value.attendence[i]['attendence']) {
+          tempObj[key] = value.attendence[i]['attendence'][key];
+        }
+        // console.log('>>>>  temoObj of Attendance', tempObj);
+
+        this.dataset.push(tempObj);
+      }
+      const blankTempObj = {};
+      blankTempObj['id'] = value.attendence.length;
+      blankTempObj['au_admission_no'] = 'Grand Total';
+      blankTempObj['au_full_name'] = '';
+      blankTempObj['present'] = '';
+      blankTempObj['absent'] = '';
+      for (let index = 1; index <= value.no_of_days_in_month; index++) {
+        let totalpresent = 0;
+        for (let i = 0; i < value.attendence.length; i++) {
+          if (value.attendence[i]['attendence'][index] === '1') {
+            totalpresent++;
+          }
+        }
+        blankTempObj[index.toString()] = totalpresent;
+      }
+      this.totalRow = blankTempObj;
+      console.log('dataset  ', this.dataset);
+      if (this.dataset.length > 20) {
+        this.gridHeight = 750;
+      } else if (this.dataset.length > 10) {
+        this.gridHeight = 550;
+      } else if (this.dataset.length > 5) {
+        this.gridHeight = 400;
+      } else {
+        this.gridHeight = 300;
+      }
+      this.tableFlag = true;
     }
-		this.totalRow = blankTempObj;
-    console.log('dataset  ', this.dataset);
-    if (this.dataset.length > 20) {
-      this.gridHeight = 750;
-    } else if (this.dataset.length > 10) {
-      this.gridHeight = 550;
-    } else if (this.dataset.length > 5) {
-      this.gridHeight = 400;
-    } else {
-      this.gridHeight = 300;
-    }
-    this.tableFlag = true;
   }
   renderDifferentColspan(item: any) {
     if (item.id % 2 === 1) {
