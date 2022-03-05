@@ -40,14 +40,15 @@ export class PaymentChooserComponent implements OnInit {
     this.erp.getGlobalSetting({ "gs_alias": "payment_banks" }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = (result.data[0] && result.data[0]['gs_value']) ? JSON.parse(result.data[0] && result.data[0]['gs_value']) : [];
-        console.log(this.settings);
+        console.log("pg settings >>>>>>>>>>>>>>>>>>>",this.settings);
         for (const item of this.settings) {
-          if (item.enabled === 'true') {
+          if (item.enabled == 'true') {
             this.formGroupArray.push({
               formGroup: this.fbuild.group({
                 'bank': ''
               }),
-              bank_name: item.bank_name
+              bank_name: item.bank_name,
+              trans_bnk_id: item.trans_bnk_id
             });
           }
 
@@ -67,35 +68,39 @@ export class PaymentChooserComponent implements OnInit {
     }
   }
   chooseBank(item, index) {
+    // console.log("formGroupArray bank >>>>>", this.formGroupArray, "-----", index);
+    
     let j = 0;
     this.chosenBank = item.bank_alias;
-    for (const item of this.formGroupArray) {
-      if (j === index) {
-        item.formGroup.patchValue({
+    for (const i of this.formGroupArray) {
+      if (i.trans_bnk_id && index === i.trans_bnk_id) {
+        i.formGroup.patchValue({
           bank: this.chosenBank
         });
+        console.log("choosen bank >>>>>", i, "-----", index);
       } else {
-        item.formGroup.patchValue({
+        i.formGroup.patchValue({
           bank: ''
         });
       }
       j++;
     }
+    console.log("formGroupArray bank >>>>>", this.formGroupArray, "-----", index);
 
   }
   closeDialog2() {
     let counter = 0;
-    for (const item of this.formGroupArray) {
-      if (!item.formGroup.value.bank) {
-        counter++;
-      } else {
-        break;
-      }
-    }
-    if (counter === this.formGroupArray.length) {
-      this.common.showSuccessErrorMessage('Please select alteast one provider', 'error');
+    // for (const item of this.formGroupArray) {
+    //   if (!item.formGroup.value.bank) {
+    //     counter++;
+    //   } else {
+    //     break;
+    //   }
+    // }
+    if (!this.chosenBank) {
+      this.common.showSuccessErrorMessage('Please select a provider', 'error');
     } else {
-      this.confirm.emit(this.formGroupArray[counter].formGroup.value);
+      this.confirm.emit({bank: this.chosenBank});
       this.closeDialog();
     }
   }

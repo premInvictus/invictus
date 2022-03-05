@@ -430,8 +430,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
 					localStorage.setItem('paymentData', '');
 					if (result && result.status === 'ok') {
-						console.log('result.data[0]', result.data[0]);
-						this.paytmResult['url'] = result.data[0]['url'];
+						console.log('result.data[0]', result.data[0].url);
+						this.paytmResult['url'] = result.data[0].url;
 						const ORDER_ID = this.paytmResult.order_id;
 						const MID = this.getMID(bank);
 						this.paytmResult['amount'] = this.outStandingAmt;
@@ -441,6 +441,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						var top = (screen.height / 2) - (800 / 2);
 						window.open(location.protocol + '//' + hostName + '/student/make-paymentviaeazypay', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
 							top + ',' + 'left=' + left);
+						// window.open(result.data[0].url);
 						localStorage.setItem('paymentWindowStatus', '1');
 						this.payAPICall = setInterval(() => {
 							if (ORDER_ID && MID) {

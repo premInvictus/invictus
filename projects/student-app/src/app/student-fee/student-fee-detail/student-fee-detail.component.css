@@ -67,3 +67,6 @@ th.mat-header-cell {
     position: relative;
     top: 15px;
 }
+td.tab-display-flex.border-0.mat-cell.cdk-column-action.mat-column-action.ng-star-inserted {
+    border: 0 !important;
+}
