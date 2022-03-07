@@ -16,7 +16,9 @@ declare var slickgroup: any;
 //import * as slickgroup from 'slickgrid-colgroup-plugin'
 
 //import * as slickgroup from './../../../../../../node_modules/slickgrid-colgroup-plugin/src/slick.colgroup.js';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
+const jsPDF = require('jspdf');
+import 'jspdf-autotable'
 
 @Component({
   selector: 'app-student-attendence',
@@ -25,7 +27,7 @@ import { DatePipe } from '@angular/common';
   encapsulation: ViewEncapsulation.None,
 })
 export class StudentAttendenceComponent implements OnInit {
-
+  reportData = new DatePipe('en-in').transform(new Date(), 'd-MMM-y')
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -54,9 +56,19 @@ export class StudentAttendenceComponent implements OnInit {
       attendance_report_type: 'Detailed Report'
     }
   ]
+  pdfrowdata: any[] = []
+  levelHeading: any[] = []
+  levelTotalFooter: any[] = []
+  levelSubtotalFooter: any[] = []
+  currentsession: any;
+  schoolInfo: any;
+  currentUser: any;
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getSession();
     this.buildForm();
+    this.getSchool();
     this.getClass();
     this.getFeeMonths();
     this.gridOptions = {
@@ -103,7 +115,7 @@ export class StudentAttendenceComponent implements OnInit {
         onCommand: (e, args) => {
           if (args.command === 'exportAsPDF') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            //this.exportAsPDF(this.dataset);
+            this.exportAsPDF(this.dataset);
           }
           if (args.command === 'exportAsExcel') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -169,6 +181,13 @@ export class StudentAttendenceComponent implements OnInit {
       }
     });
   }
+  getSchool() {
+    this.sisService.getSchool().subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.schoolInfo = res.data[0];
+      }
+    });
+  }
   getClass() {
     this.classArray = [];
     this.smartService.getClassData({ class_status: '1' }).subscribe((result: any) => {
@@ -204,6 +223,19 @@ export class StudentAttendenceComponent implements OnInit {
       });
     }
   }
+  getSession() {
+    this.sisService.getSession().subscribe((result: any) => {
+      if (result.status === 'ok') {
+        const sessionArray = result.data
+        const ses_id = JSON.parse(localStorage.getItem('session')).ses_id
+        sessionArray.forEach(ele => {
+          if (ele.ses_id === ses_id) {
+            this.currentsession = ele
+          }
+        });
+      }
+    })
+  }
   submit() {
     if (this.report_type == 'summarised_report') {
       this.resetDataset();
@@ -232,9 +264,244 @@ export class StudentAttendenceComponent implements OnInit {
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     const grid = angularGrid.slickGrid; // grid object
-
+    this.dataviewObj = angularGrid.dataView;
+    console.log('dataviewObj', this.dataviewObj);
     this.updateTotalRow(angularGrid.slickGrid);
   }
+  getReportHeader() {
+    let reportHeader
+    if (this.report_type == 'summarised_report') {
+      reportHeader = 'Summaried Report'
+    } else if (this.report_type == 'detailed_report') {
+      reportHeader = 'Detailed Report'
+    }
+    return 'Student Attendance ' + reportHeader
+  }
+
+  // Export As PDF
+  exportAsPDF(json: any[]) {
+    const headerData: any[] = []
+    this.pdfrowdata = []
+    this.levelHeading = []
+    this.levelTotalFooter = []
+    this.levelSubtotalFooter = []
+    const reportType = this.getReportHeader() + ' : ' + this.currentsession.ses_name
+    console.log('REPORT TYPE: ', reportType);
+
+    const doc = new jsPDF('p', 'mm', 'a0')
+    doc.autoTable({
+      head: [[
+        new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state
+      ]],
+      didDrawPage: function (data) { },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 22,
+      },
+      useCss: true,
+      theme: 'striped'
+    })
+    doc.autoTable({
+      head: [[reportType]],
+      margin: { top: 0 },
+      didDrawPage: function (data) { },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    const rowData: any[] = []
+    for (const item of this.columnDefinitions) {
+      headerData.push(item.name)
+    }
+    if (this.dataviewObj.getGroups().length === 0) {
+      json.forEach(ele => {
+        const arr: any[] = [];
+        this.columnDefinitions.forEach(col => {
+          arr.push(ele[col.id])
+        })
+        rowData.push(arr);
+        this.pdfrowdata.push(arr)
+      })
+    } else {
+      // this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+    }
+    if (this.totalRow) {
+      const arr: any[] = [];
+      for (const item of this.columnDefinitions) {
+        arr.push(this.totalRow[item.id]);
+      }
+      rowData.push(arr);
+      this.pdfrowdata.push(arr);
+    }
+    doc.levelHeading = this.levelHeading;
+    doc.levelTotalFooter = this.levelTotalFooter;
+    doc.levelSubtotalFooter = this.levelSubtotalFooter;
+    doc.autoTable({
+      head: [headerData],
+      body: this.pdfrowdata,
+      startY: doc.previousAutoTable.finalY + 0.5,
+      tableLineColor: 'black',
+      didDrawPage: function (data) {
+        doc.setFontStyle('bold');
+
+      },
+      willDrawCell: function (data) {
+        const doc = data.doc;
+        const rows = data.table.body;
+
+        // level 0
+        const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+        if (lfIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(0, 62, 120);
+        }
+
+        // level more than 0
+        const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+        if (lsfIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(229, 136, 67);
+        }
+
+        // group heading
+        const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+        if (lhIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#5e666d');
+          doc.setFillColor('#c8d6e5');
+        }
+
+        // grand total
+        if (data.row.index === rows.length - 1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(67, 160, 71);
+        }
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#c8d6e5',
+        textColor: '#5e666d',
+        fontSize: 18,
+      },
+      alternateRowStyles: {
+        fillColor: '#f1f4f7'
+      },
+      useCss: true,
+      styles: {
+        fontSize: 18,
+        cellWidth: 'auto',
+        textColor: 'black',
+        lineColor: '#89a8c8',
+      },
+      theme: 'grid'
+    });
+    // if (this.groupColumns.length > 0) {
+    //   doc.autoTable({
+    //     // tslint:disable-next-line:max-line-length
+    //     head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
+    //     didDrawPage: function (data) {
+
+    //     },
+    //     headStyles: {
+    //       fontStyle: 'bold',
+    //       fillColor: '#ffffff',
+    //       textColor: 'black',
+    //       halign: 'left',
+    //       fontSize: 20,
+    //     },
+    //     useCss: true,
+    //     theme: 'striped'
+    //   });
+    // }
+
+    // doc.autoTable({
+    //   // tslint:disable-next-line:max-line-length
+    //   head: [['Report Filtered as:  ' + this.reportData]],
+    //   didDrawPage: function (data) {
+
+    //   },
+    //   headStyles: {
+    //     fontStyle: 'bold',
+    //     fillColor: '#ffffff',
+    //     textColor: 'black',
+    //     halign: 'left',
+    //     fontSize: 20,
+    //   },
+    //   useCss: true,
+    //   theme: 'striped'
+    // });
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['No of records: ' + json.length]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['Generated On: '
+        + new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.save(reportType + '_' + this.reportData + '.pdf');
+  }
+
+  // Export As Excel
+
+  // Export To File
+
   updateTotalRow(grid: any) {
     //console.log('this.groupColumns', this.groupColumns);
     let columnIdx = grid.getColumns().length;
@@ -260,24 +527,22 @@ export class StudentAttendenceComponent implements OnInit {
       return "-";
     }
   }
-
   getStudentsTotalPresentAbsent(value: any) {
     let studentDetailsArray = []
     for (const item of value) {
-      let present = 0, absent = 0
       for (const item2 of item['sectionWiseDetails']) {
+        let present = 0, absent = 0
         present += item2['present']
         absent += item2['absent']
-      }
-      studentDetailsArray.push({
-        class_name: item['class_name'],
-        present: present,
-        absent: absent,
-        total: present + absent
-      })
-    }
-    // console.log('>>>>> studentDetailsArray :', studentDetailsArray);
 
+        studentDetailsArray.push({
+          class_name: item2['sec_name'] ? item['class_name'] + '-' + item2['sec_name'] : item['class_name'],
+          present: present,
+          absent: absent,
+          total: present + absent
+        })
+      }
+    }
     return studentDetailsArray
   }
   prepareDataSource(value) {
