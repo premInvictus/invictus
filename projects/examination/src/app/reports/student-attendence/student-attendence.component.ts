@@ -19,6 +19,8 @@ declare var slickgroup: any;
 import { DatePipe, TitleCasePipe } from '@angular/common';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable'
+import * as Excel from 'exceljs/dist/exceljs'
+import { saveAs } from 'file-saver'
 
 @Component({
   selector: 'app-student-attendence',
@@ -60,9 +62,38 @@ export class StudentAttendenceComponent implements OnInit {
   levelHeading: any[] = []
   levelTotalFooter: any[] = []
   levelSubtotalFooter: any[] = []
-  currentsession: any;
+  currentSession: any;
   schoolInfo: any;
   currentUser: any;
+  notFormatedCellArray: any[];
+  alphabetJSON = {
+    1: 'A',
+    2: 'B',
+    3: 'C',
+    4: 'D',
+    5: 'E',
+    6: 'F',
+    7: 'G',
+    8: 'H',
+    9: 'I',
+    10: 'J',
+    11: 'K',
+    12: 'L',
+    13: 'M',
+    14: 'N',
+    15: 'O',
+    16: 'P',
+    17: 'Q',
+    18: 'R',
+    19: 'S',
+    20: 'T',
+    21: 'U',
+    22: 'V',
+    23: 'W',
+    24: 'X',
+    25: 'Y',
+    26: 'Z'
+  };
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -119,7 +150,7 @@ export class StudentAttendenceComponent implements OnInit {
           }
           if (args.command === 'exportAsExcel') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            //this.exportToExcel(this.dataset);
+            this.exportToExcel(this.dataset);
           }
           if (args.command === 'export-csv') {
             //this.exportToFile('csv');
@@ -131,9 +162,9 @@ export class StudentAttendenceComponent implements OnInit {
         },
       }
     };
-    console.log(slickgroup);
+    // console.log(slickgroup);
     if (new slickgroup.ColGroup()) {
-      console.log(new slickgroup.ColGroup());
+      // console.log(new slickgroup.ColGroup());
       this.gridOptions['registerPlugins'] = [new slickgroup.ColGroup()];
     }
   }
@@ -230,7 +261,7 @@ export class StudentAttendenceComponent implements OnInit {
         const ses_id = JSON.parse(localStorage.getItem('session')).ses_id
         sessionArray.forEach(ele => {
           if (ele.ses_id === ses_id) {
-            this.currentsession = ele
+            this.currentSession = ele
           }
         });
       }
@@ -242,7 +273,7 @@ export class StudentAttendenceComponent implements OnInit {
       const date = new DatePipe('en-in').transform(this.paramform.value.date_id, 'yyyy-MM-dd')
       this.examService.getAttendanceReportClassSectionWise(date).subscribe((result: any) => {
         if (result && result.status === 'ok') {
-          console.log('>>> Result ', result.data)
+          // console.log('>>> Result ', result.data)
           this.prepareDataSource(result.data);
         }
       })
@@ -265,7 +296,7 @@ export class StudentAttendenceComponent implements OnInit {
     this.angularGrid = angularGrid;
     const grid = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
-    console.log('dataviewObj', this.dataviewObj);
+    // console.log('dataviewObj', this.dataviewObj);
     this.updateTotalRow(angularGrid.slickGrid);
   }
   getReportHeader() {
@@ -277,6 +308,177 @@ export class StudentAttendenceComponent implements OnInit {
     }
     return 'Student Attendance ' + reportHeader
   }
+  checkWidth(id, header) {
+    const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+    const max2 = header.toString().length;
+    const max = Math.max.apply(null, res);
+    return max2 > max ? max2 : max;
+  }
+  getNumberWithZero(value: string) {
+    if (value === '0') {
+      return 0;
+    } else {
+      return Number(value) ? Number(value) : value;
+    }
+  }
+  getLevelFooter(level) {
+    if (level === 0) {
+      return 'Total';
+    } else if (level > 0) {
+      return 'Sub Total (level ' + level + ')';
+    }
+  }
+  checkGroupLevel(item, worksheet) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        worksheet.addRow({});
+        this.notFormatedCellArray.push(worksheet._rows.length);
+        // style for groupeditem level heading
+        worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+          this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+        worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
+        worksheet.getCell('A' + worksheet._rows.length).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'c8d6e5' },
+          bgColor: { argb: 'ffffff' },
+        };
+        worksheet.getCell('A' + worksheet._rows.length).border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        worksheet.getCell('A' + worksheet._rows.length).font = {
+          name: 'Arial',
+          size: 10,
+          bold: true
+        };
+
+        if (groupItem.groups) {
+          this.checkGroupLevel(groupItem.groups, worksheet);
+          const blankTempObj = {};
+          for (const item2 of this.columnDefinitions) {
+            if (item2.id === 'class_name') {
+              blankTempObj[item2.id] = this.getLevelFooter(groupItem.level);
+            } else if (item2.id === 'student_strength') {
+              blankTempObj[item2.id] = groupItem.rows.length;
+            } else if (item2.id === 'admission_no') {
+              blankTempObj[item2.id] = groupItem.rows.length;
+            } else {
+              blankTempObj[item2.id] = '';
+            }
+          }
+          worksheet.addRow(blankTempObj);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          // style row having total
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.columnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.columnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        } else {
+          Object.keys(groupItem.rows).forEach(key => {
+            const obj = {};
+            for (const item2 of this.columnDefinitions) {
+              obj[item2.id] = groupItem.rows[key][item2.id];
+            }
+            worksheet.addRow(obj);
+          });
+          const blankTempObj = {};
+          for (const item2 of this.columnDefinitions) {
+            if (item2.id === 'class_name') {
+              blankTempObj[item2.id] = this.getLevelFooter(groupItem.level);
+            } else if (item2.id === 'student_strength') {
+              blankTempObj[item2.id] = groupItem.rows.length;
+            } else if (item2.id === 'admission_no') {
+              blankTempObj[item2.id] = groupItem.rows.length;
+            } else {
+              blankTempObj[item2.id] = '';
+            }
+          }
+          worksheet.addRow(blankTempObj);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          // style row having total
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.columnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.columnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        }
+      }
+    }
+  }
 
   // Export As PDF
   exportAsPDF(json: any[]) {
@@ -285,9 +487,7 @@ export class StudentAttendenceComponent implements OnInit {
     this.levelHeading = []
     this.levelTotalFooter = []
     this.levelSubtotalFooter = []
-    const reportType = this.getReportHeader() + ' : ' + this.currentsession.ses_name
-    console.log('REPORT TYPE: ', reportType);
-
+    const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name
     const doc = new jsPDF('p', 'mm', 'a0')
     doc.autoTable({
       head: [[
@@ -497,8 +697,209 @@ export class StudentAttendenceComponent implements OnInit {
     });
     doc.save(reportType + '_' + this.reportData + '.pdf');
   }
-
   // Export As Excel
+  exportToExcel(json: any[]) {
+    this.notFormatedCellArray = [];
+    const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+    const columns: any[] = [];
+    const columnValue: any[] = [];
+    for (const item of this.columnDefinitions) {
+      columns.push({
+        key: item.id,
+        width: this.checkWidth(item.id, item.name)
+      })
+      columnValue.push(item.name)
+    }
+    const fileName = reportType + ' - ' + this.reportData + '.xlsx';
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
+    worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
+    worksheet.getCell('A1').value = new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city +
+      ', ' + this.schoolInfo.school_state;
+    worksheet.getCell('A1').alignment = { horizontal: 'left' };
+
+    worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+    worksheet.getCell('A2').value = reportType;
+    worksheet.getCell('A2').alignment = { horizontal: 'left' };
+
+    worksheet.getRow(4).values = columnValue;
+
+    worksheet.columns = columns;
+    // console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
+    if (this.dataviewObj.getGroups().length === 0) {
+      json.forEach(element => {
+        const excelobj: any = {};
+        this.columnDefinitions.forEach(element1 => {
+          excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+        });
+        worksheet.addRow(excelobj);
+      });
+    } else {
+      // iterate all groups
+      this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
+    }
+    if (this.totalRow) {
+      worksheet.addRow(this.totalRow);
+    }
+    // style grand total
+    worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+      this.columnDefinitions.forEach(element => {
+        cell.font = {
+          color: { argb: 'ffffff' },
+          bold: true,
+          name: 'Arial',
+          size: 10
+        };
+        cell.alignment = { wrapText: true, horizontal: 'center' };
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '439f47' },
+          bgColor: { argb: '439f47' }
+        };
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+      });
+    });
+    // style all row of excel
+    worksheet.eachRow((row, rowNum) => {
+      if (rowNum === 1) {
+        row.font = {
+          name: 'Arial',
+          size: 16,
+          bold: true
+        };
+      } else if (rowNum === 2) {
+        row.font = {
+          name: 'Arial',
+          size: 14,
+          bold: true
+        };
+      } else if (rowNum === 4) {
+        row.eachCell((cell) => {
+          cell.font = {
+            name: 'Arial',
+            size: 12,
+            bold: true
+          };
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'bdbdbd' },
+            bgColor: { argb: 'bdbdbd' },
+          };
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+          cell.alignment = { horizontal: 'center' };
+        });
+      } else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+        const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+        if (cellIndex === -1) {
+          row.eachCell((cell) => {
+            cell.font = {
+              name: 'Arial',
+              size: 10,
+            };
+            cell.alignment = { wrapText: true, horizontal: 'center' };
+          });
+          if (rowNum % 2 === 0) {
+            row.eachCell((cell) => {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'ffffff' },
+                bgColor: { argb: 'ffffff' },
+              };
+              cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            });
+          } else {
+            row.eachCell((cell) => {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'dedede' },
+                bgColor: { argb: 'dedede' },
+              };
+              cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            });
+          }
+
+        }
+      }
+    });
+
+    worksheet.addRow({});
+    // if (this.groupColumns.length > 0) {
+    //   worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+    //     this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    //   worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+    //   worksheet.getCell('A' + worksheet._rows.length).font = {
+    //     name: 'Arial',
+    //     size: 10,
+    //     bold: true
+    //   };
+    // }
+
+    // worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+    //   this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    // worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
+    // worksheet.getCell('A' + worksheet._rows.length).font = {
+    //   name: 'Arial',
+    //   size: 10,
+    //   bold: true
+    // };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+      + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name);
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    workbook.xlsx.writeBuffer().then(data => {
+      const blob = new Blob([data], { type: 'application/octet-stream' });
+      saveAs(blob, fileName)
+    })
+  }
 
   // Export To File
 
@@ -649,7 +1050,7 @@ export class StudentAttendenceComponent implements OnInit {
         blankTempObj[index.toString()] = totalpresent;
       }
       this.totalRow = blankTempObj;
-      console.log('dataset  ', this.dataset);
+      // console.log('dataset  ', this.dataset);
       if (this.dataset.length > 20) {
         this.gridHeight = 750;
       } else if (this.dataset.length > 10) {
@@ -662,24 +1063,24 @@ export class StudentAttendenceComponent implements OnInit {
       this.tableFlag = true;
     }
   }
-  renderDifferentColspan(item: any) {
-    if (item.id % 2 === 1) {
-      return {
-        columns: {
-          duration: {
-            colspan: 3 // "duration" will span over 3 columns
-          }
-        }
-      };
-    } else {
-      return {
-        columns: {
-          0: {
-            colspan: '*' // starting at column index 0, we will span accross all column (*)
-          }
-        }
-      };
-    }
-  }
+  // renderDifferentColspan(item: any) {
+  //   if (item.id % 2 === 1) {
+  //     return {
+  //       columns: {
+  //         duration: {
+  //           colspan: 3 // "duration" will span over 3 columns
+  //         }
+  //       }
+  //     };
+  //   } else {
+  //     return {
+  //       columns: {
+  //         0: {
+  //           colspan: '*' // starting at column index 0, we will span accross all column (*)
+  //         }
+  //       }
+  //     };
+  //   }
+  // }
 
 }
