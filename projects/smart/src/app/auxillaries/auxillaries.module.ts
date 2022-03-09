@@ -12,6 +12,7 @@ import { TimeTableComponent } from './time-table/time-table.component';
 import { SubjectPeriodCounterComponent } from './subject-period-counter/subject-period-counter.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { TeacherWiseTimetableComponent } from './teacher-wise-timetable/teacher-wise-timetable.component';
+import { CombinedTimetableComponent } from './combined-timetable/combined-timetable.component';
 import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-timetable.component';
 import { SchedulerListViewComponent } from './scheduler/scheduler-list-view/scheduler-list-view.component';
 import { SchedulerCalenderViewComponent } from './scheduler/scheduler-calender-view/scheduler-calender-view.component';
@@ -42,6 +43,7 @@ import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable
 		SubjectPeriodCounterComponent,
 		SchedulerComponent,
 		TeacherWiseTimetableComponent,
+		CombinedTimetableComponent,
 		ClassWiseTimetableComponent,
 		SchedulerListViewComponent,
 		SchedulerCalenderViewComponent,

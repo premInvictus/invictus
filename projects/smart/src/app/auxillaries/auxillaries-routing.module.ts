@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {TimeTableComponent} from '../auxillaries/time-table/time-table.component';
 import {SubjectPeriodCounterComponent} from '../auxillaries/subject-period-counter/subject-period-counter.component';
 import { TeacherWiseTimetableComponent } from './teacher-wise-timetable/teacher-wise-timetable.component';
+import { CombinedTimetableComponent } from './combined-timetable/combined-timetable.component';
 import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-timetable.component';
 import {SchedulerComponent} from '../auxillaries/scheduler/scheduler.component';
 import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
@@ -12,6 +13,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'teacherwise-table', component: TeacherWiseTimetableComponent
+	},
+	{
+		path: 'combined-table', component: CombinedTimetableComponent
 	},
 	{
 		path: 'classwise-table', component: ClassWiseTimetableComponent

@@ -193,3 +193,21 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
 .margin-right-15{
     margin-right: 15px;
 }
+
+.mat-tab-customize-class{
+    float: right;
+    padding-right: 27px !important;
+    padding: 12px;
+}
+.combined-tab {
+    border: 2px solid #1e88e585;
+    font-size: 14px;
+    color: #1e88e5bf !important;
+    padding: 0.5% 2%;
+    background: border-box;
+    margin: 2% 0.2%;
+}
+.combined-tab-active {
+    color: #fff !important;
+    background: #77b7f0;
+}
