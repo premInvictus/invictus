@@ -2,22 +2,30 @@
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
       <div class="row">
-        <div class="col-4">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Teacher Wise Time Table</span>
-          </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="top-card-title combined-tab">
+                    <a [routerLink]="['../classwise-table']">
+                        <span class="font-size-22 font-medium margin-right-20">Class Wise View</span></a>
+                </div>
+                <div class="top-card-title combined-tab">
+                    <a [routerLink]="['../combined-table']">
+                        <span class="font-size-24 font-medium">Combined View</span></a>
+                </div>
+                <div class="top-card-title combined-tab combined-tab-active">
+                        <span class="font-size-22 font-medium margin-right-20">Teacher Wise Time Table</span>
+                </div>
+            </div>
+            
         </div>
-        <div class="col-8 text-right">
-          <div class="top-card-title">
-              <a [routerLink]="['../classwise-table']">
-                <span class="font-size-22 font-medium  margin-right-20">Class Wise View</span>
-              </a>
-            <a [routerLink]="['../time-table']">
-              <button mat-raised-button class="btn-success-green"><i class="fas fa-plus"></i>
-              </button></a>           
-          </div>
+        <div class="col-6 text-right">
+            <div class="top-card-title">
+                <a [routerLink]="['../time-table']">
+                    <button mat-raised-button class="btn-success-green "><i class="fas fa-plus"></i>
+                    </button></a>
+            </div>
         </div>
-      </div>
+    </div>
 
     </mat-card>
   </div>

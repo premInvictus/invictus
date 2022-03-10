@@ -4,12 +4,12 @@
             <div class="row">
                 <div class="col-6">
                     <div class="row">
-                        <div class="top-card-title combined-tab combined-tab-active">
-                                <span class="font-size-22 font-medium margin-right-20">Class Wise Time Table</span>
-                        </div>
                         <div class="top-card-title combined-tab">
-                            <a [routerLink]="['../combined-table']">
-                                <span class="font-size-24 font-medium">Combined View</span></a>
+                            <a [routerLink]="['../classwise-table']">
+                                <span class="font-size-22 font-medium margin-right-20">Class Wise View</span></a>
+                        </div>
+                        <div class="top-card-title combined-tab combined-tab-active">
+                            <span class="font-size-24 font-medium">Combined Time Table</span>
                         </div>
                         <div class="top-card-title combined-tab">
                             <a [routerLink]="['../teacherwise-table']">
@@ -49,20 +49,11 @@
                         </mat-form-field>
                         <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                             <mat-label>Section</mat-label>
-                            <mat-select formControlName="tt_section_id" (selectionChange)="getclasswisedetails()"
+                            <mat-select formControlName="tt_section_id" (selectionChange)="getcombineddetails()"
                                 required placeholder="Select Section">
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                                     {{item.sec_name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
-                            <mat-label>Subject</mat-label>
-                            <mat-select formControlName="tt_subject_id" placeholder="Select Subject">
-                                <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
-                                    {{item.sub_name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -106,10 +97,10 @@
                                         *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id === item.subject_id)">
                                         <i class="fas fa-circle margin-right-10 animation"
                                             [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
-                                    <td class="custom-td text-left  pad-sub"
-                                        *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id != item.subject_id)">
+                                    <td class="custom-td text-left "
+                                        *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id != item.subject_id)" style="padding: 1% 0.6% !important;">
                                         <i class="fas fa-circle margin-right-10 ddd"
-                                            [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
+                                            [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}} - <span style="font-size: 14px; font-weight: 600; color: #124261;"> {{getTeacherName(item) | capitalize}} </span> </td>
                                     <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
                                 </ng-container>
                             </tr>
@@ -129,6 +120,7 @@
                     </table>
                 </div>
             </div>
+            
             <!-- <div class="row margin-top-10" *ngIf="subjectwiseFlag">
                 <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table">

@@ -141,6 +141,8 @@ export class TeacherWiseTimetableComponent implements OnInit {
 			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArray = result.data;
+					console.log(">>>>>>>>>>>", this.teacherArray);
+					
 				} else {
 					this.commonService.showSuccessErrorMessage(result.data, 'error');
 				}

@@ -77,82 +77,82 @@
     color: orchid;
 }
 .background-color-1 {
-    background-color: aqua!important;
+    background-color: aqua;
 }
 .background-color-2 {
-    background-color: aquamarine!important;
+    background-color: aquamarine;
 }
 .background-color-3{
-    background-color: chocolate!important;
+    background-color: chocolate;
 }
 .background-color-4 {
-    background-color: peru!important;
+    background-color: peru;
 }
 .background-color-5 {
-    background-color: crimson!important;
+    background-color: crimson;
 }
 .background-color-6{
-    background-color: rebeccapurple!important;
+    background-color: rebeccapurple;
 }
 .background-color-7 {
-    background-color: red!important;
+    background-color: red;
 }
 .background-color-8 {
-    background-color: rosybrown!important;
+    background-color: rosybrown;
 }
 .background-color-9{
-    background-color: royalblue!important;
+    background-color: royalblue;
 }
 .background-color-10 {
-    background-color: yellow!important;
+    background-color: yellow;
 }
 .background-color-11 {
-    background-color: yellowgreen!important;
+    background-color: yellowgreen;
 }
 .background-color-12{
-    background-color: gold!important;
+    background-color: gold;
 }
 .background-color-13 {
-    background-color: goldenrod!important;
+    background-color: goldenrod;
 }
 .background-color-14 {
-    background-color: gray!important;
+    background-color: gray;
 }
 .background-color-15{
-    background-color: green!important;
+    background-color: green;
 }
 .background-color-16 {
-    background-color: greenyellow!important;
+    background-color: greenyellow;
 }
 .background-color-17 {
-    background-color: grey!important;
+    background-color: grey;
 }
 .background-color-18{
-    background-color: royalblue!important;
+    background-color: royalblue;
 }
 .background-color-19 {
-    background-color: blue!important;
+    background-color: blue;
 }
 .background-color-20{
-    background-color: black!important;
+    background-color: black;
 }
 .background-color-21 {
-    background-color: blueviolet!important;
+    background-color: blueviolet;
 }
 .background-color-22 {
-    background-color: brown!important;
+    background-color: brown;
 }
 .background-color-23{
-    background-color: coral!important;
+    background-color: coral;
 }
 .background-color-24 {
-    background-color: olive!important;
+    background-color: olive;
 }
 .background-color-25 {
-    background-color: orange!important;
+    background-color: orange;
 }
 .background-color-26{
-    background-color: orchid!important;
+    background-color: orchid;
 }
 .animation {
     -webkit-animation: ripplefive 0.7s linear infinite;
@@ -170,9 +170,16 @@ th.custom-th{
 }
 td.custom-td{
     color: rgba(0,0,0,.87)!important;
-    height: 35px!important;   
+    height: 35px!important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
     font-size: 16px!important;
 }
+/* Cells in even rows (2,4,6...) are one color */        
+tr.custom-tr:nth-child(even) td.custom-td { background: #f1f4f7 !important; }   
+
+/* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
+tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }  
 .pad-sub{
     padding-left:3%!important;
 }
@@ -183,20 +190,9 @@ td.custom-td{
 .font-size-22{
     font-size:22px!important;
 }
-th.custom-th{
-    color: rgba(0, 0, 0, 0.54)!important;
-    height: 40px!important;
-    padding:0px!important;
-    font-size: 15px!important;
+.margin-right-15{
+    margin-right: 15px;
 }
-td.custom-td{
-    color: rgba(0,0,0,.87)!important;
-    height: 35px!important;
-    padding-top:0px!important;
-    padding-bottom:0px!important;
-    font-size: 16px!important;
-}
-
 .mat-tab-customize-class{
     float: right;
     padding-right: 27px !important;
@@ -214,8 +210,3 @@ td.custom-td{
     color: #fff !important;
     background: #77b7f0;
 }
-/* Cells in even rows (2,4,6...) are one color */        
-tr.custom-tr:nth-child(even) td.custom-td { background: #f1f4f7 !important; }   
-
-/* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
-tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }  
