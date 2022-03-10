@@ -70,3 +70,21 @@ th.mat-header-cell {
 td.tab-display-flex.border-0.mat-cell.cdk-column-action.mat-column-action.ng-star-inserted {
     border: 0 !important;
 }
+.text-font-10{
+    font-size: 10px;
+}
+.text-font-12{
+    font-size: 12px;
+}
+.txt-font-14{
+    font-size: 14px;
+}
+.text-color-blue{
+    color: #053b73;
+}
+@keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }

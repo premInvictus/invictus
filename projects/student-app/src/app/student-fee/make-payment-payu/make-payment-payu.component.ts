@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser'
 })
 export class MakePaymentPayuComponent implements OnInit {
 
-
+  processingPayment: boolean = false;
   paytmResult: any;
   pauEnv = this.dom.bypassSecurityTrustResourceUrl(environment.payuApi);
   outStandingAmt = '';
@@ -42,6 +42,10 @@ export class MakePaymentPayuComponent implements OnInit {
 
       this.outStandingAmt = this.paytmResult['amount'];
     }
+  }
+
+  processPayment(){
+    this.processingPayment = true;
   }
 
   cancelPay() {

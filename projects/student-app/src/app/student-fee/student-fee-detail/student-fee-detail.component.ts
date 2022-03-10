@@ -46,7 +46,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	postURL = '';
 	advanceFeepayForm: FormGroup;
 	advance_fee_type=false;
-
+	isLoading = true;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('table') table: ElementRef;
@@ -76,6 +76,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	settingArr7: any[] = [];
 	counter = 0;
 	currentUser: any = {};
+	loader_status: string;
 	constructor(
 		public dialog: MatDialog,
 		private fb: FormBuilder,
@@ -154,6 +155,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 			'pageIndex': this.pageIndex,
 			'pageSize': this.invoicepagesize
 		};
+		this.loader_status = "Loading Invoice";
 		this.erpCommonService.getStudentInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.invoiceArray = result.data;
@@ -215,6 +217,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 	invoiceTableData(invoicearr = []) {
 		this.INVOICE_ELEMENT = [];
+		this.loader_status = "Preparing Data";
 		invoicearr.forEach((element, index) => {
 			let status = '';
 			let statusColor = '';
@@ -251,6 +254,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 			this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 			this.dataSource.paginator = this.paginator;
 		}
+		this.isLoading = false;
 
 	}
 

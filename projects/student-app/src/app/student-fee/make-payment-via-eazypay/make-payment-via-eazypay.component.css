@@ -1,0 +1,10 @@
+.btn-yes{
+    background: #A4De02;
+    color: #fff;
+    min-width: 120px;
+}
+.btn-no{
+    background:rgb(222, 2, 39);
+    color: #fff;
+    min-width: 120px;
+}

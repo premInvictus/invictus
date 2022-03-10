@@ -68,8 +68,8 @@
                   <i class="fas fa-file-pdf" (click)="downloadReceipt(element.rpt_id)" style="cursor:pointer; color: blue;"
                     title="Download Receipt"></i>
                     &nbsp;&nbsp;
-                  <i class="far fa-check-circle" (click)="downloadReceipt(element.rpt_id)" style="cursor:pointer; color: greenyellow;"
-                    title="Download Receipt"></i>
+                  <i class="far fa-check-circle" matRipple style="cursor:pointer; color: greenyellow; animation: ripple 1600ms linear;"
+                    title="Invoice Paid"></i>
                 </span>
               </td>
             </ng-container>
@@ -79,8 +79,19 @@
           </table>
 
           <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-            <tr *ngIf="INVOICE_ELEMENT.length == 0">
+            <tr *ngIf="INVOICE_ELEMENT.length == 0 && !isLoading">
               <td colspan="8">No Record Found</td>
+            </tr>
+            <tr  *ngIf="isLoading">
+              <div class="container">
+                <p class="text-center mt-5">
+                   <img src="assets/1484.gif" alt="loading" width="4%">
+                   <!-- Loading..... -->
+                </p>
+                <p class="text-center mb-5 text-font-12 text-color-blue">
+                   {{loader_status}}
+                </p>
+             </div>
             </tr>
           </table>
         </div>
