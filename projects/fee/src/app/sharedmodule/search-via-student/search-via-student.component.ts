@@ -19,13 +19,15 @@ export class SearchViaStudentComponent implements OnInit, AfterViewInit {
 		public dialogRef: MatDialogRef<SearchViaStudentComponent>,
 		@Inject(MAT_DIALOG_DATA) data: any,
 	) {
+		console.log('>> The data', data);
+
 		this.shouldSizeUpdate = data.shouldSizeUpdate;
 	}
 
 	@ViewChild(MatSort) sort: MatSort
 
 	ngAfterViewInit() {
-		this.sort.disableClear = true
+		// this.sort.disableClear = true
 		this.dataSource.sort = this.sort
 	}
 	ngOnInit() {
