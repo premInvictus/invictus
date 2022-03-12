@@ -9,7 +9,7 @@ import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifi
 import { CookieModule } from 'ngx-cookie';
 import { LoadingModule } from 'ngx-loading';
 import { AuthGuard } from 'src/app/_guards';
-import { LoaderService, CommonAPIService, SisService, AxiomService,SmartService,TransportService } from './_services';
+import { LoaderService, CommonAPIService, SisService, AxiomService,SmartService,TransportService, FeeService } from './_services';
 import { TransportusertypeService } from './transportusertype/transportusertype.service';
 // import { GoogleMapsAngularModule } from 'google-maps-angular';
 // import { AgmCoreModule } from '@agm/core';
@@ -22,7 +22,8 @@ const providers = [NotificationsService,
   AxiomService,
   TransportusertypeService,
   SmartService,
-  TransportService
+  TransportService,
+  FeeService
 ];
 @NgModule({
   declarations: [
