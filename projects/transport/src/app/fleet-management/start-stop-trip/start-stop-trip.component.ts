@@ -253,7 +253,7 @@ export class StartStopTripComponent implements OnInit {
         if (insertdata.sst_id) {
           this.transportService.updateStartStopTrip([insertdata]).subscribe((result: any) => {
             if (result) {
-              this.commonAPIService.showSuccessErrorMessage('Updated successfullt', 'success')
+              this.commonAPIService.showSuccessErrorMessage('Updated successfully', 'success')
               this.getAllStartStopTrip();
             } else {
               this.commonAPIService.showSuccessErrorMessage('Error while updating', 'success')
@@ -262,8 +262,24 @@ export class StartStopTripComponent implements OnInit {
         } else {
           this.transportService.insertStartStopTrip([insertdata]).subscribe((result: any) => {
             if (result) {
-              this.commonAPIService.showSuccessErrorMessage('Inserted successfullt', 'success')
-              this.getAllStartStopTrip();
+              let insertJson = {
+                "time": new DatePipe('en-in').transform(new Date(), 'HH:mm:ss'),
+                "tr_id": result.route_id,
+                "tsp_id": 0,
+                "sst_id": result.sst_id,
+                "bus_id": result.tv_id,
+                "trip_status":"start",
+                "status":"1",
+                "created_by": {
+                        "login_id": "2648",
+                        "full_name": "Admin"
+                    }
+            };
+
+              this.transportService.transportTripLogInsert(insertJson).subscribe((res: any) => {
+                this.commonAPIService.showSuccessErrorMessage('Inserted successfully', 'success')
+                this.getAllStartStopTrip();
+              })
             } else {
               this.commonAPIService.showSuccessErrorMessage('Error while inserting', 'success')
             }

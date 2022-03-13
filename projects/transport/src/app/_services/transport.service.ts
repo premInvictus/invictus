@@ -220,4 +220,16 @@ export class TransportService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/transportstoppages/insertTransportStoppages', value);
 	}
+	transportLog(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/transport-logs/getAll', value);
+	}
+	transportRunningLog(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/trip-log/getAll', value);
+	}
+	transportTripLogInsert(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiTransportUrl + '/trip-log/insert', value);
+	}
 }

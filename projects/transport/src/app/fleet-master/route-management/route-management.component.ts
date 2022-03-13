@@ -289,17 +289,40 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
       }
       console.log("fga >>>> submit", this.formGroupArray);
 
-      // this.transportService.insertRouteManagement(inputJson).subscribe((result_i: any) => {
-      //   if (result_i) {
-      //     this.getRouteManagement();
-      //     this.resetForm();
-      //     this.disableApiCall = false;
-      //     this.commonService.showSuccessErrorMessage('Route Added Successfully', 'success');
-      //   } else {
-      //     this.commonService.showSuccessErrorMessage('Insert failed', 'error');
-      //     this.disableApiCall = false;
-      //   }
-      // });
+      console.log("form group array >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.formGroupArray);
+      let insertJson = [];
+      this.formGroupArray.forEach((e)=>{
+        insertJson.push({
+          status: '1',
+          tr_id: e.tr_id,
+          tsp_id: e.tsp_id,
+          tsp_pick_time: e.formGroup.value.tsp_pick_time,
+          tsp_drop_time: e.formGroup.value.tsp_drop_time,
+          created_by: {
+            login_id: this.curr_user.login_id,
+            full_name: this.curr_user.full_name
+          },
+          ses_id: Number(this.curr_session.ses_id)
+        })
+      })
+
+      
+      this.transportService.insertRouteManagement(inputJson).subscribe((result_i: any) => {
+        if (result_i) {
+          this.transportService.insertRouteStoppageMapping(insertJson).subscribe((result: any) => {
+            if (result) {
+              console.log("res >>>>>>>>>>>>>>>>>", result);
+              this.getRouteManagement();
+              this.resetForm();
+              this.disableApiCall = false;
+              this.commonService.showSuccessErrorMessage('Route Added Successfully', 'success');
+            }
+          });
+        } else {
+          this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+          this.disableApiCall = false;
+        }
+      });
     } else {
       this.commonService.showSuccessErrorMessage('Please fill required fields', 'error');
     }
@@ -496,9 +519,11 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateRM(item) {
+  findInArray(array, element){
 
-    console.log("fga update >>>>>>>>>>>>>>>>>>>>>>>>>", this.formGroupArray);
+  }
+
+  updateRM(item) {
     let presentRouteStoppage;
     let updateJson = []
     let insertJson = []
@@ -509,8 +534,12 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
     this.transportService.getAllRouteStoppageMapping(getAllPayload).subscribe((result: any) => {
       if (result) {
         this.routeStoppageMappingArray = result.data;
+        console.log("getAllRouteStoppageMapping >>>>>>>>>>>>>>>>>>>>>>>>>", this.routeStoppageMappingArray);
+        console.log("formGroupArray >>>>>>>>>>>>>>>>>>>>>>>>>", this.formGroupArray);
         this.formGroupArray.forEach((e) => {
-          presentRouteStoppage = this.routeStoppageMappingArray.find(el => (el.tr_id == e.tr_id && el.tsp_id == e.tsp_id));
+          console.log("e >>>>>>>>>>>>>>>>>>>>>>>>>", e);          
+          presentRouteStoppage = this.routeStoppageMappingArray.find(ele => ele.tr_id == e.tr_id && ele.tsp_id == e.tsp_id);
+          console.log("presentRouteStoppage >>>>>>>>>>>>>>>>>>>>>>>>>", presentRouteStoppage);
           if (presentRouteStoppage) {
             updateJson.push({
               status: '1',
@@ -540,10 +569,14 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
             })
           }
         });
+        console.log("update json >>>>>>>>>>>>", updateJson);
+        console.log("insert Json >>>>>>>>>>>>", insertJson);
         if (updateJson) {
           this.transportService.updateRouteStoppageMapping(updateJson).subscribe((result: any) => {
             if (result) {
               this.commonService.showSuccessErrorMessage('Stoppage Mapping Updated Successful', 'success')
+              this.getRouteManagement();
+              this.resetForm();
             } else {
               this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
             }
@@ -553,6 +586,8 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
           this.transportService.insertRouteStoppageMapping(insertJson).subscribe((result: any) => {
             if (result) {
               this.commonService.showSuccessErrorMessage('Stoppage Mapping Updated Successful', 'success')
+              this.getRouteManagement();
+              this.resetForm();
             } else {
               this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
             }
@@ -562,8 +597,6 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
         this.commonService.showSuccessErrorMessage('Stoppage Mapping Update Unsuccessful', 'error')
       }
     });
-    console.log("update json >>>>>>>>>>>>", updateJson);
-    console.log("insert Json >>>>>>>>>>>>", insertJson);
 
     // const getAllPayload = {
     //   "status": '1',
@@ -648,10 +681,8 @@ export class RouteManagementComponent implements OnInit, AfterViewInit {
       this.transportService.updateRouteManagement(inputJson).subscribe((result: any) => {
         if (result) {
           // TODO UPDATE ----- transport route stoppage mapping [TRS] based on trs_id
-          this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+          this.commonService.showSuccessErrorMessage('Updated Successfully', 'success');
           this.updateRM(item);
-          this.getRouteManagement();
-          this.resetForm();
         }
       });
 

@@ -20,7 +20,7 @@
         <ng-container *ngFor="let set of settings; let i = index">
           <div class="row">
             <div class="col-12">
-              <mat-radio-group (change)="chooseBank(set, i)" [(ngModel)]="chosenBank">
+              <mat-radio-group *ngIf="set.enabled == 'true'" (change)="chooseBank(set, i)" [(ngModel)]="chosenBank">
                 <mat-radio-button [value]="set.bank_alias">
                  <span>
                    <img [src]="set.bank_logo" class="logo-bnk">
@@ -33,7 +33,7 @@
       </ng-container>
     </div>
   </div>
-  <div class="text-center btn-div">
+  <div class="text-center btn-div mt-5">
     <button mat-button class="btn-success btn-spacer" style="margin-right: 5px;"
       (click)="closeDialog2()">Confirm</button>
     <button mat-button class="btn-danger" (click)="resetForm()">Cancel</button>

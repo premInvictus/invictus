@@ -23,12 +23,14 @@ export class MakePaymentViaEazypayComponent implements OnInit {
 
   ngOnInit() {
     this.paytmResult = JSON.parse(localStorage.getItem('paymentData'));
-    console.log('paytmResult', this.paytmResult);
+    console.log('paytmResult >>>>>>>>>>>>>>', this.paytmResult);
     if (this.paytmResult) {
       this.outStandingAmt = this.paytmResult['amount'];
     }
   }
   goToLocation() {
+    alert(this.paytmResult.url);
+    // window.open(this.paytmResult.url);
     window.location.href = this.paytmResult.url;
   }
   cancelPay() {
