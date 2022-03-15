@@ -23,13 +23,15 @@ import {
 } from 'angular-slickgrid';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+
 @Component({
-  selector: 'app-tyre-log-reports',
-  templateUrl: './tyre-log-reports.component.html',
-  styleUrls: ['./tyre-log-reports.component.css']
+  selector: 'app-vehicle-log-reports',
+  templateUrl: './vehicle-log-reports.component.html',
+  styleUrls: ['./vehicle-log-reports.component.scss']
 })
-export class TyreLogReportsComponent implements OnInit {
-  displayedColumns: string[] = ['date', 'bus_id','fuel_type','fuel_station','quantity','rate','amount','attachment', 'modify'];
+
+export class VehicleLogReportsComponent implements OnInit {
+  displayedColumns: string[] = ['date', 'bus_number','fuel_type','fuel_station','quantity','rate','engine_no','insurance_no', 'modify'];
   reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
@@ -164,7 +166,7 @@ export class TyreLogReportsComponent implements OnInit {
 				},
 			},
 			draggableGrouping: {
-				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				dropPlaceHolderText: ' ',
 				// groupIconCssClass: 'fa fa-outdent',
 				deleteIconCssClass: 'fa fa-times',
 				onGroupChanged: (e, args) => {
@@ -179,13 +181,13 @@ export class TyreLogReportsComponent implements OnInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'id', name: 'S.No.', field: 'id', sortable: true, filterable: true, minWidth: 100,
+			{ id: 'bus_number', name: 'Bus No.', field: 'bus_number', sortable: true, filterable: true, minWidth: 100,
 			groupTotalsFormatter: this.srnTotalsFormatter  },
-			{ id: 'bus_id', name: 'Bus No.', field: 'bus_id', sortable: true, filterable: true, minWidth: 100,
+			{ id: 'bus_details', name: 'Bus Details', field: 'bus_details', sortable: true, filterable: true, minWidth: 150,
 			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'date', name: 'Date', field: 'date', sortable: true, filterable: true, minWidth: 150,
+			/* { id: 'created_date', name: 'Created Date', field: 'created_date', sortable: true, filterable: true, minWidth: 150,
 			grouping: {
-				getter: 'date',
+				getter: 'created_date',
 				formatter: (g) => {
 					return `${g.value}  <span style="color:green">(${g.count})</span>`;
 				},
@@ -197,18 +199,31 @@ export class TyreLogReportsComponent implements OnInit {
 				aggregators: this.aggregatearray,
 				aggregateCollapsed: true,
 				collapsed: false,
-			}},
-			{ id: 'nature', name: 'Nature', field: 'nature', sortable: true, filterable: true, minWidth: 150},
-			{ id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true, filterable: true, minWidth: 100},
-			{ id: 'rate', name: 'Rate', field: 'rate', sortable: true, filterable: true, minWidth: 100},
-			{ id: 'amount', name: 'Amount', field: 'amount', sortable: true, filterable: true, minWidth: 100 },
-			{ id: 'remarks', name: 'Amount', field: 'remarks', sortable: true, filterable: true, minWidth: 100 },
-			{ id: 'attachment', name: 'Documents', field: 'attachment', sortable: true, filterable: true, minWidth: 150,
+			}}, */
+      
+			{ id: 'chasis_no', name: 'Chasis Number', field: 'chasis_no', sortable: true, filterable: true, minWidth: 150},
+			{ id: 'engine_no', name: 'Engine No', field: 'engine_no', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'insurance_no', name: 'Insurance No', field: 'insurance_no', sortable: true, filterable: true, minWidth: 150,
 				// formatter: (row, cell, value, columnDef, dataContext) => {
 				// 	return  "<input type='button' value='"+value+"' id='btnForm' value2='"+row+"' value3='"+cell+"' onClick='fnBtnClick(this);'/>";
 				// },
 			},
-			{ id: 'created_by', name: 'Creator', field: 'created_by', sortable: true, filterable: true, minWidth: 150 },
+			{ id: 'insurance_provider', name: 'Insurance Provider', field: 'insurance_provider', sortable: true, filterable: true, minWidth: 150},
+			{ id: 'insurance_valid_upto', name: 'Insurance Valid Upto', field: 'insurance_valid_upto', sortable: true, filterable: true, minWidth: 150},
+			{ id: 'registration_no', name: 'Registration No', field: 'registration_no', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'registration_valid_upto', name: 'Registration Valid Upto', field: 'registration_valid_upto', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'permit_valid_upto', name: 'Permit Valid Upto', field: 'permit_valid_upto', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'puc_valid_upto', name: 'PUC Valid Upto', field: 'puc_valid_upto', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'device_no', name: 'Device No', field: 'device_no', sortable: true, filterable: true, minWidth: 150 },
+      { id: 'route_name', name: 'Route Name', field: 'route_name', sortable: true, filterable: true, minWidth: 150},
+      /* { id: 'total_capacity', name: 'Total Capacity', field: 'total_capacity', sortable: true, filterable: true, minWidth: 150},
+      { id: 'total_occupancy', name: 'Total Occupancy', field: 'total_occupancy', sortable: true, filterable: true, minWidth: 150}, */
+      { id: 'conductor_name', name: 'Conductor Name', field: 'conductor_name', sortable: true, filterable: true, minWidth: 200},
+      { id: 'conductor_number', name: 'Conductor No', field: 'conductor_number', sortable: true, filterable: true, minWidth: 150},
+      { id: 'driver_name', name: 'Driver Name', field: 'driver_name', sortable: true, filterable: true, minWidth: 200},
+      { id: 'driver_number', name: 'Driver No', field: 'driver_number', sortable: true, filterable: true, minWidth: 150},
+      { id: 'supervisor_name', name: 'Supervisor Name', field: 'supervisor_name', sortable: true, filterable: true, minWidth: 200},
+      { id: 'supervisor_number', name: 'Supervisor No', field: 'supervisor_number', sortable: true, filterable: true, minWidth: 150},
 		];
 		this.getAllTransportLog();
   }
@@ -217,17 +232,17 @@ export class TyreLogReportsComponent implements OnInit {
     this.serviceLogReportForm = this.fbuild.group({
         'tl_id': '',
       'date': '',
-        'bus_id': '',
-        'workshop': '',
+        'bus_number': '',
+        'bus_details': '',
         'fuel_type': '',
         'nature': '',
         'fuel_station': '',
         'quantity': '',
       'rate': '',
-      'amount':'',
+      'engine_no':'',
         'logs_type': '',
-        'attachment':[],
-        'status':''
+        'insurance_no':[],
+        'status':'',
       });
     }
 
@@ -252,13 +267,12 @@ export class TyreLogReportsComponent implements OnInit {
 		});
 	}
 
-	// Get All Transport Fuel Log
 	getAllTransportLog(){
 		const inputJson = {};		
 		inputJson['status'] = "1";
-		inputJson['logs_type'] = "tyre";
+		inputJson['logs_type'] = "vehicle";
 		inputJson['sort'] = {"date": -1};
-		this.transportService.transportLog(inputJson).subscribe((result: any) => {
+		this.transportService.transportAllVehicles(inputJson).subscribe((result: any) => {
 			if (result) {
 				this.transportLogData = result;
 				this.prepareDataSource();
@@ -285,17 +299,25 @@ export class TyreLogReportsComponent implements OnInit {
 				tempObj['id'] = key + counter;
 				tempObj['counter'] = counter;
 
-				tempObj['bus_id'] 			= this.transportLogData[key]['bus_id'] ? this.transportLogData[key]['bus_id'] : '-';
-				tempObj['date'] 			= this.transportLogData[key]['date'] ? new DatePipe('en-in').transform(this.transportLogData[key]['date'], 'd-MMM-y') : '-';
-				tempObj['nature'] 		= this.transportLogData[key]['nature'] ? new TitleCasePipe().transform(this.transportLogData[key]['nature']): '-';
-				tempObj['items'] 	= this.transportLogData[key]['items'].length > 0 ? this.transportLogData[key]['items'].length : '0';
-				tempObj['quantity'] 	= this.transportLogData[key]['quantity'] ? this.transportLogData[key]['quantity'] : '0';
-				tempObj['rate'] 	= this.transportLogData[key]['rate'] ? this.transportLogData[key]['rate'] : '0';
-				tempObj['amount'] 			= this.transportLogData[key]['amount'] ? this.transportLogData[key]['amount'] : '-';
-				tempObj['remarks'] 			= this.transportLogData[key]['remarks'] ? this.transportLogData[key]['remarks'] : '-';
-				tempObj['attachment'] 		= this.transportLogData[key]['attachment'].length <= 0 ? "No Attachments" : "View";
-				tempObj['created_by']		= this.transportLogData[key]['created_by'] ? this.transportLogData[key]['created_by'].full_name : '-';
-				
+				tempObj['bus_number'] 			= this.transportLogData[key]['bus_number'] ? this.transportLogData[key]['bus_number'] : '-';
+				tempObj['bus_details'] 		= this.transportLogData[key]['bus_details'] ? new TitleCasePipe().transform(this.transportLogData[key]['bus_details']): '-';
+				tempObj['chasis_no'] 	= this.transportLogData[key]['chasis_no'] ? this.transportLogData[key]['chasis_no'] : '-';
+				tempObj['engine_no'] 			= this.transportLogData[key]['engine_no'] ? this.transportLogData[key]['engine_no'] : '-';
+				tempObj['insurance_no'] 		= this.transportLogData[key]['insurance_no']? this.transportLogData[key]['insurance_no'] : '-';
+        tempObj['insurance_provider'] 			= this.transportLogData[key]['insurance_provider'] ? this.transportLogData[key]['insurance_provider'] : '-';
+        tempObj['insurance_valid_upto'] 			= this.transportLogData[key]['insurance_valid_upto'] ? new DatePipe('en-in').transform(this.transportLogData[key]['insurance_valid_upto'], 'd-MMM-y') : '-';
+				tempObj['registration_no']		= this.transportLogData[key]['registration_no'] ? this.transportLogData[key]['registration_no'] : '-';
+        tempObj['permit_valid_upto'] 			= this.transportLogData[key]['permit_valid_upto'] ? new DatePipe('en-in').transform(this.transportLogData[key]['permit_valid_upto'], 'd-MMM-y') : '-';
+        tempObj['puc_valid_upto'] 			= this.transportLogData[key]['puc_valid_upto'] ? new DatePipe('en-in').transform(this.transportLogData[key]['puc_valid_upto'], 'd-MMM-y') : '-';
+        tempObj['device_no']		= this.transportLogData[key]['device_no'] ? this.transportLogData[key]['device_no'] : '-';
+        tempObj['registration_valid_upto'] 			= this.transportLogData[key]['registration_valid_upto'] ? new DatePipe('en-in').transform(this.transportLogData[key]['registration_valid_upto'], 'd-MMM-y') : '-';
+        tempObj['route_name'] 		= this.transportLogData[key]['routes'][0].route_name? this.transportLogData[key]['routes'][0].route_name : '-';
+				tempObj['conductor_name'] 		= this.transportLogData[key]['conductor'].user_det.au_full_name? this.transportLogData[key]['conductor'].user_det.au_full_name : '-';
+        tempObj['conductor_number'] 		= this.transportLogData[key]['conductor'].user_det.au_mobile? this.transportLogData[key]['conductor'].user_det.au_mobile : '-';
+        tempObj['driver_name'] 		= this.transportLogData[key]['driver'].user_det.au_full_name? this.transportLogData[key]['driver'].user_det.au_full_name : '-';
+        tempObj['driver_number'] 		= this.transportLogData[key]['driver'].user_det.au_mobile? this.transportLogData[key]['driver'].user_det.au_mobile : '-';
+        tempObj['supervisor_name'] 		= this.transportLogData[key]['supervisor'].user_det.au_full_name? this.transportLogData[key]['supervisor'].user_det.au_full_name : '-';
+        tempObj['supervisor_number'] 		= this.transportLogData[key]['supervisor'].user_det.au_mobile? this.transportLogData[key]['supervisor'].user_det.au_mobile : '-';
 				this.dataset.push(tempObj);
 
 				counter++;
@@ -322,14 +344,14 @@ export class TyreLogReportsComponent implements OnInit {
 		} else {
 			this.gridHeight = 400;
 		}
-		this.aggregatearray.push(new Aggregators.Sum('bus_id'));
-		setTimeout(() => this.groupByDate(), 2);
+		this.aggregatearray.push(new Aggregators.Sum('bus_number'));
+		setTimeout(() => 2);
 	}
 
 
-	groupByDate() {
+	/* groupByDate() {
 		this.dataviewObj.setGrouping({
-			getter: 'date',
+			getter: 'bus_number',
 			formatter: (g) => {
 				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
 			},
@@ -342,8 +364,8 @@ export class TyreLogReportsComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
-		this.draggableGroupingPlugin.setDroppedGroups('date');
-	}
+		this.draggableGroupingPlugin.setDroppedGroups('bus_number');
+	} */
 
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -1040,7 +1062,7 @@ export class TyreLogReportsComponent implements OnInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Tyres Log Report';
+		return 'Vehicle Details Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -1108,7 +1130,7 @@ export class TyreLogReportsComponent implements OnInit {
 		inputJson['status'] = "1";
 		inputJson['logs_type'] = "fuel";
 		inputJson['sort'] = {"date": -1};
-		// if(this.tyreLogReportForm.value.enrolment_type) {
+		// if(this.vehicleDetailReportForm.value.enrolment_type) {
 
 		// }
 		const validateFlag = this.checkValidation();
@@ -1185,17 +1207,17 @@ export class TyreLogReportsComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'TyreLogReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'VehicleDetailReport_' + (new Date).getTime() + '.xlsx');
 
 	}
 
 	print() {
-		const printModal2 = document.getElementById('tyreLogReportPrint');
+		const printModal2 = document.getElementById('vehicleDetailReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
 		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Tyre Log Report</h2></center></div>'
+			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Vehicle Detail Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
 	}
