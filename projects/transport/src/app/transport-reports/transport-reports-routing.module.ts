@@ -5,6 +5,7 @@ import { ReportComponent } from './report/report.component'
 import { FuelLogReportsComponent } from './fuel-log-reports/fuel-log-reports.component';
 import { ServiceLogReportsComponent } from './service-log-reports/service-log-reports.component';
 import { RunningLogReportsComponent } from './running-log-reports/running-log-reports.component';
+import { BusAttendanceReportsComponent } from './bus-attendance-report/bus-attendance-report.component';
 
 const routes: Routes = [
 	{ path: '', component: ReportComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
 	{ path: 'fuel-log-reports', component: FuelLogReportsComponent },
 	{ path: 'running-log-reports', component: RunningLogReportsComponent },
 	{ path: 'service-log-reports', component: ServiceLogReportsComponent },
+	{ path: 'bus-attendance-report', component: BusAttendanceReportsComponent },
 	{ path: 'report', component: ReportComponent }
 ];
 
