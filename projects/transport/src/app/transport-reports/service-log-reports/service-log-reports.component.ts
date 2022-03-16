@@ -1035,7 +1035,7 @@ export class ServiceLogReportsComponent implements OnInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Students Details Report';
+		return 'Services Log Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -1103,7 +1103,7 @@ export class ServiceLogReportsComponent implements OnInit {
 		inputJson['status'] = "1";
 		inputJson['logs_type'] = "fuel";
 		inputJson['sort'] = {"date": -1};
-		// if(this.studentDetailReportForm.value.enrolment_type) {
+		// if(this.serviceLogReportForm.value.enrolment_type) {
 
 		// }
 		const validateFlag = this.checkValidation();
@@ -1180,17 +1180,17 @@ export class ServiceLogReportsComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'StudentDetailReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'ServiceLogReport_' + (new Date).getTime() + '.xlsx');
 
 	}
 
 	print() {
-		const printModal2 = document.getElementById('studentDetailReportPrint');
+		const printModal2 = document.getElementById('serviceLogReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
 		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Detail Report</h2></center></div>'
+			+ '<body onload="window.print()"> <div class="headingDiv"><center><h2>Service Log Report</h2></center></div>'
 			+ printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();
 	}
