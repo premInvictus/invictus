@@ -16,7 +16,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '1',
 			report_name: 'Service Log',
-			report_image: '/assets/images/Transport Report/service-64.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -25,7 +25,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '2',
 			report_name: 'Fuel Log',
-			report_image: '/assets/images/Transport Report/fuel-64.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -34,7 +34,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '3',
 			report_name: 'Tyre Log',
-			report_image: '/assets/images/Transport Report/tyre-64.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -43,7 +43,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '4',
 			report_name: 'Running Log',
-			report_image: '/assets/images/Transport Report/cab-stand-64.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -52,7 +52,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '5',
 			report_name: 'Vehicle Details',
-			report_image: '/assets/images/Transport Report/icons8-public-transportation-48.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -61,7 +61,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '6',
 			report_name: 'Bus Attendance Report',
-			report_image: '/assets/images/Transport Report/attendance-64.png',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
