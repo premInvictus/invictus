@@ -59,6 +59,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getTeacherByClassSectionAndSubject', value);
 	}
+	getTeacherByClassSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getTeacherByClassSection', value);
+	}
 	getSchedulerEventCategory() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
@@ -513,5 +517,4 @@ export class SmartService {
 	}
 
 }
-
 

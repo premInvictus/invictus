@@ -234,6 +234,6 @@ export class TransportService {
 	}
 	transportAllVehicles(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiTransportUrl + 'transport-vehicle/getAll', value);
+		return this.http.post(environment.apiTransportUrl + '/transport-vehicle/getAll', value);
 	}
 }

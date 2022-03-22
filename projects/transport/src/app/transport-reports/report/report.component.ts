@@ -50,6 +50,15 @@ export class ReportComponent implements OnInit {
 			report_check_icon_class: ''
 		},
 		{
+			report_id: '5',
+			report_name: 'Vehicle Details',
+			report_image: '/assets/images/Transport Report/icons8-public-transportation-48.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
+		},
+		{
 			report_id: '6',
 			report_name: 'Bus Attendance Report',
 			report_image: '/assets/images/Transport Report/attendance-64.png',
@@ -57,7 +66,7 @@ export class ReportComponent implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
-		}
+		},
 	];
 	reportType: string;
 	reportHeader: any;
@@ -67,8 +76,6 @@ export class ReportComponent implements OnInit {
 	constructor(private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
-		console.log("u laa laa >>>>>");
-		
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	}
 	checkEnable(report_id) {
@@ -143,6 +150,9 @@ export class ReportComponent implements OnInit {
 		}
 		if (actionT === '4') {
 			return this.CommonAPIService.isExistUserAccessMenu('972');
+		}
+		if (actionT === '5') {
+			return this.CommonAPIService.isExistUserAccessMenu('973');
 		}
 		if (actionT === '6') {
 			return this.CommonAPIService.isExistUserAccessMenu('974');

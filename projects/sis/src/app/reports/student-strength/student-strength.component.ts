@@ -461,9 +461,9 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'class_name') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'student_strength') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else if (item2.id === 'admission_no') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -492,9 +492,9 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'class_name') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'student_strength') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else if (item2.id === 'admission_no') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -554,7 +554,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -711,7 +711,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			});
 			columValue.push(item.name);
 		}
-		const fileName =reportType + '_' + this.reportdate +'.xlsx';
+		const fileName = reportType + '_' + this.reportdate + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
@@ -850,7 +850,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -914,7 +914,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	}
 	getReportHeader() {
 		return this.studentStrengthReportForm.value.reviewReport === '0' ? 'Student Strength' + ' Summarised Report' :
-		'Student Strength' + ' Detailed Report';
+			'Student Strength' + ' Detailed Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -1011,7 +1011,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -1039,20 +1039,23 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	prepareDataSource() {
 		this.columnDefinitions = [
 			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true, width: 100,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			{
+				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: true, width: 100,
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
+				groupTotalsFormatter: this.srnTotalsFormatter,
 			},
-			groupTotalsFormatter: this.srnTotalsFormatter,
-			 },
-			{ id: 'student_strength', name: 'Student Strength', field: 'student_strength', sortable: true, filterable: true,
-			groupTotalsFormatter: this.sumTotalsFormatter }
+			{
+				id: 'student_strength', name: 'Student Strength', field: 'student_strength', sortable: true, filterable: true,
+				groupTotalsFormatter: this.sumTotalsFormatter
+			}
 		];
 		let counter = 1;
 		let total = 0;
@@ -1064,7 +1067,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			tempObj['id'] = counter;
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportSummaryData[key]['sec_name'] ?
-			this.reportSummaryData[key]['class_name'] + '-' + this.reportSummaryData[key]['sec_name'] : this.reportSummaryData[key]['class_name'];
+				this.reportSummaryData[key]['class_name'] + '-' + this.reportSummaryData[key]['sec_name'] : this.reportSummaryData[key]['class_name'];
 			tempObj['student_strength'] = this.reportSummaryData[key]['student_login_ids'].split(',').length;
 			total = total + total_sec_student;
 			this.dataset.push(tempObj);
@@ -1103,40 +1106,48 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	prepareDetailDataSource() {
 		this.columnDefinitions = [
 			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			{
+				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
+				groupTotalsFormatter: this.srnTotalsFormatter
 			},
-			groupTotalsFormatter: this.srnTotalsFormatter},
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, maxWidth: 100,
-			groupTotalsFormatter: this.countTotalsFormatter},
+			{
+				id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, maxWidth: 100,
+				groupTotalsFormatter: this.countTotalsFormatter
+			},
 			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, maxWidth: 250 },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, maxWidth: 100,
-			grouping: {
-				getter: 'gender',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} },
-			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true,
-			grouping: {
-				getter: 'process_type',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			} }
+			{
+				id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, maxWidth: 100,
+				grouping: {
+					getter: 'gender',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true,
+				grouping: {
+					getter: 'process_type',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			}
 		];
 		let counter = 1;
 		let total = 0;
@@ -1146,7 +1157,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			tempObj['id'] = counter;
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportDetailData[i]['section'] ?
-			this.reportDetailData[i]['class'] + '-' + this.reportDetailData[i]['section'] : this.reportDetailData[i]['class'];
+				this.reportDetailData[i]['class'] + '-' + this.reportDetailData[i]['section'] : this.reportDetailData[i]['class'];
 			tempObj['admission_no'] = this.valueAndDash(this.reportDetailData[i]['admission_no']);
 			tempObj['student_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportDetailData[i]['student_name']));
 			tempObj['gender'] = this.valueAndDash(this.reportDetailData[i]['gender']);
@@ -1191,7 +1202,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Strength Report</h2></center></div>' +
 			printModal2.innerHTML + '</body></html>');
 		popupWin.document.close();

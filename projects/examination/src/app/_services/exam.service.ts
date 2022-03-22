@@ -238,7 +238,7 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/printGradecard', value, {
 			reportProgress: true,
-		  });
+		});
 	}
 	getMarksRegister(value) {
 		this.service.startLoading();
@@ -408,6 +408,10 @@ export class ExamService {
 	getStudentVerification(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getStudentVerification', value);
+	}
+	getAttendanceReportClassSectionWise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAttendanceReportClassSectionWise', value)
 	}
 
 }

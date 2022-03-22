@@ -1,22 +1,35 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { FeeService } from '../../_services/fee.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
 	selector: 'app-search-via-student',
 	templateUrl: './search-via-student.component.html',
 	styleUrls: ['./search-via-student.component.css']
 })
-export class SearchViaStudentComponent implements OnInit {
+export class SearchViaStudentComponent implements OnInit, AfterViewInit {
 	shouldSizeUpdate: boolean;
 	searchStudent = false;
 	studentArrayByName: any[] = [];
+	ELEMENT_DATA: Element[]
+	displayedColumns: string[] = ['sr_no', 'enrollment_no', 'name', 'class_section', 'parent_name', 'contact_no', 'enrollment_status'];
+	dataSource = new MatTableDataSource<Element>();
+
 	constructor(private feeService: FeeService,
 		public dialogRef: MatDialogRef<SearchViaStudentComponent>,
-		@Inject(MAT_DIALOG_DATA) data: any) {
-			this.shouldSizeUpdate = data.shouldSizeUpdate;
-		 }
+		@Inject(MAT_DIALOG_DATA) data: any,
+	) {
+		console.log('>> The data', data);
 
+		this.shouldSizeUpdate = data.shouldSizeUpdate;
+	}
+
+	@ViewChild(MatSort) sort: MatSort
+
+	ngAfterViewInit() {
+		// this.sort.disableClear = true
+		this.dataSource.sort = this.sort
+	}
 	ngOnInit() {
 	}
 	searchStudentByName(value) {
@@ -25,6 +38,7 @@ export class SearchViaStudentComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.studentArrayByName = [];
 					this.studentArrayByName = result.data;
+					this.getStudentData()
 					this.searchStudent = true;
 					this.updateSizeForData();
 					document.getElementById('search').blur();
@@ -57,10 +71,37 @@ export class SearchViaStudentComponent implements OnInit {
 		this.dialogRef.close();
 	}
 	updateSizeForData() {
-		this.dialogRef.updateSize('60%', '60vh');
+		this.dialogRef.updateSize('60%', '70vh');
 	}
 	updateSizeForNoData() {
 		this.dialogRef.updateSize('60%', '40vh');
 	}
+	getStudentData() {
+		let element: any = {}
+		this.ELEMENT_DATA = []
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA)
+		let pos = 1
 
+		if (this.studentArrayByName.length > 0) {
+			this.studentArrayByName.forEach((ele) => {
+				element = {
+					srno: pos,
+					admission_no: ele.au_admission_no,
+					name: ele.au_full_name,
+					class_name: ele.class_name,
+					sec_name: ele.sec_name,
+					parent_name: ele.epd_parent_name,
+					contact_no: ele.epd_contact_no,
+					process_type: ele.au_process_type
+				}
+				this.ELEMENT_DATA.push(element)
+				pos++
+			})
+		}
+		this.dataSource.sort = this.sort
+	}
+
+	applyFilter(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase()
+	}
 }

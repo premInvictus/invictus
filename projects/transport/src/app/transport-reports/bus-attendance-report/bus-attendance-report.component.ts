@@ -31,7 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class BusAttendanceReportsComponent implements OnInit {
   isLoading: boolean = true;
-  loader_status = "Under Construction";
+  loader_status = "";
   displayedColumns: string[] = ['date', 'bus_id','fuel_type','fuel_station','quantity','rate','amount','attachment', 'modify'];
   reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   columnDefinitions: Column[] = [];
@@ -270,6 +270,7 @@ export class BusAttendanceReportsComponent implements OnInit {
   }
 	// Get All Transport Fuel Log
 	getTransportStudent(){
+		this.loader_status = "Loading Transport Students";
 		const inputJson = {};		
 		this.transportLogData = [];
 		this.feeService.getTransportStudent(inputJson).subscribe((result: any) => {

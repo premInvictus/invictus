@@ -44,7 +44,7 @@
               </mat-panel-title>
               <div class="change-report-button">
                 <button class="change-bt btn-spacer" mat-raised-button (click)="switchReport()">
-                  change report
+                  Change Report
                 </button>
               </div>
             </mat-expansion-panel-header>
@@ -60,6 +60,7 @@
                 <app-fuel-log-reports *ngIf="reportType === '2'"></app-fuel-log-reports>
                 <app-tyre-log-reports *ngIf="reportType === '3'"></app-tyre-log-reports>
                 <app-running-log-reports *ngIf="reportType === '4'"></app-running-log-reports>
+                <app-vehicle-log-reports *ngIf="reportType === '5'"></app-vehicle-log-reports>
                 <app-bus-attendance-report *ngIf="reportType === '6'"></app-bus-attendance-report>
               </div>
             </div>
