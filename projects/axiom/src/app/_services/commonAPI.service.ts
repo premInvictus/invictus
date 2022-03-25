@@ -121,4 +121,17 @@ export class CommonAPIService {
 		return this.http.get(environment.apiAxiomUrl + '/users/getAllUserAccessMenu', value)
 	}
 
+	getFilterData(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getFilterData', value);
+	}
+
+	getUser(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getUser', value)
+	}
+	addEmployeeMapping(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/addEmployeeMapping', value)
+	}
 }
