@@ -26,8 +26,7 @@ import { ViewStudentProfileComponent } from './manage-users/student-management/v
 import { SearchStudentComponent } from './manage-users/student-management/view-student-profile/search-student/search-student.component';
 import { SearchTeacherComponent } from './manage-users/teacher-management/view-teacher-profile/search-teacher/search-teacher.component';
 import { ChangePasswordModalComponent } from './manage-users/change-password-modal/change-password-modal.component';
-
-
+import { UserMappingComponent } from './manage-users/user-mapping/user-mapping.component';
 
 
 @NgModule({
@@ -44,7 +43,7 @@ import { ChangePasswordModalComponent } from './manage-users/change-password-mod
 
 	entryComponents: [SearchStudentComponent, SearchTeacherComponent, ChangePasswordModalComponent],
 	// tslint:disable-next-line:max-line-length
-	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent, ChangePasswordModalComponent],
+	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent, ChangePasswordModalComponent, UserMappingComponent],
 	providers: [AcsetupService, AuthGuard, NotificationsService]
 })
 

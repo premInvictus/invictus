@@ -1,0 +1,10 @@
+.field-full-width{
+  width: 100%;
+}
+table {
+  width: 100%;
+}
+.delete-btn > i {
+  color: red;
+  cursor: pointer;
+}

@@ -18,6 +18,8 @@ import { ClassWiseComponent } from './class-wise/class-wise.component';
 import { SubjectWiseComponent } from './subject-wise/subject-wise.component';
 import { PastAssignmentsReportComponent } from './past-assignments-report/past-assignments-report.component';
 import { RemarkProgressReportModelComponent } from './remark-progress-report-model/remark-progress-report-model.component';
+import { TeacherAllotmentReportComponent } from './teacher-allotment-report/teacher-allotment-report/teacher-allotment-report.component';
+import { AngularSlickgridModule } from 'angular-slickgrid';
 
 @NgModule({
 	imports: [
@@ -25,12 +27,13 @@ import { RemarkProgressReportModelComponent } from './remark-progress-report-mod
 		ReportsRoutingModule,
 		LoadingModule,
 		SmartSharedModule,
-		MatDialogModule
+		MatDialogModule,
+		AngularSlickgridModule.forRoot()
 	],
 	declarations: [ViewSyllabusComponent,
 		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent,
 		PastAssignmentsReportComponent, NegativeReportComponent, TeacherLogEntryComponent, PastAssignmentComponent,
-		LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent, RemarkProgressReportModelComponent],
+		LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent, RemarkProgressReportModelComponent, TeacherAllotmentReportComponent],
 
 })
 export class SmartReportsModule { }
