@@ -132,13 +132,14 @@ button.sort-bt:hover {
   border: 1px solid #eee;
 } */
 .blink{
+  font-size: 10px;
   animation: blink 1s linear infinite;
   letter-spacing: 2px;
 }
 @keyframes blink{
-  0%{opacity: 0; text-transform: none;}
-  25%{opacity: .25; text-transform: lowercase;}
-  50%{opacity: .5; text-transform: capitalize;}
-  75%{opacity: .25; text-transform: uppercase;}
-  100%{opacity: 1; text-transform: uppercase;}
+  0%{opacity: 0; letter-spacing: 2px;}
+  25%{opacity: .25; letter-spacing: 3px;}
+  50%{opacity: .5; letter-spacing: 4px;}
+  75%{opacity: .25; letter-spacing: 3px;}
+  100%{opacity: 1; letter-spacing: 2px;}
   }

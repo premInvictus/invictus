@@ -153,7 +153,7 @@
 <br>
 
 <!-- Progress Loader -->
-<div class="row"  *ngIf="isLoading">
+<div class="row mb-5"  *ngIf="isLoading">
     <div class="col-12">
       <mat-card>
         <div class="container">
@@ -168,7 +168,7 @@
     </div>
   </div>
   <!-- Progress Loader End -->
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0 && !isLoading">
+<div class="mb-5" style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0 && !isLoading">
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
