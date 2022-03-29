@@ -14,7 +14,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RunningLogReportsComponent } from './running-log-reports/running-log-reports.component';
-import { BusAttendanceReportsComponent } from './bus-attendance-report/bus-attendance-report.component';
 import { VehicleLogReportsComponent } from './vehicle-log-reports/vehicle-log-reports.component';
 
 
@@ -35,7 +34,6 @@ import { VehicleLogReportsComponent } from './vehicle-log-reports/vehicle-log-re
   ],
   declarations: [
     TyreLogReportsComponent, 
-    ReportComponent, FuelLogReportsComponent, ServiceLogReportsComponent, RunningLogReportsComponent, BusAttendanceReportsComponent,
     ReportComponent, FuelLogReportsComponent, ServiceLogReportsComponent, RunningLogReportsComponent, VehicleLogReportsComponent],
   providers: [TranslateService]
 })

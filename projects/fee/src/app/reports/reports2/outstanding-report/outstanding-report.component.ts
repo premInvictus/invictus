@@ -256,9 +256,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.filterFlag = true;
 	}
 	ngOnDestroy() {
-		if (this.serviceRequest) {
-			this.serviceRequest.unsubscribe();
-		}
+		this.serviceRequest.unsubscribe();
 	}
 	checkForMultiBranch() {
 		this.loader_status = "Reading your settings";
@@ -2245,9 +2243,6 @@ export class OutstandingReportComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
-						if(repoArray.length < 1){
-							this.isLoading = false;
-						}
 						console.log("hey m here >>>>>>>>>>>>>>", repoArray);
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -2295,13 +2290,13 @@ export class OutstandingReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
-							this.gridHeight = 500;
+							this.gridHeight = 300;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-							this.gridHeight = 600;
+							this.gridHeight = 400;
 						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-							this.gridHeight = 750;
+							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
-							this.gridHeight = 950;
+							this.gridHeight = 750;
 						}
 						this.isLoading = false;
 						this.tableFlag = true;

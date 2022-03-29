@@ -16,7 +16,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '1',
 			report_name: 'Service Log',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			report_image: '/assets/images/Transport Report/service-64.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -25,7 +25,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '2',
 			report_name: 'Fuel Log',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			report_image: '/assets/images/Transport Report/fuel-64.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -34,7 +34,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '3',
 			report_name: 'Tyre Log',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			report_image: '/assets/images/Transport Report/tyre-64.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -43,7 +43,7 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '4',
 			report_name: 'Running Log',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			report_image: '/assets/images/Transport Report/cab-stand-64.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -52,21 +52,21 @@ export class ReportComponent implements OnInit {
 		{
 			report_id: '5',
 			report_name: 'Vehicle Details',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			report_image: '/assets/images/Transport Report/icons8-public-transportation-48.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
-		},
-		{
-			report_id: '6',
-			report_name: 'Bus Attendance Report',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
+		}
+		// {
+		// 	report_id: '6',
+		// 	report_name: 'Negative Report',
+		// 	report_image: '/assets/images/Transport Report/fee_defaulter_list.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// }
 	];
 	reportType: string;
 	reportHeader: any;
@@ -76,6 +76,8 @@ export class ReportComponent implements OnInit {
 	constructor(private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
+		console.log("u laa laa >>>>>");
+		
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	}
 	checkEnable(report_id) {
@@ -155,10 +157,7 @@ export class ReportComponent implements OnInit {
 			return this.CommonAPIService.isExistUserAccessMenu('973');
 		}
 		if (actionT === '6') {
-			return this.CommonAPIService.isExistUserAccessMenu('974');
+			return true;
 		}
-		// if (actionT === '6') {
-		// 	return true;
-		// }
 	}
 }
