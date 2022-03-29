@@ -16,6 +16,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 })
 export class ViewGradecardDialogComponent implements OnInit {
 
+  roundOff = false;
+
   studentDetails: any;
   currentSession: any;
   defaultsrc: any = "https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png&h=50&w=50";
@@ -211,6 +213,7 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
             this.all_term_student_total_mark += element.term_student_total_mark['A'];
           });
+          if(this.roundOff) this.all_term_student_total_mark = Math.ceil(this.all_term_student_total_mark);
           this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
         }
       },
@@ -930,6 +933,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.examService.getGradeCardMark(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.gradeCardMarkArray = result.data;
+        this.roundOff = this.gradeCardMarkArray[0]['roundOff'];
       }
       this.gflag = true;
     });
@@ -1102,10 +1106,12 @@ export class ViewGradecardDialogComponent implements OnInit {
     so_printData.forEach(element => {
       element.sub_mark.forEach(psubject => {
         if (psubject.sub_id == sub_id) {
-          final_assessment += psubject.sub_grade_mark
+          if(this.roundOff) final_assessment += Math.ceil(psubject.sub_grade_mark)
+          else final_assessment += psubject.sub_grade_mark
         }
       });
     });
+    if(this.roundOff) final_assessment = Math.ceil(final_assessment)
     return final_assessment.toFixed(2);
   }
 }

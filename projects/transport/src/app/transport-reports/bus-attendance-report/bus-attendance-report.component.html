@@ -1,0 +1,26 @@
+<!-- Progress Loader -->
+<div class="row"  *ngIf="isLoading">
+  <div class="col-12">
+    <mat-card>
+      <div class="container">
+        <p class="text-center mt-5">
+          <img src="assets/1484.gif" alt="loading">
+        </p>
+        <p class="text-center mb-5">
+          {{loader_status}}
+        </p>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<!-- Progress Loader End -->
+<div *ngIf="tableFlag && dataset.length > 0 && !isLoading" class="mt-2">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+      [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+      No Records Found
+  </div>
+</div>
