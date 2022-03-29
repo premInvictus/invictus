@@ -46,13 +46,13 @@
                     <ng-container matColumnDef="enrollment_no">
                       <th mat-header-cell *matHeaderCellDef> Enrollment No. </th>
                       <td mat-cell *matCellDef="let item">
-                        <span *ngIf="item.process_type !== '5'">
+                        <span *ngIf="item.process_type == '5'">
                           <a style="color: #007bff !important; cursor: pointer !important"
                             (click)="setId(item.admission_no, item.process_type)">
                             {{item.admission_no ? item.admission_no : '-'}}
                           </a>
                         </span>
-                        <span *ngIf="item.process_type == '5'">
+                        <span *ngIf="item.process_type !== '5'">
                           <a style="color: #000 !important">
                             {{item.admission_no ? item.admission_no : '-'}}
                           </a>

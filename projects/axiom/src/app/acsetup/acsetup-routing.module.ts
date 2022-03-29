@@ -15,7 +15,7 @@ import { StudentDashboardManagementComponent } from './manage-users/student-mana
 import { ViewTeacherProfileComponent } from './manage-users/teacher-management/view-teacher-profile/view-teacher-profile.component';
 import { SystemInfoUploadComponent } from './system-info-upload/system-info-upload.component';
 import { ViewStudentProfileComponent } from './manage-users/student-management/view-student-profile/view-student-profile.component';
-import { UserMappingComponent } from './manage-users/user-mapping/user-mapping.component';
+
 
 const routes: Routes = [
 	{
@@ -31,9 +31,8 @@ const routes: Routes = [
 			{ path: 'create-new-student', component: CreateNewStudentComponent },
 			{ path: 'student-dashboard-management', component: StudentDashboardManagementComponent },
 			{ path: 'view-teacher-profile', component: ViewTeacherProfileComponent },
-			{ path: 'system-info-upload', component: SystemInfoUploadComponent },
-			{ path: 'view-student-profile', component: ViewStudentProfileComponent },
-			{ path: 'user-mapping', component: UserMappingComponent }
+			{ path: 'system-info-upload' , component: SystemInfoUploadComponent },
+			{ path: 'view-student-profile', component: ViewStudentProfileComponent}
 		]
 	}
 ];

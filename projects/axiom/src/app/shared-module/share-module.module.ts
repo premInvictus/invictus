@@ -48,7 +48,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { AssignRightsMultipleComponent } from './assign-rights-multiple/assign-rights-multiple.component';
 import { TreeviewModule } from 'ngx-treeview';
-import { MatAutocompleteModule } from '@angular/material'
 @NgModule({
 	imports: [
 		CommonModule,
@@ -87,7 +86,6 @@ import { MatAutocompleteModule } from '@angular/material'
 		ReactiveFormsModule,
 		InvictusSharedModule,
 		ImageCropperModule,
-		MatAutocompleteModule
 
 	],
 	declarations: [
@@ -143,8 +141,7 @@ import { MatAutocompleteModule } from '@angular/material'
 		ImageCropperModule,
 		AssignRightsMultipleComponent,
 		ImagecropComponent,
-		AdmitCodeConfirmationModalComponent,
-		MatAutocompleteModule
+		AdmitCodeConfirmationModalComponent
 	],
 	entryComponents: [ImagecropComponent, AssignRightsMultipleComponent]
 })
@@ -152,19 +149,19 @@ export class SharedModule {
 	constructor() {
 		const script: any = document.createElement('script');
 		if (!(script.type === 'text/x-mathjax-config'
-			&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
+		&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
 			script.type = 'text/x-mathjax-config';
 			script[('innerHTML')] =
 				'MathJax.Hub.Config({\n' +
 				' tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']] }\n' +
-				'});\n' +
-				'MathJax.Hub.Queue(function () {\n' +
-				'var math = document.getElementById("hide_page");\n' +
-				'if (math) {\n' +
-				'console.log("loading-----")\n' +
-				'}\n' +
+				'});\n'+
+				'MathJax.Hub.Queue(function () {\n'+
+					'var math = document.getElementById("hide_page");\n'+
+					'if (math) {\n'+
+					'console.log("loading-----")\n'+
+					'}\n'+
 				'});'
-
+				
 			script.type = 'text/javascript';
 			script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML';
 			document.getElementsByTagName('head')[0].appendChild(script);

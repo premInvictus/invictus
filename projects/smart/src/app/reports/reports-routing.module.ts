@@ -10,8 +10,6 @@ import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.
 import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
 import { LogEntryReportComponent } from './log-entry-report/log-entry-report.component';
 import { PastAssignmentsReportComponent } from './past-assignments-report/past-assignments-report.component';
-import { TeacherAllotmentReportComponent } from './teacher-allotment-report/teacher-allotment-report/teacher-allotment-report.component';
-
 const routes: Routes = [
 	{
 		path: 'view-syllabus', component: ViewSyllabusComponent
@@ -39,9 +37,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'past-assignments-report', component: PastAssignmentsReportComponent
-	},
-	{
-		path: 'teacher-allotment', component: TeacherAllotmentReportComponent
 	}
 ];
 

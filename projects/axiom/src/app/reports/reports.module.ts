@@ -15,8 +15,6 @@ import { SharedModule } from '../shared-module/share-module.module';
 import { ViewAllExamsComponent } from './admin/view-all-exams/view-all-exams.component';
 import { TableRendererComponent } from './admin/view-all-exams/table-renderer/table-renderer.component';
 import { TopicwiseReportOverviewComponent } from './topicwise-report-overview/topicwise-report-overview.component';
-import { AccessRightsReportComponent } from './access-rights-report/access-rights-report.component';
-import { AngularSlickgridModule } from 'angular-slickgrid';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -28,12 +26,11 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 		LoadingModule,
 		GaugeModule.forRoot(),
 		SimpleNotificationsModule,
-		TooltipModule.forRoot(),
-		AngularSlickgridModule.forRoot()
+		TooltipModule.forRoot()
 	],
 	// tslint:disable-next-line:max-line-length
 	declarations: [ReportsComponent,
-		ViewAllExamsComponent, TableRendererComponent, TopicwiseReportOverviewComponent, AccessRightsReportComponent],
+		ViewAllExamsComponent, TableRendererComponent, TopicwiseReportOverviewComponent],
 	providers: [ReportService, NotificationsService]
 })
 export class ReportsModule { }
